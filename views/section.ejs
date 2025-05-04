@@ -1,0 +1,813 @@
+<%- include('layout') %>
+    <style>
+        body {
+            height: 100vh;
+        }
+
+        #dating-container {
+          padding-top: 5%;
+            display: flex;
+            justify-content: center;
+            /* align-items: center; */
+            flex-direction: column;
+            text-align: center;
+            width: 100%;
+            margin: .5rem auto !important;
+        }
+
+        .dating-container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        #prev, #next {
+           padding: 1rem 1.5rem;
+           border: none;
+           border-radius: 50%;
+           font-size: 1.1rem;
+           background: var(--primary-color);
+           color: var(--text-color);
+           box-shadow: .1rem .1rem .75rem var(--text-color);
+        }
+
+        #dating-container h1{
+       text-align: center !important;
+       padding-left: .5rem !important;
+  font-size: 2rem !important;
+       }
+
+       .bottom-line {
+        background: var(--secondary-color);
+        width: 40px;
+        height: 5px;
+        margin: auto;
+        border-radius: 30px;
+       }
+
+        #card-container {
+            padding: 3% 0;
+            position: relative;
+            width: 400px !important;
+            height: 450px !important;
+            perspective: 1000px !important; 
+            /* padding-left: 0 !important; */
+        }
+        .card {
+            width: 100% !important;
+            height: 100% !important;
+            height: 450px !important;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            margin: auto;
+            /* padding: 20px; */
+            position: absolute;
+            top: 0;
+            /* left: 10%; */
+            /* right: 10%; */
+            transform-origin: center;
+            transition: transform 0.5s ease-in-out;
+            overflow-y: auto;
+            z-index: 1;
+        }
+
+        .card:first-child {
+    z-index: 2 !important;  /* Top card gets a higher z-index */
+}
+        .card:hover {
+            transform: rotateY(15deg) rotateX(10deg) scale(1.05);
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        .actions button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
+        .dislike {
+            background-color: #ff4c4c;
+            color: white;
+        }
+        .like {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        /* header {
+    position: sticky !important;
+    top: 0 !important;
+    background: var(--body-bg) ;
+    box-shadow: -.2rem -.2rem .5rem rgba(0, 0, 0, 0.5);
+    z-index: 100;
+        } */
+
+    </style>
+<body data-theme="<%= theme %>" data-mode="<%= mode %>">
+
+    <script>
+        socket.on('new-secret', (data) => {
+            // Display a modern toast notification
+            const notification = document.createElement('div');
+            notification.innerText = `New secret shared: ${data.secret}`;
+            notification.style.position = 'fixed';
+            notification.style.bottom = '10px';
+            notification.style.right = '10px';
+            notification.style.backgroundColor = '#4caf50';
+            notification.style.color = '#fff';
+            notification.style.padding = '10px';
+            notification.style.borderRadius = '5px';
+            document.body.appendChild(notification);
+    
+            // Remove notification after 5 seconds
+            setTimeout(() => notification.remove(), 5000);
+        });
+    </script>
+
+    <div class="container">
+        <div id="tutorial-overlay" class="hidden">
+            <div class="tutorial-step">
+              <div class="tutorial-text">
+                            <h2> Welcome to Room of Advice and Learning</h2>
+                <p>Feel free to share or read content in a judgment-free zone.</p>
+              </div>
+    
+                <div id="progress-bar-container">
+                    <div id="progress-bar"></div>
+                </div>
+                <button id="next-step">Next</button>
+                <button class="skip-btn">Skip</button>
+            </div>
+        </div>
+        <div id="dating-container">
+            <h1>Dating & Relationship Advice</h1>
+            <div class="bottom-line"></div>
+            <div class="dating-container">
+              <button id="prev"><i class="fas fa-chevron-left"></i></button>
+              <div id="card-container">
+                <% if (locals.section) { %>
+                    <ul id="secrets">
+                        <% section.forEach((secret)=> { %>
+                
+                  <li class="secret" id="secret<%= secret.id %>">
+                    <div class="card">
+                        
+                        <small>~~ @amebo<%= secret.user_id %> ~~</small>
+                        <p>
+                          <span class="content">
+                            <% if (secret.secret.split(" ").length > 200) { %>
+                              <%= secret.secret.substring(0, 250) + "..." %>
+                            <% } else { %>
+                              <%= secret.secret %>
+                            <% } %>
+                          </span>
+                          <% if (secret.secret.split(" ").length > 200) { %>
+                              <button
+                              class="read"
+                              style="
+                                background: none;
+                                font-size: 1rem;
+                                padding: 0;
+                                font-weight: bold;
+                      padding: .75rem !important;
+                      font-weight: bold;
+                      font-family: 'Courier New', Courier, monospace !important;
+                              "
+                              data-full="<%= secret.secret %>"
+                              data-truncated="<%= secret.secret.substring(0, 250) + '...' %>"
+                            >
+                              Read More
+                            </button>
+                            
+                          <% } %>
+                        </p>
+                        
+                
+                        <div class="comment-section" data-secret-id="<%= secret.id %>">
+                          <button id="commentButton">Comment</button>
+                          <div class="comment-dropdown" id="commentDropdown">
+                            <form
+                              class="comment-display"
+                              method="POST"
+                              id="commentDisplay"
+                            ><ul id="comments"></ul></form>
+                            <form action="/comment" method="POST" id="comment-form">
+                              <input
+                                type="hidden"
+                                name="id"
+                                id="secretId"
+                                value="<%= secret.id %>"
+                              />
+                              <input
+                                type="hidden"
+                                name="secretUserId"
+                                value="<%= secret.user_id %>"
+                              />
+                              <input
+                                type="hidden"
+                                name="commentUserId"
+                                value="<%= userId %>"
+                              />
+                              <textarea
+                                id="commentInput"
+                                placeholder="Write a comment..."
+                                name="comment"
+                              ></textarea>
+                              <!-- <input type="text" id="commentInput" placeholder="Write a comment" name="comment"> -->
+                              <button id="postCommentButton">
+                                Post
+                              </button>
+                              <% if (locals.message) { %>
+                              <small><%= message %></small>
+                              <% } %>
+                            </form>
+                          </div>
+                        </div>
+                
+                        
+                        <ul class="card-menu">
+                          <li>
+                            <button class="menu-toggle-btn"><i class="fas fa-ellipsis-vertical"></i></button>
+                            <ul class="card-menu-content" style="display: none;">
+                              <li>
+                                <button class="report-btn" data-id="<%= secret.id %>">
+                                  <i class="fa-regular fa-flag"></i>Report
+                                </button>
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
+                
+                
+                    <div class="actions">
+                        <button class="dislike">😬 L</button>
+                        <button class="like">🔥 Relatable</button>
+                    </div>
+                </div>
+                     </li>
+                  <% }); %>
+                </ul>
+                <div>
+                    <p class="no-message">Oops no more content...Head back to main feeds or check back later.</p>
+                </div>
+                <% } else {%>
+                     
+                    <% } %>
+                                
+                
+                
+                    
+                                <!-- <div class="card">
+                                    <p class="advice-text">"I took my date to a fancy dinner, she spent the whole time texting her ex..."</p>
+                                    <div class="actions">
+                                        <button class="dislike">😬 L</button>
+                                        <button class="like">🔥 Relatable</button>
+                                    </div>
+                                </div> -->
+                             
+                            </div>
+
+                            <button id="next"><i class="fas fa-chevron-right"></i></button>
+                   </div>
+            </div>
+           
+        <br>
+        <br>
+        <br>
+        <br>
+
+    <div id="sections" class="sections-container">
+      <h2 class="sections-title">Explore Your Space</h2>
+      <form class="sections-cards" >
+    
+        <button class="section-card whisper-wall nav-btn" formaction="/section/love" data-action="/whisper-walls">
+          <div class="icon-circle">
+            <i class="fas fa-feather-alt fa-2x"></i>
+          </div>
+          <h3>Heartbreaks & Relationship Advice</h3>
+          <p>Swipe and support whispers anonymously.</p>
+        </button>
+    
+    
+        <button class="section-card mood-secrets nav-btn" formaction="/random" data-action="/mood-secrets">
+          <div class="icon-circle gradient-bg">
+            <i class="fas fa-smile-beam fa-2x"></i>
+          </div>
+          <h3>Random Confessions</h3>
+          <p>Share secrets by mood. Feel the vibe.</p>
+        </button>
+    
+        <!-- Support Pods -->
+        <button class="section-card support-pods nav-btn" data-action="/support-pods">
+          <div class="icon-circle gradient-bg-alt">
+            <i class="fas fa-hands-helping fa-2x"></i>
+          </div>
+          <h3>Support Pods</h3>
+          <p>Join pods for empathetic conversations.</p>
+        </button>
+    
+        <!-- Time Capsule -->
+        <button class="section-card time-capsule nav-btn" data-action="/time-capsule">
+          <div class="icon-circle gradient-bg">
+            <i class="fas fa-hourglass-half fa-2x"></i>
+          </div>
+          <h3>Time Capsule</h3>
+          <p>Write secrets to open in the future.</p>
+        </button>
+    
+        <!-- Inspirations & Confessions -->
+        <button
+          class="section-card inspirations-confessions nav-btn"
+          data-action="/inspirations"
+        >
+          <div class="icon-circle gradient-bg-alt">
+            <i class="fas fa-sun fa-2x"></i>
+          </div>
+          <h3>Inspirations</h3>
+          <p>Share stories that uplift and inspire.</p>
+        </button>
+      </form>
+    </div>
+  </div>
+
+    <script>
+        
+let step = 0;
+let currentStep = 1;
+const totalSteps = 2;
+const tutorialOverlay = document.getElementById('tutorial-overlay');
+const nextButton = document.getElementById('next-step');
+const tutorialStep = document.querySelector('.tutorial-step');
+const progressBar = document.getElementById('progress-bar');
+
+
+// Back Button Functionality
+
+
+// Function to update the progress bar
+function updateProgressBar() {
+    const progress = (currentStep / totalSteps) * 100;
+    progressBar.style.width = `${progress}%`;
+}
+
+// Skip Tutorial
+document.querySelectorAll('.skip-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+        tutorialOverlay.classList.add('hidden'); // Hide overlay on skip
+        localStorage.setItem('tutorialCompleted', true);
+    });
+});
+
+// Show the tutorial step directly
+function showTutorialStep() {
+    tutorialStep.classList.remove('hidden'); // Ensure tutorial step is visible
+}
+
+// Next Button Functionality
+nextButton.addEventListener('click', () => {
+    step++;
+
+    if (currentStep < totalSteps) {
+        currentStep++;
+        updateProgressBar();
+        showTutorialStep();  // Ensure tutorial step is shown immediately
+    }
+
+    if (step === 1) {
+        // Step 1: Highlight the dice images
+        document.querySelectorAll('.card').forEach(card => {
+          card.classList.add('highlight')
+          
+        })
+
+        if(document.getElementById('next').style.display != "none" || document.getElementById('prev').style.display != "none") {
+          document.getElementById('next').classList.add('highlight') 
+          document.getElementById('prev').classList.add('highlight' )
+        }
+
+
+        // Update tutorial instructions for Step 2
+        tutorialStep.innerHTML = `
+            <h2>Step 2</h2>
+            <p>Swipe through to view content<span class="extra"> or use buttons to swipe through content </span></p>
+              <div id="progress-bar-container">
+                        <div id="progress-bar"></div>
+                    </div>
+            <button class="skip-btn">Got it</button>
+        `;
+
+        attachSkipButtonListener();  // Reattach listener for Skip button
+    }  else{
+        // End tutorial
+        tutorialOverlay.classList.add('hidden');
+        localStorage.setItem('tutorialCompleted', true);
+    }
+});
+
+// const backButton = document.getElementById('back-step');
+
+// backButton.addEventListener('click', () => {
+//     if (currentStep > 1) {
+//         currentStep--;
+//         step--;
+//         updateProgressBar();
+//         updateTutorialStep(); // Show the previous tutorial step
+//     }
+// });
+
+// Close Tutorial on Page Load Check
+window.onload = () => {
+    // Temporarily show tutorial for testing purposes (ignore localStorage check for now)
+    if(localStorage.getItem('tutorialCompleted')){
+        tutorialOverlay.classList.add('hidden');
+    } else {
+        tutorialOverlay.classList.remove('hidden');
+    }
+   
+};
+
+// Function to Attach Skip Button Listeners Dynamically
+function attachSkipButtonListener() {
+    document.querySelectorAll('.skip-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            tutorialOverlay.classList.add('hidden');
+            localStorage.setItem('tutorialCompleted', true);
+        });
+    });
+}
+
+
+// Function to highlight an element and add a tooltip
+function highlightElement(element, tooltipText) {
+    element.classList.add('highlight'); // Highlight the element
+    const tooltip = document.createElement('div');
+    tooltip.classList.add('tooltip');
+    tooltip.textContent = tooltipText;
+    element.appendChild(tooltip);
+
+    // Position the tooltip near the element
+    const rect = element.getBoundingClientRect();
+    tooltip.style.top = `${rect.top - 30}px`;  // Position above the element
+    tooltip.style.left = `${rect.left + rect.width / 2 - tooltip.offsetWidth / 2}px`; // Center the tooltip above the element
+
+    // Show the tooltip
+    setTimeout(() => {
+        tooltip.classList.add('show');
+    }, 200);
+}
+
+// Example: Highlighting the 'Next' button with a tooltip
+highlightElement(nextButton, "Click here to move to the next step!");
+
+    </script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const commentButton = document.querySelectorAll("#commentButton");
+      const commentSection = document.querySelectorAll(".comment-section");
+
+      // Toggle comment dropdown visibility
+
+      // commentSection.forEach(async (section, index) => {
+      const commentDropdown = document.getElementById("commentDropdown");
+      const postCommentButton = document.getElementById("postCommentButton");
+      const commentInput = document.getElementById("commentInput");
+      const commentDisplay = document.getElementById("commentDisplay");
+
+
+      commentSection.forEach(async (section, index) => {
+        
+        const secretId = section.querySelector("#secretId").value;
+        try {
+          const response = await fetch(`/more/${secretId}`);
+          if (!response.ok) {
+            throw new Error("Failed to fetch secrets");
+          }
+
+          const data = await response.json();
+          const comments = data.comments;
+          let commentDisp;
+          if (comments) {
+            commentDisp = comments.map(
+              (comment) =>
+                
+              `<li class="comment-item">
+                            <div>
+                              <small class="user"><strong>@anonym${comment.user_id}</strong></small>
+                              <p class="comment">
+                                ${comment.comment}
+                              </p>
+                            </div>
+                             </li>
+              `
+            );
+
+            section.querySelector("#comments").innerHTML = `
+                        <p class="total">All comments: ${data.totalComments}
+                        </p>` + commentDisp
+                       ;
+          } else {
+            section.querySelector("#commentDisplay").innerHTML = `
+              <ul id="comments">
+                        <p class="total">${data.noComment}
+                        </p>
+                      </ul>
+                            `;
+          }
+        } catch (err) {
+          console.log(err);
+        }
+
+              section.querySelector("#commentButton").addEventListener("click", (e) => {
+
+          section.querySelector("#commentDropdown").classList.toggle("active");
+          // commentDropdown.classList.toggle("active");
+
+          if (section.querySelector("#commentDropdown").classList.contains("active")) {
+            section.querySelector("#commentButton").innerHTML = "Close Comments";
+          } else {
+            section.querySelector("#commentButton").innerHTML = "Comments";
+          }
+
+          // commentInput.focus();
+        });
+      });
+
+      document.querySelectorAll(".reaction-btn").forEach((button) => {
+        button.addEventListener("click", async (event) => {
+          const btn = event.target.closest(".reaction-btn");
+          const type = btn.getAttribute("data-type");
+          const secretCard = btn.closest(".secret-card");
+          const secretId = secretCard.getAttribute("data-id");
+
+          try {
+            const response = await fetch(`/secret/${secretId}/react`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ type }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+              const countSpan = btn.querySelector(".reaction-count");
+              countSpan.textContent = data.reactions[type].count || 0; // Use updated count from server
+            } else {
+              console.error("Failed to update reactions:", data.error);
+            }
+          } catch (error) {
+            console.error("Error updating reactions:", error);
+          }
+        });
+      });
+    });
+
+
+    const cards = document.querySelectorAll(".card")
+    cards.forEach((card) => {
+      const secretId = card.querySelector("#secretId")
+      card.querySelector(".report-btn").addEventListener('click', async (e) => {
+        const secretId = e.target.getAttribute('data-id');
+        const reason = prompt('Why are you reporting this content?'); // Ask for the reason
+
+        if (reason) {
+            try {
+                const response = await fetch(`/report/secret/${secretId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ reason })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert('Thank you for reporting. We will review it shortly.');
+                } else {
+                    alert('Error reporting content');
+                }
+            } catch (error) {
+                console.error('Error reporting:', error);
+            }
+        }
+    });
+
+
+    // card.querySelector(".read").addEventListener("click", (e) => {
+
+    //   const contentSpan = e.target.previousElementSibling;
+    //   const isTruncated = e.target.textContent === "Read More";
+
+    //   if (isTruncated) {
+    //     // Show full content
+    //     contentSpan.textContent = e.target.dataset.full;
+    //     e.target.textContent = "See Less";
+    //   } else {
+    //     // Reapply truncated content
+    //     contentSpan.textContent = e.target.dataset.truncated;
+    //     e.target.textContent = "Read More";
+    //   }
+    // })
+
+    })
+
+    document.querySelectorAll(".read").forEach((button) => {
+    button.addEventListener("click", (e) => {
+      const contentSpan = e.target.previousElementSibling;
+      const isTruncated = e.target.textContent === "Read More";
+
+      if (isTruncated) {
+        // Show full content
+        contentSpan.textContent = e.target.dataset.full;
+        e.target.textContent = "See Less";
+      } else {
+        // Reapply truncated content
+        contentSpan.textContent = e.target.dataset.truncated;
+        e.target.textContent = "Read More";
+      }
+    });
+  });
+
+    document.querySelectorAll(".menu-toggle-btn").forEach((button) => {
+    button.addEventListener("click", (e) => {
+      const menuContent = e.target.closest(".card-menu").querySelector(".card-menu-content");
+      const isVisible = menuContent.style.display === "block";
+      
+      // Hide all other menus
+      document.querySelectorAll(".card-menu-content").forEach((menu) => {
+        menu.style.display = "none";
+      });
+
+      // Toggle current menu
+      menuContent.style.display = isVisible ? "none" : "block";
+
+      // Stop event propagation to prevent immediate hiding
+      e.stopPropagation();
+    });
+  });
+
+  // Hide menu when clicking elsewhere
+  document.addEventListener("click", () => {
+    document.querySelectorAll(".card-menu-content").forEach((menu) => {
+      menu.style.display = "none";
+    });
+  });
+
+
+  document.addEventListener("click", function (event) {
+  if (event.target.closest(".fas.fa-copy")) {
+    const button = event.target.closest(".fas.fa-copy");
+
+    // Find the closest card container to get the content
+    const cardContainer = button.closest(".card");
+
+    // Extract the content inside the card container
+    const contentToCopy = cardContainer.querySelector(".content")?.innerText;
+
+    if (contentToCopy) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        // Use Clipboard API if available
+        navigator.clipboard
+          .writeText(contentToCopy)
+          .then(() => {
+            alert("Content copied to clipboard!");
+          })
+          .catch((err) => {
+            console.error("Failed to copy: ", err);
+            alert("Failed to copy content.");
+          });
+      } else {
+        // Fallback for unsupported browsers
+        const tempInput = document.createElement("textarea");
+        tempInput.value = contentToCopy;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        try {
+          document.execCommand("copy");
+          alert("Content copied to clipboard!");
+          button.innerHTML = "Copied !"
+        } catch (err) {
+          console.error("Fallback copy failed: ", err);
+          alert("Copy failed. Please copy manually.");
+        }
+        document.body.removeChild(tempInput);
+      }
+    } else {
+      console.error("No content to copy.");
+      alert("Nothing to copy.");
+    }
+  }
+});
+
+  </script>
+
+
+    <script>
+        let startX;
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const { offsetX, offsetY, target } = e;
+                const { offsetWidth, offsetHeight } = target;
+                const xRotation = ((offsetY / offsetHeight) - 0.5) * 20;
+                const yRotation = ((offsetX / offsetWidth) - 0.5) * 20;
+                target.style.transform = `rotateX(${xRotation}deg) rotateY(${yRotation}deg)`;
+            });
+
+            card.addEventListener('mouseleave', (e) => {
+                e.target.style.transform = 'rotateY(0) rotateX(0)';
+            });
+            
+            // Touch events for mobile swipe
+            card.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+            });
+            
+            card.addEventListener('touchmove', (e) => {
+                let moveX = e.touches[0].clientX - startX;
+                card.style.transform = `translateX(${moveX}px) rotate(${moveX / 10}deg)`;
+            });
+            
+            card.addEventListener('touchend', (e) => {
+                let moveX = e.changedTouches[0].clientX - startX;
+                if (moveX > 100) {
+                    card.style.transform = 'translateX(100%) rotate(20deg)';
+                    setTimeout(() => card.remove(), 300);
+                } else if (moveX < -100) {
+                    card.style.transform = 'translateX(-100%) rotate(-20deg)';
+                    setTimeout(() => card.remove(), 300);
+                } else {
+                    card.style.transform = 'translateX(0) rotate(0)';
+                }
+            });
+        });
+
+        document.querySelectorAll('.like').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const card = e.target.closest('.card');
+                card.style.transform = 'translateX(100%) rotate(20deg)';
+                setTimeout(() => card.remove(), 300);
+            });
+        });
+
+
+        document.getElementById("next").addEventListener("click", function(e) {
+          const datingContainer = e.target.closest('.dating-container')
+          // const card = datingContainer.querySelector('#card-container .card:first-child')
+          //   card.style.transform = 'translateX(100%) rotate(20deg)';
+          //   setTimeout(() => card.remove(), 300);
+
+
+
+            const card = datingContainer.querySelector('.card');
+    if (card) {
+        card.style.transform = 'translateX(100%) rotate(20deg)';
+        setTimeout(() => card.remove(), 300);
+    }
+        })
+
+        document.getElementById("prev").addEventListener("click", function(e) {
+          const datingContainer = e.target.closest('.dating-container')
+          // const card = datingContainer.querySelector('#card-container .card:first-child')
+          //   card.style.transform = 'translateX(-100%) rotate(-20deg)';
+          //   setTimeout(() => card.remove(), 300);
+
+            const card = datingContainer.querySelector('.card');
+    if (card) {
+        card.style.transform = 'translateX(-100%) rotate(-20deg)';
+        setTimeout(() => card.remove(), 300);
+    }
+        })
+
+        document.querySelectorAll('.dislike').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const card = e.target.closest('.card');
+                card.style.transform = 'translateX(-100%) rotate(-20deg)';
+                setTimeout(() => card.remove(), 300);
+            });
+        });
+    </script>
+
+<script>
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      showBrandLogo();
+
+      setTimeout(() => {
+        window.location.href = this.formAction;
+      }, 2400); // give animation time to play
+    });
+  });
+
+</script>
+
+<script src="/js/defaultTheme.js"></script>
+<script src="/js/app.js"></script>
+</body>

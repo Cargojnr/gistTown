@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Meta Tags for SEO -->
+    <meta
+      name="description"
+      content="Share gists secretly with end-to-end encryption. GistTown guarantees your privacy with 100% anonymity."
+    />
+    <meta
+      name="keywords"
+      content="anonymity, secret sharing, encrypted messaging, privacy, end-to-end encryption, anonymous communication"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Anonym" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GistTown - Share Gists Secretly" />
+    <meta
+      property="og:description"
+      content="Share your gists secretly with GistTown. Your privacy is our priority with full end-to-end encryption."
+    />
+    <meta property="og:image" content="/img/og-image.png" />
+    <meta property="og:url" content="https://yourwebsite.com" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="GistTown - Share Gists Secretly" />
+    <meta
+      name="twitter:description"
+      content="Share your gists secretly with GistTown. Your privacy is our priority with full end-to-end encryption."
+    />
+    <meta name="twitter:image" content="/img/twitter-image.png" />
+
+    <script
+      src="https://kit.fontawesome.com/ceb8cfc409.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/styles/style.css" />
+    <link rel="stylesheet" href="/styles/media.css" />
+
+    <title>GistTown - Share Gists Secretly || </title>
+
+    <style>
+      #logo {
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+      }
+       
+    </style>
+  </head>
+  <body>
+    <div id="brand-logo-container">
+      <h1 id="brand-logo">GistTown</h1>
+    </div>
+
+    <script>
+      window.addEventListener("load", function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        hideBrandLogo();
+      });
+
+      window.addEventListener("beforeunload", function () {
+        showBrandLogo();
+      });
+
+      function showBrandLogo() {
+        // const brandLogo = document.getElementById("brand-logo-container");
+        document.getElementById("brand-logo-container").style.display = "flex";
+      }
+
+      function hideBrandLogo() {
+        document.getElementById("brand-logo-container").style.display = "none";
+      }
+    </script>
+    <header>
+      <div class="container">
+        <div class="header">
+          <a href="/" id="logo"><i class="fas fa-mask fa-2x"></i></a>
+          <ul id="navbar">
+            <li class="navbar">
+              <a href="/register" 
+             >Sign Up <i class="fas fa-arrow-turn-up"></i
+              ></a>
+            </li>
+            <li class="navbar dropdown">
+              <div class="hamburger" id="hamburger">
+                <div class="bar" id="bar1"></div>
+                <!-- <div class="bar" id="bar2"></div> -->
+                <div class="bar" id="bar3"></div>
+              </div>
+              <div id="menu" class="menu-hidden" >
+                <div class="container">
+                  <div class="menu">
+                    <div class="menu-nav">
+                      <div class="menu-logo">
+                        <i class="fas fa-mask fa-2x"></i>
+                        <h4>GistTown</h4>
+                      </div>
+                      <ul class="pages">
+                        <h4>Create a secret</h4>
+                        <li><a href="/login">View secrets</a></li>
+                        <li><a href="/login">Share a secret</a></li>
+                      </ul>
+                      <ul class="account">
+                        <h4><i class="fas fa-user"></i> &nbsp;Account</h4>
+                        <li><a href="/login" class="">Login</a></li>
+                        <li><a href="/register" class="">Register</a></li>
+                      </ul>
+                    </div>
+                    <div class="theme-switch">
+                      <input
+                        type="checkbox"
+                        id="themeToggle"
+                        class="theme-toggle"
+                      />
+                      <label for="themeToggle" class="theme-toggle-label">
+                        <span class="sun-icon">☀️</span>
+                        <span class="moon-icon">🌙</span>
+                      </label>
+                    </div>
+                    <hr />
+                    <div class="menu-nav-alt">
+                      <ul class="info">
+                        <h4>Information</h4>
+                        <li><a href="">About</a></li>
+                        <li><a href="">Security</a></li>
+                        <li><a href="">Privacy</a></li>
+                        <li><a href="">Blog</a></li>
+                      </ul>
+                      <ul class="support">
+                        <h4>Support</h4>
+                        <li><a href="">FAQ</a></li>
+                        <li><a href="">Contact</a></li>
+                      </ul>
+                    </div>
+                    <p class="menu-lang">
+                      <i class="fas fa-globe"></i> English
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </header>
+    <div class="container mt-5">
+      <div class="hero">
+        <i class="fas fa-key fa-7x"></i>
+        <h1>Reset Password</h1>
+        <p>Reset your password. Protect your secrets</p>
+        <% if (locals.foundUser){ %>
+        <div class="form-container">
+          <h2> Hey <span  style="color: '<%=foundUser.color %>'; text-transform: uppercase;">@<%= foundUser.username %></span></h2>
+          <form action="/reset" method="POST" id="reset">
+            <input type="hidden" name="id" value="<%= foundUser.id %>" />
+            <div class="form-group">
+              <label for="new-password">Set a New Password</label>
+              <input
+                type="password"
+                name="newPassword"
+                class="form-control"
+                placeholder=""
+              />
+            </div>
+            <div class="form-group">
+              <label for="confirm-password">Confirm password</label>
+              <input
+                type="password"
+                name="confirmPassword"
+                class="form-control"
+                placeholder=""
+              />
+              <% if (locals.message) { %>
+              <p style="color: red; font-style: italic"><%= message %></p>
+              <% } %>
+            </div>
+            <button type="submit" class="btn btn-dark secret-btn">Reset</button>
+          </form>
+        </div>
+        <% } else { %>
+        <div class="form-container">
+          <form action="/search" method="POST" id="reset">
+            <div class="form-group">
+              <label for="search-account">Search for your Account</label>
+              <input
+                type="text"
+                name="findAccount"
+                class="form-control"
+                placeholder="Enter your Email"
+              />
+              <% if (locals.message) { %>
+              <p style="color: green; margin-top: 0.2rem"><%= message %></p>
+              <% } %>
+              <button type="submit" class="btn btn-dark secret-btn">
+                Search
+              </button>
+            </div>
+          </form>
+        </div>
+        <% } %>
+      </div>
+    </div>
+
+    <footer>
+      <div class="container">
+        <div class="footer">
+          <div class="footer-flex">
+            <div class="footer-logo">
+              <i class="fas fa-mask fa-2x"></i>
+              <h4>GistTown</h4>
+            </div>
+            <ul class="footer-child">
+              <h4>Secrets</h4>
+              <li><a href="">Create secrets</a></li>
+              <li><a href="">Share secrete</a></li>
+              <li><a href="">View secrets</a></li>
+              <li><a href=""></a></li>
+            </ul>
+
+            <ul class="footer-child">
+              <h4>Information</h4>
+              <li><a href="">About</a></li>
+              <li><a href="">Security</a></li>
+              <li><a href="">Privacy</a></li>
+              <li><a href="">Blog</a></li>
+            </ul>
+
+            <ul class="footer-child">
+              <h4>Help</h4>
+              <li><a href="">FAQ</a></li>
+              <li><a href="">Contact</a></li>
+            </ul>
+          </div>
+
+          <center>
+            <p class="viewed">
+              Secrets <span style="color: #999">created | veiwed: 0</span>
+            </p>
+          </center>
+          <ul class="socials">
+            <li>
+              <a target="_blank" href="https://t.me/@iamamebo"><i class="fab fa-telegram fa-2x"></i></a>
+            </li>
+            <li>
+              <a target="_blank" href=""><i class="fab fa-instagram fa-2x"></i></a>
+            </li>
+            <li>
+              <a target="_blank" href=""><i class="fab fa-linkedin fa-2x"></i></a>
+            </li>
+            <li>
+              <a target="_blank" href=""><i class="fab fa-github fa-2x"></i></a>
+            </li>
+          </ul>
+          <p class="footer-text">
+            <a href="">GistTown</a> lets you share gists secretly online,
+            End-to-End encrypted. One time. Keep anonymous gists out of email,
+            Whatsapp, Telegram or any other communication channel. Here you are
+            100% hidden to users as your privacy is our priority.
+          </p>
+          <ul class="footer-links">
+            <li>&copy; <%= new Date().getFullYear() %></li>
+            <li><a href="">Privacy Policy</a></li>
+            <li><a href="">Cookie Policy</a></li>
+            <li>Status</li>
+          </ul>
+          <p class="lang">English</p>
+          
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const header = document.querySelector("header");
+      const nextSection = document
+        .querySelector("body")
+        .querySelector("section:not(.active)");
+      const logo = document.getElementById("logo");
+
+      window.addEventListener("scroll", function () {
+        const scrolled = window.scrollY > 0;
+        if (scrolled) {
+          let body = document.querySelector("body");
+          body.style.overflowY = "scroll";
+          header.classList.add("scrolled");
+          logo.style.opacity = 1;
+        } else {
+          header.classList.remove("scrolled");
+          logo.style.opacity = 0;
+        }
+      });
+    </script>
+    <script src="/js/app.js"></script>
+  </body>
+</html>

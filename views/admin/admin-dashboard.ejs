@@ -1,0 +1,111 @@
+ <%- include('layout') %>
+<body>
+        <div class="container">
+    
+            <div class="sidebar">
+                <div class="first-item">
+                  <h1 >Anonym</h1>
+                </div>
+          
+                <div>
+                  <div class="card">
+                    <div class="card-title">{title}</div>
+                    <div class="card-body">{body}</div>
+                  </div>
+
+                  <div class="card">
+                    <div class="card-title">{title}</div>
+                    <div class="card-body">{body}</div>
+                  </div>
+
+                  <div class="card">
+                    <div class="card-title">{title}</div>
+                    <div class="card-body">{body}</div>
+                  </div>
+
+                </div>
+              </div>
+
+            <div id="main-content">
+                <div id="navbar" >
+                  <ul class="navbar">
+                  <li class='nav'><a  class="current" href="/admin-dashboard">Dashboard</a></li>
+                  <li class='nav'><a href="/admin/reviews">Reviews</a></li>
+                  <li class='nav'><a href="/admin/reports">Reports</a></li>
+               
+                </ul>
+                <hr />
+               </div>
+          
+
+               
+                <div class="main-content" style="display:  grid; grid-template-columns: repeat(3, 1fr); gap: 20px">
+                    <% if (locals.reviews) { %>
+                        <div class="card">
+                            <div class="card-title">No. of Reviews</div>
+                            <div class="card-body"><%= reviews.length %></div>
+                        <!-- <button>Click Me</button> -->
+                          </div>
+                    <% } %>
+                   
+    
+                    <% if (locals.users) { %>
+                        <div class="card">
+                            <div class="card-title">No. of Users</div>
+                            <div class="card-body"><%= users.length %></div>
+                            <!-- <button>Click Me</button> -->
+                          </div>
+                    <% } %>
+
+                    <% if (locals.feeds) { %>
+                        <div class="card">
+                            <div class="card-title">No. of Content Posted</div>
+                            <div class="card-body"><%= feeds.length %></div>
+                            <!-- <button>Click Me</button> -->
+                          </div>
+                    <% } %>
+
+                    <% if (locals.pendingReport) { %>
+                        <div class="card">
+                            <div class="card-title">No. of Pending Reports</div>
+                            <div class="card-body"><%= pendingReport.length %></div>
+                            <!-- <button>Click Me</button> -->
+                          </div>
+                    <% } %>
+
+                    <% if (locals.flaggedReport) { %>
+                        <div class="card">
+                            <div class="card-title">No. of Flagged Content</div>
+                            <div class="card-body"><%= flaggedReport.length %></div>
+                            <!-- <button>Click Me</button> -->
+                          </div>
+                    <% } %>
+                     
+                </div>
+              </div>
+            
+            <script>
+                    document.querySelectorAll(".read").forEach((button) => {
+        button.addEventListener("click", (e) => {
+          const contentSpan = e.target.previousElementSibling;
+          const isTruncated = e.target.textContent === "Read More";
+    
+          if (isTruncated) {
+            // Show full content
+            contentSpan.textContent = e.target.dataset.full;
+            e.target.textContent = "See Less";
+          } else {
+            // Reapply truncated content
+            contentSpan.textContent = e.target.dataset.truncated;
+            e.target.textContent = "Read More";
+          }
+        });
+      });
+            </script>
+        </div>
+
+</body>
+   
+
+
+

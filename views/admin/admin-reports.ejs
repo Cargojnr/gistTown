@@ -1,0 +1,126 @@
+
+
+<%- include('layout') %>
+<body>
+        <div class="container">
+    
+            <div class="sidebar">
+                <div class="first-item">
+                  <h1 >Anonym</h1>
+                </div>
+          
+                <div>
+                  <div class="card">
+                    <div class="card-title">Pending Reports</div>
+                    <div class="card-body">{body}</div>
+                  </div>
+
+                  <div class="card">
+                    <div class="card-title">Resolved Reports</div>
+                    <div class="card-body">{body}</div>
+                  </div>
+
+                  <div class="card">
+                    <div class="card-title">Flagged Reports</div>
+                    <div class="card-body">{body}</div>
+                  </div>
+
+                </div>
+              </div>
+
+            <div id="main-content">
+                <div id="navbar" >
+                  <ul class="navbar">
+                  <li class='nav'> <a href="/admin-dashboard">Dashboard</a></li>
+                  <li class='nav'> <a href="/admin/reviews">Reviews</a></li>
+                  <li class='nav'><a class="current" href="/admin/reports">Reports</a></li>
+               
+                </ul>
+                <hr />
+               </div>
+          
+               
+                <div class="main-content">
+                    <h2>Reported Content</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Reported By</th>
+                                <th>Secret</th>
+                                <th>Comment</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% reports.forEach(report => { %>
+                                <tr>
+                                    <td><%= report.reported_by_username %></td>
+                                    <td>
+                                        <%= report.secret|| '' %>
+                                        <p>
+                                            <span class="content">
+                                              <% if (report.secret.split(" ").length > 200) { %>
+                                                <%= report.secret.substring(0, 500) + "..." %>
+                                              <% } else { %>
+                                                <%= report.secret %>
+                                              <% } %>
+                                            </span>
+                                            <% if (report.secret.split(" ").length > 200) { %>
+                                                 <button
+                                                class="read"
+                                                style="
+                                                  background: none;
+                                                  font-size: 1rem;
+                                                  padding: 0;
+                                                  font-weight: bold;
+                                                "
+                                                data-full="<%= report.secret %>"
+                                                data-truncated="<%= report.secret.substring(0, 500) + '...' %>"
+                                              >
+                                                Read More
+                                              </button>
+                                             
+                                            <% } %>
+                                          </p>
+                                    </td>
+                                    <td><%= report.comment || '' %></td>
+                                    <td><%= report.reason %></td>
+                                    <td><%= report.status %></td>
+                                    <td>
+                                        <form method="POST">
+                                            <button formaction="/admin/report/<%= report.id %>/resolve" class="resolve-btn" data-id="<%= report.id %>">Resolve</button>
+                                            <button formaction="/admin/report/<%= report.id %>/flag" class="flag-btn" data-id="<%= report.id %>">Flag</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+          
+                </div>
+              </div>
+            
+            <script>
+                    document.querySelectorAll(".read").forEach((button) => {
+        button.addEventListener("click", (e) => {
+          const contentSpan = e.target.previousElementSibling;
+          const isTruncated = e.target.textContent === "Read More";
+    
+          if (isTruncated) {
+            // Show full content
+            contentSpan.textContent = e.target.dataset.full;
+            e.target.textContent = "See Less";
+          } else {
+            // Reapply truncated content
+            contentSpan.textContent = e.target.dataset.truncated;
+            e.target.textContent = "Read More";
+          }
+        });
+      });
+            </script>
+        </div>
+</div>
+</body>
+

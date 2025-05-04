@@ -1,0 +1,311 @@
+<%- include('layout') %>
+    <style>
+        body {
+            height: 100vh;
+            /* background-color: #121212; */
+            /* color: #fff; */
+            /* font-family: Arial, sans-serif; */
+        }
+        /* .container {
+            text-align: center;
+        } */
+
+        #dating-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            margin: 1rem auto;
+        }
+        #card-container {
+            padding: 5% 0;
+            position: relative;
+            width: 300px;
+            height: 400px;
+            perspective: 1000px;
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            position: absolute;
+            transform-origin: center;
+            transition: transform 0.5s ease-in-out;
+        }
+        .card:hover {
+            transform: rotateY(15deg) rotateX(10deg) scale(1.05);
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        .actions button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
+        .dislike {
+            background-color: #ff4c4c;
+            color: white;
+        }
+        .like {
+            background-color: #4caf50;
+            color: white;
+        }
+    </style>
+<body data-theme="<%= theme %>" data-mode="<%= mode %>">
+
+    <script>
+        socket.on('new-secret', (data) => {
+            // Display a modern toast notification
+            const notification = document.createElement('div');
+            notification.innerText = `New secret shared: ${data.secret}`;
+            notification.style.position = 'fixed';
+            notification.style.bottom = '10px';
+            notification.style.right = '10px';
+            notification.style.backgroundColor = '#4caf50';
+            notification.style.color = '#fff';
+            notification.style.padding = '10px';
+            notification.style.borderRadius = '5px';
+            document.body.appendChild(notification);
+    
+            // Remove notification after 5 seconds
+            setTimeout(() => notification.remove(), 5000);
+        });
+    </script>
+
+    <div class="container">
+        <div id="tutorial-overlay" class="hidden">
+            <div class="tutorial-step">
+              <div class="tutorial-text">
+                            <h2> <span style="text-transform: capitalize;"><%= username %></span> Welcome to our World of Anonymity!</h2>
+                <p>This is a Safe Space, where you can find comfort and anonymous support.<br> Feel free to share or read secrets in a judgment-free zone.</p>
+              </div>
+    
+                <div id="progress-bar-container">
+                    <div id="progress-bar"></div>
+                </div>
+                <button id="next-step">Next</button>
+                <button class="skip-btn">Skip</button>
+            </div>
+        </div>
+        <div id="dating-container">
+            <h1>Dating & Relationship Advice</h1>
+            <div id="card-container">
+                <div class="card">
+                    <p class="advice-text">"I took my date to a fancy dinner, she spent the whole time texting her ex..."</p>
+                    <div class="actions">
+                        <button class="dislike">😬 L</button>
+                        <button class="like">🔥 Relatable</button>
+                    </div>
+                </div>
+    
+                <div class="card">
+                    <p class="advice-text">"I took my date to a fancy dinner, she spent the whole time texting her ex..."</p>
+                    <div class="actions">
+                        <button class="dislike">😬 L</button>
+                        <button class="like">🔥 Relatable</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+let step = 0;
+let currentStep = 1;
+const totalSteps = 2;
+const tutorialOverlay = document.getElementById('tutorial-overlay');
+const nextButton = document.getElementById('next-step');
+const tutorialStep = document.querySelector('.tutorial-step');
+const progressBar = document.getElementById('progress-bar');
+
+
+// Back Button Functionality
+
+
+// Function to update the progress bar
+function updateProgressBar() {
+    const progress = (currentStep / totalSteps) * 100;
+    progressBar.style.width = `${progress}%`;
+}
+
+// Skip Tutorial
+document.querySelectorAll('.skip-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+        tutorialOverlay.classList.add('hidden'); // Hide overlay on skip
+        localStorage.setItem('tutorialCompleted', true);
+    });
+});
+
+// Show the tutorial step directly
+function showTutorialStep() {
+    tutorialStep.classList.remove('hidden'); // Ensure tutorial step is visible
+}
+
+// Next Button Functionality
+nextButton.addEventListener('click', () => {
+    step++;
+
+    if (currentStep < totalSteps) {
+        currentStep++;
+        updateProgressBar();
+        showTutorialStep();  // Ensure tutorial step is shown immediately
+    }
+
+    if (step === 1) {
+        // Step 1: Highlight the dice images
+        document.querySelectorAll('.card').forEach(card => {
+          card.classList.add('highlight')
+          
+        })
+        
+
+
+        // Update tutorial instructions for Step 2
+        tutorialStep.innerHTML = `
+            <h2>Step 2</h2>
+            <p>Use the plus button to share your anonymous content</p>
+              <div id="progress-bar-container">
+                        <div id="progress-bar"></div>
+                    </div>
+            <button class="skip-btn">Got it</button>
+        `;
+
+        attachSkipButtonListener();  // Reattach listener for Skip button
+    }  else{
+        // End tutorial
+        tutorialOverlay.classList.add('hidden');
+        localStorage.setItem('tutorialCompleted', true);
+    }
+});
+
+// const backButton = document.getElementById('back-step');
+
+// backButton.addEventListener('click', () => {
+//     if (currentStep > 1) {
+//         currentStep--;
+//         step--;
+//         updateProgressBar();
+//         updateTutorialStep(); // Show the previous tutorial step
+//     }
+// });
+
+// Close Tutorial on Page Load Check
+window.onload = () => {
+    // Temporarily show tutorial for testing purposes (ignore localStorage check for now)
+    if(localStorage.getItem('tutorialCompleted')){
+        tutorialOverlay.classList.add('hidden');
+    } else {
+        tutorialOverlay.classList.remove('hidden');
+    }
+   
+};
+
+// Function to Attach Skip Button Listeners Dynamically
+function attachSkipButtonListener() {
+    document.querySelectorAll('.skip-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            tutorialOverlay.classList.add('hidden');
+            localStorage.setItem('tutorialCompleted', true);
+        });
+    });
+}
+
+
+// Function to highlight an element and add a tooltip
+function highlightElement(element, tooltipText) {
+    element.classList.add('highlight'); // Highlight the element
+    const tooltip = document.createElement('div');
+    tooltip.classList.add('tooltip');
+    tooltip.textContent = tooltipText;
+    element.appendChild(tooltip);
+
+    // Position the tooltip near the element
+    const rect = element.getBoundingClientRect();
+    tooltip.style.top = `${rect.top - 30}px`;  // Position above the element
+    tooltip.style.left = `${rect.left + rect.width / 2 - tooltip.offsetWidth / 2}px`; // Center the tooltip above the element
+
+    // Show the tooltip
+    setTimeout(() => {
+        tooltip.classList.add('show');
+    }, 200);
+}
+
+// Example: Highlighting the 'Next' button with a tooltip
+highlightElement(nextButton, "Click here to move to the next step!");
+
+    </script>
+    <script>
+        let startX;
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const { offsetX, offsetY, target } = e;
+                const { offsetWidth, offsetHeight } = target;
+                const xRotation = ((offsetY / offsetHeight) - 0.5) * 20;
+                const yRotation = ((offsetX / offsetWidth) - 0.5) * 20;
+                target.style.transform = `rotateX(${xRotation}deg) rotateY(${yRotation}deg)`;
+            });
+            card.addEventListener('mouseleave', (e) => {
+                e.target.style.transform = 'rotateY(0) rotateX(0)';
+            });
+            
+            // Touch events for mobile swipe
+            card.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+            });
+            
+            card.addEventListener('touchmove', (e) => {
+                let moveX = e.touches[0].clientX - startX;
+                card.style.transform = `translateX(${moveX}px) rotate(${moveX / 10}deg)`;
+            });
+            
+            card.addEventListener('touchend', (e) => {
+                let moveX = e.changedTouches[0].clientX - startX;
+                if (moveX > 100) {
+                    card.style.transform = 'translateX(100%) rotate(20deg)';
+                    setTimeout(() => card.remove(), 300);
+                } else if (moveX < -100) {
+                    card.style.transform = 'translateX(-100%) rotate(-20deg)';
+                    setTimeout(() => card.remove(), 300);
+                } else {
+                    card.style.transform = 'translateX(0) rotate(0)';
+                }
+            });
+        });
+
+        document.querySelectorAll('.like').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const card = e.target.closest('.card');
+                card.style.transform = 'translateX(100%) rotate(20deg)';
+                setTimeout(() => card.remove(), 300);
+            });
+        });
+
+        document.querySelectorAll('.dislike').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const card = e.target.closest('.card');
+                card.style.transform = 'translateX(-100%) rotate(-20deg)';
+                setTimeout(() => card.remove(), 300);
+            });
+        });
+    </script>
+
+<script src="/js/app.js"></script>
+<% if (locals.theme) { %>
+  <script src="/js/theme.js"></script>
+<% } else {%>
+  <script src="/js/defaultTheme.js"></script>
+  <% } %>
+</body>

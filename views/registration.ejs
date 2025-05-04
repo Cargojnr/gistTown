@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Meta Tags for SEO -->
+    <meta
+      name="description"
+      content="Share gists secretly with end-to-end encryption. GistTown guarantees your privacy with 100% anonymity."
+    />
+    <meta
+      name="keywords"
+      content="anonymity, secret sharing, encrypted messaging, privacy, end-to-end encryption, anonymous communication"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="GistTown" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GistTown - Share Gists Secretly" />
+    <meta
+      property="og:description"
+      content="Share your gist secretly with GistTown. Your privacy is our priority with full end-to-end encryption."
+    />
+    <meta property="og:image" content="/img/og-image.png" />
+    <meta property="og:url" content="https://yourwebsite.com" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="GistTown - Share Gists secretly" />
+    <meta
+      name="twitter:description"
+      content="Share your gists secretly with GistTown. Your privacy is our priority with full end-to-end encryption."
+    />
+    <meta name="twitter:image" content="/img/twitter-image.png" />
+
+    <script
+      src="https://kit.fontawesome.com/ceb8cfc409.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/styles/style.css" />
+    <link rel="stylesheet" href="/styles/new.css" />
+    <link rel="stylesheet" href="/styles/media.css" />
+
+    <title>GistTown - Share gists secretly || Signup An Account.</title>
+
+    <style>
+
+:root {
+  --primary-color: #7f5af0;
+  --secondary-color: #2cb67d;
+  --text-color: #ffffff;
+  --body-bg: linear-gradient(135deg,#6a7bff, #a0aaff );
+  --container-bg: #1a1a2e;
+  --button-text: #ffffff;
+}
+
+[data-theme="light"] {
+  --primary-color: #6246ea;
+  --secondary-color: #2cb67d;
+  --text-color: #16161a;
+  --body-bg: linear-gradient(135deg, #a0aaff, #6a7bff);
+  --container-bg: #ffffff;
+  --button-text: #16161a;
+}
+
+.scrolled {
+  background: var(--container-bg);
+}
+      #logo {
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+      }
+
+      #brand-logo-container{
+        background: var(--body-bg);
+      }
+  
+        body {
+          font-family: 'IBM Plex Sans', sans-serif;
+          background: var(--body-bg);
+
+        }
+  
+        .form-container {
+          /* background: rgba(0, 0, 0, 0.5); */
+          background: var(--container-bg);
+          width: 100%;
+          padding: 1.5rem !important;
+        }
+  
+        .form-control {
+          border: 2px solid #1e2a3f;
+        }
+  
+        .form-control:focus {
+          border-color: #6a7bff !important;
+          outline: none;
+        }
+  
+        .btn {
+          background-color: #6a7bff;
+          color: #fff;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+  
+        .btn:hover {
+          background-color: #1e2a3f;
+        }
+  
+        footer {
+          padding: 2rem 0;
+        }
+
+  
+        @media (max-width: 768px) {
+          .hero h1 {
+            font-size: 2.5rem;
+          }
+  
+          .hero p {
+            font-size: 1.2rem;
+          }
+  
+          .form-container {
+            padding: 1.5rem;
+          }
+        }
+
+        .footer-part {
+          color: #777;
+          width: 2px;
+          height: 50px;
+
+        }
+      </style>
+  </head>
+  <body>
+    <div id="brand-logo-container">
+      <h1 id="brand-logo">GistTown</h1>
+    </div>
+
+    <script>
+      window.addEventListener("load", function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        hideBrandLogo();
+      });
+
+      window.addEventListener("beforeunload", function () {
+        showBrandLogo();
+      });
+
+      function showBrandLogo() {
+        // const brandLogo = document.getElementById("brand-logo-container");
+        document.getElementById("brand-logo-container").style.display = "flex";
+      }
+
+      function hideBrandLogo() {
+        document.getElementById("brand-logo-container").style.display = "none";
+      }
+    </script>
+
+    <header>
+      <div class="container">
+        <div class="header">
+          <a href="/" id="logo"><i class="fas fa-mask fa-2x"></i></a>
+          <ul id="navbar">
+            <li class="navbar">
+              <a href="/login"
+                >Sign In <i class="fas fa-right-to-bracket"></i
+              ></a>
+            </li>
+            <li class="navbar dropdown">
+              <div class="hamburger" id="hamburger">
+                <div class="bar" id="bar1"></div>
+                <!-- <div class="bar" id="bar2"></div> -->
+                <div class="bar" id="bar3"></div>
+              </div>
+              <div id="menu" class="menu-hidden">
+                <div class="container">
+                  <div class="menu">
+                    <div class="menu-nav">
+                      <div class="menu-logo">
+                        <i class="fas fa-key fa-2x"></i>
+                        <h4>GistTown</h4>
+                      </div>
+                      <ul class="pages">
+                        <h4>Create a secret</h4>
+                        <li><a href="">View secrets</a></li>
+                        <li><a href="">Share a secret</a></li>
+                      </ul>
+                      <ul class="account">
+                        <h4><i class="fas fa-user"></i> &nbsp;Account</h4>
+                        <li><a href="/login" class="">Login</a></li>
+                        <li><a href="/register" class="">Register</a></li>
+                      </ul>
+                    </div>
+                    <div class="theme-switch">
+                      <input
+                        type="checkbox"
+                        id="themeToggle"
+                        class="theme-toggle"
+                      />
+                      <label for="themeToggle" class="theme-toggle-label">
+                        <span class="sun-icon">☀️</span>
+                        <span class="moon-icon">🌙</span>
+                      </label>
+                    </div>
+                    <hr />
+                    <div class="menu-nav-alt">
+                      <ul class="info">
+                        <h4>Information</h4>
+                        <li><a href="">About</a></li>
+                        <li><a href="">Security</a></li>
+                        <li><a href="">Privacy</a></li>
+                        <li><a href="">Blog</a></li>
+                      </ul>
+                      <ul class="support">
+                        <h4>Support</h4>
+                        <li><a href="">FAQ</a></li>
+                        <li><a href="">Contact</a></li>
+                      </ul>
+                    </div>
+                    <p class="menu-lang">
+                      <i class="fas fa-globe"></i> English
+                    </p>
+                    <button id="close">Close</button>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+<div class="container">
+    <div class="hero">
+        <i style="color: var(--text-color)" class="fas fa-lock fa-5x"></i>
+        <h1>Create an Account</h1>
+        <p>Your privacy is our priority. Sign up and keep your secrets safe.</p>
+  
+        <div class="form-container">
+          <form action="/register" method="POST" id="register">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" name="username" class="form-control" placeholder="Enter your username" required />
+            </div>
+            <% if (locals.message) { %>
+              <p style="color: red; font-style: italic"><%= message %></p>
+              <% } %>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" name="email" class="form-control" placeholder="Enter your email" required />
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" name="password" class="form-control" placeholder="Create a password" required />
+            </div>
+            <button type="submit" class="btn">Sign Up</button>
+          </form>
+          <div class="login-footer">
+            <p>Forgot Password? <a href="/reset" style="color: #6a7bff;">Reset Password</a></p>
+          </div>
+        </div>
+      </div>
+</div>
+    
+
+    <footer>
+      <div class="container">
+        <div class="footer">
+          <div class="footer-flex">
+            <div class="footer-logo">
+              <i class="fas fa-mask fa-2x"></i>&nbsp;
+              <h4>GistTown</h4>
+            </div>
+           <div class="footer-children">
+          <center>
+            <p class="viewed">
+              Gists <span style="color: #999">created | veiwed: 0</span>
+            </p>
+          </center>
+          <hr class="footer-part" />
+          <ul class="socials">
+            <li>
+              <a target="_blank" href="link:https://t.me/iamamebo"><i class="fab fa-telegram fa-2x"></i></a>
+            </li>
+            <li>
+              <a target="_blank" href=""><i class="fab fa-instagram fa-2x"></i></a>
+            </li>
+            <li>
+              <a target="_blank" href=""><i class="fab fa-linkedin fa-2x"></i></a>
+            </li>
+            <li>
+              <a target="_blank" href=""><i class="fab fa-github fa-2x"></i></a>
+            </li>
+          </ul>
+
+          <hr class="footer-part"/>
+          <p class="lang">English</p>
+                     
+        </div>
+        </div>
+      </div>
+        <div class="footer-text">
+            <i class="fas fa-mask"></i>
+            <p>&copy; <%= new Date().getFullYear() %> GistTown. All Rights Reserved.</p>
+          </div>
+    </footer>
+
+    <script>
+      const header = document.querySelector("header");
+      const nextSection = document
+        .querySelector("body")
+        .querySelector("section:not(.active)");
+      const logo = document.getElementById("logo");
+
+      window.addEventListener("scroll", function () {
+        const scrolled = window.scrollY > 0;
+        if (scrolled) {
+          let body = document.querySelector("body");
+          body.style.overflowY = "scroll";
+          header.classList.add("scrolled");
+          logo.style.opacity = 1;
+        } else {
+          header.classList.remove("scrolled");
+          logo.style.opacity = 0;
+        }
+      });
+    </script>
+
+
+
+    <script src="/js/app.js"></script>
+    <script src="/js/defaultTheme.js"></script>
+  </body>
+</html>

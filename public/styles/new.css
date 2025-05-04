@@ -1,0 +1,92 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300);
+
+.color input[type="radio"] {
+    display: none !important;
+}
+
+input[type="radio"]:checked + label span {
+    transform:scale(1.25);
+}
+
+input[type="radio"]:checked + label .cyberpunk {
+    border: 2px solid #00ffff;
+}
+input[type="radio"]:checked + label .relaxing{
+    border: 2px solid #4f8a8b;
+}
+input[type="radio"]:checked + label .high-contrast{
+    border: 2px solid #ffcc00;
+}
+input[type="radio"]:checked + label .gradient-glow {
+    border: 2px solid #ff8c00;
+}
+input[type="radio"]:checked + label .retro {
+    border: 2px solid #00ccff;
+}
+input[type="radio"]:checked + label .monochrome {
+    border: 2px solid #808080;
+}
+input[type="radio"]:checked + label .warm-sunset {
+    border: 2px solid #ff4500;
+}
+input[type="radio"]:checked + label .violet {
+    border: 2px solid #501962;
+}
+input[type="radio"]:checked + label .purple {
+    border: 2px solid #312a64;
+}
+input[type="radio"]:checked + label .pink {
+    border: 2px solid #ff79c6;
+}
+
+ .color label {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+ .color label:hover span {
+    transform: scale(1.25);
+}
+
+.color label span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.2s ease-in-out;
+}
+
+ label span.cyberpunk{
+    background: #00ffff;
+}
+ label span.relaxing{
+    background: #4f8a8b;
+}
+ label span.high-contrast{
+    background: #ffcc00;
+}
+ label span.gradient-glow{
+    background: #ff8c00;
+}
+ label span.retro{
+    background: #00ccff;
+}
+ label span.monochrome{
+    background: #808080;
+}
+ label span.warm-sunset{
+    background: #ff4500;
+}
+ label span.violet{
+    background: #a333c8;
+}
+ label span.purple{
+    background: #6435c9;
+}
+ label span.pink{
+    background: #e03997;
+}
+
+

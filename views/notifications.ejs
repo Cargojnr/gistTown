@@ -1,0 +1,274 @@
+<%- include('layout') %>
+
+<body >
+  <!-- <div id="brand-logo-container">
+        <h1 id="brand-logo">Anonym</h1>
+    </div>
+
+    <script>
+        window.addEventListener("load", function(){
+        window.scrollTo({top: 0, behavior: 'smooth'});
+        hideBrandLogo();
+    });
+
+    window.addEventListener("beforeunload", function(){
+        showBrandLogo();
+    })
+
+    function showBrandLogo(){
+        // const brandLogo = document.getElementById("brand-logo-container");
+        document.getElementById("brand-logo-container").style.display = "flex";
+  }
+
+
+    function hideBrandLogo(){
+        document.getElementById("brand-logo-container").style.display = "none";
+    }
+    </script> -->
+
+  <div id="notifications">
+    <div class="container">
+      <center>
+        <h2 class="display-3">Notifications</h2>
+      </center>
+      <div class="notifications">
+        <ul id="secrets">
+          <% if (locals.loginMessage) { %>
+          <li class="secret">
+            <div class="card">
+              <h4>Login Message</h4>
+              <p><%= loginMessage %></p>
+            </div>
+          </li>
+          <% } %> <% if (locals.notifications && locals.notifications.length >
+          0) { %> <% notifications.forEach((notification)=> { %>
+          <li class="secret">
+            <a
+              class="message"
+              href="<%= notification.notificationType === 'secret' ? 'secret/' + notification.id : '' %>"
+            >
+              <div class="card">
+                <div class="skeleton-avatar shimmer"></div>
+                <div class="skeleton-lines">
+                  <div class="skeleton-line shimmer"></div>
+                  <div class="skeleton-line shimmer short"></div>
+                </div>
+                <h4>
+                  <% if (notification.notificationType === 'secret') { %>
+                     New secret Posted by ~~ @anonym<%= notification.user_id %> ~~
+                      <% } %>
+                       <% if (notification.notificationType === 'comment') { %>
+                  New comment on your secret from ~~ @anonym<%= notification.user_id %> ~~
+                  <% } %> 
+                  <% if (notification.notificationType === 'reaction') { %> 
+                    <% if (notification.type === "like") { %>
+                         Your secret got a new 👍 reaction!. Total: <%= notification.count %>. 
+                     <% } else if (notification.type === "laugh") { %>
+                     Your secret got a new 😂 reaction!. Total: <%= notification.count %>. 
+                     <% } else if (notification.type === "gasp") { %>
+                         Your secret got a new 😱 reaction!. Total: <%= notification.count %>. 
+                         <% } else if(notification.type === "cry") { %> 
+                            Your secret got a new 😢 reaction!. Total: <%= notification.count %>.
+                     <% }%> 
+                     <% } %>
+                </h4>
+                <p>
+                  <span class="content">
+                    <% if (notification.notificationType === 'secret') { %> 
+                        <%if (notification.secret.split(" ").length > 100) { %> 
+                            <%=notification.secret.substring(0, 100) + "..." %>
+                             <% } else { %> 
+                           <%= notification.secret %> 
+                       <% } %>
+                    <% } %> 
+                    <% if(notification.notificationType === 'comment') { %>
+                        <% if (notification.comment.split(" ").length > 100) { %> 
+                           <%=notification.comment.substring(0, 100) + "..." %>
+                         <% } else{ %> 
+                             <%= notification.comment%> 
+                        <% } %>
+                    <% } %>
+                    <% if(notification.notificationType === 'reaction') { %>
+                        <% if (notification.secret.split(" ").length > 100) { %> 
+                           "<%=notification.secret.substring(0, 100) + "..." %>"
+                         <% } else{ %> 
+                             "<%= notification.secret%>"
+                        <% } %>
+                    <% } %>
+                  </span>
+
+                  <% if (notification.notificationType === 'secret') { %>
+                  <a
+                    style="
+                      background: none;
+                      font-size: 1rem;
+                      padding: 0;
+                      font-weight: bold;
+                    "
+                    href="secret/<%= notification.id %>"
+                    >Read More</a
+                  >
+                  <% } %> <% if (notification.notificationType === 'comment') {
+                  %>
+                  <a
+                    style="
+                      background: none;
+                      font-size: 1rem;
+                      padding: 0;
+                      font-weight: bold;
+                    "
+                    href="secret/<%= notification.id %>"
+                    >View Comment</a
+                  >
+                  <% } %> <% if (notification.notificationType === 'reaction') {
+                  %>
+                  <a
+                    style="
+                      background: none;
+                      font-size: 1rem;
+                      padding: 0;
+                      font-weight: bold;
+                    "
+                    href="secret/<%= notification.id %>"
+                    >View</a
+                  >
+                  <% } %>
+                </p>
+              </div>
+            </a>
+          </li>
+          <% }); %> <% } else { %>
+          <p>No new notifications</p>
+          <% } %>
+          <li class="secret">
+            <div class="card">
+              <h4>Welcome Message</h4>
+              <p>
+                Welcome <%= username %> to the anonymous community. Your
+                anonymous tag is ~@anonymous<%= userId %>~. Have fun.
+              </p>
+            </div>
+          </li>
+        </ul>
+        <hr />
+        <br />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const header = document.querySelector("header");
+      const nextSection = document
+        .querySelector("body")
+        .querySelector("section:not(.active)");
+      const logo = document.getElementById("logo");
+
+      window.addEventListener("scroll", function () {
+        const scrolled = window.scrollY > 0;
+        if (scrolled) {
+          let body = document.querySelector("body");
+          body.style.overflowY = "scroll";
+          header.classList.add("scrolled");
+        } else {
+          header.classList.remove("scrolled");
+        }
+      });
+    });
+    document.querySelector(".counter").textContent = "0";
+
+    const notificationList = document.querySelector("#secrets");
+
+    // const socket = io();
+
+    // Listen for new notifications
+    socket.on("new-notification", (data) => {
+      const { type, data: notificationData } = data;
+
+      // Create a new notification element
+      const li = document.createElement("li");
+      li.classList.add("secret");
+
+      if (type === "comment") {
+        li.innerHTML = `
+                    <a class="message" href="secret/${notificationData.id}">
+                        <div class="card">
+                            <h4>New comments on your secret</h4>
+                            <p>${notificationData.comment.substring(0, 100)} ...
+                                <a style="background: none; font-size: 1rem; padding: 0; font-weight: bold;" 
+                                   href="secret/${
+                                     notificationData.id
+                                   }">View comment</a>
+                            </p>
+                            <p class="timestamp">${
+                              notificationData.timestamp
+                            }</p>
+                        </div>
+                    </a>
+                `;
+      } else if (type === "secret") {
+        li.innerHTML = `
+                    <a class="message" href="secret/${notificationData.id}">
+                        <div class="card">
+                            <h4>New secret shared by ~@anonym${
+                              notificationData.user_id
+                            }~</h4>
+                            <p>${notificationData.secret.substring(0, 100)} ...
+                                <a style="background: none; font-size: 1rem; padding: 0; font-weight: bold;" 
+                                   href="secret/${notificationData.id}">Read</a>
+                            </p>
+                        </div>
+                    </a>
+                `;
+      } else if (type == "reaction") {
+        console.log(notificationData);
+        li.innerHTML = `
+                     <a class="message" href="secret/${notificationData.id}">
+                        <div class="card">
+                            <h4>Your secret received a new "${notificationData.reaction}" reaction! Total: ${notificationData.count}.</h4>
+                        </div>
+                    </a>
+                    `;
+      }
+      if (type === "top-secret") {
+        li.innerHTML = `
+                    <a class="message" href="secret/${data.data.id}">
+                        <div class="card">
+                            <h4>Most discussed secret goes to ~~@anonym${
+                              data.data.userId
+                            }~~</h4>
+                            <p>${data.data.secret.substring(0, 100)} ...
+                                <a style="background: none; font-size: 1rem; padding: 0; font-weight: bold;" 
+                                   href="secret/${data.data.id}">Read</a>
+                            </p>
+                        </div>
+                    </a>
+                `;
+      } else {
+        li.innerHTML = `
+                    <a class="message" href="secret/${notificationData.id}">
+                        <div class="card">
+                            <h4>Most discussed secret goes to ~~@anonym${
+                              notificationData.userId
+                            }~~</h4>
+                            <p>${notificationData.secret.substring(0, 100)} ...
+                                <a style="background: none; font-size: 1rem; padding: 0; font-weight: bold;" 
+                                   href="secret/${notificationData.id}">Read</a>
+                            </p>
+                        </div>
+                    </a>
+          `;
+      }
+
+      // Append the new notification to the list
+      notificationList.prepend(li);
+
+      // Increment the notification counter
+      const counter = document.querySelector(".counter");
+      const currentCount = parseInt(counter.textContent) || 0;
+      counter.textContent = currentCount + 1;
+    });
+  </script>
+  <script src="/js/app.js"></script>
+  <script src="/js/defaultTheme.js"></script>
+</body>

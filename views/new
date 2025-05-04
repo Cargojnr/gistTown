@@ -1,0 +1,262 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/ceb8cfc409.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="/styles/media.css">
+    <link rel="stylesheet" href="/styles/new.css">
+    <title>Document</title>
+    <style>
+        .btn:hover {
+            background: dark<%=color%> !important;
+        }
+
+        #scrollToTopBtn:hover {
+            background: dark<%=color%> !important;
+        }
+
+        .card a:active {
+            color: dark<%=color%>;
+        }
+    </style>
+</head>
+
+
+
+</html>
+
+
+
+
+<div id="notifications" style="position: fixed; top: 10px; right: 10px; z-index: 1000;"></div>
+<script>
+    const socket = io();
+
+    // Listen for new-secret events
+    socket.on('new-secret', (data) => {
+        console.log('Received new secret:', data);
+        const notificationsDiv = document.getElementById('notifications');
+
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.style.background = "<%= color %>"
+        notification.innerText = `New secret shared: ${data.secret} by ${data.user_id}`;
+
+        notificationsDiv.appendChild(notification);
+
+        // Remove the notification after 5 seconds
+        setTimeout(() => {
+            notification.remove();
+        }, 5000);
+    });
+    </script>
+
+
+
+<% if (secret.reactions) { %>
+    <div class="reactions">
+        <% for (let reaction in secret.reactions) { %>
+            <p><%= reaction %>: <%= secret.reactions[reaction] %> reactions</p>
+        <% } %>
+    </div>
+<% } %>
+
+<% if (secret.reactions) { %>
+    <div class="reactions">
+        <h5>Reactions:</h5>
+        <% Object.keys(secret.reactions).forEach(reaction => { %>
+            <p><%= reaction %>: <%= secret.reactions[reaction] %> reactions</p>
+        <% }); %>
+    </div>
+<% } %>
+
+<% reactions.forEach((reaction)=> { %>
+    <% reaction.forEach((react) => { %>
+        <li class="secret">
+            <a class="message" href="">
+                <div class="card">
+                    <h4 >
+                        Your secret received a new <%= react.type %> reaction!..
+                    </h4>
+                </div>
+            </a>
+        </li>
+    <%}) %>
+    <% }); %>
+
+// const notifySecret = secretResult.rows
+const notifySecret = secretResult.rows.map(row => {
+    // Initialize the reactions object
+    const reactions = row.reactions ? row.reactions : {};
+
+    return {
+        ...row,
+        reactions
+    };
+});
+
+
+try {
+    const response = await fetch(`/secret/${secretId}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch secrets");
+    }
+
+    const data = await response.json();
+    const comments = data.comments;
+    let commentDisp;
+    if (comments) {
+      commentDisp = comments.map(
+        (comment) =>
+          `
+  <li class="comment-item">
+                <div>
+                  <small class="user"><strong>@anonym${comment.user_id}</strong></small>
+                  <p class="comment">
+                    ${comment.comment}
+                  </p>
+                </div>
+                <!-- <button formaction="/reply">reply</button> -->
+  </li>
+  `
+      );
+
+      commentDisplay.innerHTML = `
+  <ul id="comments">
+            <p class="total">All comments: ${data.totalComments}
+            </p>
+           ${commentDisp}
+          </ul>
+                `;
+    } else {
+      commentDisplay.innerHTML = `
+  <ul id="comments">
+            <p class="total"> ${data.noComment}
+            </p>
+          </ul>
+                `;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+
+  <p>
+    <span class="content">
+      <% if (secret.secret.split(" ").length > 200) { %>
+        <%= secret.secret.substring(0, 250) + "..." %>
+      <% } else { %>
+        <%= secret.secret %>
+      <% } %>
+    </span>
+    <% if (secret.secret.split(" ").length > 200) { %>
+      <button
+        class="read"
+        style="
+          background: none;
+          font-size: 1rem;
+          padding: 0;
+          font-weight: bold;
+        "
+        data-full="<%= secret.secret %>"
+        data-truncated="<%= secret.secret.substring(0, 250) + '...' %>"
+      >
+        Read More
+      </button>
+    <% } %>
+  </p>
+
+
+  const result = await db.query(
+    `UPDATE secrets 
+     SET reactions = jsonb_set(
+         reactions, 
+         $1, 
+         (COALESCE(reactions->>$2, '0')::int + 1)::text::jsonb
+     ) 
+     WHERE id = $3
+     RETURNING reactions, user_id`,
+    [`{${type}}`, type, id]
+);
+
+
+app.get("/notifications", async (req, res) => {
+    if (req.isAuthenticated()) {
+        try {
+            const userTheme = req.user.color || 'default';
+            const mode = req.user.mode || "light"
+
+            const secretResult = await db.query("SELECT reactions, secrets.id, username ,user_id, secret FROM secrets JOIN users ON users.id = user_id WHERE user_id != $1 ORDER BY secrets.id DESC LIMIT 5", [
+                req.user.id
+            ]);
+
+            const commentsResult = await db.query("SELECT comments.user_id, secrets.id, comment, username,color secret FROM comments JOIN users ON users.id = comments.user_id JOIN secrets ON secrets.id = secret_id WHERE secrets.user_id = $1  ORDER BY comments.id DESC LIMIT 5", [
+                req.user.id
+            ])
+
+
+            // Create notifySecret by mapping through the secrets
+            const notifySecret = secretResult.rows.map(row => {
+                const reactions = row.reactions ? row.reactions : {}; // If reactions are null or empty, use an empty object
+
+                // Create a new array for notifyReaction by mapping over the reactions object
+                const notifyReaction = Object.keys(reactions).map(reactionType => {
+                    return {
+                        type: reactionType,       // The type of reaction (e.g., "like", "laugh")
+                        count: reactions[reactionType], // The count of that reaction type
+                    };
+                });
+
+                // Now return the row with both the secret and the reactions
+                return {
+                    ...row,
+                    reactions,  // This will be the original reactions object
+                    notifyReaction, // This will be the new array of reactions
+                    notificationType: 'secret',
+                    timestamp: row.created_at
+                };
+            });
+
+            const notifyComment = commentsResult.rows.map(comment => {
+                return {
+                    ...comment,
+                    notificationType: 'comment',
+                    timestamp: comment.created_at
+                };
+            });
+
+            // const notifyComment = commentsResult.rows;
+            const notifyReaction = notifySecret
+            .map(secret => secret.notifyReaction)  // Extract notifyReaction
+            .flat()  // Flatten the array of arrays into a single array
+            .reverse()  // Reverse the order of reactions
+            .slice(0, 5);  // Limit to 5 reactions
+            // const notifyReaction = notifySecret.map(secret => secret.notifyReaction)
+
+            console.log(notifyReaction)
+
+            const combinedNotifications = [
+                ...notifyReaction,
+                ...notifyComment,
+                ...notifySecret
+            ]
+            console.log(combinedNotifications)
+
+            if (notifySecret.length > 0 || notifyComment.length > 0 || notifyReaction > 0) {
+                res.render("notifications", { heading: `New secrets from`, comments: notifyComment, secrets: notifySecret, reactions: notifyReaction, userId: req.user.id, username: req.user.username, theme: userTheme, mode: mode, timestamp: Date.now(), notifications: notifications })
+            } else {
+                res.render("notifications", { heading: null, comments: null, secrets: notifySecret, reactions: notifyReaction, userId: req.user.id, username: req.user.username, theme: userTheme, mode: mode, timestamp: Date.now() })
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    } else {
+        res.redirect("login")
+    }
+})

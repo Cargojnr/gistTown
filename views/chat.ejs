@@ -1,0 +1,201 @@
+<%- include('layout') %> 
+
+<link rel="stylesheet" href="/styles/chat.css" />
+
+    <div class="container">
+        <main>
+            <div id="chat-box">
+
+                <div class="chat-box">
+        <center><h2>Anonymous Chat Room <span>Connected Anonymies: <span class="users-count">0</span></span></h2></center>
+                <div id="messages" style="overflow-y: auto; height: 200px;">
+                    <div id="typing-indicator"></div>
+                </div>
+               
+                <div id="input-container">
+                    <input type="text" id="chat-input" placeholder="Type your message here..." />
+                    <button id="send-chat">Send</button>
+                    <button id="emoji-btn">😀</button>
+                    <div id="emoji-picker" style="display:none;">
+                        <span>😀</span><span>😂</span><span>😍</span><span>🥳</span><span>👍</span>
+                    </div>
+                  </div>
+                </div>
+                <button class="message-button"><i class="fas fa-message fa-2x"></i> <span class="message-count"></span></button>
+            </div>
+        </main>
+        
+    
+    
+    </div>
+
+    <script>
+    
+    // Store username in localStorage (on page load)
+    localStorage.setItem('userId', '<%= userId %>');
+</script>
+    <script>
+        document.getElementById('emoji-btn').addEventListener('click', () => {
+    const picker = document.getElementById('emoji-picker');
+    picker.style.display = picker.style.display === 'none' ? 'block' : 'none';
+});
+
+// Append selected emoji to input
+document.querySelectorAll('#emoji-picker span').forEach(emoji => {
+    emoji.addEventListener('click', () => {
+        chatInput.value += emoji.textContent;
+        picker.style.display = 'none';
+    });
+});
+
+    </script>
+   
+   <script>
+
+// const socket = io('http://localhost:4000', { query: { userId: localStorage.getItem('userId') } });
+const chatInput = document.getElementById('chat-input');
+const sendChat = document.getElementById('send-chat');
+const messagesDiv = document.getElementById('messages');
+const userCount = document.querySelector('.users-count');
+const typingIndicator = document.getElementById('typing-indicator');
+
+const user = localStorage.getItem('userId'); // Assume user ID is stored in localStorage
+
+// Function to get current timestamp
+function getCurrentTimestamp() {
+    return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+// Load chat history from localStorage
+function loadChatHistory() {
+    const chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
+    chatHistory.forEach((msg) => {
+        appendMessage(msg.message, msg.type, new Date(msg.timestamp).toLocaleTimeString());
+    });
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+// Save message with type to localStorage
+function saveMessage(message, type, user) {
+    let chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
+    chatHistory.push({ user, message, type, timestamp: new Date().toISOString() });
+    localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+}
+
+// Append message to the chat UI
+function appendMessage( message, type, user, timestamp = getCurrentTimestamp()) {
+    const msgDiv = document.createElement('div');
+    const timeSpan = document.createElement('span');
+    const msgUser = document.createElement('span');
+    msgUser.className = "user"
+    msgDiv.textContent = message;
+    msgUser.textContent = `~~anonym${user}~~`
+    timeSpan.textContent = ` (${timestamp})`;
+    msgDiv.classList.add(type);
+    msgDiv.appendChild(timeSpan);
+    msgDiv.appendChild(msgUser);
+    messagesDiv.appendChild(msgDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+// Typing indicator timeout
+let typingTimeout;
+
+// Send "typing" event when user types
+chatInput.addEventListener('input', () => {
+    socket.emit('typing', { user });
+
+    clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(() => {
+        socket.emit('stoppedTyping', { user });
+    }, 2000);
+});
+
+// Check if it's the first connection after page reload
+let count = 0
+if (!sessionStorage.getItem('hasJoined')) {
+    socket.on('userJoined', (message) => {
+        appendSystemMessage(message);
+       userCount.innerHTML = count++
+    });
+
+    // Mark that the user has joined
+    sessionStorage.setItem('hasJoined', 'true');
+}
+
+window.addEventListener('beforeunload', () => {
+    sessionStorage.removeItem('hasJoined'); // Remove 'hasJoined' flag when the user is about to leave
+    
+});
+
+socket.on('userLeft', (message) => {
+    if (sessionStorage.getItem('hasJoined')) {
+        appendSystemMessage(message);
+        // userCount.innerHTML = count--
+    }
+});
+
+
+function appendSystemMessage(message) {
+    const msgDiv = document.createElement('div');
+    msgDiv.textContent = message;
+    msgDiv.classList.add('system-message'); // Add a CSS class for styling
+    messagesDiv.appendChild(msgDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+
+// Handle incoming messages
+socket.on('message', (data) => {
+    appendMessage(data.text, data.user === user ? 'sent' : 'received', new Date(data.timestamp).toLocaleTimeString());
+    saveMessage(data.text, data.user === user ? 'sent' : 'received');
+});
+
+// Handle typing indicator
+socket.on('typing', (data) => {
+    typingIndicator.textContent = ` ~~anonym${data.user}~~ is typing...`;
+});
+
+socket.on('stoppedTyping', () => {
+    typingIndicator.textContent = '';
+});
+
+// Send message when "Send" button is clicked
+sendChat.addEventListener('click', () => {
+    const message = chatInput.value.trim();
+    if (message) {
+        // appendMessage(message, 'sent');
+        // saveMessage(message, 'sent');
+        socket.emit('message', { user, text: message });
+        chatInput.value = '';
+    }
+});
+
+chatInput.addEventListener('keyup', (e) => {
+  if(e.key === 'Enter'){
+    const message = chatInput.value.trim();
+    if (message) {
+        // appendMessage(message, 'sent');
+        // saveMessage(message, 'sent');
+        socket.emit('message', { user, text: message });
+        chatInput.value = '';
+    }
+  }
+})
+
+// Load chat history on page load
+window.onload = loadChatHistory;
+
+// Handle WebSocket errors
+socket.on('connect_error', (error) => {
+    console.error('Socket.IO Connection Error:', error);
+});
+
+</script>
+
+<script src="/js/app.js"></script>
+<% if (locals.theme) { %>
+    <script src="/js/theme.js"></script>
+  <% } else {%>
+    <script src="/js/defaultTheme.js"></script>
+    <% } %>

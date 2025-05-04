@@ -1,0 +1,275 @@
+<%- include('layout') %> 
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    margin: 0;
+  }
+
+  #random-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  .wheel-container {
+    text-align: center;
+    width: 300px;
+    height: 300px;
+    margin: auto;
+  }
+
+  .wheel {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    border: 10px solid #333;
+    border: 10px solid var(--primary-color);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 10px var(--secondary-color);
+  }
+
+  .segment {
+    width: 50%;
+    height: 50%;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    color: white;
+    text-align: center;
+    line-height: 150px;
+    font-size: 18px;
+    font-weight: bold;
+    transform-origin: 100% 100%;
+    transform: rotate(0deg);
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2);
+    margin: 1rem;
+    padding: 1rem;
+  }
+
+  .segment span {
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .wheel-container {
+    /* position: relative; */
+    text-align: center;
+  }
+
+  .spinner {
+    position: absolute;
+    top: 29% !important;
+    left: 49% !important;
+    display: none;
+    margin-top: -20px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spinner 1s linear infinite;
+  }
+
+  @keyframes spinner {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    color: white;
+  }
+
+  .overlay-content {
+    position: fixed;
+    top: 25%;
+    bottom: 25%;
+    right: 0;
+    left: 0;
+    /* padding: 30px; */
+    border-radius: 15px;
+    text-align: center;
+    max-width: 400px;
+    margin: auto;
+    color: #fff;
+  }
+
+  button#closeOverlay {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  button#closeOverlay:hover {
+    transform: scale(1.2);
+  }
+
+  #spinBtn {
+    position: relative;
+  }
+
+</style>
+
+<body>
+  <script>
+    socket.on('new-secret', (data) => {
+        const notification = document.createElement('div');
+        notification.innerText = `New secret shared: ${data.secret}`;
+        notification.style.position = 'fixed';
+        notification.style.bottom = '10px';
+        notification.style.right = '10px';
+        notification.style.backgroundColor = '#4caf50';
+        notification.style.color = '#fff';
+        notification.style.padding = '10px';
+        notification.style.borderRadius = '5px';
+        document.body.appendChild(notification);
+
+        setTimeout(() => notification.remove(), 5000);
+    });
+  </script>
+
+  <div class="jumbotron text-center">
+    <div class="container">
+      <center>
+        <h1 class="display-3">Random Wheel</h1>
+        <p>Spin the wheel to select random confessions</p>
+      </center>
+      <div id="random-container">
+        <div class="wheel-container">
+         
+          <div class="wheel" id="wheel" style="color: var(--text-color);">
+            <!-- Dynamic segments will be inserted here by JavaScript -->
+           
+            <% if (locals.randomSecret) { %>
+              <% randomSecret.forEach((secret) => { %>
+                  <div class="segment" style="transform: rotate(<%= secret.id %>deg); margin: <%= secret.id %>px;">
+                    <%= secret.id %>
+                  </div>
+              <% }) %>
+             
+            <% } %>
+            
+          </div>
+
+          <div id="spinner" class="spinner"></div> <!-- Spinner -->
+          <div class="pointer" id="pointer">↑</div>
+          <button id="spinBtn">Spin the Wheel</button>
+       
+        </div>
+        
+        <!-- Modal Overlay -->
+        <div id="overlay" class="overlay">
+          <div  id="pinned-secret" class="overlay-content random card">
+            <button id="closeOverlay">&times;</button>
+            <div id="overlay-content"></div>
+          </div>
+        </div>
+        
+        <script>
+          // Fetch randomSecrets data passed from the backend
+          const randomSecrets = "<%= randomSecret %>";
+          
+
+          // Select wheel container and pointer elements
+          const wheel = document.getElementById('wheel');
+          const pointer = document.getElementById('pointer');
+          const spinner = document.getElementById('spinner');
+          const overlay = document.getElementById('overlay');
+          const overlayContent = document.getElementById('overlay-content');
+
+          // Convert randomSecrets to an array if it's an object
+          const secretsArray = Array.isArray(randomSecrets) ? randomSecrets : Object.values(randomSecrets);
+
+          
+
+          // Check if secretsArray has content
+          if (randomSecrets.length > 0) {
+            // Define the number of segments and angle for each
+            const angle = 360 / randomSecrets.length;
+
+            // Create wheel segments and add them to the wheel
+            const segments = secretsArray.map((secret, index) => {
+              const angleForThisSegment = angle * index;
+              return `
+                <div class="segment" style="transform: rotate(${angleForThisSegment}deg); background-color: ${secret.color || '#f00'};">
+                  <span>${secret.id}</span>
+                </div>
+              `;
+            }).join('');
+
+            // Insert segments into the wheel
+          //   wheel.innerHTML = segments;
+            
+            // Function to spin the wheel
+            function spinWheel() {
+              // Show spinner
+              spinner.style.display = 'block';
+
+              // Randomly determine a rotation angle (in degrees)
+              const randomRotation = Math.floor(Math.random() * 360) + 3600; // 3600 ensures multiple rotations
+
+              // Apply rotation to the wheel (with transition)
+              wheel.style.transition = 'transform 4s ease-out';  // Make the transition smooth
+              wheel.style.transform = `rotate(${randomRotation}deg)`; 
+
+              // Simulate waiting for the wheel to stop
+              setTimeout(() => {
+                // Hide spinner
+                spinner.style.display = 'none';
+
+                // Calculate which segment is selected based on the rotation
+                const selectedIndex = Math.floor((randomRotation % 360) / angle);
+
+                // Display the selected secret in the overlay
+                const selectedSecret = secretsArray[selectedIndex];
+                overlayContent.innerHTML = `
+                      <center>
+        <h3 class="display-3">You've Pokenosed a Gist Amebo!</h3>
+        <p>Don't kiss and tell</p>
+      </center>
+                  <h2>${selectedSecret.secret}</h2>
+                  <p>Category: ${selectedSecret.category}</p>
+                  <p>From: @${selectedSecret.username}</p>
+                `;
+                
+                // Show the overlay with the selected data
+                overlay.style.display = 'block';
+              }, 4500); // Allow time for the wheel to stop (slightly more than 4 seconds)
+            }
+
+            // Close the overlay when the user clicks the close button
+            document.getElementById('closeOverlay').addEventListener('click', () => {
+              overlay.style.display = 'none';
+            });
+
+            // Attach the spin function to the button
+            document.getElementById('spinBtn').addEventListener('click', spinWheel);
+          }
+
+        </script>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script src="/js/theme.js"></script>
+</body>

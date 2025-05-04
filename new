@@ -1,0 +1,52 @@
+          <p>
+                ${secret.secret}
+                <a id="pinnedButton" class="read"
+                href="#secret${secret.id}"
+                  style="
+                    background: none;
+                    font-size: 1rem;
+                    padding: 0;
+                    font-weight: bold;
+                  "
+                  >View secret</a
+                >
+              </p>
+
+
+              <div class="secret-card" data-id="<%= secret.id %>">
+                <div class="reactions">
+                    <button class="reaction-btn" data-type="like">
+                        👍
+                        <span class="reaction-count">
+                            <%= secret.reactions.like ? secret.reactions.like.count : 0 %>
+                        </span>
+                    </button>
+                    <button class="reaction-btn" data-type="laugh">
+                        😂
+                        <span class="reaction-count">
+                            <%= secret.reactions.laugh ? secret.reactions.laugh.count : 0 %>
+                        </span>
+                    </button>
+                    <button class="reaction-btn" data-type="cry">
+                        😢
+                        <span class="reaction-count">
+                            <%= secret.reactions.cry ? secret.reactions.cry.count : 0 %>
+                        </span>
+                    </button>
+                    <button class="reaction-btn" data-type="gasp">
+                        😱
+                        <span class="reaction-count">
+                            <%= secret.reactions.gasp ? secret.reactions.gasp.count : 0 %>
+                        </span>
+                    </button>
+                </div>
+                <button><i class="fas fa-copy"></i></button>
+            </div>
+
+            <p class="footer-text">
+                <a href="">GistTown</a> lets you share secrets anonymously online,
+                End-to-End encrypted. One time. Keep anonymous secrets out of email,
+                Whatsapp, Telegram or any other communication channel. Here you are
+                100% hidden to users as your privacy is our priority.
+              </p>
+            

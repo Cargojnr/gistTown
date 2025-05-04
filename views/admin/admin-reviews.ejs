@@ -1,0 +1,145 @@
+<%- include('layout') %>
+<body>
+        <div class="container">
+    
+            <div class="sidebar">
+                <div class="first-item">
+                  <h1 >Anonym</h1>
+                </div>
+          
+                <div>
+                  <div class="card">
+                    <div class="card-title">{title}</div>
+                    <div class="card-body">{body}</div>
+                  </div>
+
+                  <div class="card">
+                    <div class="card-title">{title}</div>
+                    <div class="card-body">{body}</div>
+                  </div>
+
+                  <div class="card">
+                    <div class="card-title">{title}</div>
+                    <div class="card-body">{body}</div>
+                  </div>
+
+                </div>
+              </div>
+
+            <div id="main-content">
+                <div id="navbar" >
+                  <ul class="navbar">
+                  <li class='nav'><a href="/admin-dashboard">Dashboard</a></li>
+                  <li class='nav'><a class="current" href="/admin/reviews">Reviews</a></li>
+                  <li class='nav'><a href="/admin/reports">Reports</a></li>
+               
+                </ul>
+                <hr />
+               </div>
+          
+
+               
+                <div class="main-content">
+                  <h2>Feedbacks</h2>
+                  <table>
+                      <thead>
+                          <tr>
+                             <th>No.</th>
+                              <th>Reviews</th>
+                              <th>Ratings</th>
+                              <th>Suggestions</th>
+                              <th>User</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <% reviews.forEach(review => { %>
+                              <tr>
+                                <td><%= count++ %>.</td>
+                                  <td>
+                                      <p>
+                                          <span class="content">
+                                            <% if (review.review.split(" ").length > 200) { %>
+                                              <%= review.review.substring(0, 500) + "..." %>.
+                                            <% } else { %>
+                                              <%= review.review %>.
+                                            <% } %>
+                                          </span>
+                                          <% if (review.review.split(" ").length > 200) { %>
+                                               <button
+                                              class="read"
+                                              style="
+                                                background: none;
+                                                font-size: 1rem;
+                                                padding: 0;
+                                                font-weight: bold;
+                                              "
+                                              data-full="<%= review.review %>."
+                                              data-truncated="<%= review.review.substring(0, 500) + '...' %>."
+                                            >
+                                              Read More
+                                            </button>
+                                           
+                                          <% } %>
+                                        </p>
+                                  </td>
+          
+                                  <td><%= review.rating || '' %></td>
+          
+                                  <td> <p>
+                                      <span class="content">
+                                        <% if (review.idea.split(" ").length > 200) { %>
+                                          <%= review.idea.substring(0, 500) + "..." %>.
+                                        <% } else { %>
+                                          <%= review.idea %>.
+                                        <% } %>
+                                      </span>
+                                      <% if (review.idea.split(" ").length > 200) { %>
+                                           <button
+                                          class="read"
+                                          style="
+                                            background: none;
+                                            font-size: 1rem;
+                                            padding: 0;
+                                            font-weight: bold;
+                                          "
+                                          data-full="<%= review.idea %>."
+                                          data-truncated="<%= review.idea.substring(0, 500) + '...' %>."
+                                        >
+                                          Read More
+                                        </button>
+                                       
+                                      <% } %>
+                                    </p>
+                                </td>
+          
+                                <td>~~anonym<%= review.user_id %>~~ (<span style="font-style: italic;"><%= review.username %></span>)</td>
+          
+                              </tr>
+                          <% }); %>
+                      </tbody>
+                  </table>
+          
+                </div>
+              </div>
+            
+            <script>
+                    document.querySelectorAll(".read").forEach((button) => {
+        button.addEventListener("click", (e) => {
+          const contentSpan = e.target.previousElementSibling;
+          const isTruncated = e.target.textContent === "Read More";
+    
+          if (isTruncated) {
+            // Show full content
+            contentSpan.textContent = e.target.dataset.full;
+            e.target.textContent = "See Less";
+          } else {
+            // Reapply truncated content
+            contentSpan.textContent = e.target.dataset.truncated;
+            e.target.textContent = "Read More";
+          }
+        });
+      });
+            </script>
+        </div>
+</div>
+</body>

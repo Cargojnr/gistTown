@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/styles/style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Reset Password</h1>
+
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="card">
+                    <div class="card-body">
+                        <% if (locals.comment) { %>
+                               <h2>Edit Comment</h2>
+                            <form action="/update-comment" method="POST">
+                                <input type="hidden" name="id" value="<%= comment.id %>">
+                                <div class="form-group">
+                                    <label for="comment">Edit your comment</label> 
+                                    <input type="text" name="updateComment" class="form-control" value="<%= comment.comment %>">
+                                    <% if (locals.message) { %>
+                                        <p style="color: red; font-style: italic;"><%= message %></p>
+                                    <% } %>
+                                </div>
+                                <button type="submit" class="btn btn-dark">Save</button>
+                            </form>
+                        <% } %>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</body>
+</html>
