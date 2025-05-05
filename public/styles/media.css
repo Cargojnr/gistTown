@@ -12,6 +12,10 @@
 
 @media (max-width: 600px) {
 
+  #countdown {
+    margin-top: 10px !important;
+  }
+
   #recordContainer {
     height: 32vh !important;
     text-align: center;

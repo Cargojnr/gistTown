@@ -19,7 +19,7 @@
         h1 {
             margin-bottom: 20px;
             font-size: 24px;
-            color: #fff !important;
+            color: var(--text-color) !important;
         }
 
         .or {
@@ -127,6 +127,8 @@
             max-width: 600px;
         }
     </style>
+    <body>
+
     <div class="container">
         <!-- <i class="fas fa-key fa-6x"></i> -->
         <h1 class="display-3">Share your Gossips</h1>
@@ -498,9 +500,6 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
 
-    <script src="/js/app.js"></script>
-    <% if (locals.theme) { %>
-        <script src="/js/theme.js"></script>
-        <% } else {%>
-            <script src="/js/defaultTheme.js"></script>
-            <% } %>
+<script src="/js/defaultTheme.js"></script>
+    <script src="/js/app.js"></script>     
+</body>

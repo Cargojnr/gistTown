@@ -57,7 +57,7 @@ body {
 
 
 #brand-logo {
-    color: var(--text-color);
+    color: var(--primary-color);
 }
 
 @keyframes display {
@@ -639,6 +639,8 @@ body {
 
 #pinned {
   z-index: 10;
+  display: block !important;
+  
 }
 
 #pinned-secret h2{
