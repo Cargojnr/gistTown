@@ -214,6 +214,20 @@ app.get("/register", (req, res) => {
     res.render("registration");
 });
 
+app.get("/profile", async(req, res) => {
+    if(req.isAuthenticated()){
+        try {
+         const result = await  db.query("SELECT * FROM users WHERE id = $1", [req.user.id])
+         const userDetails = result.rows[0];
+         console.log(userDetails.profile_picture)
+         res.render("profile", {userId: req.user.id, profilePicture: req.user.profile_picture, username: req.user.username, profile: userDetails});
+        }catch(err){
+            console.log(err)
+        }
+    }
+   
+})
+
 app.get("/random", async (req, res) => {
     if (req.isAuthenticated()) {
         try {
@@ -226,7 +240,7 @@ app.get("/random", async (req, res) => {
             console.log(reportResult)
 
             // console.log(usersSecret)
-            res.render("random", { randomSecret: usersSecret, userId: req.user.id, username: req.user.username, mode: mode, reactions: JSON.stringify(usersSecret.reactions || {}), })
+            res.render("random", { randomSecret: usersSecret, userId: req.user.id, profilePicture: req.user.profile_picture, username: req.user.username, mode: mode, reactions: JSON.stringify(usersSecret.reactions || {}), })
             // console.log(usersSecret)
         } catch (err) {
             console.log(err)
@@ -248,7 +262,7 @@ app.get("/random-secret", async (req, res) => {
             console.log(reportResult)
 
             // console.log(usersSecret)
-            res.json({ randomSecret: randomSecret, userId: req.user.id, username: req.user.username, theme: userTheme, mode: mode, reactions: JSON.stringify(randomSecret.reactions || {}), })
+            res.json({ randomSecret: randomSecret, userId: req.user.id, profilePicture: req.user.profile_picture, username: req.user.username, theme: userTheme, mode: mode, reactions: JSON.stringify(randomSecret.reactions || {}), })
             console.log(randomSecret)
         } catch (err) {
             console.log(err)
@@ -290,9 +304,9 @@ app.get("/dashboard", async (req, res) => {
             const trendingGist = trendingQuery.rows
 
             if (secrets.length > 0 || audioFiles.length > 0) {
-                res.render("secrets", { heading: "My Gossips🤫", pGrph: null, secret: secrets, userAudio: audioFiles, trendingGist, userId: req.user.id, username: req.user.username, mode: mode, message, dashboard: true })
+                res.render("secrets", { heading: "My Gossips🤫", pGrph: null, secret: secrets, userAudio: audioFiles, trendingGist, userId: req.user.id, profilePicture: req.user.profile_picture, username: req.user.username, mode: mode, message, dashboard: true })
             } else {
-                res.render("secrets", { heading: ``, pGrph: "Welcome to the Safe Space, where you can find comfort and anonymous support. Feel free to be an Amebo (i.e share or read gists in a judgment-free zone).", trendingGist, userId: req.user.id, username: req.user.username, mode: mode, message, dashboard: true })
+                res.render("secrets", { heading: ``, pGrph: "Welcome to the Safe Space, where you can find comfort and anonymous support. Feel free to be an Amebo (i.e share or read gists in a judgment-free zone).", trendingGist, userId: req.user.id, profilePicture: req.user.profile_picture, username: req.user.username, mode: mode, message, dashboard: true })
             }
         } catch (error) {
             console.log(error)
@@ -307,13 +321,13 @@ app.get("/feeds", async (req, res) => {
         try {
             const userTheme = req.user.color || 'default';
             const mode = req.user.mode || "light"
-            const result = await db.query("SELECT reported, secrets.id, reactions, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id ORDER BY secrets.id DESC ")
+            const result = await db.query("SELECT reported, secrets.id, reactions,profile_picture, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id ORDER BY secrets.id DESC ")
 
             // const reportResult = await db.query("SELECT reports.status, secrets.id, user_id, category, secret FROM secrets JOIN reports ON secrets.id = reports.secret_id  ORDER BY secrets.id DESC ")
             // console.log(reportResult)
             const usersSecret = result.rows;
             // console.log(usersSecret)
-            res.render("secrets", { secrets: usersSecret, userId: req.user.id, username: req.user.username, theme: userTheme, mode: mode, reactions: JSON.stringify(usersSecret.map(secret => secret.reactions || {})), })
+            res.render("secrets", { secrets: usersSecret, userId: req.user.id, profilePicture: req.user.profile_picture, username: req.user.username, theme: userTheme, mode: mode, reactions: JSON.stringify(usersSecret.map(secret => secret.reactions || {})), })
         } catch (err) {
             console.log(err)
         }
@@ -327,7 +341,7 @@ app.get("/chat", async(req, res) => {
         const userTheme = req.user.color || 'default';
         const mode = req.user.mode || "light"
         console.log(req.user)
-        res.render("chat", {  theme: userTheme, mode: mode, username: req.user.username, userId: req.user.id })
+        res.render("chat", {  theme: userTheme, mode: mode, username: req.user.username, userId: req.user.id, profilePicture: req.user.profile_picture })
     } else {
         res.redirect("/login")
     }
@@ -338,7 +352,7 @@ app.get("/feedback", async(req, res) => {
         const userTheme = req.user.color || 'default';
         const mode = req.user.mode || "light"
         console.log(req.user)
-        res.render("feedback", {  theme: userTheme, mode: mode, username: req.user.username, userId: req.user.id })
+        res.render("feedback", {  theme: userTheme, mode: mode, username: req.user.username, userId: req.user.id, profilePicture: req.user.profile_picture })
     } else {
         res.redirect("/login")
     }
@@ -359,7 +373,7 @@ app.get('/admin/reports', async (req, res) => {
         const result = await db.query(reportsQuery);
         const reports = result.rows;
 
-        res.render('./admin/admin-reports', { reports, userId: req.user.id  });
+        res.render('./admin/admin-reports', { reports, userId: req.user.id, profilePicture: req.user.profile_picture  });
     } catch (error) {
         console.error('Error fetching reports:', error);
         res.status(500).render('error', { message: 'Error fetching reports' });
@@ -380,7 +394,7 @@ app.get('/admin/reviews', async (req, res) => {
 
         var count = 1;
 
-        res.render('./admin/admin-reviews', { reviews, theme: userTheme, mode: mode, userId: req.user.id, count: count  });
+        res.render('./admin/admin-reviews', { reviews, theme: userTheme, mode: mode, userId: req.user.id, profilePicture: req.user.profile_picture, count: count  });
     } catch (error) {
         console.error('Error fetching reports:', error);
         res.status(500).json({ message: 'Error fetching reviews' });
@@ -434,7 +448,7 @@ app.get('/admin-dashboard', async (req, res) => {
 
         var count = 1;
 
-        res.render('./admin/admin-dashboard', { reviews, users, feeds, pendingReport, flaggedReport,theme: userTheme, mode: mode, userId: req.user.id, count: count  });
+        res.render('./admin/admin-dashboard', { reviews, users, feeds, pendingReport, flaggedReport,theme: userTheme, mode: mode, userId: req.user.id, profilePicture: req.user.profile_picture, count: count  });
     } catch (error) {
         console.error('Error fetching reports:', error);
         res.status(500).json({ message: 'Error fetching reviews' });
@@ -473,7 +487,7 @@ app.get("/section/:section", async (req, res) => {
             [section])
         const usersSecret = result.rows;
         // console.log(usersSecret)
-        res.render("section", { section: usersSecret, userId: req.user.id, username: req.user.username, theme: userTheme, mode: mode, reactions: JSON.stringify(usersSecret.map(secret => secret.reactions || {})), })
+        res.render("section", { section: usersSecret, userId: req.user.id, profilePicture: req.user.profile_picture, username: req.user.username, theme: userTheme, mode: mode, reactions: JSON.stringify(usersSecret.map(secret => secret.reactions || {})), })
     } catch (err) {
         console.log(err)
     }
@@ -493,7 +507,7 @@ app.get("/categories/:category", async (req, res) => {
         ])
 
         const response = result.rows
-        res.render("section", { secrets: response, userId: req.user.id, username: req.user.username, theme: userTheme, mode: mode, reactions: JSON.stringify(response.reactions || {}) })
+        res.render("section", { secrets: response, userId: req.user.id, profilePicture: req.user.profile_picture, username: req.user.username, theme: userTheme, mode: mode, reactions: JSON.stringify(response.reactions || {}) })
         console.log(`Fetched secrets for category "${category}":`, response);
     } catch (err) {
         console.log(err)
@@ -529,15 +543,6 @@ LIMIT 1;
                 }
             })
 
-            // io.emit("new-notification", {
-            //     type: "top-secret",
-            //     data: {
-            //         id: topSecret.id, // The secret ID
-            //         secret: topSecret.secret,
-            //         userId: topSecret.user_id,
-            //         category: topSecret.category,
-            //     }
-            // })
 
             res.json({ success: true, topSecret: topSecret, reactions: JSON.stringify(topSecret.reactions || {}) });
         } else {
@@ -561,7 +566,7 @@ app.get("/partial-submit", async (req, res) => {
             theme: userTheme,
             mode: mode,
             username: req.user.username,
-            userId: req.user.id
+            userId: req.user.id, profilePicture: req.user.profile_picture
         };
 
         res.render("partials/submitForm", formData)
@@ -583,7 +588,7 @@ app.get("/submit", async (req, res) => {
             theme: userTheme,
             mode: mode,
             username: req.user.username,
-            userId: req.user.id
+            userId: req.user.id, profilePicture: req.user.profile_picture
         };
 
         res.render("submit", formData)
@@ -650,7 +655,7 @@ app.get("/secret/:id", async (req, res) => {
             secret: data,
             comments: commentData.length > 0 ? commentData : null,
             noComment: commentData.length === 0 ? "Share your thoughts." : null,
-            userId: req.user.id,
+            userId: req.user.id, profilePicture: req.user.profile_picture,
             totalComments: commentData.length || null,
             theme: userTheme,
             mode: mode,
@@ -706,7 +711,7 @@ app.get("/more/:id", async (req, res) => {
             secret: data,
             comments: commentData.length > 0 ? commentData : null,
             noComment: commentData.length === 0 ? "Share your thoughts." : null,
-            userId: req.user.id,
+            userId: req.user.id, profilePicture: req.user.profile_picture,
             totalComments: commentData.length || null,
             theme: userTheme,
             mode: mode,
@@ -940,7 +945,7 @@ app.get("/notifications", async (req, res) => {
                 secrets: notifySecret,
                 reactions: notifyReaction,
                 notifications: sortedNotifications, // Pass sorted notifications to the client
-                userId: req.user.id,
+                userId: req.user.id, profilePicture: req.user.profile_picture,
                 username: req.user.username,
                 theme: userTheme,
                 mode: mode
@@ -1160,7 +1165,7 @@ app.post("/edit", async (req, res) => {
             ]);
 
             const data = result.rows[0];
-            res.render("submit", { submit: "Update", secret: data, theme: userTheme, mode: mode, userId: req.user.id })
+            res.render("submit", { submit: "Update", secret: data, theme: userTheme, mode: mode, userId: req.user.id, profilePicture: req.user.profile_picture })
         } catch (error) {
             console.log(error);
         }

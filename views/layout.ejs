@@ -1,354 +1,357 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
-      rel="stylesheet"
-    />
-    <script
-      src="https://kit.fontawesome.com/ceb8cfc409.js"
-      crossorigin="anonymous"
-    ></script>
-    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://unpkg.com/lottie-web@5.10.0/build/player/lottie.min.js"></script>
-    <link rel="stylesheet" href="/styles/style.css" />
-    <link rel="stylesheet" href="/styles/media.css" />
-    <link rel="stylesheet" href="/styles/new.css" />
-    <style>
-      #brand-logo-container {
-  animation: fadeIn 0.5s ease-in-out;
-}
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/ceb8cfc409.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://unpkg.com/lottie-web@5.10.0/build/player/lottie.min.js"></script>
+  <link rel="stylesheet" href="/styles/style.css" />
+  <link rel="stylesheet" href="/styles/media.css" />
+  <link rel="stylesheet" href="/styles/new.css" />
+  <style>
+    #brand-logo-container {
+      animation: fadeIn 0.5s ease-in-out;
+    }
 
-    </style>
-  </head>
-  <body data-theme="dark" data-mode="<%= mode %>">
-    <div id="brand-logo-container">
-      <div id="brand-animation" style="width: 150px; height: 150px;"></div>
-      <h1 id="brand-logo">GistTown</h1>
-    </div>
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
 
-    <script>
-      let lottiePlayer = null;
-    
-      window.addEventListener("load", function () {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        hideBrandLogo();
-      });
-    
-      window.addEventListener("beforeunload", function (e) {
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="brand-logo-container">
+    <div id="brand-animation" style="width: 150px; height: 150px;"></div>
+    <h1 id="brand-logo">GistTown</h1>
+  </div>
+
+  <script>
+    let lottiePlayer = null;
+
+    window.addEventListener("load", function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      hideBrandLogo();
+    });
+
+    window.addEventListener("beforeunload", function (e) {
+      showBrandLogo();
+    });
+
+
+    function showBrandLogo() {
+      const container = document.getElementById("brand-logo-container");
+      const animContainer = document.getElementById("brand-animation");
+
+      container.style.display = "flex";
+      document.getElementById("brand-logo").style.display = "none"; // hide text
+
+
+      if (!lottiePlayer) {
+        lottiePlayer = lottie.loadAnimation({
+          container: animContainer,
+          renderer: "svg",
+          loop: true,
+          autoplay: true,
+          path: "img/lottie/brandlogo.json", // <-- put your lottie JSON file path here
+        });
+      } else {
+        lottiePlayer.goToAndPlay(0);
+      }
+    }
+
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") {
         showBrandLogo();
-      });
-
-    
-      function showBrandLogo() {
-        const container = document.getElementById("brand-logo-container");
-        const animContainer = document.getElementById("brand-animation");
-    
-        container.style.display = "flex";
-        document.getElementById("brand-logo").style.display = "none"; // hide text
-  
-
-          if (!lottiePlayer) {
-            lottiePlayer = lottie.loadAnimation({
-            container: animContainer,
-            renderer: "svg",
-            loop: true,
-            autoplay: true,
-            path: "img/lottie/brandlogo.json", // <-- put your lottie JSON file path here
-          });
-        } else {
-          lottiePlayer.goToAndPlay(0);
-        }
+      } else {
+        hideBrandLogo();
       }
+    });
 
-      
-      document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "hidden") {
-    showBrandLogo();
-  } else {
-    hideBrandLogo();
-  }
-});
-    
-      function hideBrandLogo() {
-        document.getElementById("brand-logo-container").style.display = "none";
-      }
+    function hideBrandLogo() {
+      document.getElementById("brand-logo-container").style.display = "none";
+    }
 
 
 
-    </script>
-    
+  </script>
 
-    <header>
-      <div class="container">
-        <div class="header">
-          <a class="nav-link" href="/dashboard" id="logo"><i class="fas fa-mask fa-2x"></i></a>
-          <ul id="navbar">
-            <li class="navbar">
-              <a class="nav-link" href="/notifications">
-                <i class="fas fa-bell fa-2x"></i>
-                <span class="counter">0</span>
-              </a>
-            </li>
-            <li class="navbar dropdown">
-              <div class="hamburger" id="hamburger">
-                <div class="bar" id="bar1"></div>
-                <!-- <div class="bar" id="bar2"></div> -->
-                <div class="bar" id="bar3"></div>
-              </div>
-              <div id="menu" class="menu-hidden">
-                <div class="container">
-                  <div class="menu">
-                    <div class="menu-nav">
-                      <!-- <div class="menu-logo">
+
+  <header>
+    <div class="container">
+      <div class="header">
+        <a class="nav-link" href="/dashboard" id="logo"><i class="fas fa-mask fa-2x"></i></a>
+        <ul id="navbar">
+          <li class="navbar">
+            <a class="nav-link" href="/notifications">
+              <i class="fas fa-bell fa-2x"></i>
+              <span class="counter">0</span>
+            </a>
+          </li>
+          <li class="navbar dropdown">
+            <div class="hamburger" id="hamburger">
+              <div class="bar" id="bar1"></div>
+              <!-- <div class="bar" id="bar2"></div> -->
+              <div class="bar" id="bar3"></div>
+            </div>
+            <div id="menu" class="menu-hidden">
+              <div class="container">
+                <div class="profile-header">
+                  <img src="<%= profilePicture %>" alt="Profile Avatar" class="profile-avatar" />
+
+                  <h3 class="username">Hello, <span>@amebo<%= userId %></span></h3>
+                </div>
+
+                <div class="menu">
+                  <div class="menu-nav">
+                    <!-- <div class="menu-logo">
                                             <i class="fas fa-mask fa-2x"></i>
                                             <h4>bAnonym</h4>
                                         </div> -->
-                      <ul class="pages">
-                        <h4>Compose a gist</h4>
-                        <li><a class="nav-link" href="/feeds">View Gist</a></li>
-                        <li><a class="nav-link" href="/submit">Share a Gist</a></li>
-                      </ul>
-                      <ul class="account">
-                        <h4>Account</h4>
-                        <li>
-                          <a class="nav-link" href="/notifications" class="">Notifcations</a>
-                        </li>
-                        <li>
-                          <a class="nav-link" href="/logout" class=""
-                            >Logout <i class="fas fa-right-from-bracket"></i
-                          ></a>
-                        </li>
-                      </ul>
-                    </div>
-                    <div class="theme-switch">
-                      <input
-                        type="checkbox"
-                        id="themeToggle"
-                        class="theme-toggle"
-                        onchange="toggleMode()"
-                      />
-                      <label for="themeToggle" class="theme-toggle-label">
-                        <span class="sun-icon">☀️</span>
-                        <span class="moon-icon">🌙</span>
-                      </label>
-                    </div>
-
-                    <ul class="socials">
+                    <ul class="pages">
+                      <h4>Compose a gist</h4>
+                      <li><a class="nav-link" href="/feeds">View Gist</a></li>
+                      <li><a class="nav-link" href="/submit">Share a Gist</a></li>
                       <li>
-                        <a class="nav-link" target="_blank" href="https://t.me/@iamamebo"><i class="fab fa-telegram fa-2x"></i></a>
-                      </li>
-                      <li>
-                        <a class="nav-link" target="_blank" href=""><i class="fab fa-instagram fa-2x"></i></a>
-                      </li>
-                      <li>
-                        <a class="nav-link" target="_blank" href=""><i class="fab fa-linkedin fa-2x"></i></a>
-                      </li>
-                      <li>
-                        <a class="nav-link" target="_blank" href=""><i class="fab fa-github fa-2x"></i></a>
+                        <a class="nav-link" href="/notifications" class="">Notifcations</a>
                       </li>
                     </ul>
-                    <hr />
-                    <div class="menu-nav-alt">
-                      <ul class="info">
-                        <h4>Information</h4>
-                        <li><a href="">About</a></li>
-                        <li><a href="">Security</a></li>
-                        <li><a href="">Privacy</a></li>
-                        <li><a href="">Blog</a></li>
-                      </ul>
-                      <ul class="support">
-                        <h4>Support</h4>
-                        <li><a href="">FAQ</a></li>
-                        <li><a href="">Contact</a></li>
-                        <li><a href="/feedback">Reviews</a></li>
-                      </ul>
-                    </div>
-                    <p class="menu-lang">
-                      <i class="fas fa-globe"></i> English
-                    </p>
-                    <button id="close">Close</button>
+                    <ul class="account">
+                      <h4>Account</h4>
+                      <li>
+                        <a class="nav-link" href="/notifications" class="">Go To Profile</a>
+                      </li>
+                      <li><a class="nav-link" href="/profile">Edit Profile</a></li>
+
+                      <li>
+                        <a class="nav-link" href="/logout" class="">Logout <i class="fas fa-right-from-bracket"></i></a>
+                      </li>
+                    </ul>
                   </div>
+                  <div class="theme-switch">
+                    <input type="checkbox" id="themeToggle" class="theme-toggle" onchange="toggleMode()" />
+                    <label for="themeToggle" class="theme-toggle-label">
+                      <span class="sun-icon">☀️</span>
+                      <span class="moon-icon">🌙</span>
+                    </label>
+                  </div>
+
+                  <ul class="socials">
+                    <li>
+                      <a class="nav-link" target="_blank" href="https://t.me/@iamamebo"><i
+                          class="fab fa-telegram fa-2x"></i></a>
+                    </li>
+                    <li>
+                      <a class="nav-link" target="_blank" href=""><i class="fab fa-instagram fa-2x"></i></a>
+                    </li>
+                    <li>
+                      <a class="nav-link" target="_blank" href=""><i class="fab fa-linkedin fa-2x"></i></a>
+                    </li>
+                    <li>
+                      <a class="nav-link" target="_blank" href=""><i class="fab fa-github fa-2x"></i></a>
+                    </li>
+                  </ul>
+                  <hr />
+                  <div class="menu-nav-alt">
+                    <ul class="info">
+                      <h4>Information</h4>
+                      <li><a href="">About</a></li>
+                      <li><a href="">Security</a></li>
+                      <li><a href="">Privacy</a></li>
+                      <li><a href="">Blog</a></li>
+                    </ul>
+                    <ul class="support">
+                      <h4>Support</h4>
+                      <li><a href="">FAQ</a></li>
+                      <li><a href="">Contact</a></li>
+                      <li><a href="/feedback">Reviews</a></li>
+                    </ul>
+                  </div>
+                  <p class="menu-lang">
+                    <i class="fas fa-globe"></i> English
+                  </p>
+                  <button id="close">Close</button>
                 </div>
               </div>
-            </li>
-          </ul>
-        </div>
+            </div>
+          </li>
+        </ul>
       </div>
-    </header>
-
-
-    <div id="milestone-badge" class="hidden">🎉 10 Reactions! 🎉</div>
-
-    <div id="announcement-overlay" class="hidden">
-      <div class="trumpet-animation"></div>
-      <div class="overlay-content" text-align="center">
-        <center>
-          <h2>Announcement! 🎇🎆</h2>
-          <h4>Top Most Discussed Gist</h4>
-          <!-- <p id="pin-secret"></p> -->
-          <small id="posted-by"></small>
-          <div id="countdown-timer">5</div>
-        </center>
-      </div>
-      <button id="close-announcement" class="btn btn-dark btn-lg">Close</button>
     </div>
+  </header>
 
-    <!-- Content of each page will be injected here -->
 
-    <!-- Notifications Container -->
-    <div
-      id="notification"
-      style="position: fixed; bottom: 10px; left: 10px; z-index: 1000"
-    ></div>
+  <div id="milestone-badge" class="hidden">🎉 10 Reactions! 🎉</div>
 
-    <script>
-        const currentUserId = "<%= userId %>";
-      const socket = io({ query: { userId: currentUserId } });
-      const counter = document.querySelector(".counter");
+  <div id="announcement-overlay" class="hidden">
+    <div class="trumpet-animation"></div>
+    <div class="overlay-content" text-align="center">
+      <center>
+        <h2>Announcement! 🎇🎆</h2>
+        <h4>Top Most Discussed Gist</h4>
+        <!-- <p id="pin-secret"></p> -->
+        <small id="posted-by"></small>
+        <div id="countdown-timer">5</div>
+      </center>
+    </div>
+    <button id="close-announcement" class="btn btn-dark btn-lg">Close</button>
+  </div>
 
-      // Handle new notifications
-      socket.on("new-notification", (data) => {
-        // Increment the notification counter
-        const currentCount = parseInt(counter.textContent) || 0;
-        counter.textContent = currentCount + 1;
+  <!-- Content of each page will be injected here -->
 
-        const notificationsDiv = document.getElementById("notification");
-        const notification = document.createElement("div");
-        notification.className = "notification";
+  <!-- Notifications Container -->
+  <div id="notification" style="position: fixed; bottom: 10px; left: 10px; z-index: 1000"></div>
 
-        // Display a notification if it's a "secret" type
-        if (data.type === "secret") {
-          notification.innerText = `New secret shared by ~~@anonym${data.data.userId}~~: "${data.data.secret}"`;
-        } else if (data.type === "selected") {
-          notification.innerText = `~~@anonym${data.data.userId}~~ Your secret is the top most discussed for the Day...... Keep it up!"`;
-          notificationsDiv.style.textAlign = "center"
-        } else if (data.type === "reaction") {
-          const { reaction, count, milestone } = data.data;
-          notification.innerText =
-            `Your secret received a new "${reaction}" reaction! Total: ${count}.`
-        } else if(data.type === "top-secret"){
-          notification.innerText = `Most discussed secret goes to ~~@anonym${data.data.userId}~~"`;
-        }
+  <script>
+    const currentUserId = "<%= userId %>";
+    const socket = io({ query: { userId: currentUserId } });
+    const counter = document.querySelector(".counter");
 
-        notificationsDiv.appendChild(notification);
+    // Handle new notifications
+    socket.on("new-notification", (data) => {
+      // Increment the notification counter
+      const currentCount = parseInt(counter.textContent) || 0;
+      counter.textContent = currentCount + 1;
 
-        // Automatically remove the notification after 5 seconds
-        setTimeout(() => {
-          notification.remove();
-        }, 5000);
+      const notificationsDiv = document.getElementById("notification");
+      const notification = document.createElement("div");
+      notification.className = "notification";
 
-      });
-    </script>
-
-    <script>
-      const showAnnouncement = (secret) => {
-        const overlay = document.getElementById("announcement-overlay");
-        // const secretText = document.getElementById("pin-secret");
-        const postedBy = document.getElementById("posted-by");
-        const countdownTimer = document.getElementById("countdown-timer");
-        const closeButton = document.getElementById("close-announcement");
-
-        // secretText.textContent = `"${secret.secret}"`;
-        postedBy.textContent = `Goes to ~~@anonym${secret.user_id}~~`;
-
-        let countdown = 5;
-        const countdownInterval = setInterval(() => {
-          countdown -= 1;
-          countdownTimer.textContent = countdown;
-
-          if (countdown === 0) {
-            clearInterval(countdownInterval);
-            setTimeout(() => {
-              overlay.classList.add("hidden");
-              pinSecret(secret);
-            }, 1000);
-          }
-        }, 1000);
-
-        overlay.classList.remove("hidden");
-
-        closeButton.addEventListener("click", () => {
-          overlay.classList.add("hidden");
-          pinSecret(secret);
-        });
-      };
-    </script>
-
-    <script>
-      const reactToSecret = async (secretId, type) => {
-        try {
-          const response = await fetch(`/secrets/${secretId}/react`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ type }),
-          });
-
-          const data = await response.json();
-          console.log(data)
-
-          if (data.success) {
-            // Update the reactions count on the UI
-            const secretCard = document.querySelector(
-              `[data-id="${secretId}"]`
-            );
-            const reactionCount = secretCard.querySelector(
-              `.reaction-btn[data-type="${type}"] .reaction-count`
-            );
-            reactionCount.textContent = data.reactions[type] || 0;
-
-            // Trigger confetti if milestone is reached
-            if (data.milestone) {
-              triggerConfetti();
-              showMilestoneBadge();
-            }
-          } else {
-            console.error(data.error);
-          }
-        } catch (error) {
-          console.error("Error reacting:", error);
-        }
-      };
-
-      function triggerConfetti() {
-        confetti({
-          particleCount: 100, // Number of confetti particles
-          spread: 70, // Spread angle
-          origin: { y: 0.6 }, // Start position
-          colors: ["#ff6f61", "#ffcc00", "#66ff99", "#6699ff", "#ff99cc"], // Custom colors
-        });
+      // Display a notification if it's a "secret" type
+      if (data.type === "secret") {
+        notification.innerText = `New secret shared by ~~@anonym${data.data.userId}~~: "${data.data.secret}"`;
+      } else if (data.type === "selected") {
+        notification.innerText = `~~@anonym${data.data.userId}~~ Your secret is the top most discussed for the Day...... Keep it up!"`;
+        notificationsDiv.style.textAlign = "center"
+      } else if (data.type === "reaction") {
+        const { reaction, count, milestone } = data.data;
+        notification.innerText =
+          `Your secret received a new "${reaction}" reaction! Total: ${count}.`
+      } else if (data.type === "top-secret") {
+        notification.innerText = `Most discussed secret goes to ~~@anonym${data.data.userId}~~"`;
       }
 
-      function showMilestoneBadge() {
-        const badge = document.getElementById("milestone-badge");
-        badge.classList.remove("hidden");
+      notificationsDiv.appendChild(notification);
 
-        setTimeout(() => {
-          badge.classList.add("hidden");
-        }, 5000); // 5 seconds
-      }
-    </script>
-    <script>
-      document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', function(e) {
-          e.preventDefault();
-          showBrandLogo();
-    
+      // Automatically remove the notification after 5 seconds
+      setTimeout(() => {
+        notification.remove();
+      }, 5000);
+
+    });
+  </script>
+
+  <script>
+    const showAnnouncement = (secret) => {
+      const overlay = document.getElementById("announcement-overlay");
+      // const secretText = document.getElementById("pin-secret");
+      const postedBy = document.getElementById("posted-by");
+      const countdownTimer = document.getElementById("countdown-timer");
+      const closeButton = document.getElementById("close-announcement");
+
+      // secretText.textContent = `"${secret.secret}"`;
+      postedBy.textContent = `Goes to ~~@anonym${secret.user_id}~~`;
+
+      let countdown = 5;
+      const countdownInterval = setInterval(() => {
+        countdown -= 1;
+        countdownTimer.textContent = countdown;
+
+        if (countdown === 0) {
+          clearInterval(countdownInterval);
           setTimeout(() => {
-            window.location.href = this.href;
-          }, 2400); // give animation time to play
-        });
+            overlay.classList.add("hidden");
+            pinSecret(secret);
+          }, 1000);
+        }
+      }, 1000);
+
+      overlay.classList.remove("hidden");
+
+      closeButton.addEventListener("click", () => {
+        overlay.classList.add("hidden");
+        pinSecret(secret);
       });
-    </script>
-  </body>
+    };
+  </script>
+
+  <script>
+    const reactToSecret = async (secretId, type) => {
+      try {
+        const response = await fetch(`/secrets/${secretId}/react`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ type }),
+        });
+
+        const data = await response.json();
+        console.log(data)
+
+        if (data.success) {
+          // Update the reactions count on the UI
+          const secretCard = document.querySelector(
+            `[data-id="${secretId}"]`
+          );
+          const reactionCount = secretCard.querySelector(
+            `.reaction-btn[data-type="${type}"] .reaction-count`
+          );
+          reactionCount.textContent = data.reactions[type] || 0;
+
+          // Trigger confetti if milestone is reached
+          if (data.milestone) {
+            triggerConfetti();
+            showMilestoneBadge();
+          }
+        } else {
+          console.error(data.error);
+        }
+      } catch (error) {
+        console.error("Error reacting:", error);
+      }
+    };
+
+    function triggerConfetti() {
+      confetti({
+        particleCount: 100, // Number of confetti particles
+        spread: 70, // Spread angle
+        origin: { y: 0.6 }, // Start position
+        colors: ["#ff6f61", "#ffcc00", "#66ff99", "#6699ff", "#ff99cc"], // Custom colors
+      });
+    }
+
+    function showMilestoneBadge() {
+      const badge = document.getElementById("milestone-badge");
+      badge.classList.remove("hidden");
+
+      setTimeout(() => {
+        badge.classList.add("hidden");
+      }, 5000); // 5 seconds
+    }
+  </script>
+  <script>
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        showBrandLogo();
+
+        setTimeout(() => {
+          window.location.href = this.href;
+        }, 2400); // give animation time to play
+      });
+    });
+  </script>
+</body>
+
 </html>
