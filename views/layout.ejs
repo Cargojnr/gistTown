@@ -8,7 +8,8 @@
   <script src="https://kit.fontawesome.com/ceb8cfc409.js" crossorigin="anonymous"></script>
   <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://unpkg.com/lottie-web@5.10.0/build/player/lottie.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
   <link rel="stylesheet" href="/styles/style.css" />
   <link rel="stylesheet" href="/styles/media.css" />
   <link rel="stylesheet" href="/styles/new.css" />
@@ -26,6 +27,8 @@
         opacity: 1;
       }
     }
+
+   
   </style>
 </head>
 
@@ -91,12 +94,21 @@
     <div class="container">
       <div class="header">
         <a class="nav-link" href="/dashboard" id="logo"><i class="fas fa-mask fa-2x"></i></a>
+        <form action="/search" method="post">
+          <div class="search">
+            <button class="search-btn" type="submit"><i class="fa fas-magnifying-glass"></i></button>
+            <input name="search" type="text" id="search" placeholder="Search">
+          </div>
+        </form>
         <ul id="navbar">
           <li class="navbar">
             <a class="nav-link" href="/notifications">
               <i class="fas fa-bell fa-2x"></i>
               <span class="counter">0</span>
             </a>
+          </li>
+          <li class="navbar profiled">
+            <button class="nav-btn avatar-profile thumb"><img src="<%= profilePicture %>" alt="" class="profile-pic thumb"></button>
           </li>
           <li class="navbar dropdown">
             <div class="hamburger" id="hamburger">
@@ -191,23 +203,23 @@
   </header>
 
 
-  <div id="milestone-badge" class="hidden">🎉 10 Reactions! 🎉</div>
+    <div id="milestone-badge" class="hidden">🎉 10 Reactions! 🎉</div>
 
-  <div id="announcement-overlay" class="hidden">
-    <div class="trumpet-animation"></div>
-    <div class="overlay-content" text-align="center">
-      <center>
-        <h2>Announcement! 🎇🎆</h2>
-        <h4>Top Most Discussed Gist</h4>
-        <!-- <p id="pin-secret"></p> -->
-        <small id="posted-by"></small>
-        <div id="countdown-timer">5</div>
-      </center>
+    <div id="announcement-overlay" class="hidden">
+      <div class="trumpet-animation"></div>
+      <div class="overlay-content" text-align="center">
+        <center>
+          <h2>Announcement! 🎇🎆</h2>
+          <h4>Top Most Discussed Gist</h4>
+          <!-- <p id="pin-secret"></p> -->
+          <small id="posted-by"></small>
+          <div id="countdown-timer">5</div>
+        </center>
+      </div>
+      <button id="close-announcement" class="btn btn-dark btn-lg">Close</button>
     </div>
-    <button id="close-announcement" class="btn btn-dark btn-lg">Close</button>
-  </div>
 
-  <!-- Content of each page will be injected here -->
+    <!-- Content of each page will be injected here -->
 
   <!-- Notifications Container -->
   <div id="notification" style="position: fixed; bottom: 10px; left: 10px; z-index: 1000"></div>

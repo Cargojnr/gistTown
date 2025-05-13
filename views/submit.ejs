@@ -129,19 +129,70 @@
     </style>
     <body>
 
-    <div class="container">
-        <!-- <i class="fas fa-key fa-6x"></i> -->
-        <h1 class="display-3">Share your Gossips</h1>
-        <p class="secret-text">Don't keep your Gists, share them anonymously!</p>
+    <div class="layout-container container">
 
+        <aside class="left-sidebar card">
+            <ul class="nav">
+              <li class="nav-item">
+                <i class="nav-icon fas fa-home"></i>
+                <a  href="/feeds" class="nav-text">Home</a>
+              </li>
+              <li class="nav-item">
+                <i  class="nav-icon fas fa-message"></i>
+                <a  href="/chat"class="nav-text">Chat</a>
+              </li>
+              <li class="nav-item mid-post-1" >
+                <i  class="nav-icon fas fa-plus-circle"></i>
+                <a  href="/submit"class="nav-text"></a>
+              </li>
+              <!-- <li class="nav-item">
+                <i  class="nav-icon fas fa-bell"></i>
+                <a  href="#"class="nav-text">Alerts</a>
+              </li> -->
+              <li class="nav-item">
+                <i  class="nav-icon fas fa-circle-user"></i>
+                <a  href="/dashboard"class="nav-text">My Profile</a>
+              </li>
+              <li class="nav-item mid-post-2">
+                <a  href="/submit"class="nav-text">Compose Gist</a>
+                <i  class="nav-icon fas fa-circle-plus"></i>
+              </li>
+            </ul>
+          </aside>
+
+           <!-- Modal for the submit form -->
+           <div id="submitModal" class="modal">
+            <div id="tutorial-overlay">
+
+              <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <center>
+                  <h2>Share your Gossip</h2>
+                </center>
+
+                <div id="submitFormContainer">
+                  <!-- Server-rendered form will be injected here -->
+
+                </div>
+              </div>
+            </div>
+          </div>
+         
+
+        <main>      
+           
         <% if (locals.secret) { %>
             <div class="form-container">
+                
+       
                 <form action="/update" method="POST" id="share">
                     <input type="hidden" name="id" value="<%= secret.id %>" class="form-control">
                     <div class="form-group">
                         <textarea class="form-control" name="secret"><%= secret.secret %></textarea>
                     </div>
 
+                   
+                      
                     <div class="form-group category-section">
                         <label for="category" class="category-label">Choose a category</label>
                         <select id="category"
@@ -169,6 +220,10 @@
 
                 <div class="form-container">
                     <form method="POST" action="/share" id="share">
+
+                        <div class="avatar-profile">
+                            <img src="<%= profilePicture %>" class="profile-pic " alt="Avatar Profile">
+                          </div> 
                         <div class="form-group category-section">
                             <label for="category" class="category-label">Choose a category</label>
                             <select id="category" onchange="changeBg(event)" name="category"
@@ -297,7 +352,9 @@
                             <!-- <a href="/logout" class="btn btn-light btn-lg" role="button">Log Out</a> -->
                             <!-- <a href="/submit" class="btn btn-dark secret-btn" role="button">Submit a Secret</a> -->
     </div>
+</main>
     </div>
+
 
     <script>
         const header = document.querySelector('header');
