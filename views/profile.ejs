@@ -355,7 +355,7 @@
     }
 
     .audio-wave-wrapper {
-  padding: 0.5rem;
+  /* padding: 0.5rem; */
   border: 1px solid var(--text-color);
   border-radius: 1rem;
   background: linear-gradient(135deg, var(--body-bg), var(--primary-color));
@@ -377,6 +377,28 @@
 }
 
 
+.audio-visualizer-card {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      margin: 1em auto;
+    }
+    
+    .audio-canvas {
+      width: 95%;
+      height: 60px;
+      display: flex;
+      justify-self: flex-end;
+      margin-top: 0;
+      border-radius: 0 1rem 1rem 0;
+      background:  linear-gradient(135deg, var(--body-bg), var(--primary-color));
+      /* box-shadow: 0 0 10px rgba(255 255 255 / 0.1); */
+    }
+
+
+      .visually-hidden {
+        display: none;
+      }
 
   </style>
 
@@ -1170,169 +1192,206 @@ class=" read" style="
     <!-- Load Day.js and the plugin via CDN -->
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
 
-
-
-
     <script src="https://unpkg.com/wavesurfer.js"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const navigatorForm = document.getElementById("navigator");
-    const postsContainer = document.getElementById("userPostsContainer");
-    const shimmerTemplate = document.getElementById("shimmerTemplate");
-    const userId = navigatorForm.querySelector("#user").value;
-
-    navigatorForm.addEventListener("click", async (e) => {
-      if (e.target.tagName === "BUTTON") {
-        e.preventDefault();
-        const type = e.target.dataset.type;
-
-        // Animate current content out
-        postsContainer.classList.add("fade-out");
-
-        setTimeout(() => {
-          // Clear and show shimmer
-          postsContainer.innerHTML = "";
-          for (let i = 0; i < 5; i++) {
-            const shimmer = shimmerTemplate.content.cloneNode(true);
-            postsContainer.appendChild(shimmer);
-          }
-
-          // Animate new content in after shimmer setup
-          postsContainer.classList.remove("fade-out");
-          postsContainer.classList.add("fade-in");
-        }, 200);
-
-        try {
-          const res = await fetch(`/fetch-posts/${userId}?type=${type}`);
-          const data = await res.json();
-
-          setTimeout(() => {
-            postsContainer.innerHTML = ""; // Clear shimmer
-            if (res.ok && data.posts) {
-              renderPosts(data.posts, type);
-
-              // 🔊 Initialize WaveSurfer after audio posts are rendered
-              if (type === "audio") {
-  data.posts.forEach(post => {
-    requestAnimationFrame(() => {
-      const waveformId = `#waveform-${post.id}`;
-      const waveformElement = document.querySelector(waveformId);
-
-      if (waveformElement && post.url && post.url.startsWith("http")) {
-        const wave = WaveSurfer.create({
-          container: waveformId,
-          waveColor: '#ddd',
-          progressColor: '#555',
-          height: 40,
-          responsive: true,
-          barWidth: 2,
-          barGap: 2
-        });
-
-        wave.load(post.url);
-
-        const playBtn = document.querySelector(`.wave-play-btn[data-id="${post.id}"]`);
-        playBtn.addEventListener("click", () => {
-          wave.playPause();
-        });
-
-        wave.on("play", () => playBtn.innerText = "⏸️");
-        wave.on("pause", () => playBtn.innerText = "▶️");
-        wave.on("finish", () => playBtn.innerText = "▶️");
-      } else {
-        console.warn("Waveform container or valid URL not found for:", post);
-      }
-    });
-  });
-}
-
-            } else {
-              postsContainer.innerHTML = `<li>No ${type} posts found.</li>`;
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const navigatorForm = document.getElementById("navigator");
+        const postsContainer = document.getElementById("userPostsContainer");
+        const shimmerTemplate = document.getElementById("shimmerTemplate");
+        const userId = navigatorForm.querySelector("#user").value;
+    
+        navigatorForm.addEventListener("click", async (e) => {
+          if (e.target.tagName === "BUTTON") {
+            e.preventDefault();
+            const type = e.target.dataset.type;
+    
+            postsContainer.classList.add("fade-out");
+    
+            setTimeout(() => {
+              postsContainer.innerHTML = "";
+              for (let i = 0; i < 5; i++) {
+                const shimmer = shimmerTemplate.content.cloneNode(true);
+                postsContainer.appendChild(shimmer);
+              }
+              postsContainer.classList.remove("fade-out");
+              postsContainer.classList.add("fade-in");
+            }, 200);
+    
+            try {
+              const res = await fetch(`/fetch-posts/${userId}?type=${type}`);
+              const data = await res.json();
+    
+              setTimeout(() => {
+                postsContainer.innerHTML = "";
+    
+                if (res.ok && data.posts) {
+                  renderPosts(data.posts, type);
+    
+                  if (type === "audio") {
+                    data.posts.forEach(post => {
+                      const waveformElement = document.querySelector(`#waveform-${post.id}`);
+                      const canvas = document.getElementById(`visualizer-${post.id}`);
+                      const audioUrl = post.url;
+    
+                      if (waveformElement && canvas && audioUrl) {
+                        const wave = WaveSurfer.create({
+                          container: waveformElement,
+                          waveColor: "#ddd",
+                          progressColor: "#555",
+                          height: 40,
+                          responsive: true,
+                          barWidth: 2,
+                          barGap: 2
+                        });
+    
+                        wave.load(audioUrl);
+    
+                        const playBtn = document.querySelector(`.wave-play-btn[data-id='${post.id}']`);
+                        if (playBtn) {
+                          playBtn.addEventListener("click", () => wave.playPause());
+                          wave.on("play", () => playBtn.innerText = "⏸️");
+                          wave.on("pause", () => playBtn.innerText = "▶️");
+                          wave.on("finish", () => playBtn.innerText = "▶️");
+                        }
+    
+                        wave.on("ready", () => {
+                          const audio = wave.media;
+                          setupVisualizer(audio, canvas, wave);
+                        });
+                      } else {
+                        console.warn("Waveform element, canvas, or audio URL missing for post:", post.id);
+                      }
+                    });
+                  }
+                } else {
+                  postsContainer.innerHTML = `<li>No ${type} posts found.</li>`;
+                }
+              }, 1000);
+            } catch (err) {
+              console.error("Fetch error:", err);
+              postsContainer.innerHTML = `<li>Error loading ${type} posts.</li>`;
             }
-          }, 1000); // mimic shimmer delay
-        } catch (err) {
-          console.error("Fetch error:", err);
-          postsContainer.innerHTML = `<li>Error loading ${type} posts.</li>`;
-        }
-      }
-    });
-
-    function renderPosts(posts, type) {
-      postsContainer.innerHTML = posts.map(post => {
-        const username = `@amebo${post.user_id}`;
-        const id = post.id;
-        const profilePic = post.profile_picture || post.profile_pic || "../../img/avatar/thumbs/girrafe.png";
-        const timestamp = post.timestamp || new Date().toLocaleString();
-        const category = post.category || "random";
-        const likeCount = post.reactions?.like?.count || 0;
-        const commentCount = post.comments?.length || 0;
-        const isAudio = type === "audio";
-
-        const categoryText = isAudio
-          ? "🎧"
-          : {
-              funny: "<i class='fas fa-laugh'></i>",
-              love: "<i class='fas fa-heart'></i>",
-              nasty: "<i class='fas fa-skull-crossbones'></i>",
-              sassy: "<i class='fas fa-face-meh'></i>",
-              hilarious: "<i class='fas fa-teeth-open'></i>",
-              random: "<i class='fas fa-shuffle'></i>"
-            }[category] || "<i class='fas fa-shuffle'></i>";
-
-        const cardContent = isAudio
-          ? `
-            <div class="audio-wave-wrapper">
-              <div class="waveform" id="waveform-${id}"></div>
-              <button class="wave-play-btn" data-id="${id}">▶️</button>
-            </div>
-          `
-          : `<p class="content-preview">${truncateText(post.secret, 250)}</p>`;
-
-        return `
-          <li class="secret fade-in">
-            <div class="card">
-              <span class="tag ${category} random">${categoryText}</span>
-              <div class="card-header">
-                <div class="avatar-profile">
-                  <img src="../.${profilePic}" alt="Profile Picture" class="profile-pic">
+          }
+        });
+    
+        function renderPosts(posts, type) {
+          postsContainer.innerHTML = posts.map(post => {
+            const username = `@amebo${post.user_id}`;
+            const id = post.id;
+            const profilePic = post.profile_picture || post.profile_pic || "../../img/avatar/thumbs/girrafe.png";
+            const timestamp = post.timestamp || new Date().toLocaleString();
+            const category = post.category || "random";
+            const likeCount = post.reactions?.like?.count || 0;
+            const commentCount = post.comments?.length || 0;
+            const isAudio = type === "audio";
+    
+            const categoryText = isAudio
+              ? "🎧"
+              : {
+                  funny: "<i class='fas fa-laugh'></i>",
+                  love: "<i class='fas fa-heart'></i>",
+                  nasty: "<i class='fas fa-skull-crossbones'></i>",
+                  sassy: "<i class='fas fa-face-meh'></i>",
+                  hilarious: "<i class='fas fa-teeth-open'></i>",
+                  random: "<i class='fas fa-shuffle'></i>"
+                }[category] || "<i class='fas fa-shuffle'></i>";
+    
+            const cardContent = isAudio
+              ? `
+                <div class="audio-visualizer-card">
+                  <div class="audio-wave-wrapper">
+                    <div class="waveform visually-hidden" id="waveform-${id}"></div>
+                    <button class="wave-play-btn" data-id="${id}">▶️</button>
+                    <canvas id="visualizer-${id}" class="audio-canvas"></canvas>
+                  </div>
+                  
                 </div>
-                <div class="user-info">
-                  <p class="username">${username}</p>
-                  <span class="timestamp" data-raw='${timestamp}'>${timestamp}</span>
-                </div>
-              </div>
-
-              <div class="card-content">
-                ${cardContent}
-              </div>
-
-              <div class="reactions sleek">
-                <div class="secret-card" data-id=${id}>
-                  <div class="reactions">
-                    <button class="reaction-btn reaction" data-type="like">
-                      ❤️ <span class="reaction-count">${likeCount}</span>
+              `
+              : `<p class="content-preview">${truncateText(post.secret, 250)}</p>`;
+    
+            return `
+              <li class="secret fade-in">
+                <div class="card">
+                  <span class="tag ${category} random">${categoryText}</span>
+                  <div class="card-header">
+                    <div class="avatar-profile">
+                      <img src="../.${profilePic}" alt="Profile Picture" class="profile-pic">
+                    </div>
+                    <div class="user-info">
+                      <p class="username">${username}</p>
+                      <span class="timestamp" data-raw='${timestamp}'>${timestamp}</span>
+                    </div>
+                  </div>
+                  <div class="card-content">${cardContent}</div>
+                  <div class="reactions sleek">
+                    <div class="secret-card" data-id=${id}>
+                      <div class="reactions">
+                        <button class="reaction-btn reaction" data-type="like">
+                          ❤️ <span class="reaction-count">${likeCount}</span>
+                        </button>
+                      </div>
+                      <div class="floating-lottie" data-type="like"></div>
+                    </div>
+                    <button class="reaction-btn comment-btn">
+                      💬 <span class="comment-count">${commentCount}</span>
                     </button>
                   </div>
-                  <div class="floating-lottie" data-type="like"></div>
                 </div>
-
-                <button class="reaction-btn comment-btn">
-                  💬 <span class="comment-count">${commentCount}</span>
-                </button>
-              </div>
-            </div>
-          </li>
-        `;
-      }).join("");
-    }
-
-    function truncateText(text, maxLength) {
-      if (!text || text.length <= maxLength) return text;
-      return text.substring(0, maxLength) + '...';
-    }
-  });
-</script>
-
+              </li>
+            `;
+          }).join("");
+        }
+    
+        function truncateText(text, maxLength) {
+          return !text || text.length <= maxLength ? text : text.substring(0, maxLength) + '...';
+        }
+    
+        function setupVisualizer(audioElement, canvas, waveInstance) {
+          const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          const analyser = audioCtx.createAnalyser();
+          const source = audioCtx.createMediaElementSource(audioElement);
+          const ctx = canvas.getContext("2d");
+    
+          source.connect(analyser);
+          analyser.connect(audioCtx.destination);
+          analyser.fftSize = 256;
+    
+          const bufferLength = analyser.frequencyBinCount;
+          const dataArray = new Uint8Array(bufferLength);
+          canvas.width = canvas.offsetWidth;
+          canvas.height = canvas.offsetHeight;
+    
+          const width = canvas.width;
+          const height = canvas.height;
+          const barWidth = width / bufferLength;
+    
+          function draw() {
+            requestAnimationFrame(draw);
+            analyser.getByteFrequencyData(dataArray);
+            ctx.clearRect(0, 0, width, height);
+            dataArray.forEach((value, i) => {
+              const barHeight = (value / 255) * height;
+              const hue = (i / bufferLength) * 360;
+              ctx.fillStyle = `hsl(${hue}, 70%, 50%)`;
+              ctx.fillRect(i * barWidth, height - barHeight, barWidth - 1, barHeight);
+            });
+          }
+    
+          const startDrawing = () => {
+            audioCtx.resume();
+            draw();
+          };
+    
+          // Sync drawing to play events
+          if (waveInstance) {
+            waveInstance.on("play", startDrawing);
+          } else {
+            audioElement.onplay = startDrawing;
+          }
+        }
+      });
+    </script>
+    
     <script>
       document.addEventListener('DOMContentLoaded', function () {
 
