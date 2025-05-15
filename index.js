@@ -298,13 +298,32 @@ app.get("/random-secret", async (req, res) => {
 
 app.get("/feeds", async (req, res) => {
     if (req.isAuthenticated()) {
+        const userId = req.user.id
         try {
             const userTheme = req.user.color || 'default';
             const mode = req.user.mode || "light"
             const result = await db.query("SELECT timestamp, reported, secrets.id, reactions,profile_picture, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id ORDER BY secrets.id DESC ")
+            const audioPosts = await Audio.findAll({
+                where: { userId },
+                order: [['uploadDate', 'DESC']]
+              });
+
+              const userInfo = await db.query(`SELECT username, profile_picture FROM users WHERE id = $1`, [userId]);
+      const user = userInfo.rows[0];
+
+      const formatted = audioPosts.map(audio => ({
+        id: audio.id,
+        url: audio.url,
+        user_id: audio.userId,
+        username: user.username,
+        profile_pic: user.profile_picture,
+        timestamp: dayjs(audio.uploadDate).fromNow()
+      }));
+
+        
 
             const usersSecret = result.rows;
-            res.render("secrets", { secrets: usersSecret, userId: req.user.id, profilePicture: req.user.profile_picture, username: req.user.username, theme: userTheme, mode: mode, reactions: JSON.stringify(usersSecret.map(secret => secret.reactions || {})), })
+            res.render("secrets", { secrets: usersSecret, audioPost: formatted, userId: req.user.id, profilePicture: req.user.profile_picture, username: req.user.username, theme: userTheme, mode: mode, reactions: JSON.stringify(usersSecret.map(secret => secret.reactions || {})), })
         } catch (err) {
             console.log(err)
         }
