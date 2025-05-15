@@ -88,7 +88,7 @@ body {
       background: var(--container-bg) !important;
       border-radius: 30px;
       padding: 1rem;
-     
+      margin-bottom: 0rem;
     }
 
   .right-sidebar,
@@ -100,9 +100,6 @@ body {
     flex-direction: column !important;
   }
 
-  .aside{
-    margin-bottom: 2rem;
-  }
   
   main {
     flex: 1;

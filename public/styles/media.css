@@ -20,6 +20,11 @@
     padding: 0;
   }
 
+  .aisde {
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+  }
+
   .left-sidebar {
     position: fixed !important;
     top: auto;
@@ -60,11 +65,15 @@
     width: 200px !important;
   }
 
+  .nav-item {
+    margin-bottom: 0;
+  }
+
   
   .scroll-btn {
     position: fixed;
-    right: 5rem ;
-    bottom: 10rem !important;
+    right: 1rem ;
+    /* bottom: -10rem !important; */
 }
 
 .search {

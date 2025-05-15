@@ -385,29 +385,35 @@
       <aside class="left-sidebar">
         <div class="aside">
           <ul class="nav">
-            <li class="nav-item">
-              <i class="nav-icon fas fa-home"></i>
-              <a href="/feeds" class="nav-text">Home</a>
+            <li class="nav-item current">
+              <a href="/feeds">
+                <i class="nav-icon fas fa-home"></i>
+                <span class="nav-text">Home</span>
+              </a>
             </li>
             <li class="nav-item">
-              <i class="nav-icon fas fa-message"></i>
-              <a href="/chat" class="nav-text">Chat</a>
+              <a href="/chat">
+                <i class="nav-icon fas fa-message"></i>
+                <span class="nav-text">Chat</span>
+              </a>
             </li>
             <button id="openSubmitForm" class="nav-item mid-post-1">
               <i class="nav-icon fas fa-plus-circle"></i>
             </button>
-            <li class="nav-item current">
-              <i class="nav-icon fas fa-circle-user"></i>
-              <a href="/profile" class="nav-text">My Profile</a>
+            <li class="nav-item">
+              <a href="/profile">
+                <i class="nav-icon fas fa-circle-user"></i>
+                <span class="nav-text">My Profile</span>
+              </a>
             </li>
             <li class="nav-item mid-post-2">
-              <a href="/submit" class="nav-text">Compose Gist</a>
-              <i class="nav-icon fas fa-circle-plus"></i>
+              <a  href="/submit"class="nav-text">Compose Gist</a>
+              <i  class="nav-icon fas fa-circle-plus"></i>
             </li>
           </ul>
         </div>
-      </aside>
-
+        </aside>
+  
       <main>
         <div class="jumbotron text-center">
           <div class="container">
@@ -435,7 +441,7 @@
 
                 <hr style="margin-top: 2rem;">
                 <form id="navigator">
-                  <input type="hidden" id="user" value="<%= userId %>">
+                  <input type="hidden" id="user" name="user" value="<%= userId %>">
                   <button data-type="text">Text</button>
                   <button data-type="audio">Audio</button>
                 </form>
@@ -735,7 +741,7 @@ class=" read" style="
 
               <hr style="margin-top: 2rem;">
               <form id="navigator">
-                <input type="hidden" name="user" value="<%= userId %>">
+                <input type="hidden" id="user" name="user" value="<%= userId %>">
                 <button type="button" data-type="text">Text</button>
                 <button type="button" data-type="audio">Audio</button>
               </form>
@@ -1173,7 +1179,7 @@ class=" read" style="
     const navigatorForm = document.getElementById("navigator");
     const postsContainer = document.getElementById("userPostsContainer");
     const shimmerTemplate = document.getElementById("shimmerTemplate");
-    const userId = document.getElementById("user").value;
+    const userId = navigatorForm.querySelector("#user").value;
 
     navigatorForm.addEventListener("click", async (e) => {
       if (e.target.tagName === "BUTTON") {
@@ -1197,7 +1203,7 @@ class=" read" style="
         }, 200);
 
         try {
-          const res = await fetch(`/fetch-posts/:${user}?type=${type}`);
+          const res = await fetch(`/fetch-posts/${userId}?type=${type}`);
           const data = await res.json();
 
           setTimeout(() => {
@@ -1207,27 +1213,38 @@ class=" read" style="
 
               // 🔊 Initialize WaveSurfer after audio posts are rendered
               if (type === "audio") {
-                data.posts.forEach(post => {
-                  const wave = WaveSurfer.create({
-                    container: `#waveform-${post.id}`,
-                    waveColor: '#ddd',
-                    progressColor: '#555',
-                    height: 40,
-                    responsive: true,
-                    barWidth: 2,
-                    barGap: 2
-                  });
-                  if (post.url) {
-  wave.load(post.url);
+  data.posts.forEach(post => {
+    requestAnimationFrame(() => {
+      const waveformId = `#waveform-${post.id}`;
+      const waveformElement = document.querySelector(waveformId);
+
+      if (waveformElement && post.url && post.url.startsWith("http")) {
+        const wave = WaveSurfer.create({
+          container: waveformId,
+          waveColor: '#ddd',
+          progressColor: '#555',
+          height: 40,
+          responsive: true,
+          barWidth: 2,
+          barGap: 2
+        });
+
+        wave.load(post.url);
+
+        const playBtn = document.querySelector(`.wave-play-btn[data-id="${post.id}"]`);
+        playBtn.addEventListener("click", () => {
+          wave.playPause();
+        });
+
+        wave.on("play", () => playBtn.innerText = "⏸️");
+        wave.on("pause", () => playBtn.innerText = "▶️");
+        wave.on("finish", () => playBtn.innerText = "▶️");
+      } else {
+        console.warn("Waveform container or valid URL not found for:", post);
+      }
+    });
+  });
 }
-
-
-                  document.querySelector(`.wave-play-btn[data-id="${post.id}"]`)
-                    .addEventListener("click", () => {
-                      wave.playPause();
-                    });
-                });
-              }
 
             } else {
               postsContainer.innerHTML = `<li>No ${type} posts found.</li>`;
@@ -1242,9 +1259,9 @@ class=" read" style="
 
     function renderPosts(posts, type) {
       postsContainer.innerHTML = posts.map(post => {
-        const username = post.username || `@amebo${post.user_id}`;
+        const username = `@amebo${post.user_id}`;
         const id = post.id;
-        const profilePic = post.profile_picture || post.profile_pic || "/img/avatar/thumbs/girrafe.png";
+        const profilePic = post.profile_picture || post.profile_pic || "../../img/avatar/thumbs/girrafe.png";
         const timestamp = post.timestamp || new Date().toLocaleString();
         const category = post.category || "random";
         const likeCount = post.reactions?.like?.count || 0;
@@ -1274,10 +1291,10 @@ class=" read" style="
         return `
           <li class="secret fade-in">
             <div class="card">
-              <span class="tag ${category}">${categoryText}</span>
+              <span class="tag ${category} random">${categoryText}</span>
               <div class="card-header">
                 <div class="avatar-profile">
-                  <img src="${profilePic}" alt="Profile Picture" class="profile-pic">
+                  <img src="../.${profilePic}" alt="Profile Picture" class="profile-pic">
                 </div>
                 <div class="user-info">
                   <p class="username">${username}</p>
@@ -1868,6 +1885,5 @@ class=" read" style="
     <script src="/js/defaultTheme.js"></script>
     <script src="/js/generate-thumbnails.js"></script>
 
-<script src="https://unpkg.com/wavesurfer.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
   </body>

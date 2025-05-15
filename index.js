@@ -316,10 +316,9 @@ app.get("/feeds", async (req, res) => {
 
 app.get("/fetch-posts/:user", async (req, res) => {
   const { type } = req.query;
+  const userId = req.params.user;
 
   if (req.isAuthenticated()){
-
-  const userId = req.params;
 
   try {
     if (type === "text") {
