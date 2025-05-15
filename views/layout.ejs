@@ -13,94 +13,33 @@
   <link rel="stylesheet" href="/styles/style.css" />
   <link rel="stylesheet" href="/styles/media.css" />
   <link rel="stylesheet" href="/styles/new.css" />
-  <style>
-    #brand-logo-container {
-      animation: fadeIn 0.5s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-
-      to {
-        opacity: 1;
-      }
-    }
-
-   
-  </style>
 </head>
 
 <body>
-  <div id="brand-logo-container">
-    <div id="brand-animation" style="width: 150px; height: 150px;"></div>
-    <h1 id="brand-logo">GistTown</h1>
-  </div>
 
   <script>
     let lottiePlayer = null;
 
     window.addEventListener("load", function () {
       window.scrollTo({ top: 0, behavior: "smooth" });
-      hideBrandLogo();
     });
-
-    window.addEventListener("beforeunload", function (e) {
-      showBrandLogo();
-    });
-
-
-    function showBrandLogo() {
-      const container = document.getElementById("brand-logo-container");
-      const animContainer = document.getElementById("brand-animation");
-
-      container.style.display = "flex";
-      document.getElementById("brand-logo").style.display = "none"; // hide text
-
-
-      if (!lottiePlayer) {
-        lottiePlayer = lottie.loadAnimation({
-          container: animContainer,
-          renderer: "svg",
-          loop: true,
-          autoplay: true,
-          path: "img/lottie/brandlogo.json", // <-- put your lottie JSON file path here
-        });
-      } else {
-        lottiePlayer.goToAndPlay(0);
-      }
-    }
-
-
-    document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "hidden") {
-        showBrandLogo();
-      } else {
-        hideBrandLogo();
-      }
-    });
-
-    function hideBrandLogo() {
-      document.getElementById("brand-logo-container").style.display = "none";
-    }
-
-
-
-  </script>
+</script>
 
 
   <header>
     <div class="container">
       <div class="header">
-        <a class="nav-link" href="/dashboard" id="logo"><i class="fas fa-mask fa-2x"></i></a>
-        <form action="/search" method="post">
+        <a class="nav-link" href="../../dashboard" id="logo"><i class="fas fa-mask fa-2x"></i></a>
+        <form id="liveSearchForm" action="/search" method="post" autocomplete="off">
           <div class="search">
-            <button class="search-btn" type="submit"><i class="fa fas-magnifying-glass"></i></button>
-            <input name="search" type="text" id="search" placeholder="Search">
+            <button class="search-btn" type="submit">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+            <input name="search" type="text" id="searchInput" placeholder="Search">
           </div>
+          <ul id="suggestions" class="suggestion-box"></ul>
         </form>
-        <ul id="navbar">
+                <ul id="navbar">
           <li class="navbar">
             <a class="nav-link" href="/notifications">
               <i class="fas fa-bell fa-2x"></i>
@@ -108,7 +47,7 @@
             </a>
           </li>
           <li class="navbar profiled">
-            <button class="nav-btn avatar-profile thumb"><img src="<%= profilePicture %>" alt="" class="profile-pic thumb"></button>
+            <button class="nav-btn avatar-profile thumb"><img src="../.<%= profilePicture %>" alt="" class="profile-pic thumb"></button>
           </li>
           <li class="navbar dropdown">
             <div class="hamburger" id="hamburger">
@@ -119,7 +58,7 @@
             <div id="menu" class="menu-hidden">
               <div class="container">
                 <div class="profile-header">
-                  <img src="<%= profilePicture %>" alt="Profile Avatar" class="profile-avatar" />
+                  <img src="../.<%= profilePicture %>" alt="Profile Avatar" class="profile-avatar" />
 
                   <h3 class="username">Hello, <span>@amebo<%= userId %></span></h3>
                 </div>
@@ -200,6 +139,11 @@
         </ul>
       </div>
     </div>
+    <div id="announcement">
+      <!-- <div id="pinned" class="pinned-secret">
+        <div id="countdown" style="margin-top: 20px; font-weight: bold; text-align: center;"></div>
+      </div>
+    </div> -->
   </header>
 
 
@@ -295,6 +239,7 @@
         pinSecret(secret);
       });
     };
+    
   </script>
 
   <script>
@@ -352,18 +297,69 @@
       }, 5000); // 5 seconds
     }
   </script>
-  <script>
-    document.querySelectorAll('.nav-link').forEach(link => {
-      link.addEventListener('click', function (e) {
-        e.preventDefault();
-        showBrandLogo();
 
-        setTimeout(() => {
-          window.location.href = this.href;
-        }, 2400); // give animation time to play
-      });
-    });
-  </script>
+<script>
+  const searchInput = document.getElementById("searchInput");
+  const suggestionsBox = document.getElementById("suggestions");
+
+  let debounceTimer;
+
+  searchInput.addEventListener("keyup", function () {
+    clearTimeout(debounceTimer);
+    const query = this.value.trim();
+
+    if (query.length === 0) {
+      suggestionsBox.innerHTML = "";
+      return;
+    }
+
+    debounceTimer = setTimeout(() => {
+      fetch("/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ search: query })
+      })
+        .then(res => res.json())
+        .then(data => {
+          suggestionsBox.innerHTML = "";
+
+          if (data.searchResults.length === 0) {
+            suggestionsBox.innerHTML = "<li class='no-result'>No result found</li>";
+            return;
+          }
+
+          function highlightMatch(text, keyword) {
+  const regex = new RegExp(`(${keyword})`, "gi");
+  return text.replace(regex, '<mark>$1</mark>');
+}
+
+data.searchResults.forEach(item => {
+  const li = document.createElement("li");
+  li.classList.add("suggestion-item");
+
+  const highlightedText = highlightMatch(item.secret, query);
+
+  li.innerHTML = `
+    <span class="arrow">→</span>
+    <span class="text">${highlightedText}</span>
+  `;
+
+  li.addEventListener("click", () => {
+    window.location.href = `/secret/${item.id}`; // adjust if needed
+  });
+
+  suggestionsBox.appendChild(li);
+});
+
+        })
+        .catch(err => console.error("Live search error:", err));
+    }, 300); // 300ms debounce
+  });
+</script>
+
+
 </body>
 
 </html>

@@ -1,4 +1,5 @@
 document.getElementById("openSubmitForm").addEventListener("click", () => {
+  
     // Check if the user is on mobile (example check for width)
     if (window.innerWidth <= 768) {
       // Redirect to the submit page for mobile users

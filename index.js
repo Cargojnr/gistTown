@@ -21,6 +21,9 @@ import http from "http"
 import multer from "multer";
 import Audio from './models/Audio.js';
 import sequelize from './db.js';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime.js';
+dayjs.extend(relativeTime);
 
 
 const options = {
@@ -140,22 +143,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// const transporter = nodemailer.createTransport({
-//     host: 'smtp.gmail.com',
-//     port: 587,
-//     secure: false, // true for 465, false for other ports
-//     auth: {
-//         user: process.env.EMAIL_USER,
-//         pass: process.env.EMAIL_PASS,
-//     },
-// });
-
-
-// app.enable("trust proxy");
-// app.use((req, res, next) => {
-//     if (req.secure) return next();
-//     res.redirect("http://" + req.headers.host + req.url);
-// });
 
 
 const activeUsers = new Set();
@@ -217,16 +204,51 @@ app.get("/register", (req, res) => {
 
 app.get("/profile", async (req, res) => {
     if (req.isAuthenticated()) {
+        const userId = req.user.id;
         try {
-            const result = await db.query("SELECT * FROM users WHERE id = $1", [req.user.id])
-            const userDetails = result.rows[0];
-            console.log(userDetails.profile_picture)
-            res.render("profile", { userId: req.user.id, profilePicture: req.user.profile_picture, username: req.user.username, profile: userDetails });
+            const result = await db.query("SELECT timestamp, reported, secrets.id, reactions,profile_picture, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id  WHERE user_id = $1", [req.user.id])
+            
+            const audioFiles = await Audio.findAll({
+                where: { userId },
+            });
+
+            const userDetails = result.rows;
+
+            res.render("profile", { userId: req.user.id, profilePicture: req.user.profile_picture, username: req.user.username, profile: userDetails, userAudio: audioFiles });
         } catch (err) {
             console.log(err)
         }
     }
 
+})
+
+app.get("/profile/amebo/:user", async(req, res) => {
+    const params = req.params.user
+    if(req.isAuthenticated()){
+        const userId = req.user.id;
+         try{
+            const result = await db.query("SELECT timestamp, reported, secrets.id, reactions,profile_picture, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id WHERE user_id = $1 ORDER by secrets.id DESC", [params])
+            
+
+            const userProfile = result.rows;
+            const userid = userProfile[0].user_id
+            const userPicture = userProfile[0].profile_picture
+
+            const audioFiles = await Audio.findAll({
+                where: { userId },
+            });
+            
+            const totalReactions = result.reactions
+            const totalComments = result.comment
+            console.log(userPicture)
+            res.render("profile", {userId:userid, userPicture, profilePicture: req.user.profile_picture, userProfile, userAudio: audioFiles, totalComments, totalReactions})
+
+         } catch(err){
+            console.log(err)
+         }
+    } else {
+        res.redirect("/login")
+    }
 })
 
 app.get("/random", async (req, res) => {
@@ -274,52 +296,6 @@ app.get("/random-secret", async (req, res) => {
 })
 
 
-
-app.get("/dashboard", async (req, res) => {
-
-    const message = req.session.loginMessage;
-    delete req.session.loginMessage;
-
-
-
-    console.log(req.user);
-    if (req.isAuthenticated()) {
-        const userId = req.user.id;
-
-        try {
-            const userSecret = await db.query("SELECT timestamp, reactions, secrets.id,secret, secrets.user_id FROM secrets JOIN users ON users.id = user_id WHERE secrets.user_id = $1 ORDER BY secrets.id ASC", [
-                req.user.id
-            ])
-
-            const audioFiles = await Audio.findAll({
-                where: { userId },
-            });
-            const secrets = userSecret.rows;
-
-            const totalReactions = secrets.reactions
-            const totalComments = secrets.comment
-
-            const mode = req.user.mode || "light"
-
-            const trendingQuery = await db.query("SELECT reactions, secrets.id, secret, secrets.user_id FROM secrets JOIN users ON users.id = user_id ORDER BY secrets.id DESC LIMIT 14")
-
-
-
-            const trendingGist = trendingQuery.rows
-
-            if (secrets.length > 0 || audioFiles.length > 0) {
-                res.render("secrets", { heading: "My Gossips🤫", pGrph: null, secret: secrets, userAudio: audioFiles, trendingGist, userId: req.user.id, profilePicture: req.user.profile_picture, username: req.user.username, mode: mode, message, dashboard: true, totalPosts: secrets.length, totalComments, totalReactions })
-            } else {
-                res.render("secrets", { heading: ``, pGrph: "Welcome to the Safe Space, where you can find comfort and anonymous support. Feel free to be an Amebo (i.e share or read gists in a judgment-free zone).", trendingGist, userId: req.user.id, profilePicture: req.user.profile_picture, username: req.user.username, mode: mode, message, dashboard: true , totalPosts: 0, totalComments: 0, totalReactions: 0})
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    } else {
-        res.redirect("login")
-    }
-});
-
 app.get("/feeds", async (req, res) => {
     if (req.isAuthenticated()) {
         try {
@@ -327,10 +303,7 @@ app.get("/feeds", async (req, res) => {
             const mode = req.user.mode || "light"
             const result = await db.query("SELECT timestamp, reported, secrets.id, reactions,profile_picture, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id ORDER BY secrets.id DESC ")
 
-            // const reportResult = await db.query("SELECT reports.status, secrets.id, user_id, category, secret FROM secrets JOIN reports ON secrets.id = reports.secret_id  ORDER BY secrets.id DESC ")
-            // console.log(reportResult)
             const usersSecret = result.rows;
-            // console.log(usersSecret)
             res.render("secrets", { secrets: usersSecret, userId: req.user.id, profilePicture: req.user.profile_picture, username: req.user.username, theme: userTheme, mode: mode, reactions: JSON.stringify(usersSecret.map(secret => secret.reactions || {})), })
         } catch (err) {
             console.log(err)
@@ -339,6 +312,82 @@ app.get("/feeds", async (req, res) => {
         res.redirect("login")
     }
 })
+
+
+app.get("/fetch-posts/:user", async (req, res) => {
+  const { type } = req.query;
+
+  if (req.isAuthenticated()){
+
+  const userId = req.params;
+
+  try {
+    if (type === "text") {
+      const result = await db.query(`
+        SELECT timestamp, reported, secrets.id, reactions, profile_picture, username, user_id, color, category, secret
+        FROM secrets
+        JOIN users ON users.id = user_id
+        WHERE user_id = $1
+      `, [userId]);
+
+      return res.json({ posts: result.rows });
+
+    } else if (type === "audio") {
+      const audioPosts = await Audio.findAll({
+        where: { userId },
+        order: [['uploadDate', 'DESC']]
+      });
+
+      const userInfo = await db.query(`SELECT username, profile_picture FROM users WHERE id = $1`, [userId]);
+      const user = userInfo.rows[0];
+
+      const formatted = audioPosts.map(audio => ({
+        id: audio.id,
+        url: audio.url,
+        user_id: audio.userId,
+        username: user.username,
+        profile_pic: user.profile_picture,
+        timestamp: dayjs(audio.uploadDate).fromNow()
+      }));
+
+      return res.json({ posts: formatted });
+
+    } else {
+      return res.status(400).json({ message: "Invalid type" });
+    }
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+} else {
+    res.redirect("/login")
+}
+});
+  
+
+app.get("/api/comment-counts", async (req, res) => {
+    try {
+        const result = await db.query(`
+            SELECT secret_id, COUNT(*) AS count
+            FROM comments
+            GROUP BY secret_id
+        `);
+
+        // Format into a map: { [secret_id]: count }
+        const counts = {};
+        result.rows.forEach(row => {
+            counts[row.secret_id] = parseInt(row.count);
+        });
+
+        res.json(counts);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Error fetching comment counts" });
+    }
+});
+
+
 
 app.get("/chat", async (req, res) => {
     if (req.isAuthenticated()) {
@@ -501,23 +550,6 @@ app.get("/section/:section", async (req, res) => {
 
 })
 
-app.get("/categories/:category", async (req, res) => {
-    const { category } = req.params;
-    const userTheme = req.user.color || 'default';
-    const mode = req.user.mode || "light"
-    try {
-        const result = await db.query("SELECT reactions, secrets.id, username,user_id, color, secrets.category, secret FROM secrets JOIN users ON users.id = user_id WHERE category = $1 ORDER BY secrets.id DESC ", [
-            category
-        ])
-
-        const response = result.rows
-        res.render("section", { secrets: response, userId: req.user.id, profilePicture: req.user.profile_picture, username: req.user.username, theme: userTheme, mode: mode, reactions: JSON.stringify(response.reactions || {}) })
-        console.log(`Fetched secrets for category "${category}":`, response);
-    } catch (err) {
-        console.log(err)
-        res.status(500).json({ error: 'Failed to fetch secrets' });
-    }
-});
 
 app.get('/top-discussed', async (req, res) => {
     try {
@@ -629,7 +661,7 @@ app.get("/secret/:id", async (req, res) => {
 
         // Fetch secret and reactions in one query
         const secretQuery = `
-            SELECT secret, secrets.id, secrets.user_id, category, reactions 
+            SELECT timestamp, profile_picture, secret, secrets.id, secrets.user_id, category, reactions 
             FROM secrets 
             JOIN users ON users.id = user_id 
             WHERE secrets.id = $1 
@@ -703,7 +735,7 @@ app.get("/more/:id", async (req, res) => {
         const data = secretResult.rows[0];
 
         if (!data) {
-            return res.status(404).render("not-found", { message: "Secret not found" });
+            return res.status(404).json({ message: "Secret not found" });
         }
 
         // Fetch comments
@@ -972,14 +1004,6 @@ app.get("/notifications", async (req, res) => {
 
 
 
-// wss.on('connection', ws => {
-//     ws.on('message', message => {
-//         console.log('recieved', message);
-//     });
-
-//     ws.send(JSON.stringify({type: 'notification', message: 'You have a new notification'}));
-// })
-
 
 
 app.post("/find-account", async (req, res) => {
@@ -1000,30 +1024,29 @@ app.post("/find-account", async (req, res) => {
 })
 
 app.post("/search", async (req, res) => {
-    const searckKey = req.body.search
-    if (searckKey !== "") {
-        try {
-            const result = await db.query("SELECT * FROM secrets WHERE LOWER(secret) = $1", [
-                searckKey.toLowerCase()
-            ]);
-            const searchResult = result.rows[0];
-            const searchResults = result.rows
-
-            console.log(searchResult)
-
-            if(result.rows.length > 1) {
-                res.json({ message:"Results found", searchResults : searchResults })
-            } else {
-                res.json({ message:"Result found", searchResult: searchResult})
-            }
-           
-        } catch (err) {
-            console.log(err);
+    const searchKey = req.body.search;
+  
+    if (searchKey.trim() !== "") {
+      try {
+        const result = await db.query(
+          "SELECT * FROM secrets WHERE LOWER(secret) ILIKE $1",
+          [`%${searchKey.toLowerCase()}%`]
+        );
+  
+        if (result.rows.length > 0) {
+          res.json({ message: "Results found", searchResults: result.rows });
+        } else {
+          res.json({ message: "No matching results", searchResults: [] });
         }
+      } catch (err) {
+        console.error("Search error:", err);
+        res.status(500).json({ message: "Server error" });
+      }
     } else {
-        res.json({ message: "No result sound", searchResult: null })
+      res.json({ message: "Empty search", searchResults: [] });
     }
-})
+  });
+  
 
 app.post("/reset", async (req, res) => {
     const newPassword = req.body.newPassword
@@ -1285,39 +1308,6 @@ app.post("/translate", express.json(), async (req, res) => {
   
 
 
-app.post("/reaction", async (req, res) => {
-    const reaction = req.body.reaction
-    const secretId = req.body.id
-    try {
-        const result = await db.query("INSERT INTO reactions(reaction, secret_id, user_id) VALUES($1, $2, $3) RETURNING *;",
-            [reaction, secretId, req.user.id]
-        )
-        const response = result.rows;
-        console.log(response, secretId)
-        res.json(response)
-
-    } catch (err) {
-        console.log(err)
-    }
-})
-
-app.post("/change", async (req, res) => {
-    const color = String(req.body.color);
-    if (req.isAuthenticated()) {
-        try {
-            await db.query("UPDATE users SET color = $1 WHERE id = $2;",
-                [color, req.user.id]
-            )
-            console.log(req.user.id, color)
-            req.user.color = color
-            res.redirect("/dashboard")
-        } catch (err) {
-            console.log(err);
-        }
-    } else {
-        res.redirect("/login")
-    }
-})
 
 app.post("/review", async (req, res) => {
     const review = req.body.review;
@@ -1396,47 +1386,13 @@ app.post("/login", (req, res, next) => {
                 return next(err);
             }
 
-            const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-            const timestamp = new Date().toLocaleString();
-            const userEmail = req.body.email;
-
-            // req.session.loginMessage = `You are logged in from IP: ${ip} at ${timestamp}`;
-
-            // const mailOptions = {
-            //     from: process.env.EMAIL_USER,
-            //     to: userEmail,
-            //     subject: 'Login Notification',  // Corrected to lowercase 'subject'
-            //     text: `User is logged in from IP: ${ip} at ${timestamp}`,
-            // };
-
-            // transporter.sendMail(mailOptions, (error, info) => {
-            //     if (error) {
-            //         console.error('Error sending email:', error);
-            //     } else {
-            //         console.log('Email sent:', info.response);
-            //     }
-            // });
-
             // console.log(`User is logged in from IP: ${ip} at ${timestamp}`);
             req.session.userId = user.user_id;
-            res.redirect("/dashboard");
+            res.redirect("/feeds");
         });
     })(req, res, next);
 
-    // return res.render("notifications", {loginMessage: `You are logged in from iP: ${ip} at ${timestamp}`, theme: userTheme, username: null, userId: null})
-    // return res.redirect("/secrets");
 })
-
-// req.logIn(user, (err) => {
-//     if(err) {
-//         return next(err);
-//     }
-// (req, res, next);
-//     {
-//     successRedirect: "/secrets",
-//     failureRedirect: "/login",
-// }
-// });
 
 passport.use(new Strategy(async function verify(username, password, cb) {
     console.log(username)
@@ -1477,9 +1433,6 @@ passport.deserializeUser((user, cb) => {
     cb(null, user);
 });
 
-// server.listen(port, '0.0.0.0', () => {
-//     console.log(`Server started on port ${process.env.DB_HOST}:${port}`);
-// });
 
 // Sync database models
 sequelize.sync({ force: false }).then(() => {

@@ -50,3 +50,7 @@
                 100% hidden to users as your privacy is our priority.
               </p>
             
+              if (type === "audio") {
+            } else {
+                return res.status(400).json({ message: "Invalid type" });
+              }

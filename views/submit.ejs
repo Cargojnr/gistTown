@@ -131,52 +131,31 @@
 
     <div class="layout-container container">
 
-        <aside class="left-sidebar card">
+        <aside class="left-sidebar">
+        <div class="aside">
             <ul class="nav">
-              <li class="nav-item">
+              <li class="nav-item active">
                 <i class="nav-icon fas fa-home"></i>
-                <a  href="/feeds" class="nav-text">Home</a>
+                <a href="/feeds" class="nav-text">Home</a>
               </li>
               <li class="nav-item">
-                <i  class="nav-icon fas fa-message"></i>
-                <a  href="/chat"class="nav-text">Chat</a>
+                <i class="nav-icon fas fa-message"></i>
+                <a href="/chat" class="nav-text">Chat</a>
               </li>
-              <li class="nav-item mid-post-1" >
-                <i  class="nav-icon fas fa-plus-circle"></i>
-                <a  href="/submit"class="nav-text"></a>
-              </li>
-              <!-- <li class="nav-item">
-                <i  class="nav-icon fas fa-bell"></i>
-                <a  href="#"class="nav-text">Alerts</a>
-              </li> -->
+              <button id="openSubmitForm" class="nav-item mid-post-1 current">
+                <i class="nav-icon fas fa-plus-circle"></i>
+              </button>
               <li class="nav-item">
-                <i  class="nav-icon fas fa-circle-user"></i>
-                <a  href="/dashboard"class="nav-text">My Profile</a>
+                <i class="nav-icon fas fa-circle-user"></i>
+                <a href="/profile" class="nav-text">My Profile</a>
               </li>
-              <li class="nav-item mid-post-2">
+              <li class="nav-item mid-post-2 current">
                 <a  href="/submit"class="nav-text">Compose Gist</a>
                 <i  class="nav-icon fas fa-circle-plus"></i>
               </li>
             </ul>
-          </aside>
-
-           <!-- Modal for the submit form -->
-           <div id="submitModal" class="modal">
-            <div id="tutorial-overlay">
-
-              <div class="modal-content">
-                <span class="close-btn">&times;</span>
-                <center>
-                  <h2>Share your Gossip</h2>
-                </center>
-
-                <div id="submitFormContainer">
-                  <!-- Server-rendered form will be injected here -->
-
-                </div>
-              </div>
-            </div>
           </div>
+          </aside>
          
 
         <main>      
@@ -328,31 +307,35 @@
                 <audio id="post-sound" src="/sounds/whoosh-6316.mp3" preload="auto"></audio>
                 <% } %>
 
-                    <% if (locals.message) { %>
-                        <!-- <script>
-                            const postSound = document.getElementById('post-sound');
-                            const input = document.getElementById('input');
-                            const share = document.getElementById('share');
-                            share.addEventListener('submit', function (event) {
-                                if (input.value == "") {
-                                    event.preventDefault();
-                                    setTimeout(function () { alert("<%= message %>") }, 1000)
-                                    postSound.play();
-                                } else {
-                                    // setInterval(event.preventDefault(), 1000)
-                                    setTimeout(function () { alert("Secret shared successfully") }, 1000)
-                                    postSound.play();
-                                }
-                            })
-                        </script> -->
-                        <% } %>
-
+                    
                             <hr>
                             <br>
-                            <!-- <a href="/logout" class="btn btn-light btn-lg" role="button">Log Out</a> -->
-                            <!-- <a href="/submit" class="btn btn-dark secret-btn" role="button">Submit a Secret</a> -->
-    </div>
+                           
+                        </div>
 </main>
+
+<aside class="right-sidebar">
+    <div class="aside">
+    <ul class="nav">
+      <li class="nav-item">Moohe</li>
+      <li class="nav-item">Homeem</li>
+      <li class="nav-item">Homeem</li>
+      <li class="nav-item">Homeem</li>
+      <li class="nav-item">Homeem</li>
+    </ul>
+    </div>
+    <div class="aside aside-2">
+      <center><h4>Active Gossips</h4></center>
+    <ul class="nav">
+      <li class="nav-item">Moohe</li>
+      <li class="nav-item">Homeem</li>
+      <li class="nav-item">Homeem</li>
+      <li class="nav-item">Homeem</li>
+      <li class="nav-item">Homeem</li>
+    </ul>
+  </div>
+  </aside>
+
     </div>
 
 
@@ -557,6 +540,17 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
 
+<script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const modal = document.getElementById("submitModal");
+  
+      if (modal && modal.style.display !== "none") {
+        const script = document.createElement("script");
+        script.src = "/js/shareModal.js";
+        document.body.appendChild(script);
+      }
+    });
+  </script>
 <script src="/js/defaultTheme.js"></script>
     <script src="/js/app.js"></script>     
 </body>
