@@ -1,4 +1,11 @@
 /* Responsive tweaks */
+@media (max-width:930px) {
+  aside {
+    width: 200px !important;
+    margin-bottom: 1rem;
+  } 
+}
+
 @media (max-width: 768px) {
   blockquote {
     font-size: 1.125rem;

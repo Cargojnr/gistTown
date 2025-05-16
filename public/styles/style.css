@@ -79,7 +79,7 @@ body {
   }
   
   aside {
-    width: 250px !important;
+    width: 250px;
     border-radius: 30px;
     /* padding: 1rem; */
     }
@@ -88,8 +88,66 @@ body {
       background: var(--container-bg) !important;
       border-radius: 30px;
       padding: 1rem;
-      margin-bottom: 0rem;
+      margin-bottom: 2rem;
     }
+
+    .aside-2 {
+      background: transparent;
+      padding: 1rem;
+      overflow-y: auto;
+      height: 300px;
+      position: relative;
+    }
+
+    .user-count {
+      position: sticky;
+      top: 0;
+    }
+    
+    .user-list {
+      margin-top: 1rem;
+    }
+    
+    .nav-item.connected-user {
+      list-style: none;
+      background: var(--body-bg);
+      margin-bottom: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      font-size: .8rem;
+    }
+    
+    .connected-user {
+      opacity: 0;
+      transform: translateX(20px);
+      transition: all 0.4s ease;
+    }
+    
+    .connected-user.enter {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .connected-user.exit {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    
+    .connected-user {
+        opacity: 0;
+        transform: translateX(20px);
+        transition: all 0.4s ease;
+      }
+      .connected-user.enter {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .connected-user.exit {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+    
     
 
   .right-sidebar,
@@ -339,13 +397,11 @@ body {
     text-decoration: underline;
   }
 
-  
-
 
   header {
     background: transparent;
     z-index: 50 !important;
-    flex: 1;
+    flex: 1 1 100%;
     width: 100%;
     transition: background 0.5s ease;
     
@@ -612,8 +668,8 @@ body {
   }
   
   .profile-avatar {
-    width: 50px;
-    height: 50px;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid var(--primary-color);
@@ -785,8 +841,8 @@ body {
 
   .theme-switch {
      position: fixed;
-     top: 10px;
-    left: 20px;
+     bottom: 50px;
+    left: 45px;
      display: flex;
      align-items: center;
   }
@@ -798,14 +854,15 @@ body {
 
   .theme-toggle-label {
     cursor: pointer;
-   width: 60px;
-   height: 30px;
-   background-color: var(--body-bg);
+   width: 30px;
+   height: 60px;
+   background-color: var(--container-bg);
    border-radius: 30px;
    display: flex;
    align-items: center;
+   flex-direction: column;
    justify-content: space-between;
-   padding: 0 5px;
+   padding: 5px;
    position: relative;
   }
 
@@ -832,7 +889,7 @@ body {
     content: "";
     width: 26px;
     height: 26px;
-    background: var(--button-text);
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
     border-radius: 50%;
     position: absolute;
     top: 2px;
@@ -841,7 +898,7 @@ body {
   }
 
   .theme-toggle:checked + .theme-toggle-label::before {
-    transform: translate(30px);
+    transform: translateY(30px);
   }
 
 
@@ -2169,32 +2226,6 @@ audio {
   width: 100%;
 }
 
-.shimmer {
-  position: relative;
-  overflow: hidden;
-}
-
-.shimmer::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -150px;
-  height: 100%;
-  width: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--body-bg)
-    transparent
-  );
-  animation: shimmer 1.5s infinite;
-}
-
-@keyframes shimmer {
-  100% {
-    transform: translateX(100%);
-  }
-}
 
   .card::after{
     display: none;
@@ -2225,6 +2256,8 @@ audio {
   .card:hover {
     box-shadow: -0.2rem -0.2rem 1.2rem rgba(0, 0, 0, 0.3);
   }
+
+  
 
   .related-gist .secrets{
   display: flex;

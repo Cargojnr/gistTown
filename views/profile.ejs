@@ -214,7 +214,7 @@
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      padding: 1.5rem !important;
+      padding: 2rem !important;
       background: var(--container-bg);
       border-radius: 1.5rem;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -354,10 +354,98 @@
       background: var(--secondary);
     }
 
-    
-      #editModal {
-        display: none;
+
+    #editModal {
+      display: none;
+    }
+
+    .shimmer-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      /* padding: 1rem; */
+    }
+
+    .shimmer-card {
+      display: flex;
+      background: var(--container-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      animation: pulse 1.5s infinite;
+    }
+
+    .shimmer-avatar {
+      width: 50px;
+      height: 50px;
+      background: var(--body-bg);
+      border-radius: 50%;
+      margin: 1rem;
+    }
+
+
+
+    .shimmer-lines {
+      flex: 1;
+      padding: 1rem 0;
+    }
+
+    .shimmer-line {
+      height: 10px;
+      background: var(--body-bg);
+      margin: 8px 0;
+      border-radius: 5px;
+    }
+
+    .shimmer-line.short {
+      width: 50%;
+    }
+
+    .shimmer-line.tiny {
+      width: 30%;
+    }
+
+    .shimmer-footer {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .shimmer-btn {
+      width: 40px;
+      height: 20px;
+      background: var(--body-bg);
+      border-radius: 5px;
+    }
+
+    @keyframes pulse {
+      0% {
+        background-color: var(--container-bg);
       }
+
+      50% {
+        background-color: var(--body-bg);
+      }
+
+      100% {
+        background-color: var(--container-bg);
+      }
+    }
+
+    .shimmer {
+      background: linear-gradient(90deg, var(--container-bg) 25%, var(--body-bg) 50%, var(--container-bg) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+
+      100% {
+        background-position: 200% 0;
+      }
+    }
 
   </style>
 
@@ -388,13 +476,13 @@
               </a>
             </li>
             <li class="nav-item mid-post-2">
-              <a  href="/submit"class="nav-text">Compose Gist</a>
-              <i  class="nav-icon fas fa-circle-plus"></i>
+              <a href="/submit" class="nav-text">Compose Gist</a>
+              <i class="nav-icon fas fa-circle-plus"></i>
             </li>
           </ul>
         </div>
-        </aside>
-  
+      </aside>
+
       <main>
         <div class="jumbotron text-center">
           <div class="container">
@@ -405,7 +493,7 @@
                   <div class="avatar-profile editable-avatar">
                     <img src="../.<%= userPicture %>" alt="Avatar" class="profile-pic" onclick="editAvatar()">
                   </div>
-                  <small class="username">@amebo<%= userId %></small>
+                  <small class="username">@amebo<%= profileId %></small>
                   <div class="quick-stats">
                     <div class="stat"><strong>
                         <%= userProfile.length | 0 %>
@@ -435,33 +523,28 @@
              %>
           <li class=" secret <%=isLongSecret ? 'full-width' : 'half-width' %>" id="secret<%= secret.id %>">
 
-
-
                           <div class="card">
 
-
                             <!-- Shimmer Template -->
-                           <template id="shimmerTemplate">
-                            <li class="secret card shimmer-card">
-                              <div class="card-header">
-                                <div class="avatar-profile shimmer-avatar"></div>
-                                <div class="user-info">
-                                  <div class="shimmer-line short"></div>
-                                  <div class="shimmer-line tiny"></div>
+                            <template id="shimmerTemplate">
+                              <li class="secret shimmer-card">
+                                <div class="card">
+                                  <div class="card-header">
+                                    <div class="user-info">
+                                      <div class="shimmer-line tiny"></div>
+                                    </div>
+                                  </div>
+                                  <div class="card-content">
+                                    <div class="shimmer-line"></div>
+                                    <div class="shimmer-line"></div>
+                                  </div>
+                                  <div class="shimmer-footer">
+                                    <div class="shimmer-btn"></div>
+                                    <div class="shimmer-btn"></div>
+                                  </div>
                                 </div>
-                              </div>
-                              <div class="card-content">
-                                <div class="shimmer-line"></div>
-                                <div class="shimmer-line"></div>
-                              </div>
-                              <div class="shimmer-footer">
-                                  <div class="shimmer-btn"></div>
-                                  <div class="shimmer-btn"></div>
-                                </div>
-
-                            </li>
-                          </template> 
-
+                              </li>
+                            </template>
 
                             <% if (secret.category=="funny" ) { %>
                               <span class="tag funny"><i class="fas fa-laugh"></i></span>
@@ -481,10 +564,8 @@
 
 
                                             <div class="card-header">
-                                              <div class="avatar-profile"><img src="../.<%= userPicture %>"
-                                                  alt="Profile Picture" class="profile-pic"></div>
                                               <div class="user-info">
-                                                <p class="username"> @amebo<%= secret.user_id %>~~</p>
+
                                                 <span class="timestamp" data-raw="<%= secret.timestamp %>"></span>
                                               </div>
 
@@ -588,218 +669,147 @@ class=" read" style="
                           </li>
 
                           <% }) %>
-                            <% } %>
-               
 
-                  <%if (locals.userAudio) { %>
 
-                    <li class="secret">
-                      <% userAudio.forEach((audio)=> { %>
-                        <div class="card">
-                          <div class="shimmer-wrapper">
-                            <div class="shimmer-card">
-                              <div class="shimmer-lines">
-                                <div class="shimmer-line short"></div>
-                                <div class="shimmer-line"></div>
-                                <div class="shimmer-line"></div>
-                                <div class="shimmer-footer">
-                                  <div class="shimmer-btn"></div>
-                                  <div class="shimmer-btn"></div>
+
+                            <% } else {%>
+                              <li class="secret">
+                                <div class="card">
+                                  <div class="card-content">No Posts</div>
                                 </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="card-header">
-                            <div class="avatar-profile"><img src="../.<%= userPicture %>" alt="Profile Picture"
-                                class="profile-pic"></div>
-                            <div class="user-info">
-                              <p class="username"> @amebo<%= userId %>~~</p>
-                              <span class="timestamp" data-raw="<%= audio.uploadDate %>">
-                                <%= audio.uploadDate %>
-                              </span>
+                              </li>
+                              <% } %>
 
-                            </div>
-
-                          </div>
-                          <div class="card-content">
-                            <audio class="audio-item content-preview" src="<%= audio.url %>" controls></audio>
-
-                            <div class="card-actions">
-                              <form method="POST" formaction="/audio-delete" id="update">
-                                <input type="hidden" name="id" id="audioId" value="<%= audio.id %>" />
-
-                                <button class="audio-delete" formaction="/audio-delete/<% audio.id %>" type="click">
-                                  <abbr title="delete">
-                                    <i class="fas fa-trash"></i>
-                                  </abbr>
-                                </button>
-
-                              </form>
-                            </div>
-                            <div class="reaction-info">
-                              <span>🔥 </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <% }) %>
-              </div>
-              </li>
-
-
-              <script>
-                function renderAudioFiles(audioFiles) {
-
-                  const audioList = document.querySelectorAll(".audio-list")
-
-                  audioList.forEach(list => {
-                    const deleteButton = list.querySelector(".audio-delete")
-                    deleteButton.addEventListener('click', async (e) => {
-                      e.preventDefault();
-                      const audioId = list.querySelector("#audioId").value;
-
-
-                      // e.preventDefault();
-                      if (confirm("Are you sure you want to delete this secret?")) {
-                        try {
-
-                          const response = await fetch(`/audio-delete/${audioId}`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ audioId })
-                          });
-
-                          const data = await response.json();
-
-                          console.log(data)
-
-                          if (data) {
-
-                            alert(data.message)
-                            list.querySelector("#audioContainer").style.display = "none"
-                            e.target.style.display = "none"
-                          } else {
-                            alert(data.error)
-                          }
-                        } catch (error) {
-                          console.error('Error deleting audio file:', error);
-                        }
-                      } else {
-                        e.preventDefault();
-                      }
-
-                    });
-
-                  });
-                }
-              </script>
-
-
-              <% } %>
                 </ul>
-
-          </div>
-          <% } else if(locals.profile){ %>
-            <div id="profile">
-              <div class="profile-header ">
-                <div class="avatar-profile editable-avatar">
-                  <img src="../.<%= profilePicture %>" alt="Avatar" class="profile-pic" onclick="editAvatar()">
-                </div>
-                <small class="username">@amebo<%= userId %></small>
-                <div class="quick-stats">
-                  <div class="stat"><strong>
-                      <%= profile.length | 0 %>
-                    </strong><span>Gists</span></div>
-                  <div class="stat"><strong>
-                      <%= 0 %>
-                    </strong><span>Audience</span></div>
-                  <div class="stat"><strong>
-                      <%= 0 %>
-                    </strong><span>Reactions</span></div>
-                </div>
-                <button class="edit-profile-btn">Edit Profile</button>
               </div>
+              <% } else if(locals.profile){ %>
+                <div id="profile">
+                  <div class="profile-header ">
+                    <div class="avatar-profile editable-avatar">
+                      <img src="../.<%= profilePicture %>" alt="Avatar" class="profile-pic" onclick="editAvatar()">
+                    </div>
+                    <small class="username">@amebo<%= userId %></small>
+                    <div class="quick-stats">
+                      <div class="stat"><strong>
+                          <%= profile.length | 0 %>
+                        </strong><span>Gists</span></div>
+                      <div class="stat"><strong>
+                          <%= 0 %>
+                        </strong><span>Audience</span></div>
+                      <div class="stat"><strong>
+                          <%= 0 %>
+                        </strong><span>Reactions</span></div>
+                    </div>
+                    <button class="edit-profile-btn">Edit Profile</button>
+                  </div>
 
-              <hr style="margin-top: 2rem;">
-              <form id="navigator">
-                <input type="hidden" id="user" name="user" value="<%= userId %>">
-                <button type="button" data-type="text">Text</button>
-                <button type="button" data-type="audio">Audio</button>
-              </form>
+                  <hr style="margin-top: 2rem;">
+                  <form id="navigator">
+                    <input type="hidden" id="user" name="user" value="<%= userId %>">
+                    <button type="button" data-type="text">Text</button>
+                    <button type="button" data-type="audio">Audio</button>
+                  </form>
 
-              <ul id="userPostsContainer">
-                <% if (locals.profile) { %>
+                  <ul id="userPostsContainer">
+                    <% if (locals.profile) { %>
 
 
-                  <% profile.forEach((secret)=> { %>
-                    <% const isLongSecret=secret.secret.split(" ").length > 17;
+                      <% profile.forEach((secret)=> { %>
+                        <% const isLongSecret=secret.secret.split(" ").length > 17;
                  %>
               <li class=" secret <%=isLongSecret ? 'full-width' : 'half-width' %>" id="secret<%= secret.id %>">
 
 
 
-                        <div class="card">
+                            <div class="card">
 
-                          <!-- Shimmer Template -->
-                           <template id="shimmerTemplate">
-                            <li class="secret card shimmer-card">
-                              <div class="card-header">
-                                <div class="avatar-profile shimmer-avatar"></div>
-                                <div class="user-info">
-                                  <div class="shimmer-line short"></div>
-                                  <div class="shimmer-line tiny"></div>
-                                </div>
-                              </div>
-                              <div class="card-content">
-                                <div class="shimmer-line"></div>
-                                <div class="shimmer-line"></div>
-                              </div>
-                              <div class="shimmer-footer">
-                                  <div class="shimmer-btn"></div>
-                                  <div class="shimmer-btn"></div>
-                                </div>
+                              <!-- Shimmer Template -->
+                              <!-- <template id="shimmerTemplate">
+                                <li class="secret shimmer-card">
+                                  <div class="card">
+                                    <div class="card-header">
+                                      <div class="user-info">
+                                        <div class="shimmer-line tiny"></div>
+                                      </div>
+                                    </div>
+                                    <div class="card-content">
+                                      <div class="shimmer-line"></div>
+                                      <div class="shimmer-line"></div>
+                                    </div>
+                                    <div class="shimmer-footer">
+                                      <div class="shimmer-btn"></div>
+                                      <div class="shimmer-btn"></div>
+                                    </div>
 
-                            </li>
-                          </template> 
+                                  </div>
+                                </li>
+                              </template> -->
+
+                              <template id="shimmerTemplate">
+                                <li class="secret shimmer-wrapper">
+                                  <div class="card shimmer-card">
+
+                                    <div class="card-header">
+                                     <div class="user-info">
+                                      <div class="shimmer-avatar"></div>
+                                      <div class="shimmer-lines">
+                                      <div class="shimmer-line short"></div>
+                                      <div class="shimmer-line tiny"></div>
+                                      </div>
+                                     </div>
+
+                                     <div class="card-content">
+                                      <div class="shimmer-lines">
+                                        <div class="shimmer-line short"></div>
+                                        <div class="shimmer-line"></div>
+                                        <div class="shimmer-line"></div>
+                                    </div>  
+                                     </div>
+                                    
+                                     <div class="shimmer-footer">
+                                      <div class="shimmer-btn"></div>
+                                      <div class="shimmer-btn"></div>
+                                    </div>
+
+                                  </div>
+                                </li>
+                              </template>
 
 
-                          <% if (secret.category=="funny" ) { %>
-                            <span class="tag funny"><i class="fas fa-laugh"></i></span>
-                            <% } else if (secret.category=="love" ) { %>
-                              <span class="tag love"><i class="fas fa-heart"></i></span>
-                              <% } else if (secret.category=="nasty" ) { %>
-                                <span class="tag nasty"><i class="fas fa-skull-crossbones"></i></span>
-                                <% } else if (secret.category=="sassy" ) { %>
-                                  <span class="tag sassy"><i class="fas fa-face-meh"></i></span>
-                                  <% } else if (secret.category=="hilarious" ) { %>
-                                    <span class="tag hilarious"><i class="fas fa-teeth-open"></i></span>
-                                    <% } else if (secret.category=="random" ) { %>
-                                      <span class="tag random"><i class="fas fa-shuffle"></i></span>
-                                      <% } else { %>
-                                        <span class="tag random"><i class="fas fa-shuffle"></i></span>
-                                        <% } %>
+                              <% if (secret.category=="funny" ) { %>
+                                <span class="tag funny"><i class="fas fa-laugh"></i></span>
+                                <% } else if (secret.category=="love" ) { %>
+                                  <span class="tag love"><i class="fas fa-heart"></i></span>
+                                  <% } else if (secret.category=="nasty" ) { %>
+                                    <span class="tag nasty"><i class="fas fa-skull-crossbones"></i></span>
+                                    <% } else if (secret.category=="sassy" ) { %>
+                                      <span class="tag sassy"><i class="fas fa-face-meh"></i></span>
+                                      <% } else if (secret.category=="hilarious" ) { %>
+                                        <span class="tag hilarious"><i class="fas fa-teeth-open"></i></span>
+                                        <% } else if (secret.category=="random" ) { %>
+                                          <span class="tag random"><i class="fas fa-shuffle"></i></span>
+                                          <% } else { %>
+                                            <span class="tag random"><i class="fas fa-shuffle"></i></span>
+                                            <% } %>
 
 
-                                          <div class="card-header">
-                                            <div class="avatar-profile"><img src="../.<%= profilePicture %>"
-                                                alt="Profile Picture" class="profile-pic"></div>
-                                            <div class="user-info">
-                                              <p class="username"> @amebo<%= secret.user_id %>~~</p>
-                                              <span class="timestamp" data-raw="<%= secret.timestamp %>"></span>
-                                            </div>
+                                              <div class="card-header">
+                                                <div class="user-info">
+                                                  <span class="timestamp" data-raw="<%= secret.timestamp %>"></span>
+                                                </div>
 
-                                          </div>
+                                              </div>
 
-                                          <div class="card-content">
-                                            <p>
-                                              <span class="content">
-                                                <% if (secret.secret.split(" ").length > 200) { %>
+                                              <div class="card-content">
+                                                <p>
+                                                  <span class="content">
+                                                    <% if (secret.secret.split(" ").length > 200) { %>
     <%= secret.secret.substring(0, 250) + " ..." %>
-                                                  <% } else { %>
-                                                    <%= secret.secret %>
-                                                      <% } %>
-                                              </span>
-                                              <% if (secret.secret.split(" ").length > 200) { %>
+                                                      <% } else { %>
+                                                        <%= secret.secret %>
+                                                          <% } %>
+                                                  </span>
+                                                  <% if (secret.secret.split(" ").length > 200) { %>
     
         <button
     class=" read" style="
@@ -811,442 +821,432 @@ class=" read" style="
       font-weight: bold;
       font-family: 'Courier New', Courier, monospace !important;
     " data-full="<%= secret.secret %>" data-truncated="<%= secret.secret.substring(0, 250) + '...' %>">
-                                                Read More
-                                                </button>
+                                                    Read More
+                                                    </button>
 
 
-                                                <% } %>
-                                            </p>
-                                          </div>
-
-                                          <div class="reactions sleek">
-                                            <div class="secret-card" data-id="<%= secret.id %>">
-                                              <div class="reactions">
-
-                                                <button class="reaction-btn reaction" data-type="like">
-                                                  <!-- <div id="like-animation" class="lottie-animation"></div> -->
-                                                  <!-- <i class="fas fa-heart"></i> -->
-                                                  ❤️
-                                                  <span class="reaction-count">
-                                                    <%= secret.reactions.like ? secret.reactions.like.count : 0 %>
-                                                  </span>
-                                                </button>
-                                              </div>
-
-                                              <div class="floating-lottie" data-type="like"></div>
-
-                                            </div>
-
-                                            <div class="comment-section" data-secret-id="<%= secret.id %>">
-                                              <button id="commentButton" class="reaction-btn"><i
-                                                  class="fas fa-comment"></i><span
-                                                  class="comment-count"></span></button>
-                                              <div class="comment-dropdown" id="commentDropdown">
-                                                <form class="comment-display" method="POST" id="commentDisplay">
-                                                  <ul id="comments" class="comments-list"></ul>
-                                                </form>
-                                                <form action="/comment" method="POST" id="comment-form">
-                                                  <input type="hidden" name="id" id="secretId"
-                                                    value="<%= secret.id %>" />
-                                                  <input type="hidden" name="secretUserId"
-                                                    value="<%= secret.user_id %>" />
-                                                  <input type="hidden" name="commentUserId" value="<%= userId %>" />
-                                                  <textarea id="commentInput" placeholder="Write a comment..."
-                                                    name="comment"></textarea>
-                                                  <!-- <input type="text" id="commentInput" placeholder="Write a comment" name="comment"> -->
-                                                  <button id="postCommentButton">
-                                                    Post
-                                                  </button>
-                                                  <% if (locals.message) { %>
-                                                    <small>
-                                                      <%= message %>
-                                                    </small>
                                                     <% } %>
-                                                </form>
+                                                </p>
+                                              </div>
+
+                                              <div class="reactions sleek">
+                                                <div class="secret-card" data-id="<%= secret.id %>">
+                                                  <div class="reactions">
+
+                                                    <button class="reaction-btn reaction" data-type="like">
+                                                      <!-- <div id="like-animation" class="lottie-animation"></div> -->
+                                                      <!-- <i class="fas fa-heart"></i> -->
+                                                      ❤️
+                                                      <span class="reaction-count">
+                                                        <%= secret.reactions.like ? secret.reactions.like.count : 0 %>
+                                                      </span>
+                                                    </button>
+                                                  </div>
+
+                                                  <div class="floating-lottie" data-type="like"></div>
+
+                                                </div>
+
+                                                <div class="comment-section" data-secret-id="<%= secret.id %>">
+                                                  <button id="commentButton" class="reaction-btn"><i
+                                                      class="fas fa-comment"></i><span
+                                                      class="comment-count"></span></button>
+                                                  <div class="comment-dropdown" id="commentDropdown">
+                                                    <form class="comment-display" method="POST" id="commentDisplay">
+                                                      <ul id="comments" class="comments-list"></ul>
+                                                    </form>
+                                                    <form action="/comment" method="POST" id="comment-form">
+                                                      <input type="hidden" name="id" id="secretId"
+                                                        value="<%= secret.id %>" />
+                                                      <input type="hidden" name="secretUserId"
+                                                        value="<%= secret.user_id %>" />
+                                                      <input type="hidden" name="commentUserId" value="<%= userId %>" />
+                                                      <textarea id="commentInput" placeholder="Write a comment..."
+                                                        name="comment"></textarea>
+                                                      <!-- <input type="text" id="commentInput" placeholder="Write a comment" name="comment"> -->
+                                                      <button id="postCommentButton">
+                                                        Post
+                                                      </button>
+                                                      <% if (locals.message) { %>
+                                                        <small>
+                                                          <%= message %>
+                                                        </small>
+                                                        <% } %>
+                                                    </form>
+
+                                                  </div>
+                                                </div>
 
                                               </div>
-                                            </div>
-
-                                          </div>
 
 
-                                          <ul class="card-menu">
-                                            <li>
-                                              <button class="menu-toggle-btn"><i
-                                                  class="fas fa-ellipsis-vertical"></i></button>
-                                              <ul class="card-menu-content" style="display: none;">
+                                              <ul class="card-menu">
                                                 <li>
-                                                  <button class="report-btn" data-id="<%= secret.id %>">
-                                                    <i class="fa-regular fa-flag"></i>Report
-                                                  </button>
-                                                </li>
-                                                <li>
-                                                  <button class="copy-btn">
-                                                    <i class="fas fa-copy">Copy</i>
-                                                  </button>
-                                                </li>
-                                              </ul>
-                        </div>
-                        </li>
+                                                  <button class="menu-toggle-btn"><i
+                                                      class="fas fa-ellipsis-vertical"></i></button>
+                                                  <ul class="card-menu-content" style="display: none;">
+                                                    <li>
+                                                      <button class="report-btn" data-id="<%= secret.id %>">
+                                                        <i class="fa-regular fa-flag"></i>Report
+                                                      </button>
+                                                    </li>
+                                                    <li>
+                                                      <button class="copy-btn">
+                                                        <i class="fas fa-copy">Copy</i>
+                                                      </button>
+                                                    </li>
+                                                  </ul>
+                            </div>
+                            </li>
 
-                        <% }) %>
-                          <% } %>
+                            <% }) %>
+                              <% } else {%>
+                                <% } %>
 
 
-                            <%if (locals.userAudio) { %>
+                                  <li class="secret">
+                                    <div class="card">
 
-                              <li class="secret">
-                                <% userAudio.forEach((audio)=> { %>
-                                  <div class="card">
-                                    <div class="shimmer-wrapper">
-                                      <div class="shimmer-card">
-                                        <div class="shimmer-lines">
-                                          <div class="shimmer-line short"></div>
-                                          <div class="shimmer-line"></div>
-                                          <div class="shimmer-line"></div>
-                                          <div class="shimmer-footer">
-                                            <div class="shimmer-btn"></div>
-                                            <div class="shimmer-btn"></div>
-                                          </div>
+                                      <template id="shimmerTemplate">
+                                  <li class="secret shimmer-card">
+                                    <div class="card">
+                                      <div class="card-header">
+                                        <div class="user-info">
+                                          <div class="shimmer-line tiny"></div>
                                         </div>
                                       </div>
-                                    </div>
-                                    <div class="card-header">
-                                      <div class="avatar-profile"><img src="../.<%= profilePicture %>"
-                                          alt="Profile Picture" class="profile-pic"></div>
-                                      <div class="user-info">
-                                        <p class="username"> @amebo<%= userId %>~~</p>
-                                        <span class="timestamp" data-raw="<%= audio.uploadDate %>">
-                                          <%= audio.uploadDate %>
-                                        </span>
-
+                                      <div class="card-content">
+                                        <div class="shimmer-line"></div>
+                                        <div class="shimmer-line"></div>
+                                      </div>
+                                      <div class="shimmer-footer">
+                                        <div class="shimmer-btn"></div>
+                                        <div class="shimmer-btn"></div>
                                       </div>
 
                                     </div>
-                                    <div class="card-content">
-                                      <audio class="audio-item content-preview" src="<%= audio.url %>" controls></audio>
 
-                                      <div class="card-actions">
-                                        <form method="POST" formaction="/audio-delete" id="update">
-                                          <input type="hidden" name="id" id="audioId" value="<%= audio.id %>" />
+                                  </li>
+                                  </template>
 
-                                          <button class="audio-delete" formaction="/audio-delete/<% audio.id %>"
-                                            type="click">
-                                            <abbr title="delete">
-                                              <i class="fas fa-trash"></i>
-                                            </abbr>
-                                          </button>
-
-                                        </form>
-                                      </div>
-                                      <div class="reaction-info">
-                                        <span>🔥 </span>
-                                      </div>
-                                    </div>
+                                  <div class="card-content">
+                                  <p>  You are just one step away to become a Gossipa </p>
+                                  <p>share a gist now</p>
+                                   <small>make it loud</small>
                                   </div>
 
-                                  <% }) %>
-            </div>
-            </li>
-
-
-
-            <script>
-              function renderAudioFiles(audioFiles) {
-
-                const audioList = document.querySelectorAll(".audio-list")
-
-                audioList.forEach(list => {
-                  const deleteButton = list.querySelector(".audio-delete")
-                  deleteButton.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    const audioId = list.querySelector("#audioId").value;
-
-
-                    // e.preventDefault();
-                    if (confirm("Are you sure you want to delete this secret?")) {
-                      try {
-
-                        const response = await fetch(`/audio-delete/${audioId}`, {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ audioId })
-                        });
-
-                        const data = await response.json();
-
-                        console.log(data)
-
-                        if (data) {
-
-                          alert(data.message)
-                          list.querySelector("#audioContainer").style.display = "none"
-                          e.target.style.display = "none"
-                        } else {
-                          alert(data.error)
-                        }
-                      } catch (error) {
-                        console.error('Error deleting audio file:', error);
-                      }
-                    } else {
-                      e.preventDefault();
-                    }
-
-                  });
-
-                });
-              }
-            </script>
-
-            <% } %>
-              </ul>
-        </div>
-
-
-
-        <section id="editModal" class="profile-page">
-          <div class="profile-card">
-            <div class="avatar-wrapper">
-              <img src="<%= profile.profile_picture %>" alt="User Avatar" class="profile-pic" />
-              <label for="avatar-upload" class="edit-icon">
-                <i class="fas fa-pen"></i>
-              </label>
-              <input type="file" id="avatar-upload" accept="image/*" style="display: none;" />
-            </div>
-
-            <div class="avatar-selector-wrapper">
-              <h3 class="display-3">Select Your Avatar</h3>
-              <div class="carousel-container">
-                <div class="center-highlight"></div>
-                <div class="avatar-carousel" id="avatarCarousel">
-                  <div class="avatar-item spacer"></div> <!-- before -->
-
-
-                  <div class="avatar-item"><img src="./img/avatars/thumbs/dog.jpg" alt="Dog" /></div>
-                  <div class="avatar-item"><img src="./img/avatars/thumbs/carmel.jpg" alt="Carmel" /></div>
-                  <div class="avatar-item"><img src="./img/avatars/thumbs/monkey.jpg" alt="Monkey" /></div>
-                  <div class="avatar-item"><img src="./img/avatars/thumbs/elephant.jpg" alt="Elephant" /></div>
-                  <div class="avatar-item"><img src="./img/avatars/thumbs/bird.jpg" alt="Bird" /></div>
-                  <div class="avatar-item"><img src="./img/avatars/thumbs/carmel.jpg" alt="Carmel" /></div>
-                  <div class="avatar-item"><img src="./img/avatars/thumbs/lioness.jpg" alt="Lioness" /></div>
-                  <div class="avatar-item"><img src="./img/avatars/thumbs/cute dog.jpg" alt="Dog" /></div>
-                  <div class="avatar-item active"><img src="./img/avatars/thumbs/girrafe.jpg" alt="Girrafe" />
-                  </div>
-                  <div class="avatar-item"><img src="./img/avatars/thumbs/sheep.jpg" alt="Sheep" /></div>
-                  <!-- Add more avatars -->
-
-                  <div class="avatar-item spacer"></div> <!-- after -->
                 </div>
+                </li>
+                </ul>
+          </div>
+
+
+
+          <section id="editModal" class="profile-page">
+            <div class="profile-card">
+              <div class="avatar-wrapper">
+                <img src="<%= profile.profile_picture %>" alt="User Avatar" class="profile-pic" />
+                <label for="avatar-upload" class="edit-icon">
+                  <i class="fas fa-pen"></i>
+                </label>
+                <input type="file" id="avatar-upload" accept="image/*" style="display: none;" />
               </div>
 
+              <div class="avatar-selector-wrapper">
+                <h3 class="display-3">Select Your Avatar</h3>
+                <div class="carousel-container">
+                  <div class="center-highlight"></div>
+                  <div class="avatar-carousel" id="avatarCarousel">
+                    <div class="avatar-item spacer"></div> <!-- before -->
+
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/dog.jpg" alt="Dog" /></div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/carmel.jpg" alt="Carmel" /></div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/monkey.jpg" alt="Monkey" /></div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/elephant.jpg" alt="Elephant" /></div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/bird.jpg" alt="Bird" /></div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/carmel.jpg" alt="Carmel" /></div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/lioness.jpg" alt="Lioness" /></div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/cute dog.jpg" alt="Dog" /></div>
+                    <div class="avatar-item active"><img src="./img/avatars/thumbs/girrafe.jpg" alt="Girrafe" />
+                    </div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/sheep.jpg" alt="Sheep" /></div>
+                    <!-- Add more avatars -->
+
+                    <div class="avatar-item spacer"></div> <!-- after -->
+                  </div>
+                </div>
+
+              </div>
+
+
+
+
+              <div class="info-section">
+                <h2>@amebo<%= userId %>
+                </h2>
+                <p class="bio">Your short bio goes here...</p>
+
+                <form class="profile-form">
+                  <div class="form-group">
+                    <label for="displayName">Display Name</label>
+                    <input type="text" id="displayName" value="John Doe" />
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" value="john@example.com" />
+                  </div>
+                  <div class="form-group">
+                    <label for="bio">Bio</label>
+                    <textarea id="bio">Tell us about yourself...</textarea>
+                  </div>
+
+                  <button type="submit" class="save-btn">Save Changes</button>
+                </form>
+              </div>
             </div>
+          </section>
+          <script>
+            const carousel = document.getElementById('avatarCarousel');
+            const avatarItems = document.querySelectorAll('.avatar-item');
 
+            function updateCenterSelection() {
+              let closest = null;
+              let closestDistance = Infinity;
 
+              document.querySelectorAll('.avatar-item:not(.spacer)').forEach(item => {
+                const rect = item.getBoundingClientRect();
+                const centerX = window.innerWidth / 2;
+                const itemCenter = rect.left + rect.width / 2;
+                const distance = Math.abs(centerX - itemCenter);
 
-
-            <div class="info-section">
-              <h2>@amebo<%= userId %>
-              </h2>
-              <p class="bio">Your short bio goes here...</p>
-
-              <form class="profile-form">
-                <div class="form-group">
-                  <label for="displayName">Display Name</label>
-                  <input type="text" id="displayName" value="John Doe" />
-                </div>
-                <div class="form-group">
-                  <label for="email">Email</label>
-                  <input type="email" id="email" value="john@example.com" />
-                </div>
-                <div class="form-group">
-                  <label for="bio">Bio</label>
-                  <textarea id="bio">Tell us about yourself...</textarea>
-                </div>
-
-                <button type="submit" class="save-btn">Save Changes</button>
-              </form>
-            </div>
-          </div>
-        </section>
-        <script>
-          const carousel = document.getElementById('avatarCarousel');
-          const avatarItems = document.querySelectorAll('.avatar-item');
-
-          function updateCenterSelection() {
-            let closest = null;
-            let closestDistance = Infinity;
-
-            document.querySelectorAll('.avatar-item:not(.spacer)').forEach(item => {
-              const rect = item.getBoundingClientRect();
-              const centerX = window.innerWidth / 2;
-              const itemCenter = rect.left + rect.width / 2;
-              const distance = Math.abs(centerX - itemCenter);
-
-              if (distance < closestDistance) {
-                closestDistance = distance;
-                closest = item;
-              }
-            });
-
-            document.querySelectorAll('.avatar-item').forEach(item =>
-              item.classList.remove('active')
-            );
-            if (closest) closest.classList.add('active');
-          }
-
-
-          function scrollToCenter(element) {
-            const carouselRect = carousel.getBoundingClientRect();
-            const elementRect = element.getBoundingClientRect();
-            const offset = (elementRect.left + elementRect.width / 2) - (carouselRect.left + carouselRect.width / 2);
-            carousel.scrollBy({ left: offset, behavior: 'smooth' });
-          }
-
-          avatarItems.forEach(item => {
-            item.addEventListener('click', () => {
-              scrollToCenter(item);
-            });
-          });
-
-          carousel.addEventListener('scroll', () => {
-            window.requestAnimationFrame(updateCenterSelection);
-          });
-
-          // Initial call
-          updateCenterSelection();
-        </script>
-        <% } %>
-
-    </div>
-  </main>
-   
-  <aside class="right-sidebar">
-    <div class="aside">
-      <ul class="nav">
-        <li class="nav-item">Moohe</li>
-        <li class="nav-item">Homeem</li>
-        <li class="nav-item">Homeem</li>
-        <li class="nav-item">Homeem</li>
-        <li class="nav-item">Homeem</li>
-      </ul>
-    </div>
-    <div class="aside aside-2">
-      <center>
-        <h4>Active Gossips</h4>
-      </center>
-      <ul class="nav">
-        <li class="nav-item">Moohe</li>
-        <li class="nav-item">Homeem</li>
-        <li class="nav-item">Homeem</li>
-        <li class="nav-item">Homeem</li>
-        <li class="nav-item">Homeem</li>
-      </ul>
-
-    </div>
-  </aside>
-
-
-
-
-    <!-- Load Day.js and the plugin via CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
-
-    <script src="https://unpkg.com/wavesurfer.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const navigatorForm = document.getElementById("navigator");
-        const postsContainer = document.getElementById("userPostsContainer");
-        const shimmerTemplate = document.getElementById("shimmerTemplate");
-        const userId = navigatorForm.querySelector("#user").value;
-    
-        navigatorForm.addEventListener("click", async (e) => {
-          if (e.target.tagName === "BUTTON") {
-            e.preventDefault();
-            const type = e.target.dataset.type;
-    
-            postsContainer.classList.add("fade-out");
-    
-            setTimeout(() => {
-              postsContainer.innerHTML = "";
-              for (let i = 0; i < 5; i++) {
-                const shimmer = shimmerTemplate.content.cloneNode(true);
-                postsContainer.appendChild(shimmer);
-              }
-              postsContainer.classList.remove("fade-out");
-              postsContainer.classList.add("fade-in");
-            }, 200);
-    
-            try {
-              const res = await fetch(`/fetch-posts/${userId}?type=${type}`);
-              const data = await res.json();
-    
-              setTimeout(() => {
-                postsContainer.innerHTML = "";
-    
-                if (res.ok && data.posts) {
-                  renderPosts(data.posts, type);
-    
-                  if (type === "audio") {
-                    data.posts.forEach(post => {
-                      const waveformElement = document.querySelector(`#waveform-${post.id}`);
-                      const canvas = document.getElementById(`visualizer-${post.id}`);
-                      const audioUrl = post.url;
-    
-                      if (waveformElement && canvas && audioUrl) {
-                        const wave = WaveSurfer.create({
-                          container: waveformElement,
-                          waveColor: "#ddd",
-                          progressColor: "#555",
-                          height: 40,
-                          responsive: true,
-                          barWidth: 2,
-                          barGap: 2
-                        });
-    
-                        wave.load(audioUrl);
-    
-                        const playBtn = document.querySelector(`.wave-play-btn[data-id='${post.id}']`);
-                        if (playBtn) {
-                          playBtn.addEventListener("click", () => wave.playPause());
-                          wave.on("play", () => playBtn.innerText = "⏸️");
-                          wave.on("pause", () => playBtn.innerText = "▶️");
-                          wave.on("finish", () => playBtn.innerText = "▶️");
-                        }
-    
-                        wave.on("ready", () => {
-                          const audio = wave.media;
-                          setupVisualizer(audio, canvas, wave);
-                        });
-                      } else {
-                        console.warn("Waveform element, canvas, or audio URL missing for post:", post.id);
-                      }
-                    });
-                  }
-                } else {
-                  postsContainer.innerHTML = `<li>No ${type} posts found.</li>`;
+                if (distance < closestDistance) {
+                  closestDistance = distance;
+                  closest = item;
                 }
-              }, 1000);
-            } catch (err) {
-              console.error("Fetch error:", err);
-              postsContainer.innerHTML = `<li>Error loading ${type} posts.</li>`;
+              });
+
+              document.querySelectorAll('.avatar-item').forEach(item =>
+                item.classList.remove('active')
+              );
+              if (closest) closest.classList.add('active');
             }
+
+
+            function scrollToCenter(element) {
+              const carouselRect = carousel.getBoundingClientRect();
+              const elementRect = element.getBoundingClientRect();
+              const offset = (elementRect.left + elementRect.width / 2) - (carouselRect.left + carouselRect.width / 2);
+              carousel.scrollBy({ left: offset, behavior: 'smooth' });
+            }
+
+            avatarItems.forEach(item => {
+              item.addEventListener('click', () => {
+                scrollToCenter(item);
+              });
+            });
+
+            carousel.addEventListener('scroll', () => {
+              window.requestAnimationFrame(updateCenterSelection);
+            });
+
+            // Initial call
+            updateCenterSelection();
+          </script>
+          <% } %>
+
+        </div>
+      </main>
+
+      <aside class="right-sidebar">
+        <div class="aside">
+          <ul class="nav">
+            <li class="nav-item">Moohe</li>
+            <li class="nav-item">Homeem</li>
+            <li class="nav-item">Homeem</li>
+            <li class="nav-item">Homeem</li>
+            <li class="nav-item">Homeem</li>
+          </ul>
+        </div>
+        <div class="aside aside-2">
+          <center>
+            <h4 class="user-count">Active Gossipas: <span id="activeCount">0</span></h4>
+          </center>
+          <ul class="nav user-list">
+          </ul>
+
+        </div>
+      </aside>
+
+
+
+      <!-- Load Day.js and the plugin via CDN -->
+      <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+
+      <script src="https://unpkg.com/wavesurfer.js"></script>
+      <script>
+        const connectedUsersMap = new Map();
+        const userList = document.querySelector(".user-list");
+        const userCountDisplay = document.getElementById("activeCount");
+
+        function updateUserCount() {
+          userCountDisplay.textContent = connectedUsersMap.size;
+        }
+
+        function userConnected(user) {
+          if (connectedUsersMap.has(user.id)) return;
+
+          const userBox = document.createElement("li");
+          userBox.className = "connected-user nav-item enter";
+          userBox.id = `user-${user.id}`;
+          userBox.innerHTML = `
+          <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
+            <img src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
+            <p>@amebo${user.id}</p>
+          </div>
+        `;
+
+          userList.appendChild(userBox);
+          connectedUsersMap.set(user.id, userBox);
+          updateUserCount();
+
+          // Trigger reflow for entry animation
+          requestAnimationFrame(() => {
+            userBox.classList.add("enter");
+          });
+        }
+
+        function userDisconnected(userId) {
+          const userBox = connectedUsersMap.get(userId);
+          if (userBox) {
+            userBox.classList.add("exit");
+            userBox.classList.remove("enter");
+            setTimeout(() => {
+              userBox.remove();
+              connectedUsersMap.delete(userId);
+              updateUserCount();
+            }, 400); // CSS transition match
+          }
+        }
+
+        socket.on("userJoined", async (userId) => {
+          try {
+            const res = await fetch(`/user/${userId}`);
+            const user = await res.json();
+            userConnected(user);
+          } catch (err) {
+            console.error("Failed to fetch user data:", err);
           }
         });
-    
-        function renderPosts(posts, type) {
-          postsContainer.innerHTML = posts.map(post => {
-            const username = `@amebo${post.user_id}`;
-            const id = post.id;
-            const profilePic = post.profile_picture || post.profile_pic || "../../img/avatar/thumbs/girrafe.png";
-            const timestamp = post.timestamp || new Date().toLocaleString();
-            const category = post.category || "random";
-            const likeCount = post.reactions?.like?.count || 0;
-            const commentCount = post.comments?.length || 0;
-            const isAudio = type === "audio";
-    
-            const categoryText = isAudio
-              ? "🎧"
-              : {
+
+        socket.on("userLeft", (userId) => {
+          userDisconnected(userId);
+        });
+
+        // Load current active users on first load
+        fetch("/active-users")
+          .then(res => res.json())
+          .then(users => {
+            users.forEach(user => userConnected(user));
+          })
+          .catch(console.error);
+      </script>
+
+
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          const navigatorForm = document.getElementById("navigator");
+          const postsContainer = document.getElementById("userPostsContainer");
+          const shimmerTemplate = document.getElementById("shimmerTemplate");
+          const userId = navigatorForm.querySelector("#user").value;
+
+          navigatorForm.addEventListener("click", async (e) => {
+            if (e.target.tagName === "BUTTON") {
+              e.preventDefault();
+              const type = e.target.dataset.type;
+
+              postsContainer.classList.add("fade-out");
+
+
+              try {
+                const res = await fetch(`/fetch-posts/${userId}?type=${type}`);
+                const data = await res.json();
+
+                setTimeout(() => {
+                  postsContainer.innerHTML = "";
+                  for (let i = 0; i < data.posts.length; i++) {
+                    const shimmer = shimmerTemplate.content.cloneNode(true);
+                    postsContainer.appendChild(shimmer);
+                  }
+                  postsContainer.classList.remove("fade-out");
+                  postsContainer.classList.add("fade-in");
+                }, 500);
+
+
+                setTimeout(() => {
+                  postsContainer.innerHTML = "";
+
+                  if (res.ok && data.posts) {
+                    renderPosts(data.posts, type);
+
+                    if (type === "audio") {
+                      data.posts.forEach(post => {
+                        const waveformElement = document.querySelector(`#waveform-${post.id}`);
+                        const canvas = document.getElementById(`visualizer-${post.id}`);
+                        const audioUrl = post.url;
+
+                        if (waveformElement && canvas && audioUrl) {
+                          const wave = WaveSurfer.create({
+                            container: waveformElement,
+                            waveColor: "#ddd",
+                            progressColor: "#555",
+                            height: 40,
+                            responsive: true,
+                            barWidth: 2,
+                            barGap: 2
+                          });
+
+                          wave.load(audioUrl);
+
+                          const playBtn = document.querySelector(`.wave-play-btn[data-id='${post.id}']`);
+                          if (playBtn) {
+                            playBtn.addEventListener("click", () => wave.playPause());
+                            wave.on("play", () => playBtn.innerText = "⏸️");
+                            wave.on("pause", () => playBtn.innerText = "▶️");
+                            wave.on("finish", () => playBtn.innerText = "▶️");
+                          }
+
+                          wave.on("ready", () => {
+                            const audio = wave.media;
+                            setupVisualizer(audio, canvas, wave);
+                          });
+                        } else {
+                          console.warn("Waveform element, canvas, or audio URL missing for post:", post.id);
+                        }
+                      });
+                    }
+                  } else {
+                    postsContainer.innerHTML = `<li>No ${type} posts found.</li>`;
+                  }
+                }, 1000);
+              } catch (err) {
+                console.error("Fetch error:", err);
+                postsContainer.innerHTML = `<li>Error loading ${type} posts.</li>`;
+              }
+            }
+          });
+
+          function renderPosts(posts, type) {
+            postsContainer.innerHTML = posts.map(post => {
+              const id = post.id;
+              const timestamp = post.timestamp || new Date().toLocaleString();
+              const category = post.category || "random";
+              const likeCount = post.reactions?.like?.count || 0;
+              const commentCount = post.comments?.length || 0;
+              const isAudio = type === "audio";
+
+              const categoryText = isAudio
+                ? "🎧"
+                : {
                   funny: "<i class='fas fa-laugh'></i>",
                   love: "<i class='fas fa-heart'></i>",
                   nasty: "<i class='fas fa-skull-crossbones'></i>",
@@ -1254,9 +1254,9 @@ class=" read" style="
                   hilarious: "<i class='fas fa-teeth-open'></i>",
                   random: "<i class='fas fa-shuffle'></i>"
                 }[category] || "<i class='fas fa-shuffle'></i>";
-    
-            const cardContent = isAudio
-              ? `
+
+              const cardContent = isAudio
+                ? `
                 <div class="audio-visualizer-card">
                   <div class="audio-wave-wrapper">
                     <div class="waveform visually-hidden" id="waveform-${id}"></div>
@@ -1266,18 +1266,14 @@ class=" read" style="
                   
                 </div>
               `
-              : `<p class="content-preview">${truncateText(post.secret, 250)}</p>`;
-    
-            return `
+                : `<p class="content-preview">${truncateText(post.secret, 250)}</p>`;
+
+              return `
               <li class="secret fade-in">
                 <div class="card">
                   <span class="tag ${category} random">${categoryText}</span>
                   <div class="card-header">
-                    <div class="avatar-profile">
-                      <img src="../.${profilePic}" alt="Profile Picture" class="profile-pic">
-                    </div>
                     <div class="user-info">
-                      <p class="username">${username}</p>
                       <span class="timestamp" data-raw='${timestamp}'>${timestamp}</span>
                     </div>
                   </div>
@@ -1298,210 +1294,210 @@ class=" read" style="
                 </div>
               </li>
             `;
-          }).join("");
-        }
-    
-        function truncateText(text, maxLength) {
-          return !text || text.length <= maxLength ? text : text.substring(0, maxLength) + '...';
-        }
-    
-        function setupVisualizer(audioElement, canvas, waveInstance) {
-          const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-          const analyser = audioCtx.createAnalyser();
-          const source = audioCtx.createMediaElementSource(audioElement);
-          const ctx = canvas.getContext("2d");
-    
-          source.connect(analyser);
-          analyser.connect(audioCtx.destination);
-          analyser.fftSize = 256;
-    
-          const bufferLength = analyser.frequencyBinCount;
-          const dataArray = new Uint8Array(bufferLength);
-          canvas.width = canvas.offsetWidth;
-          canvas.height = canvas.offsetHeight;
-    
-          const width = canvas.width;
-          const height = canvas.height;
-          const barWidth = width / bufferLength;
-    
-          function draw() {
-            requestAnimationFrame(draw);
-            analyser.getByteFrequencyData(dataArray);
-            ctx.clearRect(0, 0, width, height);
-            dataArray.forEach((value, i) => {
-              const barHeight = (value / 255) * height;
-              const hue = (i / bufferLength) * 360;
-              ctx.fillStyle = `hsl(${hue}, 70%, 50%)`;
-              ctx.fillRect(i * barWidth, height - barHeight, barWidth - 1, barHeight);
-            });
+            }).join("");
           }
-    
-          const startDrawing = () => {
-            audioCtx.resume();
-            draw();
-          };
-    
-          // Sync drawing to play events
-          if (waveInstance) {
-            waveInstance.on("play", startDrawing);
-          } else {
-            audioElement.onplay = startDrawing;
+
+          function truncateText(text, maxLength) {
+            return !text || text.length <= maxLength ? text : text.substring(0, maxLength) + '...';
           }
-        }
-      });
-    </script>
-    
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
 
-        document.querySelectorAll('.reaction').forEach(button => {
-          const type = button.getAttribute('data-type');
+          function setupVisualizer(audioElement, canvas, waveInstance) {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const analyser = audioCtx.createAnalyser();
+            const source = audioCtx.createMediaElementSource(audioElement);
+            const ctx = canvas.getContext("2d");
 
-          button.addEventListener('click', () => {
-            const emojiChar = button.textContent.trim().split('\n')[0];
-            const card = button.closest('.secret-card');
-            const floatingContainer = card.querySelector('.floating-lottie');
+            source.connect(analyser);
+            analyser.connect(audioCtx.destination);
+            analyser.fftSize = 256;
 
-            // === 1. EMOJI BURST AROUND BUTTON ===
-            triggerEmojiBurst(button, emojiChar);
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
 
-            // === 2. 3D EXTRAS AROUND BUTTON ===
-            if (type === 'cry') {
-              const tear = document.createElement('span');
-              tear.className = 'emoji-particle';
-              tear.innerText = '💧';
-              tear.style.setProperty('--x', '0px');
-              tear.style.setProperty('--y', '50px');
-              button.appendChild(tear);
-              setTimeout(() => tear.remove(), 800);
+            const width = canvas.width;
+            const height = canvas.height;
+            const barWidth = width / bufferLength;
+
+            function draw() {
+              requestAnimationFrame(draw);
+              analyser.getByteFrequencyData(dataArray);
+              ctx.clearRect(0, 0, width, height);
+              dataArray.forEach((value, i) => {
+                const barHeight = (value / 255) * height;
+                const hue = (i / bufferLength) * 360;
+                ctx.fillStyle = `hsl(${hue}, 70%, 50%)`;
+                ctx.fillRect(i * barWidth, height - barHeight, barWidth - 1, barHeight);
+              });
             }
 
-            if (type === 'gasp') {
-              const puff = document.createElement('span');
-              puff.className = 'emoji-particle';
-              puff.innerText = '💨';
-              puff.style.setProperty('--x', '-10px');
-              puff.style.setProperty('--y', '0px');
-              button.appendChild(puff);
-              setTimeout(() => puff.remove(), 800);
+            const startDrawing = () => {
+              audioCtx.resume();
+              draw();
+            };
+
+            // Sync drawing to play events
+            if (waveInstance) {
+              waveInstance.on("play", startDrawing);
+            } else {
+              audioElement.onplay = startDrawing;
             }
-
-
-            // === 5. REMOVE LOTTIE ANIMATION AFTER IT FINISHES ===
-            setTimeout(() => {
-              floatingContainer.classList.remove('active'); // Remove the active class
-              floatingContainer.innerHTML = ''; // Clear the Lottie animation
-            }, 2000); // Adjust the timeout to match the animation duration
-          });
+          }
         });
+      </script>
 
-        function triggerEmojiBurst(container, emojiChar) {
-          const burstCount = 10;
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
 
-          for (let i = 0; i < burstCount; i++) {
-            const particle = document.createElement('span');
-            particle.classList.add('emoji-particle');
-            particle.innerText = emojiChar;
+          document.querySelectorAll('.reaction').forEach(button => {
+            const type = button.getAttribute('data-type');
 
-            const angle = Math.random() * 2 * Math.PI;
-            const distance = Math.random() * 40 + 20;
-            const x = Math.cos(angle) * distance + 'px';
-            const y = Math.sin(angle) * distance + 'px';
+            button.addEventListener('click', () => {
+              const emojiChar = button.textContent.trim().split('\n')[0];
+              const card = button.closest('.secret-card');
+              const floatingContainer = card.querySelector('.floating-lottie');
 
-            particle.style.setProperty('--x', x);
-            particle.style.setProperty('--y', y);
+              // === 1. EMOJI BURST AROUND BUTTON ===
+              triggerEmojiBurst(button, emojiChar);
 
-            container.appendChild(particle);
-            setTimeout(() => particle.remove(), 800);
-          }
-
-          container.classList.add('pop-animate');
-          setTimeout(() => container.classList.remove('pop-animate'), 300);
-        }
-      });
-    </script>
-
-    <script>
-      dayjs.extend(window.dayjs_plugin_relativeTime);
-
-      document.querySelectorAll('.timestamp').forEach((timeElem) => {
-        const rawTimestamp = timeElem.getAttribute('data-raw');
-        if (rawTimestamp) {
-          const formatted = dayjs(rawTimestamp).fromNow();
-          timeElem.textContent = formatted;
-        }
-      });
-    </script>
-
-    <script>
-      const header = document.querySelector('header');
-      const nextSection = document.querySelector('body').querySelector('section:not(.active)');
-      const logo = document.getElementById('logo')
-
-      window.addEventListener('scroll', function () {
-        const scrolled = window.scrollY > 0;
-        if (scrolled) {
-          let body = document.querySelector('body');
-          body.style.overflowY = 'scroll';
-          header.classList.add('scrolled');
-        } else {
-          header.classList.remove('scrolled');
-        }
-      });
-    </script>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        fetch("/api/comment-counts")
-          .then(res => res.json())
-          .then(counts => {
-            Object.entries(counts).forEach(([secretId, count]) => {
-              const el = document.querySelector(`[data-secret-id="${secretId}"] .comment-count`);
-              if (el) {
-                // el.textContent = `${count} comment${count !== 1 ? 's' : ''}`;
-                el.textContent = `${count}`;
+              // === 2. 3D EXTRAS AROUND BUTTON ===
+              if (type === 'cry') {
+                const tear = document.createElement('span');
+                tear.className = 'emoji-particle';
+                tear.innerText = '💧';
+                tear.style.setProperty('--x', '0px');
+                tear.style.setProperty('--y', '50px');
+                button.appendChild(tear);
+                setTimeout(() => tear.remove(), 800);
               }
+
+              if (type === 'gasp') {
+                const puff = document.createElement('span');
+                puff.className = 'emoji-particle';
+                puff.innerText = '💨';
+                puff.style.setProperty('--x', '-10px');
+                puff.style.setProperty('--y', '0px');
+                button.appendChild(puff);
+                setTimeout(() => puff.remove(), 800);
+              }
+
+
+              // === 5. REMOVE LOTTIE ANIMATION AFTER IT FINISHES ===
+              setTimeout(() => {
+                floatingContainer.classList.remove('active'); // Remove the active class
+                floatingContainer.innerHTML = ''; // Clear the Lottie animation
+              }, 2000); // Adjust the timeout to match the animation duration
             });
-          })
-          .catch(err => console.error("Failed to fetch comment counts", err));
-      });
-    </script>
+          });
 
-    <script>
-      $(document).ready(function () {
-        $(".comment-section").each(function () {
-          const commentSection = $(this);
+          function triggerEmojiBurst(container, emojiChar) {
+            const burstCount = 10;
 
-          // Submit comment form
-          commentSection.find("#comment-form").on("submit", function (e) {
-            e.preventDefault();
+            for (let i = 0; i < burstCount; i++) {
+              const particle = document.createElement('span');
+              particle.classList.add('emoji-particle');
+              particle.innerText = emojiChar;
 
-            const secretId = commentSection.find("#secretId").val();
-            const secretUserId = commentSection.find('[name="secretUserId"]').val();
-            const commentUserId = commentSection.find('[name="commentUserId"]').val();
-            const comment = commentSection.find("#commentInput").val();
-            const commentDisplay = commentSection.find("#commentDisplay");
+              const angle = Math.random() * 2 * Math.PI;
+              const distance = Math.random() * 40 + 20;
+              const x = Math.cos(angle) * distance + 'px';
+              const y = Math.sin(angle) * distance + 'px';
 
-            $.ajax({
-              url: "/comment",
-              type: "POST",
-              data: {
-                id: secretId,
-                secretUserId,
-                commentUserId,
-                comment,
-              },
-              success: async function (response) {
-                if (response.success) {
-                  try {
-                    const fetchResponse = await fetch(`/more/${secretId}`);
-                    if (!fetchResponse.ok) throw new Error("Failed to fetch comments");
+              particle.style.setProperty('--x', x);
+              particle.style.setProperty('--y', y);
 
-                    const data = await fetchResponse.json();
-                    const comments = data.comments;
+              container.appendChild(particle);
+              setTimeout(() => particle.remove(), 800);
+            }
 
-                    if (comments) {
-                      let commentDisp = comments.map((comment) => `
+            container.classList.add('pop-animate');
+            setTimeout(() => container.classList.remove('pop-animate'), 300);
+          }
+        });
+      </script>
+
+      <script>
+        dayjs.extend(window.dayjs_plugin_relativeTime);
+
+        document.querySelectorAll('.timestamp').forEach((timeElem) => {
+          const rawTimestamp = timeElem.getAttribute('data-raw');
+          if (rawTimestamp) {
+            const formatted = dayjs(rawTimestamp).fromNow();
+            timeElem.textContent = formatted;
+          }
+        });
+      </script>
+
+      <script>
+        const header = document.querySelector('header');
+        const nextSection = document.querySelector('body').querySelector('section:not(.active)');
+        const logo = document.getElementById('logo')
+
+        window.addEventListener('scroll', function () {
+          const scrolled = window.scrollY > 0;
+          if (scrolled) {
+            let body = document.querySelector('body');
+            body.style.overflowY = 'scroll';
+            header.classList.add('scrolled');
+          } else {
+            header.classList.remove('scrolled');
+          }
+        });
+      </script>
+
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          fetch("/api/comment-counts")
+            .then(res => res.json())
+            .then(counts => {
+              Object.entries(counts).forEach(([secretId, count]) => {
+                const el = document.querySelector(`[data-secret-id="${secretId}"] .comment-count`);
+                if (el) {
+                  // el.textContent = `${count} comment${count !== 1 ? 's' : ''}`;
+                  el.textContent = `${count}`;
+                }
+              });
+            })
+            .catch(err => console.error("Failed to fetch comment counts", err));
+        });
+      </script>
+
+      <script>
+        $(document).ready(function () {
+          $(".comment-section").each(function () {
+            const commentSection = $(this);
+
+            // Submit comment form
+            commentSection.find("#comment-form").on("submit", function (e) {
+              e.preventDefault();
+
+              const secretId = commentSection.find("#secretId").val();
+              const secretUserId = commentSection.find('[name="secretUserId"]').val();
+              const commentUserId = commentSection.find('[name="commentUserId"]').val();
+              const comment = commentSection.find("#commentInput").val();
+              const commentDisplay = commentSection.find("#commentDisplay");
+
+              $.ajax({
+                url: "/comment",
+                type: "POST",
+                data: {
+                  id: secretId,
+                  secretUserId,
+                  commentUserId,
+                  comment,
+                },
+                success: async function (response) {
+                  if (response.success) {
+                    try {
+                      const fetchResponse = await fetch(`/more/${secretId}`);
+                      if (!fetchResponse.ok) throw new Error("Failed to fetch comments");
+
+                      const data = await fetchResponse.json();
+                      const comments = data.comments;
+
+                      if (comments) {
+                        let commentDisp = comments.map((comment) => `
                         <li class="comment-item">
                           <div>
                             <small class="user"><strong>@anonym${comment.user_id}</strong></small>
@@ -1512,98 +1508,98 @@ class=" read" style="
                         </li>
                       `).join("");
 
-                      commentDisplay.html(`
+                        commentDisplay.html(`
                         <ul id="comments">
                           <p class="total">All comments: ${data.totalComments}</p>
                           ${commentDisp}
                         </ul>
                       `);
-                    } else {
-                      commentDisplay.html(`
+                      } else {
+                        commentDisplay.html(`
                         <ul id="comments">
                           <p class="total">${data.noComment}</p>
                         </ul>
                       `);
+                      }
+                    } catch (err) {
+                      console.log(err);
                     }
-                  } catch (err) {
-                    console.log(err);
+
+                    commentSection.find("#commentInput").val(""); // clear input
+                  } else {
+                    console.log("Failed to post comment:", response.message);
                   }
-
-                  commentSection.find("#commentInput").val(""); // clear input
-                } else {
-                  console.log("Failed to post comment:", response.message);
-                }
-              },
-              error: function (err) {
-                console.log("Error submitting comment:", err);
-              },
+                },
+                error: function (err) {
+                  console.log("Error submitting comment:", err);
+                },
+              });
             });
-          });
 
-          // Translation handler (delegated for dynamic buttons)
-          commentSection.on("click", ".translate-btn", function (e) {
-            e.preventDefault();
-            const btn = $(this);
-            const commentText = btn.data("text");
-            const commentId = btn.data("id");
-            const translatedBox = commentSection.find(`#translated-${commentId}`);
+            // Translation handler (delegated for dynamic buttons)
+            commentSection.on("click", ".translate-btn", function (e) {
+              e.preventDefault();
+              const btn = $(this);
+              const commentText = btn.data("text");
+              const commentId = btn.data("id");
+              const translatedBox = commentSection.find(`#translated-${commentId}`);
 
-            $.ajax({
-              url: "/translate",
-              type: "POST",
-              contentType: "application/json",
-              data: JSON.stringify({ text: commentText, targetLang: "en" }),
-              success: function (res) {
-                if (res.translated) {
-                  translatedBox.text(res.translated);
-                } else {
-                  translatedBox.text("Translation failed.");
-                }
-              },
-              error: function (err) {
-                translatedBox.text("Error translating comment.");
-              },
+              $.ajax({
+                url: "/translate",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ text: commentText, targetLang: "en" }),
+                success: function (res) {
+                  if (res.translated) {
+                    translatedBox.text(res.translated);
+                  } else {
+                    translatedBox.text("Translation failed.");
+                  }
+                },
+                error: function (err) {
+                  translatedBox.text("Error translating comment.");
+                },
+              });
             });
           });
         });
-      });
-    </script>
+      </script>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const commentSections = document.querySelectorAll(".comment-section");
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          const commentSections = document.querySelectorAll(".comment-section");
 
-        commentSections.forEach(async (section) => {
-          const secretId = section.querySelector("#secretId").value;
-          const commentList = section.querySelector(".comments-list");
+          commentSections.forEach(async (section) => {
+            const secretId = section.querySelector("#secretId").value;
+            const commentList = section.querySelector(".comments-list");
 
-          // Toggle dropdown
-          section.querySelector("#commentButton").addEventListener("click", () => {
-            const dropdown = section.querySelector(".comment-dropdown");
-            dropdown.classList.toggle("active");
+            // Toggle dropdown
+            section.querySelector("#commentButton").addEventListener("click", () => {
+              const dropdown = section.querySelector(".comment-dropdown");
+              dropdown.classList.toggle("active");
 
-            const icon = section.querySelector("#commentButton i");
-            icon.className = dropdown.classList.contains("active")
-              ? "fas fa-comment-slash"
-              : "fas fa-comment";
-          });
+              const icon = section.querySelector("#commentButton i");
+              icon.className = dropdown.classList.contains("active")
+                ? "fas fa-comment-slash"
+                : "fas fa-comment";
+            });
 
-          // Fetch and display comments
-          try {
-            const response = await fetch(`/more/${secretId}`);
-            const data = await response.json();
-            const comments = data.comments;
+            // Fetch and display comments
+            try {
+              const response = await fetch(`/more/${secretId}`);
+              const data = await response.json();
+              const comments = data.comments;
 
-            if (comments && comments.length > 0) {
-              section.querySelector(".comment-display").insertAdjacentHTML(
-                "afterbegin",
-                `<p class="total">All comments: ${data.totalComments}</p>`
-              );
+              if (comments && comments.length > 0) {
+                section.querySelector(".comment-display").insertAdjacentHTML(
+                  "afterbegin",
+                  `<p class="total">All comments: ${data.totalComments}</p>`
+                );
 
-              comments.forEach((comment) => {
-                const li = document.createElement("li");
-                li.className = "comment-item";
-                li.innerHTML = `
+                comments.forEach((comment) => {
+                  const li = document.createElement("li");
+                  li.className = "comment-item";
+                  li.innerHTML = `
               <div>
                 <small class="user"><strong>@anonym${comment.user_id}</strong></small>
                 <p class="comment">${comment.comment}</p>
@@ -1611,297 +1607,297 @@ class=" read" style="
               <button type="button" class="translate-btn" data-id="${comment.id}" data-text="${comment.comment}">Translate</button>
               <p class="translated-text" id="translated-${secretId}-${comment.id}"></p>
             `;
-                commentList.appendChild(li);
-              });
-            } else {
-              commentList.innerHTML = `<p class="total">${data.noComment}</p>`;
+                  commentList.appendChild(li);
+                });
+              } else {
+                commentList.innerHTML = `<p class="total">${data.noComment}</p>`;
+              }
+            } catch (err) {
+              console.error("Error loading comments:", err);
             }
-          } catch (err) {
-            console.error("Error loading comments:", err);
-          }
 
-          // Delegate click for Translate buttons inside this section
-          commentList.addEventListener("click", async (e) => {
-            if (e.target.classList.contains("translate-btn")) {
-              const btn = e.target;
-              const text = btn.dataset.text;
-              const id = btn.dataset.id;
-              const output = section.querySelector(`#translated-${secretId}-${id}`);
+            // Delegate click for Translate buttons inside this section
+            commentList.addEventListener("click", async (e) => {
+              if (e.target.classList.contains("translate-btn")) {
+                const btn = e.target;
+                const text = btn.dataset.text;
+                const id = btn.dataset.id;
+                const output = section.querySelector(`#translated-${secretId}-${id}`);
 
-              output.innerText = "Translating...";
+                output.innerText = "Translating...";
+
+                try {
+                  const res = await fetch("/translate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ text, targetLang: "en" }),
+                  });
+
+                  const result = await res.json();
+                  if (result.translated) {
+                    output.innerText = result.translated;
+                  } else {
+                    output.innerText = "Translation failed.";
+                  }
+                } catch (err) {
+                  output.innerText = "Error translating comment.";
+                  console.error(err);
+                }
+              }
+            });
+          });
+        });
+      </script>
+
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          document.querySelectorAll(".reaction").forEach((button) => {
+            const animations = {
+              like: './img/lottie/love4.json',
+              laugh: './img/lottie/laugh.json',
+              cry: './img/lottie/cry.json',
+              gasp: './img/lottie/gasp.json'
+            };
+
+
+            button.addEventListener("click", async (event) => {
+              const btn = event.target.closest(".reaction");
+              const type = btn.getAttribute("data-type");
+              const secretCard = btn.closest(".secret-card");
+              const secretId = secretCard.getAttribute("data-id");
+
+
+              const emojiChar = btn.textContent.trim().split('\n')[0];
+              const card = btn.closest('.secret');
+              const floatingContainer = card.querySelector('.floating-lottie');
+              const floating = document.createElement('div');
+              floating.className = 'floating-lottie-animated';
+              card.appendChild(floating);
+
+
+              // === 1. EMOJI BURST AROUND BUTTON ===
+              triggerEmojiBurst(btn, emojiChar);
+
+              // === 2. 3D EXTRAS AROUND BUTTON ===
+              if (type === 'cry') {
+                const tear = document.createElement('span');
+                tear.className = 'emoji-particle';
+                tear.innerText = '💧';
+                tear.style.setProperty('--x', '0px');
+                tear.style.setProperty('--y', '50px');
+                button.appendChild(tear);
+                setTimeout(() => tear.remove(), 800);
+              }
+
+              if (type === 'gasp') {
+                const puff = document.createElement('span');
+                puff.className = 'emoji-particle';
+                puff.innerText = '💨';
+                puff.style.setProperty('--x', '-10px');
+                puff.style.setProperty('--y', '0px');
+                button.appendChild(puff);
+                setTimeout(() => puff.remove(), 800);
+              }
+
 
               try {
-                const res = await fetch("/translate", {
+                const response = await fetch(`/secret/${secretId}/react`, {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ text, targetLang: "en" }),
+                  body: JSON.stringify({ type }),
                 });
 
-                const result = await res.json();
-                if (result.translated) {
-                  output.innerText = result.translated;
+                const data = await response.json();
+
+
+                const animation = lottie.loadAnimation({
+                  container: floating,
+                  renderer: 'svg',
+                  loop: false,
+                  autoplay: true,
+                  path: animations[type]
+                });
+
+                // Get button to card offset
+                const buttonRect = button.getBoundingClientRect();
+                const cardRect = card.getBoundingClientRect();
+
+                const startX = buttonRect.left - cardRect.left + buttonRect.width / 2;
+                const startY = buttonRect.top - cardRect.top + buttonRect.height / 2;
+
+                floating.style.left = `${startX}px`;
+                floating.style.top = `${startY}px`;
+
+                // 🎇 TRAIL PARTICLES WHILE MOVING
+                const trailEmojis = ['✨', '💥', '💨'];
+                let trailInterval = setInterval(() => {
+                  const trail = document.createElement('span');
+                  trail.className = 'trail-particle';
+                  trail.innerText = trailEmojis[Math.floor(Math.random() * trailEmojis.length)];
+
+                  // Offset from Lottie position
+                  const offsetX = (Math.random() - 0.5) * 60;
+                  const offsetY = (Math.random() - 0.5) * 60;
+
+                  trail.style.left = `${floating.offsetLeft}px`;
+                  trail.style.top = `${floating.offsetTop}px`;
+                  trail.style.setProperty('--trail-x', `${offsetX}px`);
+                  trail.style.setProperty('--trail-y', `${offsetY}px`);
+
+                  card.appendChild(trail);
+                  setTimeout(() => trail.remove(), 600);
+                }, 100);
+
+                // 🎯 Animate to center
+                setTimeout(() => {
+                  floating.classList.add('to-center');
+                }, 50);
+
+                // 👋 Animate back and remove
+                setTimeout(() => {
+                  floating.classList.remove('to-center');
+                  floating.classList.add('to-button');
+                  clearInterval(trailInterval);
+                }, 1200);
+
+                setTimeout(() => {
+                  floating.remove();
+                }, 1800);
+
+
+                if (data.success) {
+                  const countSpan = btn.querySelector(".reaction-count");
+                  countSpan.textContent = data.reactions[type].count || 0; // Use updated count from server
                 } else {
-                  output.innerText = "Translation failed.";
+                  console.error("Failed to update reactions:", data.error);
                 }
-              } catch (err) {
-                output.innerText = "Error translating comment.";
-                console.error(err);
+              } catch (error) {
+                console.error("Error updating reactions:", error);
               }
+
+
+              function triggerEmojiBurst(container, emojiChar) {
+                const burstCount = 10;
+
+                for (let i = 0; i < burstCount; i++) {
+                  const particle = document.createElement('span');
+                  particle.classList.add('emoji-particle');
+                  particle.innerText = emojiChar;
+
+                  const angle = Math.random() * 2 * Math.PI;
+                  const distance = Math.random() * 40 + 20;
+                  const x = Math.cos(angle) * distance + 'px';
+                  const y = Math.sin(angle) * distance + 'px';
+
+                  particle.style.setProperty('--x', x);
+                  particle.style.setProperty('--y', y);
+
+                  container.appendChild(particle);
+                  setTimeout(() => particle.remove(), 800);
+                }
+
+                container.classList.add('pop-animate');
+                setTimeout(() => container.classList.remove('pop-animate'), 300);
+              }
+            });
+          });
+        });
+
+
+        document.querySelectorAll(".read").forEach((button) => {
+          button.addEventListener("click", (e) => {
+            const contentSpan = e.target.previousElementSibling;
+            const isTruncated = e.target.textContent === "Read More";
+
+            if (isTruncated) {
+              // Show full content
+              contentSpan.textContent = e.target.dataset.full;
+              e.target.textContent = "See Less";
+            } else {
+              // Reapply truncated content
+              contentSpan.textContent = e.target.dataset.truncated;
+              e.target.textContent = "Read More";
             }
           });
         });
-      });
-    </script>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        document.querySelectorAll(".reaction").forEach((button) => {
-          const animations = {
-            like: './img/lottie/love4.json',
-            laugh: './img/lottie/laugh.json',
-            cry: './img/lottie/cry.json',
-            gasp: './img/lottie/gasp.json'
-          };
+        document.querySelectorAll(".menu-toggle-btn").forEach((button) => {
+          button.addEventListener("click", (e) => {
+            const menuContent = e.target.closest(".card-menu").querySelector(".card-menu-content");
+            const isVisible = menuContent.style.display === "block";
 
+            // Hide all other menus
+            document.querySelectorAll(".card-menu-content").forEach((menu) => {
+              menu.style.display = "none";
+            });
 
-          button.addEventListener("click", async (event) => {
-            const btn = event.target.closest(".reaction");
-            const type = btn.getAttribute("data-type");
-            const secretCard = btn.closest(".secret-card");
-            const secretId = secretCard.getAttribute("data-id");
+            // Toggle current menu
+            menuContent.style.display = isVisible ? "none" : "block";
 
-
-            const emojiChar = btn.textContent.trim().split('\n')[0];
-            const card = btn.closest('.secret');
-            const floatingContainer = card.querySelector('.floating-lottie');
-            const floating = document.createElement('div');
-            floating.className = 'floating-lottie-animated';
-            card.appendChild(floating);
-
-
-            // === 1. EMOJI BURST AROUND BUTTON ===
-            triggerEmojiBurst(btn, emojiChar);
-
-            // === 2. 3D EXTRAS AROUND BUTTON ===
-            if (type === 'cry') {
-              const tear = document.createElement('span');
-              tear.className = 'emoji-particle';
-              tear.innerText = '💧';
-              tear.style.setProperty('--x', '0px');
-              tear.style.setProperty('--y', '50px');
-              button.appendChild(tear);
-              setTimeout(() => tear.remove(), 800);
-            }
-
-            if (type === 'gasp') {
-              const puff = document.createElement('span');
-              puff.className = 'emoji-particle';
-              puff.innerText = '💨';
-              puff.style.setProperty('--x', '-10px');
-              puff.style.setProperty('--y', '0px');
-              button.appendChild(puff);
-              setTimeout(() => puff.remove(), 800);
-            }
-
-
-            try {
-              const response = await fetch(`/secret/${secretId}/react`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ type }),
-              });
-
-              const data = await response.json();
-
-
-              const animation = lottie.loadAnimation({
-                container: floating,
-                renderer: 'svg',
-                loop: false,
-                autoplay: true,
-                path: animations[type]
-              });
-
-              // Get button to card offset
-              const buttonRect = button.getBoundingClientRect();
-              const cardRect = card.getBoundingClientRect();
-
-              const startX = buttonRect.left - cardRect.left + buttonRect.width / 2;
-              const startY = buttonRect.top - cardRect.top + buttonRect.height / 2;
-
-              floating.style.left = `${startX}px`;
-              floating.style.top = `${startY}px`;
-
-              // 🎇 TRAIL PARTICLES WHILE MOVING
-              const trailEmojis = ['✨', '💥', '💨'];
-              let trailInterval = setInterval(() => {
-                const trail = document.createElement('span');
-                trail.className = 'trail-particle';
-                trail.innerText = trailEmojis[Math.floor(Math.random() * trailEmojis.length)];
-
-                // Offset from Lottie position
-                const offsetX = (Math.random() - 0.5) * 60;
-                const offsetY = (Math.random() - 0.5) * 60;
-
-                trail.style.left = `${floating.offsetLeft}px`;
-                trail.style.top = `${floating.offsetTop}px`;
-                trail.style.setProperty('--trail-x', `${offsetX}px`);
-                trail.style.setProperty('--trail-y', `${offsetY}px`);
-
-                card.appendChild(trail);
-                setTimeout(() => trail.remove(), 600);
-              }, 100);
-
-              // 🎯 Animate to center
-              setTimeout(() => {
-                floating.classList.add('to-center');
-              }, 50);
-
-              // 👋 Animate back and remove
-              setTimeout(() => {
-                floating.classList.remove('to-center');
-                floating.classList.add('to-button');
-                clearInterval(trailInterval);
-              }, 1200);
-
-              setTimeout(() => {
-                floating.remove();
-              }, 1800);
-
-
-              if (data.success) {
-                const countSpan = btn.querySelector(".reaction-count");
-                countSpan.textContent = data.reactions[type].count || 0; // Use updated count from server
-              } else {
-                console.error("Failed to update reactions:", data.error);
-              }
-            } catch (error) {
-              console.error("Error updating reactions:", error);
-            }
-
-
-            function triggerEmojiBurst(container, emojiChar) {
-              const burstCount = 10;
-
-              for (let i = 0; i < burstCount; i++) {
-                const particle = document.createElement('span');
-                particle.classList.add('emoji-particle');
-                particle.innerText = emojiChar;
-
-                const angle = Math.random() * 2 * Math.PI;
-                const distance = Math.random() * 40 + 20;
-                const x = Math.cos(angle) * distance + 'px';
-                const y = Math.sin(angle) * distance + 'px';
-
-                particle.style.setProperty('--x', x);
-                particle.style.setProperty('--y', y);
-
-                container.appendChild(particle);
-                setTimeout(() => particle.remove(), 800);
-              }
-
-              container.classList.add('pop-animate');
-              setTimeout(() => container.classList.remove('pop-animate'), 300);
-            }
+            // Stop event propagation to prevent immediate hiding
+            e.stopPropagation();
           });
         });
-      });
 
-
-      document.querySelectorAll(".read").forEach((button) => {
-        button.addEventListener("click", (e) => {
-          const contentSpan = e.target.previousElementSibling;
-          const isTruncated = e.target.textContent === "Read More";
-
-          if (isTruncated) {
-            // Show full content
-            contentSpan.textContent = e.target.dataset.full;
-            e.target.textContent = "See Less";
-          } else {
-            // Reapply truncated content
-            contentSpan.textContent = e.target.dataset.truncated;
-            e.target.textContent = "Read More";
-          }
-        });
-      });
-
-      document.querySelectorAll(".menu-toggle-btn").forEach((button) => {
-        button.addEventListener("click", (e) => {
-          const menuContent = e.target.closest(".card-menu").querySelector(".card-menu-content");
-          const isVisible = menuContent.style.display === "block";
-
-          // Hide all other menus
+        // Hide menu when clicking elsewhere
+        document.addEventListener("click", () => {
           document.querySelectorAll(".card-menu-content").forEach((menu) => {
             menu.style.display = "none";
           });
-
-          // Toggle current menu
-          menuContent.style.display = isVisible ? "none" : "block";
-
-          // Stop event propagation to prevent immediate hiding
-          e.stopPropagation();
         });
-      });
-
-      // Hide menu when clicking elsewhere
-      document.addEventListener("click", () => {
-        document.querySelectorAll(".card-menu-content").forEach((menu) => {
-          menu.style.display = "none";
-        });
-      });
 
 
-      document.addEventListener("click", function (event) {
-        if (event.target.closest(".fas.fa-copy")) {
-          const button = event.target.closest(".fas.fa-copy");
+        document.addEventListener("click", function (event) {
+          if (event.target.closest(".fas.fa-copy")) {
+            const button = event.target.closest(".fas.fa-copy");
 
-          // Find the closest card container to get the content
-          const cardContainer = button.closest(".card");
+            // Find the closest card container to get the content
+            const cardContainer = button.closest(".card");
 
-          // Extract the content inside the card container
-          const contentToCopy = cardContainer.querySelector(".content")?.innerText;
+            // Extract the content inside the card container
+            const contentToCopy = cardContainer.querySelector(".content")?.innerText;
 
-          if (contentToCopy) {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-              // Use Clipboard API if available
-              navigator.clipboard
-                .writeText(contentToCopy)
-                .then(() => {
+            if (contentToCopy) {
+              if (navigator.clipboard && navigator.clipboard.writeText) {
+                // Use Clipboard API if available
+                navigator.clipboard
+                  .writeText(contentToCopy)
+                  .then(() => {
+                    alert("Content copied to clipboard!");
+                  })
+                  .catch((err) => {
+                    console.error("Failed to copy: ", err);
+                    alert("Failed to copy content.");
+                  });
+              } else {
+                // Fallback for unsupported browsers
+                const tempInput = document.createElement("textarea");
+                tempInput.value = contentToCopy;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                try {
+                  document.execCommand("copy");
                   alert("Content copied to clipboard!");
-                })
-                .catch((err) => {
-                  console.error("Failed to copy: ", err);
-                  alert("Failed to copy content.");
-                });
-            } else {
-              // Fallback for unsupported browsers
-              const tempInput = document.createElement("textarea");
-              tempInput.value = contentToCopy;
-              document.body.appendChild(tempInput);
-              tempInput.select();
-              try {
-                document.execCommand("copy");
-                alert("Content copied to clipboard!");
-                button.innerHTML = "Copied!"
-              } catch (err) {
-                console.error("Fallback copy failed: ", err);
-                alert("Copy failed. Please copy manually.");
+                  button.innerHTML = "Copied!"
+                } catch (err) {
+                  console.error("Fallback copy failed: ", err);
+                  alert("Copy failed. Please copy manually.");
+                }
+                document.body.removeChild(tempInput);
               }
-              document.body.removeChild(tempInput);
+            } else {
+              console.error("No content to copy.");
+              alert("Nothing to copy.");
             }
-          } else {
-            console.error("No content to copy.");
-            alert("Nothing to copy.");
           }
-        }
-      });
+        });
 
-    </script>
+      </script>
 
 
-    <script src="/js/app.js"></script>
-    <script src="/js/defaultTheme.js"></script>
-    <script src="/js/generate-thumbnails.js"></script>
+      <script src="/js/app.js"></script>
+      <script src="/js/defaultTheme.js"></script>
+      <script src="/js/generate-thumbnails.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
   </body>

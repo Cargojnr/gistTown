@@ -146,45 +146,45 @@ app.use(passport.session());
 
 
 const activeUsers = new Set();
-// let connectedUsers = new Set();
 
-io.on('connection', (socket) => {
+io.on("connection", (socket) => {
+  const userId = parseInt(socket.handshake.query.userId);
 
-    const userId = socket.handshake.query.userId;
+  if (userId) {
+    console.log(`User ${userId} connected`);
+    activeUsers.add(userId);
+    socket.join(`user_${userId}`);
+    socket.broadcast.emit("userJoined", userId);
+  } else {
+    console.error("User ID is missing from handshake query");
+  }
 
-    if (userId) {
-        console.log(`User ${userId} connected`);
-        activeUsers.add(userId);
-        socket.join(`user_${userId}`); // Join user's private room
-        socket.broadcast.emit('userJoined', `~~anonym~~ ${userId} joined`);
-    } else {
-        console.error('User ID is missing from handshake query');
+  socket.on("message", (data) => {
+    io.emit("message", {
+      user: data.user,
+      text: data.text,
+      timestamp: new Date(),
+    });
+  });
+
+  socket.on("typing", (data) => {
+    socket.broadcast.emit("typing", { user: data.user });
+  });
+
+  socket.on("stoppedTyping", () => {
+    socket.broadcast.emit("stoppedTyping");
+  });
+
+  socket.on("disconnect", () => {
+    if (userId && activeUsers.has(userId)) {
+      console.log(`User ${userId} disconnected.`);
+      activeUsers.delete(userId);
+      socket.broadcast.emit("userLeft", userId);
     }
-
-    // Handle chat messages
-    socket.on('message', (data) => {
-        console.log(`Message from ${data.user}: ${data.text}`);
-        const messageData = { user: data.user, text: data.text, timestamp: new Date() };
-        io.emit('message', messageData); // Broadcast message to all
-    });
-
-    // Handle typing event
-    socket.on('typing', (data) => {
-        socket.broadcast.emit('typing', { user: data.user });
-    });
-
-    socket.on('stoppedTyping', () => {
-        socket.broadcast.emit('stoppedTyping');
-    });
-
-    socket.on('disconnect', () => {
-        if (userId && activeUsers.has(userId)) {
-            console.log(`~~anonym~~ ${userId} disconnected.`);
-            activeUsers.delete(userId);
-            socket.broadcast.emit('userLeft', `~~anonym~~ ${userId} left`);
-        }
-    });
+  });
 });
+
+
 
 
 
@@ -201,6 +201,40 @@ app.get("/reset", (req, res) => {
 app.get("/register", (req, res) => {
     res.render("registration");
 });
+
+app.get("/user/:id", async (req, res) => {
+    const userId = req.params.id;
+    try {
+      const result = await db.query(
+        "SELECT id, username, profile_picture FROM users WHERE id = $1",
+        [userId]
+      );
+      if (result.rows.length > 0) {
+        res.json(result.rows[0]);
+      } else {
+        res.status(404).json({ error: "User not found" });
+      }
+    } catch (err) {
+      res.status(500).json({ error: "Database error" });
+    }
+  });
+  
+  // --- Add endpoint to get all currently active users ---
+  app.get("/active-users", async (req, res) => {
+    try {
+      const ids = Array.from(activeUsers);
+      if (ids.length === 0) return res.json([]);
+  
+      const result = await db.query(
+        `SELECT id, username, profile_picture FROM users WHERE id = ANY($1::int[])`,
+        [ids]
+      );
+      res.json(result.rows);
+    } catch (err) {
+      res.status(500).json({ error: "Could not retrieve active users" });
+    }
+  });
+  
 
 app.get("/profile", async (req, res) => {
     if (req.isAuthenticated()) {
@@ -223,11 +257,10 @@ app.get("/profile", async (req, res) => {
 })
 
 app.get("/profile/amebo/:user", async(req, res) => {
-    const params = req.params.user
     if(req.isAuthenticated()){
-        const userId = req.user.id;
+        const userId = req.params.user;
          try{
-            const result = await db.query("SELECT timestamp, reported, secrets.id, reactions,profile_picture, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id WHERE user_id = $1 ORDER by secrets.id DESC", [params])
+            const result = await db.query("SELECT timestamp, reported, secrets.id, reactions,profile_picture, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id WHERE user_id = $1 ORDER by secrets.id DESC", [userId])
             
 
             const userProfile = result.rows;
@@ -241,7 +274,7 @@ app.get("/profile/amebo/:user", async(req, res) => {
             const totalReactions = result.reactions
             const totalComments = result.comment
             console.log(userPicture)
-            res.render("profile", {userId:userid, userPicture, profilePicture: req.user.profile_picture, userProfile, userAudio: audioFiles, totalComments, totalReactions})
+            res.render("profile", {userId:req.user.id, profileId: userid, userPicture, profilePicture: req.user.profile_picture, userProfile, userAudio: audioFiles, totalComments, totalReactions})
 
          } catch(err){
             console.log(err)
@@ -302,7 +335,10 @@ app.get("/feeds", async (req, res) => {
         try {
             const userTheme = req.user.color || 'default';
             const mode = req.user.mode || "light"
+            const allUsers = await db.query("SELECT id, username, profile_picture FROM users");
+
             const result = await db.query("SELECT timestamp, reported, secrets.id, reactions,profile_picture, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id ORDER BY secrets.id DESC ")
+
             const audioPosts = await Audio.findAll({
                 where: { userId },
                 order: [['uploadDate', 'DESC']]
@@ -323,7 +359,7 @@ app.get("/feeds", async (req, res) => {
         
 
             const usersSecret = result.rows;
-            res.render("secrets", { secrets: usersSecret, audioPost: formatted, userId: req.user.id, profilePicture: req.user.profile_picture, username: req.user.username, theme: userTheme, mode: mode, reactions: JSON.stringify(usersSecret.map(secret => secret.reactions || {})), })
+            res.render("secrets", {allUsers: allUsers.rows, secrets: usersSecret, audioPost: formatted, userId: req.user.id, profilePicture: req.user.profile_picture, username: req.user.username, theme: userTheme, mode: mode, reactions: JSON.stringify(usersSecret.map(secret => secret.reactions || {})), })
         } catch (err) {
             console.log(err)
         }

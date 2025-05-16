@@ -8,7 +8,6 @@
   <script src="https://kit.fontawesome.com/ceb8cfc409.js" crossorigin="anonymous"></script>
   <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
   <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
   <link rel="stylesheet" href="/styles/style.css" />
   <link rel="stylesheet" href="/styles/media.css" />
@@ -47,7 +46,7 @@
             </a>
           </li>
           <li class="navbar profiled">
-            <button class="nav-btn avatar-profile thumb"><img src="../.<%= profilePicture %>" alt="" class="profile-pic thumb"></button>
+            <button class="nav-btn avatar-profile thumb"><img src="<%= profilePicture ? profilePicture : '../.' + profilePicture %>" alt="" class="profile-pic thumb"></button>
           </li>
           <li class="navbar dropdown">
             <div class="hamburger" id="hamburger">
@@ -58,7 +57,7 @@
             <div id="menu" class="menu-hidden">
               <div class="container">
                 <div class="profile-header">
-                  <img src="../.<%= profilePicture %>" alt="Profile Avatar" class="profile-avatar" />
+                  <img src="<%= profilePicture ? profilePicture : '../.' + profilePicture %>" alt="Profile Avatar" class="profile-avatar" />
 
                   <h3 class="username">Hello, <span>@amebo<%= userId %></span></h3>
                 </div>
@@ -88,13 +87,6 @@
                         <a class="nav-link" href="/logout" class="">Logout <i class="fas fa-right-from-bracket"></i></a>
                       </li>
                     </ul>
-                  </div>
-                  <div class="theme-switch">
-                    <input type="checkbox" id="themeToggle" class="theme-toggle" onchange="toggleMode()" />
-                    <label for="themeToggle" class="theme-toggle-label">
-                      <span class="sun-icon">☀️</span>
-                      <span class="moon-icon">🌙</span>
-                    </label>
                   </div>
 
                   <ul class="socials">
@@ -161,6 +153,15 @@
         </center>
       </div>
       <button id="close-announcement" class="btn btn-dark btn-lg">Close</button>
+    </div>
+
+    
+    <div class="theme-switch">
+      <input type="checkbox" id="themeToggle" class="theme-toggle" onchange="toggleMode()" />
+      <label for="themeToggle" class="theme-toggle-label">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </label>
     </div>
 
     <!-- Content of each page will be injected here -->
