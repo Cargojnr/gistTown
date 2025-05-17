@@ -1,5 +1,55 @@
 <%- include('layout') %>
     <style>
+        .form-container {
+            margin-top: 2rem !important;
+        }
+
+        .gossip-select.fancy-select {
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  border: 1px solid #444;
+  background: linear-gradient(145deg, #2b2b2b, #1f1f1f);
+  color: #f0f0f0;
+  font-size: 0.9rem;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gossip-select.fancy-select:hover {
+  background: #2a2a2a;
+  box-shadow: 0 0 5px #888;
+}
+
+.gossip-dropdown {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  opacity: 0;
+  margin-top: 0.5rem;
+}
+
+.gossip-dropdown.show {
+  max-height: 100px;
+  opacity: 1;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: block;
+  }
+
+  .gossip-select.full {
+    width: 100%;
+  }
+}
+
         #recordContainer {
             background: linear-gradient(135deg, #1e3c72, #2a5298);
             display: flex;
@@ -206,35 +256,62 @@
                 <div class="form-container">
                     <form method="POST" action="/share" id="share">
 
-                        <div class="avatar-profile">
-                            <img src="<%= profilePicture %>" class="profile-pic " alt="Avatar Profile">
-                          </div> 
-                        <div class="form-group category-section">
-                            <label for="category" class="category-label">Choose a category</label>
-                            <select id="category" onchange="changeBg(event)" name="category"
-                                class="form-control category-dropdown">
-                                <option value="" disabled selected>Select a category</option>
-                                <option value="confession">Confession</option>
-                                <option value="advice">Advice</option>
-                                <option value="funny">Funny</option>
-                                <option value="random">Random</option>
-                                <option value="vent">Vent</option>
-                                <option value="love">Love</option>
+                        <div class="form-top">
+                          <div class="avatar-and-type">
+                            <div class="avatar-profile">
+                              <img src="<%= profilePicture %>" class="profile-pic" alt="Avatar Profile">
+                            </div>
+                    
+                            <!-- Gossip Type Selector (desktop) -->
+                            <div class="gossip-type-selector desktop-only">
+                              <select name="gossipType" class="gossip-select fancy-select">
+                                <option disabled selected>🌟 Choose Gossip Type</option>
+                                <option value="disappearing">⏳ Disappearing Gossip</option>
+                                <option value="scheduled">📅 Scheduled Gossip</option>
+                                <option value="private">🔒 Private Gossip</option>
+                              </select>
+                            </div>
+                    
+                            <!-- Mobile toggle chevron -->
+                            <div class="mobile-only gossip-type-toggle" onclick="toggleGossipMenu()">
+                              <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                          </div>
+                    
+                          <!-- Slide-down Dropdown on Mobile -->
+                          <div id="gossipDropdown" class="mobile-only gossip-dropdown hidden">
+                            <select name="gossipType" class="gossip-select full fancy-select">
+                              <option disabled selected>🌟 Choose Gossip Type</option>
+                              <option value="disappearing">⏳ Disappearing Gossip</option>
+                              <option value="scheduled">📅 Scheduled Gossip</option>
+                              <option value="private">🔒 Private Gossip</option>
                             </select>
+                          </div>
                         </div>
-
-
+                    
+                        <!-- Category + textarea (unchanged) -->
+                        <div class="form-group category-section">
+                          <label for="category" class="category-label">Choose a category</label>
+                          <select id="category" onchange="changeBg(event)" name="category" class="form-control category-dropdown">
+                            <option value="" disabled selected>Select a category</option>
+                            <option value="confession">Confession</option>
+                            <option value="advice">Advice</option>
+                            <option value="funny">Funny</option>
+                            <option value="random">Random</option>
+                            <option value="vent">Vent</option>
+                            <option value="love">Love</option>
+                          </select>
+                        </div>
+                    
                         <div class="form-group">
-                            <textarea class="form-control" id="input" name="secret"
-                                placeholder="Hey <%= username %> What's on your mind today!"></textarea>
+                          <textarea class="form-control" id="input" name="secret"
+                            placeholder="Hey <%= username %>, what's on your mind today!"></textarea>
                         </div>
-
-
+                    
                         <button type="submit" id="submit" class="btn btn-dark secret-btn">
-                            <%= submit %>
+                          <%= submit %>
                         </button>
-
-                    </form>
+                      </form>
 
                     <div class="or">
                         <hr>
@@ -320,28 +397,106 @@
 </main>
 
 <aside class="right-sidebar">
-    <div class="aside">
-    <ul class="nav">
-      <li class="nav-item">Moohe</li>
-      <li class="nav-item">Homeem</li>
-      <li class="nav-item">Homeem</li>
-      <li class="nav-item">Homeem</li>
-      <li class="nav-item">Homeem</li>
-    </ul>
-    </div>
-    <div class="aside aside-2">
-      <center><h4>Active Gossips</h4></center>
-    <ul class="nav">
-      <li class="nav-item">Moohe</li>
-      <li class="nav-item">Homeem</li>
-      <li class="nav-item">Homeem</li>
-      <li class="nav-item">Homeem</li>
-      <li class="nav-item">Homeem</li>
-    </ul>
-  </div>
+    <div class="aside premium-aside">
+        <div class="premium-card">
+          <div class="crown-icon sparkle">👑</div>
+      
+          <h3 class="premium-title">Become a Top Gossipa</h3>
+          <p class="premium-text">Stand out in the World of anonymity. Get Known. Remain unseen.</p>
+      
+          <div class="trending-stats">
+            <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
+          </div>
+      
+          <div class="avatar-hint">
+            <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
+            <p>You’re 1 step from <strong>trending</strong>…</p>
+          </div>
+      
+          <a href="/subscribe" class="premium-btn">Unlock Premium</a>
+        </div>
+      </div>
+        
+      <div class="aside aside-2">
+        <center>
+          <h4 class="user-count">Active Gossipas: <span id="activeCount">0</span></h4>
+        </center>
+        <ul class="nav user-list">
+        </ul>
+
+      </div>
+
   </aside>
 
 </div>
+
+<script>
+    const connectedUsersMap = new Map();
+    const userList = document.querySelector(".user-list");
+    const userCountDisplay = document.getElementById("activeCount");
+
+    function updateUserCount() {
+      userCountDisplay.textContent = connectedUsersMap.size;
+    }
+
+    function userConnected(user) {
+      if (connectedUsersMap.has(user.id)) return;
+
+      const userBox = document.createElement("li");
+      userBox.className = "connected-user nav-item enter";
+      userBox.id = `user-${user.id}`;
+      userBox.innerHTML = `
+      <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
+        <img src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
+        <p>@amebo${user.id}</p>
+      </div>
+    `;
+
+      userList.appendChild(userBox);
+      connectedUsersMap.set(user.id, userBox);
+      updateUserCount();
+
+      // Trigger reflow for entry animation
+      requestAnimationFrame(() => {
+        userBox.classList.add("enter");
+      });
+    }
+
+    function userDisconnected(userId) {
+      const userBox = connectedUsersMap.get(userId);
+      if (userBox) {
+        userBox.classList.add("exit");
+        userBox.classList.remove("enter");
+        setTimeout(() => {
+          userBox.remove();
+          connectedUsersMap.delete(userId);
+          updateUserCount();
+        }, 400); // CSS transition match
+      }
+    }
+
+    socket.on("userJoined", async (userId) => {
+      try {
+        const res = await fetch(`/user/${userId}`);
+        const user = await res.json();
+        userConnected(user);
+      } catch (err) {
+        console.error("Failed to fetch user data:", err);
+      }
+    });
+
+    socket.on("userLeft", (userId) => {
+      userDisconnected(userId);
+    });
+
+    // Load current active users on first load
+    fetch("/active-users")
+      .then(res => res.json())
+      .then(users => {
+        users.forEach(user => userConnected(user));
+      })
+      .catch(console.error);
+  </script>
 
     <script>
         const header = document.querySelector('header');
@@ -543,6 +698,14 @@
     </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+
+<script>
+    function toggleGossipMenu() {
+      const dropdown = document.getElementById("gossipDropdown");
+      dropdown.classList.toggle("show");
+    }
+  </script>
+  
 
 <script>
     window.addEventListener("DOMContentLoaded", () => {

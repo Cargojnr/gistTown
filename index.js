@@ -340,9 +340,9 @@ app.get("/feeds", async (req, res) => {
             const result = await db.query("SELECT timestamp, reported, secrets.id, reactions,profile_picture, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id ORDER BY secrets.id DESC ")
 
             const audioPosts = await Audio.findAll({
-                where: { userId },
                 order: [['uploadDate', 'DESC']]
               });
+              
 
               const userInfo = await db.query(`SELECT username, profile_picture FROM users WHERE id = $1`, [userId]);
       const user = userInfo.rows[0];
@@ -1077,13 +1077,14 @@ app.post("/find-account", async (req, res) => {
     }
 })
 
-app.post("/search", async (req, res) => {
+
+app.post("/searching", async (req, res) => {
     const searchKey = req.body.search;
   
     if (searchKey.trim() !== "") {
       try {
         const result = await db.query(
-          "SELECT * FROM secrets WHERE LOWER(secret) ILIKE $1",
+          "SELECT * FROM secrets JOIN users ON user_id = users.id WHERE LOWER(secret) ILIKE $1",
           [`%${searchKey.toLowerCase()}%`]
         );
   
@@ -1100,6 +1101,39 @@ app.post("/search", async (req, res) => {
       res.json({ message: "Empty search", searchResults: [] });
     }
   });
+
+  function highlightMatch(text, keyword) {
+    const regex = new RegExp(`(${keyword})`, "gi");
+    return text.replace(regex, "<mark>$1</mark>");
+  }
+  app.post("/search", async (req, res) => {
+    const { search } = req.body;
+  
+    if (!search || search.trim() === "") {
+      return res.render("searchResults", { results: [], keyword: "" });
+    }
+  
+    try {
+      const searchTerm = `%${search.toLowerCase()}%`;
+  
+      const result = await db.query(
+        `SELECT id, secret FROM secrets WHERE LOWER(secret) LIKE $1 ORDER BY id DESC`,
+        [searchTerm]
+      );
+  
+      res.render("searchResults", {
+        userId: req.user.id,
+        profilePicture: req.user.profile_picture,
+        results: result.rows,
+        keyword: search,
+        highlightMatch
+      });
+    } catch (err) {
+      console.error("Search error:", err);
+      res.status(500).send("Internal Server Error");
+    }
+  });
+  
   
 
 app.post("/reset", async (req, res) => {

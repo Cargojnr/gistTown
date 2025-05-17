@@ -83,16 +83,41 @@
     /* bottom: -10rem !important; */
 }
 
-.search {
-  display: none;
-}
 
 
 header .profiled {
   display: none;
 }
 
+.search {
+  width: 40px;
+  justify-content: center;
 }
+
+.search input {
+  width: 0;
+  opacity: 0;
+  padding: 0;
+  border: none;
+  transition: width 0.3s ease, opacity 0.3s ease;
+}
+
+.search.active {
+  width: 100%;
+  padding: 5px 10px;
+  justify-content: flex-start;
+}
+
+.search.active input {
+  width: 100%;
+  opacity: 1;
+  padding: 8px 10px;
+  border: none;
+}
+
+}
+
+
 @media (max-width: 600px) {
 
   .avatar-profile {
@@ -392,7 +417,7 @@ button#next-step {
   .card {
     /* margin-bottom: .5rem !important; */
     padding: 1rem;
-    font-size: .9rem;
+    font-size: 1rem;
   }
 
   .card a {

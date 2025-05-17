@@ -30,14 +30,15 @@
       <div class="header">
         <a class="nav-link" href="../../dashboard" id="logo"><i class="fas fa-mask fa-2x"></i></a>
         <form id="liveSearchForm" action="/search" method="post" autocomplete="off">
-          <div class="search">
-            <button class="search-btn" type="submit">
+          <div class="search" id="mobileSearch">
+            <button class="search-btn" type="submit" id="toggleSearch">
               <i class="fa-solid fa-magnifying-glass"></i>
             </button>
             <input name="search" type="text" id="searchInput" placeholder="Search">
           </div>
           <ul id="suggestions" class="suggestion-box"></ul>
         </form>
+        
                 <ul id="navbar">
           <li class="navbar">
             <a class="nav-link" href="/notifications">
@@ -300,11 +301,42 @@
   </script>
 
 <script>
+  const searchWrapper = document.getElementById("mobileSearch");
+  const toggleBtn = document.getElementById("toggleSearch");
   const searchInput = document.getElementById("searchInput");
   const suggestionsBox = document.getElementById("suggestions");
 
   let debounceTimer;
 
+  // Toggle expand/collapse
+  toggleBtn.addEventListener("click", function (e) {
+    // Only apply on small screens
+    if (window.innerWidth <= 768) {
+      e.preventDefault();
+      searchWrapper.classList.toggle("active");
+
+      if (searchWrapper.classList.contains("active")) {
+        searchInput.focus();
+      } else {
+        searchInput.value = "";
+        suggestionsBox.innerHTML = "";
+      }
+    }
+  });
+
+  // Click outside to collapse
+  document.addEventListener("click", function (e) {
+    if (
+      window.innerWidth <= 768 &&
+      !searchWrapper.contains(e.target)
+    ) {
+      searchWrapper.classList.remove("active");
+      searchInput.value = "";
+      suggestionsBox.innerHTML = "";
+    }
+  });
+
+  // Live search logic
   searchInput.addEventListener("keyup", function () {
     clearTimeout(debounceTimer);
     const query = this.value.trim();
@@ -315,7 +347,7 @@
     }
 
     debounceTimer = setTimeout(() => {
-      fetch("/search", {
+      fetch("/searching", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -332,31 +364,30 @@
           }
 
           function highlightMatch(text, keyword) {
-  const regex = new RegExp(`(${keyword})`, "gi");
-  return text.replace(regex, '<mark>$1</mark>');
-}
+            const regex = new RegExp(`(${keyword})`, "gi");
+            return text.replace(regex, "<mark>$1</mark>");
+          }
 
-data.searchResults.forEach(item => {
-  const li = document.createElement("li");
-  li.classList.add("suggestion-item");
+          data.searchResults.forEach(item => {
+            const li = document.createElement("li");
+            li.classList.add("suggestion-item");
 
-  const highlightedText = highlightMatch(item.secret, query);
+            const highlightedText = highlightMatch(item.secret, query);
 
-  li.innerHTML = `
-    <span class="arrow">→</span>
-    <span class="text">${highlightedText}</span>
-  `;
+            li.innerHTML = `
+              <span class="arrow">→</span>
+              <span class="text">${highlightedText}</span>
+            `;
 
-  li.addEventListener("click", () => {
-    window.location.href = `/secret/${item.id}`; // adjust if needed
-  });
+            li.addEventListener("click", () => {
+              window.location.href = `/secret/${item.id}`;
+            });
 
-  suggestionsBox.appendChild(li);
-});
-
+            suggestionsBox.appendChild(li);
+          });
         })
         .catch(err => console.error("Live search error:", err));
-    }, 300); // 300ms debounce
+    }, 300);
   });
 </script>
 

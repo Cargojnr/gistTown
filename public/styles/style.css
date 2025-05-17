@@ -99,6 +99,8 @@ body {
       position: relative;
     }
 
+
+
     .user-count {
       position: sticky;
       top: 0;
@@ -159,6 +161,98 @@ body {
     flex-direction: column !important;
   }
 
+  /* permr */
+  .premium-aside {
+    padding: 1rem;
+    background: linear-gradient(to bottom right, #1a1a1a, #2c2c2c);
+    color: #fff;
+    border-radius: 1rem;
+    text-align: center;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.2);
+  }
+  
+  .premium-card {
+    padding: 1.5rem 1rem;
+    border-radius: 1rem;
+    background: radial-gradient(circle at top left, #333 0%, #111 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s;
+  }
+  
+  .premium-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 14px rgba(255, 215, 0, 0.3);
+  }
+  
+  .crown-icon {
+    font-size: 2.2rem;
+    color: gold;
+    margin-bottom: 0.5rem;
+  }
+  
+  .sparkle {
+    animation: sparkle 1.5s infinite ease-in-out;
+  }
+  
+  @keyframes sparkle {
+    0%, 100% { text-shadow: 0 0 5px gold, 0 0 10px gold; }
+    50% { text-shadow: 0 0 10px #fff, 0 0 20px gold; }
+  }
+  
+  .premium-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  
+  .premium-text {
+    font-size: 0.9rem;
+    color: #ccc;
+    margin-bottom: 1rem;
+  }
+  
+  .trending-stats {
+    font-size: 0.85rem;
+    color: #ffc107;
+    margin-bottom: 1rem;
+  }
+  
+  .avatar-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.2rem;
+    justify-content: center;
+  }
+  
+  .blur-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    filter: blur(1px) brightness(0.8);
+    object-fit: cover;
+  }
+  
+  .avatar-hint p {
+    font-size: 0.8rem;
+    color: #bbb;
+  }
+  
+  .premium-btn {
+    display: inline-block;
+    padding: 0.5rem 1.2rem;
+    background: gold;
+    color: #111;
+    border-radius: 999px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background 0.3s;
+  }
+  
+  .premium-btn:hover {
+    background: #ffce00;
+  }
+  
   
   main {
     flex: 1;
@@ -168,6 +262,7 @@ body {
     max-width: 900px !important;
     /* width: 900px !important; */
   }
+
 
   .nav-item {
     display: flex;
@@ -469,7 +564,7 @@ body {
   }
 
   .search-btn {
-    padding: .5rem;
+    padding: .55rem;
     background: var(--container-bg);
     border: none;
     border-radius: 30px 0 0 30px!important;
@@ -546,6 +641,20 @@ body {
     max-width: 300px;
     z-index: 20;
   }
+
+  /* Base search styling */
+.search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  transition: width 0.3s ease;
+  background: #2c2c2c;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 500px;
+}
+
+
 
   mark {
     background-color: #ffe58f;

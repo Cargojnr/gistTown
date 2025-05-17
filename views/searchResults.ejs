@@ -1,0 +1,202 @@
+
+  <%- include("layout") %>
+  <style>
+    .search-result-box {
+      max-width: 900px;
+      margin: 80px auto 40px;
+      padding: 20px;
+      background: #1e1e1e;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      color: #fff;
+    }
+
+    .search-result-item {
+      display: flex;
+      align-items: flex-start;
+      padding: 15px 0;
+      border-bottom: 1px solid #333;
+      gap: 15px;
+    }
+
+    .search-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #ffd54f;
+    }
+
+    .search-content {
+      flex: 1;
+    }
+
+    .search-meta {
+      display: flex;
+      align-items: center;
+      font-size: 0.85rem;
+      color: #aaa;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+
+    .search-meta .badge {
+      background: #444;
+      color: #ffd54f;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      text-transform: capitalize;
+    }
+
+    .search-meta .timestamp {
+      font-style: italic;
+    }
+
+    .search-text mark {
+      background: #ffd54f;
+      color: black;
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+
+    .read-more {
+      background: none;
+      border: none;
+      color: #ffd54f;
+      font-weight: bold;
+      cursor: pointer;
+      margin-left: 10px;
+      font-size: 0.9rem;
+    }
+
+    .read-more:hover {
+      text-decoration: underline;
+    }
+
+    .no-result {
+      text-align: center;
+      padding: 10px;
+      color: #888;
+    }
+
+    .reactions {
+      font-size: 0.8rem;
+      margin-top: 5px;
+      color: #bbb;
+    }
+
+    .load-more {
+      text-align: center;
+      margin-top: 20px;
+      cursor: pointer;
+      color: #ffd54f;
+      font-weight: bold;
+    }
+  </style>
+<body>
+
+  <div class="search-result-box" id="resultsBox">
+    <% if (results.length === 0) { %>
+      <div class="no-result">No results found for "<%= keyword %>"</div>
+    <% } else { %>
+      <% results.slice(0, 10).forEach((item, index) => { 
+        const isLong = item.secret.length > 150;
+        const shortText = isLong ? item.secret.slice(0, 150) + "..." : item.secret;
+      %>
+      <div class="search-result-item" data-index="<%= index %>">
+        <img class="search-avatar" src="<%= item.profile_picture %>" alt="Avatar">
+        <div class="search-content">
+          <div class="search-meta">
+            <span class="username"><%= item.username %></span>
+            <span class="badge"><%= item.category %></span>
+            <span class="timestamp"><%= item.timestamp %></span>
+          </div>
+          <div class="search-text short-text" data-full="<%= item.secret.replace(/"/g, '&quot;') %>">
+            <%- highlightMatch(shortText, keyword) %>
+            <% if (isLong) { %>
+              <button class="read-more" onclick="toggleRead(event, this, '<%= keyword %>')">Read More</button>
+            <% } %>
+          </div>
+          <div class="reactions">❤️ <%= Object.keys(item.reactions || {}).length %> reactions</div>
+        </div>
+      </div>
+      <% }) %>
+      <div id="loadMore" class="load-more">Load More</div>
+    <% } %>
+  </div>
+
+  <script>
+    function goToSecret(id) {
+      window.location.href = `/secret/${id}`;
+    }
+
+    function highlightMatch(text, keyword) {
+      const regex = new RegExp("(" + keyword + ")", "gi");
+      return text.replace(regex, "<mark>$1</mark>");
+    }
+
+    function toggleRead(e, btn, keyword) {
+      e.stopPropagation();
+      const textEl = btn.parentElement;
+      const raw = textEl.getAttribute("data-full");
+      const expanded = textEl.classList.contains("expanded");
+
+      if (!expanded) {
+        textEl.innerHTML = highlightMatch(raw, keyword);
+        const newBtn = document.createElement("button");
+        newBtn.textContent = "Show Less";
+        newBtn.className = "read-more";
+        newBtn.onclick = ev => toggleRead(ev, newBtn, keyword);
+        textEl.appendChild(newBtn);
+        textEl.classList.add("expanded");
+      } else {
+        const short = raw.slice(0, 150) + "...";
+        textEl.innerHTML = highlightMatch(short, keyword);
+        const newBtn = document.createElement("button");
+        newBtn.textContent = "Read More";
+        newBtn.className = "read-more";
+        newBtn.onclick = ev => toggleRead(ev, newBtn, keyword);
+        textEl.appendChild(newBtn);
+        textEl.classList.remove("expanded");
+      }
+    }
+
+    // Lazy loading
+    const results = <%- JSON.stringify(results) %>;
+    let currentIndex = 10;
+
+    document.getElementById("loadMore")?.addEventListener("click", () => {
+      const box = document.getElementById("resultsBox");
+      const keyword = "<%= keyword %>";
+
+      const chunk = results.slice(currentIndex, currentIndex + 10);
+      chunk.forEach(item => {
+        const short = item.secret.length > 150 ? item.secret.slice(0, 150) + "..." : item.secret;
+        const div = document.createElement("div");
+        div.className = "search-result-item";
+        div.innerHTML = `
+          <img class="search-avatar" src="${item.profile_picture}" alt="Avatar">
+          <div class="search-content">
+            <div class="search-meta">
+              <span class="username">${item.username}</span>
+              <span class="badge">${item.category}</span>
+              <span class="timestamp">${item.timestamp}</span>
+            </div>
+            <div class="search-text short-text" data-full="${item.secret.replace(/"/g, '&quot;')}">
+              ${highlightMatch(short, keyword)}
+              ${item.secret.length > 150 ? '<button class="read-more" onclick="toggleRead(event, this, \'' + keyword + '\')">Read More</button>' : ''}
+            </div>
+            <div class="reactions">❤️ ${Object.keys(item.reactions || {}).length} reactions</div>
+          </div>`;
+        box.insertBefore(div, document.getElementById("loadMore"));
+      });
+
+      currentIndex += 10;
+      if (currentIndex >= results.length) {
+        document.getElementById("loadMore").style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html>

@@ -60,22 +60,37 @@
             </div>
         </main>
         <aside class="right-sidebar">
-          <div class="aside">
-          <ul class="nav">
-            <li class="nav-item">Moohe</li>
-            <li class="nav-item">Homeem</li>
-            <li class="nav-item">Homeem</li>
-            <li class="nav-item">Homeem</li>
-            <li class="nav-item">Homeem</li>
-          </ul>
+
+          <div class="aside premium-aside">
+            <div class="premium-card">
+              <div class="crown-icon sparkle">👑</div>
+          
+              <h3 class="premium-title">Become a Top Gossipa</h3>
+              <p class="premium-text">Stand out in the World of anonymity. Get Known. Remain unseen.</p>
+          
+              <div class="trending-stats">
+                <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
+              </div>
+          
+              <div class="avatar-hint">
+                <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
+                <p>You’re 1 step from <strong>trending</strong>…</p>
+              </div>
+          
+              <a href="/subscribe" class="premium-btn">Unlock Premium</a>
+            </div>
           </div>
+          
+       
            <div class="aside aside-2">
           <center>
               <h4 class="user-count">Active Gossipas: <span id="activeCount">0</span></h4>
           </center>
           <ul class="nav user-list">
           </ul>
-
+          <ul id="systemMessage">
+            
+          </ul>
         </div>
 
         </aside>
@@ -187,7 +202,7 @@ function getCurrentTimestamp() {
     return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-function updateUserCount() {
+function updateGossipaCount() {
         userCount.textContent = connectedUsersMap.size;
       }
 
@@ -198,7 +213,7 @@ function loadChatHistory() {
         appendMessage(msg.message, msg.type, new Date(msg.timestamp).toLocaleTimeString());
     });
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    updateUserCount();
+    updateGossipaCount();
 }
 
 // Save message with type to localStorage
@@ -279,7 +294,7 @@ socket.on('message', (data) => {
 
 // Handle typing indicator
 socket.on('typing', (data) => {
-    typingIndicator.textContent = ` ~~anonym${data.user}~~ is typing...`;
+    typingIndicator.textContent = ` ~~gossipa${data.user}~~ is typing...`;
 });
 
 socket.on('stoppedTyping', () => {
