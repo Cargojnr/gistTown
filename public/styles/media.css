@@ -4,9 +4,18 @@
     width: 200px !important;
     margin-bottom: 1rem;
   } 
+
+  #selectCategory {
+    top: 4.7rem;
+  }
+
+  .right-sidebar {
+    display: none;
+  }
 }
 
 @media (max-width: 768px) {
+  
   blockquote {
     font-size: 1.125rem;
   }
@@ -80,19 +89,14 @@
   .scroll-btn {
     position: fixed;
     right: 1rem ;
-    /* bottom: -10rem !important; */
+    bottom: 7rem !important;
 }
-
 
 
 header .profiled {
   display: none;
 }
 
-.search {
-  width: 40px;
-  justify-content: center;
-}
 
 .search input {
   width: 0;
@@ -115,10 +119,258 @@ header .profiled {
   border: none;
 }
 
+  #liveSearchForm {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align icon to the left */
+    flex: 1;
+  }
+
+  .search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+
+  .search input {
+    width: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .search.active input {
+    width: 150px;
+    opacity: 1;
+    visibility: visible;
+    margin-left: 8px;
+  }
+
+  .search-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    padding: 0 8px;
+    cursor: pointer;
+  }
+
+}
+
+@media (max-width: 738px) {
+
+  #feeds {
+    margin-bottom: 5rem;
+  }
+
+  #profile, #resultsBox {
+    margin-bottom: 7rem;
+  }
+
+  .aside {
+    margin-bottom: .75rem !important;
+    z-index: 10;
+  } 
+
+  #liveSearchForm {
+    width: 100%;
+  }
+
+  .search {
+    max-width: 100%;
+    font-size: 0.9rem;
+  }
+
+  #searchInput {
+    font-size: 0.9rem;
+  }
+
+  #navbar {
+    gap: 12px;
+    justify-content: center;
+    margin-top: .5rem;
+  }
+
+  #navbar .fa-bell,
+  #navbar .fa-mask {
+    font-size: 1.5rem;
+  }
+
+  .nav-tag {
+    right: -100%;
+  }
+
+  .thumb {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  .counter {
+    top: -6px;
+    right: 0.5rem;
+    font-size: 0.7rem;
+    padding: .2rem .35rem;
+  }
+
+  #menu {
+    padding: 1rem;
+    overflow-y: auto;
+  }
+
+  .menu {
+    margin: 2rem auto;
+  }
+
+  .menu-nav,
+  .menu-nav-alt {
+    gap: 1rem;
+    height: auto;
+  }
+
+  .menu-nav h4,
+  .menu-nav-alt h4 {
+    font-size: 1.2rem;
+  }
+
+  .menu-nav li a,
+  .menu-nav-alt li a {
+    font-size: 1.1rem;
+  }
+
+  #selectCategory {
+    position: fixed;
+    top: 4rem;
+    z-index: 5;
+    gap: .2rem;
+  }
+
+  .profile-header {
+    margin: 0 auto 1rem;
+  }
+
+  .profile-avatar {
+    width: 45px;
+    height: 45px;
+  }
+
+  .username {
+    font-size: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .suggestion-box {
+    font-size: 0.85rem;
+    max-height: 180px;
+  }
+
+  .suggestion-item .text:hover::after {
+    max-width: 90vw;
+  }
+
+  .topbar-icons {
+    gap: .75rem;
+  }
+
+  #liveSearchForm {
+    /* max-width: 38px;  */
+    margin: auto .75rem !important;
+  }
+
+  #mobileSearch {
+    width: 38px;
+    border: none;
+    background: transparent;
+    justify-content: center;
+  }
+
+  #mobileSearch.active {
+    width: 60vw !important;
+    border: 1px solid var(--primary-color);
+    background: var(--container-bg);
+    border-radius: 30px;
+  }
+
+  #searchInput {
+    display: none;
+    padding: .2rem;
+  }
+
+  #mobileSearch.active #searchInput {
+    display: block;
+    width: 100%;
+  }
+
+  .suggestion-box {
+    top: 100%;
+  }
+
+  #feeds #secrets {
+    margin-top: 1rem;
+  }
 }
 
 
+
 @media (max-width: 600px) {
+  .header {
+    padding: .5rem 0 !important;
+  }
+
+  header .fas {
+    font-size: 1.5rem;
+  }
+  
+  .topbar-icons {
+    gap: .5rem;
+  }
+
+  #liveSearchForm {
+    /* max-width: 38px;  */
+    margin: auto .5rem !important;
+  }
+
+  #mobileSearch {
+    width: 30px;
+  }
+  
+  #mobileSearch.active {
+    width: 55vw !important;
+  }
+
+  .search-btn {
+    padding: 0;
+    font-size: 1.2rem;
+  }
+
+  #selectCategory {
+    position: fixed;
+    top: 3.3rem;
+  }
+
+  #feeds #secrets {
+    gap: 10px;
+    margin-top: 1rem;
+  }
+
+  .secret .card {
+    padding: 1rem !important;
+  }
+  
+  .tag {
+    padding: .25rem !important;
+  }
+
+  .secret .card {
+    padding: 1.75rem !important;
+  }
+
+  .reactions .sleek {
+    margin: 0 !important;
+  }
+
+  .reactions {
+    margin-top: 0 !important;
+  }
 
   .avatar-profile {
     position: relative;
@@ -634,7 +886,7 @@ button#next-step {
 }
 
 .reactions {
-  margin-bottom: .5rem;
+  margin-bottom: 0;
 }
 
 .reaction-btn {
@@ -714,10 +966,6 @@ button#next-step {
     padding: .75rem 1rem;
   }
 
-
-  #scrollToTopBtn {
-    bottom: 1.5rem !important;
-  }
 
   footer {
     margin-top: 5rem;

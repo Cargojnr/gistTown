@@ -240,7 +240,7 @@ app.get("/profile", async (req, res) => {
     if (req.isAuthenticated()) {
         const userId = req.user.id;
         try {
-            const result = await db.query("SELECT timestamp, reported, secrets.id, reactions,profile_picture, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id  WHERE user_id = $1", [req.user.id])
+            const result = await db.query("SELECT verified,timestamp, reported, secrets.id, reactions,profile_picture, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id  WHERE user_id = $1", [req.user.id])
             
             const audioFiles = await Audio.findAll({
                 where: { userId },
@@ -248,7 +248,7 @@ app.get("/profile", async (req, res) => {
 
             const userDetails = result.rows;
 
-            res.render("profile", { userId: req.user.id, profilePicture: req.user.profile_picture, username: req.user.username, profile: userDetails, userAudio: audioFiles });
+            res.render("profile", { userId: req.user.id, profilePicture: req.user.profile_picture, verification: req.user.verified, username: req.user.username, profile: userDetails, userAudio: audioFiles });
         } catch (err) {
             console.log(err)
         }
@@ -260,11 +260,11 @@ app.get("/profile/amebo/:user", async(req, res) => {
     if(req.isAuthenticated()){
         const userId = req.params.user;
          try{
-            const result = await db.query("SELECT timestamp, reported, secrets.id, reactions,profile_picture, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id WHERE user_id = $1 ORDER by secrets.id DESC", [userId])
+            const result = await db.query("SELECT verified, timestamp, reported, secrets.id, reactions,profile_picture, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id WHERE user_id = $1 ORDER by secrets.id DESC", [userId])
             
-
             const userProfile = result.rows;
             const userid = userProfile[0].user_id
+            const verification = userProfile[0].verified
             const userPicture = userProfile[0].profile_picture
 
             const audioFiles = await Audio.findAll({
@@ -274,7 +274,7 @@ app.get("/profile/amebo/:user", async(req, res) => {
             const totalReactions = result.reactions
             const totalComments = result.comment
             console.log(userPicture)
-            res.render("profile", {userId:req.user.id, profileId: userid, userPicture, profilePicture: req.user.profile_picture, userProfile, userAudio: audioFiles, totalComments, totalReactions})
+            res.render("profile", {userId:req.user.id, profileId: userid, verification: verification, userPicture, profilePicture: req.user.profile_picture, userProfile, userAudio: audioFiles, totalComments, totalReactions})
 
          } catch(err){
             console.log(err)
@@ -335,16 +335,16 @@ app.get("/feeds", async (req, res) => {
         try {
             const userTheme = req.user.color || 'default';
             const mode = req.user.mode || "light"
-            const allUsers = await db.query("SELECT id, username, profile_picture FROM users");
+            const allUsers = await db.query("SELECT id, verified, username, profile_picture FROM users");
 
-            const result = await db.query("SELECT timestamp, reported, secrets.id, reactions,profile_picture, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id ORDER BY secrets.id DESC ")
+            const result = await db.query("SELECT timestamp, reported, verified, secrets.id, reactions,profile_picture, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id ORDER BY secrets.id DESC ")
 
             const audioPosts = await Audio.findAll({
                 order: [['uploadDate', 'DESC']]
               });
               
 
-              const userInfo = await db.query(`SELECT username, profile_picture FROM users WHERE id = $1`, [userId]);
+              const userInfo = await db.query(`SELECT username,verified, profile_picture FROM users WHERE id = $1`, [userId]);
       const user = userInfo.rows[0];
 
       const formatted = audioPosts.map(audio => ({
@@ -352,6 +352,7 @@ app.get("/feeds", async (req, res) => {
         url: audio.url,
         user_id: audio.userId,
         username: user.username,
+        verification: user.verified,
         profile_pic: user.profile_picture,
         timestamp: dayjs(audio.uploadDate).fromNow()
       }));
@@ -382,6 +383,7 @@ app.get("/fetch-posts/:user", async (req, res) => {
         FROM secrets
         JOIN users ON users.id = user_id
         WHERE user_id = $1
+        ORDER BY secrets.id DESC
       `, [userId]);
 
       return res.json({ posts: result.rows });
@@ -951,7 +953,7 @@ app.get("/notifications", async (req, res) => {
 
             // Fetch secrets with timestamp
             const secretResult = await db.query(`
-                SELECT reactions, secrets.id, username, user_id, secret, timestamp
+                SELECT profile_picture, reactions, secrets.id, username, user_id, secret, timestamp
                 FROM secrets 
                 JOIN users ON users.id = user_id 
                 WHERE user_id != $1 
@@ -959,7 +961,7 @@ app.get("/notifications", async (req, res) => {
             `, [req.user.id]);
 
             const reactionResult = await db.query(`
-                SELECT reactions, secrets.id, username, user_id, secret, timestamp
+                SELECT profile_picture, reactions, secrets.id, username, user_id, secret, timestamp
                 FROM secrets 
                 JOIN users ON users.id = user_id 
                 WHERE user_id = $1 
@@ -1117,7 +1119,7 @@ app.post("/searching", async (req, res) => {
       const searchTerm = `%${search.toLowerCase()}%`;
   
       const result = await db.query(
-        `SELECT id, secret FROM secrets WHERE LOWER(secret) LIKE $1 ORDER BY id DESC`,
+        `SELECT secrets.id, secret, profile_picture, timestamp, category, user_id, reactions FROM secrets JOIN users ON user_id = users.id WHERE LOWER(secret) LIKE $1 ORDER BY id DESC`,
         [searchTerm]
       );
   
@@ -1126,7 +1128,8 @@ app.post("/searching", async (req, res) => {
         profilePicture: req.user.profile_picture,
         results: result.rows,
         keyword: search,
-        highlightMatch
+        highlightMatch,
+        // reactions: JSON.stringify(usersSecret.map(secret => secret.reactions || {}))
       });
     } catch (err) {
       console.error("Search error:", err);

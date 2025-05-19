@@ -462,14 +462,22 @@
             </li>
             <li class="nav-item">
               <a href="/chat">
-                <i class="nav-icon fas fa-message"></i>
-                <span class="nav-text">Chat</span>
+                <div class="nav-main">
+                  <p>
+                    <i class="nav-icon fas fa-message"></i>
+                    <span class="nav-text">Chat</span>       
+                  </p>
+                  
+                <span class="nav-tag">New</span>
+              </div>
               </a>
             </li>
-            <button id="openSubmitForm" class="nav-item mid-post-1">
-              <i class="nav-icon fas fa-plus-circle"></i>
-            </button>
-            <li class="nav-item">
+            <li class="nav-item mid-post-1">
+              <button id="openSubmitForm" >
+                <i class="nav-icon fas fa-plus-circle"></i>
+              </button>
+            </li>
+           <li class="nav-item">
               <a href="/profile">
                 <i class="nav-icon fas fa-circle-user"></i>
                 <span class="nav-text">My Profile</span>
@@ -492,8 +500,13 @@
                 <div class="profile-header ">
                   <div class="avatar-profile editable-avatar">
                     <img src="../.<%= userPicture %>" alt="Avatar" class="profile-pic" onclick="editAvatar()">
-                  </div>
-                  <small class="username">@amebo<%= profileId %></small>
+                  </div> 
+                    <small class="username">@amebo<%= profileId %>
+                      <% if(verification === true) {%>
+                       <img src="../../img/badge.png" alt="">
+                       <% } else {%>
+                      <% } %>
+                      </small>
                   <div class="quick-stats">
                     <div class="stat"><strong>
                         <%= userProfile.length | 0 %>
@@ -688,7 +701,11 @@ class=" read" style="
                     <div class="avatar-profile editable-avatar">
                       <img src="../.<%= profilePicture %>" alt="Avatar" class="profile-pic" onclick="editAvatar()">
                     </div>
-                    <small class="username">@amebo<%= userId %></small>
+                    <% if(verification === true) {%>
+                      <small class="username">@amebo<%= userId %> <img src="img/badge.png" alt=""></small>
+                    <% } else {%>
+                      <small class="username">@amebo<%= userId %></small>
+                    <% } %>
                     <div class="quick-stats">
                       <div class="stat"><strong>
                           <%= profile.length | 0 %>
@@ -700,7 +717,10 @@ class=" read" style="
                           <%= 0 %>
                         </strong><span>Reactions</span></div>
                     </div>
-                    <button class="edit-profile-btn">Edit Profile</button>
+                    <div class="card-footer">
+                      <button class="edit-profile-btn">Edit Profile</button>
+                      <button class="edit-profile-btn">Get verified</button>
+                    </div>
                   </div>
 
                   <hr style="margin-top: 2rem;">
@@ -710,6 +730,31 @@ class=" read" style="
                     <button type="button" data-type="audio">Audio</button>
                   </form>
 
+                  <div id="shimmer-container" class="shimmer-container">
+                    <ul>
+                    <% for (let i = 0; i < profile.length; i++) { %>
+                      <li class="secret shimmer-placeholder">
+                        <div class="card">
+                          <div class="shimmer-wrapper">
+                            <div class="shimmer-card">
+                              <div class="shimmer-lines">
+                                <div class="shimmer-line short"></div>
+                                <div class="shimmer-line"></div>
+                                <div class="shimmer-line"></div>
+                                <div class="shimmer-footer">
+                                  <div class="shimmer-btn"></div>
+                                  <div class="shimmer-btn"></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    <% } %>
+                  </ul>
+                  </div>
+                  
+                  <div id="real-secrets" style="display: none;">
                   <ul id="userPostsContainer">
                     <% if (locals.profile) { %>
 
@@ -719,32 +764,9 @@ class=" read" style="
                  %>
               <li class=" secret <%=isLongSecret ? 'full-width' : 'half-width' %>" id="secret<%= secret.id %>">
 
-
-
                             <div class="card">
 
-                              <!-- Shimmer Template -->
-                              <!-- <template id="shimmerTemplate">
-                                <li class="secret shimmer-card">
-                                  <div class="card">
-                                    <div class="card-header">
-                                      <div class="user-info">
-                                        <div class="shimmer-line tiny"></div>
-                                      </div>
-                                    </div>
-                                    <div class="card-content">
-                                      <div class="shimmer-line"></div>
-                                      <div class="shimmer-line"></div>
-                                    </div>
-                                    <div class="shimmer-footer">
-                                      <div class="shimmer-btn"></div>
-                                      <div class="shimmer-btn"></div>
-                                    </div>
-
-                                  </div>
-                                </li>
-                              </template> -->
-
+                              
                               <template id="shimmerTemplate">
                                 <li class="secret shimmer-wrapper">
                                   <div class="card shimmer-card">
@@ -901,43 +923,45 @@ class=" read" style="
 
                             <% }) %>
                               <% } else {%>
+                                <li class="secret">
+                                  <div class="card">
+
+                                    <template id="shimmerTemplate">
+                                <li class="secret shimmer-card">
+                                  <div class="card">
+                                    <div class="card-header">
+                                      <div class="user-info">
+                                        <div class="shimmer-line tiny"></div>
+                                      </div>
+                                    </div>
+                                    <div class="card-content">
+                                      <div class="shimmer-line"></div>
+                                      <div class="shimmer-line"></div>
+                                    </div>
+                                    <div class="shimmer-footer">
+                                      <div class="shimmer-btn"></div>
+                                      <div class="shimmer-btn"></div>
+                                    </div>
+
+                                  </div>
+
+                                </li>
+                                </template>
+
+                                <div class="card-content">
+                                <p>  You are just one step away to become a Gossipa </p>
+                                <p>share a gist now</p>
+                                 <small>make it loud</small>
+                                </div>
+
+              </div>
+              </li>
                                 <% } %>
 
 
-                                  <li class="secret">
-                                    <div class="card">
-
-                                      <template id="shimmerTemplate">
-                                  <li class="secret shimmer-card">
-                                    <div class="card">
-                                      <div class="card-header">
-                                        <div class="user-info">
-                                          <div class="shimmer-line tiny"></div>
-                                        </div>
-                                      </div>
-                                      <div class="card-content">
-                                        <div class="shimmer-line"></div>
-                                        <div class="shimmer-line"></div>
-                                      </div>
-                                      <div class="shimmer-footer">
-                                        <div class="shimmer-btn"></div>
-                                        <div class="shimmer-btn"></div>
-                                      </div>
-
-                                    </div>
-
-                                  </li>
-                                  </template>
-
-                                  <div class="card-content">
-                                  <p>  You are just one step away to become a Gossipa </p>
-                                  <p>share a gist now</p>
-                                   <small>make it loud</small>
-                                  </div>
-
-                </div>
-                </li>
+                                  
                 </ul>
+          </div>
           </div>
 
 
@@ -1062,8 +1086,8 @@ class=" read" style="
           <div class="premium-card">
             <div class="crown-icon sparkle">👑</div>
         
-            <h3 class="premium-title">Become a Top Gossipa</h3>
-            <p class="premium-text">Stand out in the World of anonymity. Get Known. Remain unseen.</p>
+            <h3 class="premium-title">Become a Chief Gossipa</h3>
+            <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain Unknown.</p>
         
             <div class="trending-stats">
               <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
@@ -1249,7 +1273,7 @@ class=" read" style="
           function renderPosts(posts, type) {
             postsContainer.innerHTML = posts.map(post => {
               const id = post.id;
-              const timestamp = post.timestamp || new Date().toLocaleString();
+              const timestamp = dayjs(post.timestamp).fromNow() || new Date().toLocaleString();
               const category = post.category || "random";
               const likeCount = post.reactions?.like?.count || 0;
               const commentCount = post.comments?.length || 0;
@@ -1904,6 +1928,19 @@ class=" read" style="
         });
 
       </script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Simulate a short loading delay (optional)
+    setTimeout(() => {
+      // Hide shimmer placeholder
+      document.getElementById("shimmer-container").style.display = "none";
+      // Show real secrets
+      document.getElementById("real-secrets").style.display = "block";
+    }, 1000); // 1s delay – tweak as needed
+  });
+</script>
+
 
 
       <script src="/js/app.js"></script>

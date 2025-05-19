@@ -4,6 +4,12 @@
             margin-top: 2rem !important;
         }
 
+        .avatar-and-type {
+          display: flex;
+          align-items: center;
+          gap: .5rem;
+        }
+
         .gossip-select.fancy-select {
   padding: 0.5rem 1rem;
   border-radius: 25px;
@@ -192,8 +198,14 @@
                 </li>
                 <li class="nav-item">
                   <a href="/chat">
-                    <i class="nav-icon fas fa-message"></i>
-                    <span class="nav-text">Chat</span>
+                    <div class="nav-main">
+                      <p>
+                        <i class="nav-icon fas fa-message"></i>
+                        <span class="nav-text">Chat</span>       
+                      </p>
+                      
+                    <span class="badge">New</span>
+                  </div>
                   </a>
                 </li>
                 <button id="openSubmitForm" class="nav-item mid-post-1">
@@ -401,8 +413,8 @@
         <div class="premium-card">
           <div class="crown-icon sparkle">👑</div>
       
-          <h3 class="premium-title">Become a Top Gossipa</h3>
-          <p class="premium-text">Stand out in the World of anonymity. Get Known. Remain unseen.</p>
+          <h3 class="premium-title">Become a Chief Gossipa</h3>
+          <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain unknown.</p>
       
           <div class="trending-stats">
             <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>

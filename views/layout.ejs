@@ -28,7 +28,8 @@
   <header>
     <div class="container">
       <div class="header">
-        <a class="nav-link" href="../../dashboard" id="logo"><i class="fas fa-mask fa-2x"></i></a>
+        <a class="nav-link" href="../../feeds" id="logo"><i class="fas fa-mask fa-2x"></i></a>
+        <div class="topbar-icons">
         <form id="liveSearchForm" action="/search" method="post" autocomplete="off">
           <div class="search" id="mobileSearch">
             <button class="search-btn" type="submit" id="toggleSearch">
@@ -47,7 +48,7 @@
             </a>
           </li>
           <li class="navbar profiled">
-            <button class="nav-btn avatar-profile thumb"><img src="<%= profilePicture ? profilePicture : '../.' + profilePicture %>" alt="" class="profile-pic thumb"></button>
+            <button class="nav-btn avatar-profile thumb"><img src="<%= profilePicture ?'../.' + profilePicture: profilePicture %>" alt="" class="profile-pic thumb"></button>
           </li>
           <li class="navbar dropdown">
             <div class="hamburger" id="hamburger">
@@ -55,6 +56,8 @@
               <!-- <div class="bar" id="bar2"></div> -->
               <div class="bar" id="bar3"></div>
             </div>
+            </li>
+          </div>
             <div id="menu" class="menu-hidden">
               <div class="container">
                 <div class="profile-header">
@@ -92,7 +95,7 @@
 
                   <ul class="socials">
                     <li>
-                      <a class="nav-link" target="_blank" href="https://t.me/@iamamebo"><i
+                      <a class="nav-link" target="_blank" href="https://t.me/anonymcret"><i
                           class="fab fa-telegram fa-2x"></i></a>
                     </li>
                     <li>
@@ -133,10 +136,8 @@
       </div>
     </div>
     <div id="announcement">
-      <!-- <div id="pinned" class="pinned-secret">
-        <div id="countdown" style="margin-top: 20px; font-weight: bold; text-align: center;"></div>
-      </div>
-    </div> -->
+   
+    </div> 
   </header>
 
 
@@ -308,10 +309,9 @@
 
   let debounceTimer;
 
-  // Toggle expand/collapse
   toggleBtn.addEventListener("click", function (e) {
-    // Only apply on small screens
-    if (window.innerWidth <= 768) {
+  if (window.innerWidth <= 768) {
+    if (document.activeElement !== searchInput) {
       e.preventDefault();
       searchWrapper.classList.toggle("active");
 
@@ -320,9 +320,19 @@
       } else {
         searchInput.value = "";
         suggestionsBox.innerHTML = "";
+        suggestionsBox.style.display = "none"; // <- Hide it here
       }
     }
-  });
+  } else {
+    // Desktop validation
+    if (searchInput.value.trim().length === 0) {
+      e.preventDefault();
+      suggestionsBox.innerHTML = "<li class='no-result'>Please enter a search keyword</li>";
+      suggestionsBox.style.display = "block";
+    }
+  }
+});
+
 
   // Click outside to collapse
   document.addEventListener("click", function (e) {
@@ -337,58 +347,69 @@
   });
 
   // Live search logic
-  searchInput.addEventListener("keyup", function () {
-    clearTimeout(debounceTimer);
-    const query = this.value.trim();
+  searchInput.addEventListener("keyup", function (e) {
+  clearTimeout(debounceTimer);
+  const query = this.value.trim();
 
-    if (query.length === 0) {
-      suggestionsBox.innerHTML = "";
-      return;
-    }
+  if (query.length === 0) {
+    e.preventDefault()
+    suggestionsBox.innerHTML = "";
+    suggestionsBox.style.display = "none"; // <- Ensure it is hidden
+    searchWrapper.classList.toggle("active");
+    return;
+  }
 
-    debounceTimer = setTimeout(() => {
-      fetch("/searching", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ search: query })
-      })
-        .then(res => res.json())
-        .then(data => {
-          suggestionsBox.innerHTML = "";
+  suggestionsBox.style.display = "none"; // Reset before debounce
 
-          if (data.searchResults.length === 0) {
-            suggestionsBox.innerHTML = "<li class='no-result'>No result found</li>";
-            return;
-          }
+  debounceTimer = setTimeout(() => {
+    fetch("/searching", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ search: query })
+    })
+      .then(res => res.json())
+      .then(data => {
+        suggestionsBox.innerHTML = "";
 
-          function highlightMatch(text, keyword) {
-            const regex = new RegExp(`(${keyword})`, "gi");
-            return text.replace(regex, "<mark>$1</mark>");
-          }
+        if (data.searchResults.length === 0) {
+          suggestionsBox.innerHTML = "<li class='no-result'>No result found</li>";
+          suggestionsBox.style.display = "block"; // <- Show only when needed
+          return;
+        }
 
-          data.searchResults.forEach(item => {
-            const li = document.createElement("li");
-            li.classList.add("suggestion-item");
+        suggestionsBox.style.display = "block";
 
-            const highlightedText = highlightMatch(item.secret, query);
+        function highlightMatch(text, keyword) {
+          const regex = new RegExp(`(${keyword})`, "gi");
+          return text.replace(regex, "<mark>$1</mark>");
+        }
 
-            li.innerHTML = `
-              <span class="arrow">→</span>
-              <span class="text">${highlightedText}</span>
-            `;
+        data.searchResults.forEach(item => {
+          const li = document.createElement("li");
+          li.classList.add("suggestion-item");
 
-            li.addEventListener("click", () => {
-              window.location.href = `/secret/${item.id}`;
-            });
+          const highlightedText = highlightMatch(item.secret, query);
+          li.innerHTML = `
+            <span class="arrow">→</span>
+            <span class="text">${highlightedText}</span>
+          `;
 
-            suggestionsBox.appendChild(li);
+          li.addEventListener("click", () => {
+            window.location.href = `/secret/${item.id}`;
           });
-        })
-        .catch(err => console.error("Live search error:", err));
-    }, 300);
-  });
+
+          suggestionsBox.appendChild(li);
+        });
+      })
+      .catch(err => {
+        suggestionsBox.style.display = "none"; // fallback to hidden
+        console.error("Live search error:", err);
+      });
+  }, 300);
+});
+
 </script>
 
 
