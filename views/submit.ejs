@@ -200,11 +200,11 @@
                   <a href="/chat">
                     <div class="nav-main">
                       <p>
-                        <i class="nav-icon fas fa-message"></i>
-                        <span class="nav-text">Chat</span>       
+                        <i class="nav-icon fas fa-comments"></i>
+                        <span class="nav-text">ChatRoom</span>       
                       </p>
                       
-                    <span class="badge">New</span>
+                    <span class="nav-tag">New</span>
                   </div>
                   </a>
                 </li>
@@ -215,6 +215,18 @@
                   <a href="/profile">
                     <i class="nav-icon fas fa-circle-user"></i>
                     <span class="nav-text">My Profile</span>
+                  </a>
+                </li>
+                <li class="nav-item blur">
+                  <a aria-disabled="true">
+                    <div class="nav-main">
+                      <p>
+                        <i class="nav-icon fab fa-modx"></i>
+                        <span class="nav-text">Explore</span>       
+                      </p>
+                      
+                    <span class="nav-tag">Soon</span>
+                  </div>
                   </a>
                 </li>
                 <li class="nav-item mid-post-2">
@@ -431,7 +443,7 @@
         
       <div class="aside aside-2">
         <center>
-          <h4 class="user-count">Active Gossipas: <span id="activeCount">0</span></h4>
+          <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Active Gossipas: <span id="activeCount">0</span></h4>
         </center>
         <ul class="nav user-list">
         </ul>
@@ -457,12 +469,19 @@
       const userBox = document.createElement("li");
       userBox.className = "connected-user nav-item enter";
       userBox.id = `user-${user.id}`;
-      userBox.innerHTML = `
-      <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
-        <img src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
-        <p>@amebo${user.id}</p>
-      </div>
-    `;
+      const verifiedBadge = `${user.verified}`
+    ? `<img src="/img/badge.png" alt="Verified Badge" class="verified-badge" style="width: 16px; height: 16px;">`
+    : "";
+
+        userBox.innerHTML = `
+          <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
+            <img src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
+            <p>
+              @amebo${user.id}
+             ${verifiedBadge}
+              </p>
+          </div>
+        `;
 
       userList.appendChild(userBox);
       connectedUsersMap.set(user.id, userBox);

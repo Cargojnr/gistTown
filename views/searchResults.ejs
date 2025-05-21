@@ -3,7 +3,6 @@
   
   <style>
     .search-result-box {
-      max-width: 900px;
       margin: 30px auto 40px;
       padding: 20px;
       /* background: #1e1e1e; */
@@ -95,6 +94,91 @@
       color: #ffd54f;
       font-weight: bold;
     }
+
+  .shimmer-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      /* padding: 1rem; */
+    }
+
+    .shimmer-card {
+      display: flex;
+      background: var(--container-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      animation: pulse 1.5s infinite;
+    }
+
+    .shimmer-avatar {
+      width: 50px;
+      height: 50px;
+      background: var(--body-bg);
+      border-radius: 50%;
+      margin: 1rem;
+    }
+
+
+
+    .shimmer-lines {
+      flex: 1;
+      padding: 1rem 0;
+    }
+
+    .shimmer-line {
+      height: 10px;
+      background: var(--body-bg);
+      margin: 8px 0;
+      border-radius: 5px;
+    }
+
+    .shimmer-line.short {
+      width: 50%;
+    }
+
+    .shimmer-footer {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .shimmer-btn {
+      width: 40px;
+      height: 20px;
+      background: var(--body-bg);
+      border-radius: 5px;
+    }
+
+    @keyframes pulse {
+      0% {
+        background-color: var(--container-bg);
+      }
+
+      50% {
+        background-color: var(--body-bg);
+      }
+
+      100% {
+        background-color: var(--container-bg);
+      }
+    }
+
+    .shimmer {
+      background: linear-gradient(90deg, var(--container-bg) 25%, var(--body-bg) 50%, var(--container-bg) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+
+      100% {
+        background-position: 200% 0;
+      }
+    }
+
   </style>
 <body>
   <div class="layout-container container">
@@ -111,8 +195,8 @@
             <a href="/chat">
               <div class="nav-main">
                 <p>
-                  <i class="nav-icon fas fa-message"></i>
-                  <span class="nav-text">Chat</span>       
+                  <i class="nav-icon fas fa-comments"></i>
+                  <span class="nav-text">ChatRoom</span>       
                 </p>
                 
               <span class="nav-tag">New</span>
@@ -130,6 +214,18 @@
               <span class="nav-text">My Profile</span>
             </a>
           </li>
+          <li class="nav-item blur">
+            <a aria-disabled="true">
+              <div class="nav-main">
+                <p>
+                  <i class="nav-icon fab fa-modx"></i>
+                  <span class="nav-text">Explore</span>       
+                </p>
+                
+              <span class="nav-tag">Soon</span>
+            </div>
+            </a>
+          </li>
           <li class="nav-item mid-post-2">
             <a  href="/submit"class="nav-text">Compose Gist</a>
             <i  class="nav-icon fas fa-circle-plus"></i>
@@ -139,11 +235,36 @@
       </aside>
  
     <main>
-      
+      <div id="shimmer-container" class="shimmer-container">
+        <ul>
+        <% for (let i = 0; i < results.length; i++) { %>
+          <li class="shimmer-placeholder">
+            <div class="search-result-item ">
+              <div class="shimmer-wrapper">
+                <div class="shimmer-card">
+                  <div class="shimmer-avatar"></div>
+                  <div class="shimmer-lines">
+                    <div class="shimmer-line short"></div>
+                    <div class="shimmer-line"></div>
+                    <div class="shimmer-line"></div>
+                    <div class="shimmer-footer">
+                      <div class="shimmer-btn"></div>
+                      <div class="shimmer-btn"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        <% } %>
+      </ul>
+      </div>
+
   <div class="search-result-box" id="resultsBox">
     <% if (results.length === 0) { %>
       <div class="no-result">No results found for "<%= keyword %>"</div>
     <% } else { %>
+      
       <% results.slice(0, 8).forEach((item, index) => { 
         const isLong = item.secret.length > 150;
         const shortText = isLong ? item.secret.slice(0, 150) + "..." : item.secret;
@@ -152,7 +273,13 @@
         <img class="search-avatar" src="<%= item.profile_picture %>" alt="Avatar">
         <div class="search-content">
           <div class="search-meta">
-            <span class="username">@gossipa<%= item.user_id %></span>
+            <span class="username">
+              @gossipa<%= item.user_id %>
+              <% if(item.verified === true) {%>
+                       <img src="../../img/badge.png" alt="">
+                       <% } else {%>
+                      <% } %>
+              </span>
             <span class="badge"><%= item.category ? item.category : "random" %></span>
             <span class="timestamp" data-raw="<%= item.timestamp %>"></span>
           </div>
@@ -171,7 +298,6 @@
       <% } %>
     <% } %>
   </div>
-  
 </main>
 
 <aside class="right-sidebar">
@@ -197,7 +323,7 @@
         
       <div class="aside aside-2">
         <center>
-          <h4 class="user-count">Active Gossipas: <span id="activeCount">0</span></h4>
+          <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Active Gossipas: <span id="activeCount">0</span></h4>
         </center>
         <ul class="nav user-list">
         </ul>
@@ -226,12 +352,19 @@
       const userBox = document.createElement("li");
       userBox.className = "connected-user nav-item enter";
       userBox.id = `user-${user.id}`;
-      userBox.innerHTML = `
-      <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
-        <img src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
-        <p>@amebo${user.id}</p>
-      </div>
-    `;
+      const verifiedBadge = `${user.verified}`
+    ? `<img src="/img/badge.png" alt="Verified Badge" class="verified-badge" style="width: 16px; height: 16px;">`
+    : "";
+
+        userBox.innerHTML = `
+          <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
+            <img src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
+            <p>
+              @amebo${user.id}
+             ${verifiedBadge}
+              </p>
+          </div>
+        `;
 
       userList.appendChild(userBox);
       connectedUsersMap.set(user.id, userBox);
@@ -391,6 +524,17 @@
           const formatted = dayjs(rawTimestamp).fromNow();
           timeElem.textContent = formatted;
         }
+      });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Simulate a short loading delay (optional)
+        setTimeout(() => {
+          // Hide shimmer placeholder
+          document.getElementById("shimmer-container").style.display = "none";
+          // Show real secrets
+          document.getElementById("real-secrets").style.display = "block";
+        }, 1000); // 1s delay – tweak as needed
       });
     </script>
    

@@ -464,8 +464,8 @@
               <a href="/chat">
                 <div class="nav-main">
                   <p>
-                    <i class="nav-icon fas fa-message"></i>
-                    <span class="nav-text">Chat</span>       
+                    <i class="nav-icon fas fa-comments"></i>
+                    <span class="nav-text">ChatRoom</span>       
                   </p>
                   
                 <span class="nav-tag">New</span>
@@ -483,6 +483,18 @@
                 <span class="nav-text">My Profile</span>
               </a>
             </li>
+            <li class="nav-item blur">
+              <a aria-disabled="true">
+                <div class="nav-main">
+                  <p>
+                    <i class="nav-icon fab fa-modx"></i>
+                    <span class="nav-text">Explore</span>       
+                  </p>
+                  
+                <span class="nav-tag">Soon</span>
+              </div>
+              </a>
+            </li>
             <li class="nav-item mid-post-2">
               <a href="/submit" class="nav-text">Compose Gist</a>
               <i class="nav-icon fas fa-circle-plus"></i>
@@ -490,6 +502,11 @@
           </ul>
         </div>
       </aside>
+
+      <button class="message-button">
+        <i class="fas fa-message fa-2x"></i>
+        <span class="message-count"></span>
+      </button>
 
       <main>
         <div class="jumbotron text-center">
@@ -507,6 +524,9 @@
                        <% } else {%>
                       <% } %>
                       </small>
+                      <p id="active-status" class="status">
+                        <%= activeStatus ? '🟢 Online' : '🔴 Offline'; %>
+                      </p>
                   <div class="quick-stats">
                     <div class="stat"><strong>
                         <%= userProfile.length | 0 %>
@@ -523,7 +543,7 @@
 
                 <hr style="margin-top: 2rem;">
                 <form id="navigator">
-                  <input type="hidden" id="user" name="user" value="<%= userId %>">
+                  <input type="hidden" id="user" name="user" value="<%= profileId %>">
                   <button data-type="text">Text</button>
                   <button data-type="audio">Audio</button>
                 </form>
@@ -700,12 +720,19 @@ class=" read" style="
                   <div class="profile-header ">
                     <div class="avatar-profile editable-avatar">
                       <img src="../.<%= profilePicture %>" alt="Avatar" class="profile-pic" onclick="editAvatar()">
+                 
                     </div>
+                    
                     <% if(verification === true) {%>
                       <small class="username">@amebo<%= userId %> <img src="img/badge.png" alt=""></small>
                     <% } else {%>
                       <small class="username">@amebo<%= userId %></small>
                     <% } %>
+
+                    <p id="active-status" class="status">
+                     
+                    </p>
+
                     <div class="quick-stats">
                       <div class="stat"><strong>
                           <%= profile.length | 0 %>
@@ -1104,7 +1131,7 @@ class=" read" style="
         
         <div class="aside aside-2">
           <center>
-            <h4 class="user-count">Active Gossipas: <span id="activeCount">0</span></h4>
+            <h4 class="user-count"> <button class="dot active animate-ping-once" data-slide="0"></button> &nbsp;Active Gossipas: <span id="activeCount">0</span></h4>
           </center>
           <ul class="nav user-list">
           </ul>
@@ -1118,6 +1145,35 @@ class=" read" style="
       <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
 
       <script src="https://unpkg.com/wavesurfer.js"></script>
+      <script>
+        document.addEventListener("beforeunload", () => {
+  const user = document.querySelector("input[name='user']").value;
+  fetch(`/api/active-status/${user}`)
+    .then(res => res.json())
+    .then(data => {
+      const statusEl = document.getElementById("active-status");
+      if (statusEl) {
+        statusEl.textContent = data.active ? '🟢 Online' : '🔴 Offline';
+      }
+    })
+    .catch(err => console.error('Error fetching active status', err));
+});
+
+        // Fetch active status on initial page load
+document.addEventListener("DOMContentLoaded", () => {
+  const user = document.querySelector("input[name='user']").value;
+  fetch(`/api/active-status/${user}`)
+    .then(res => res.json())
+    .then(data => {
+      const statusEl = document.getElementById("active-status");
+      if (statusEl) {
+        statusEl.textContent = data.active ? '🟢 Online' : '🔴 Offline';
+      }
+    })
+    .catch(err => console.error('Error fetching active status', err));
+});
+
+      </script>
       <script>
         const connectedUsersMap = new Map();
         const userList = document.querySelector(".user-list");
@@ -1133,10 +1189,17 @@ class=" read" style="
           const userBox = document.createElement("li");
           userBox.className = "connected-user nav-item enter";
           userBox.id = `user-${user.id}`;
-          userBox.innerHTML = `
+          const verifiedBadge = `${user.verified}`
+    ? `<img src="/img/badge.png" alt="Verified Badge" class="verified-badge" style="width: 16px; height: 16px;">`
+    : "";
+
+        userBox.innerHTML = `
           <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
             <img src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
-            <p>@amebo${user.id}</p>
+            <p>
+              @amebo${user.id}
+             ${verifiedBadge}
+              </p>
           </div>
         `;
 
@@ -1164,7 +1227,11 @@ class=" read" style="
         }
 
         socket.on("userJoined", async (userId) => {
+//           if (userId == localStorage.getItem('userId')) {
+//             document.querySelector('#active-status').textContent = '🟢 Online';
+// }
           try {
+     
             const res = await fetch(`/user/${userId}`);
             const user = await res.json();
             userConnected(user);
@@ -1174,6 +1241,9 @@ class=" read" style="
         });
 
         socket.on("userLeft", (userId) => {
+    //       if (userId == localStorage.getItem('userId')) {
+    //     document.querySelector('#active-status').textContent = '🔴 Offline';
+    // }
           userDisconnected(userId);
         });
 

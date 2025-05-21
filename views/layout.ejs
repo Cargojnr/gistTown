@@ -3,8 +3,8 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2&family=Quicksand&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/ceb8cfc409.js" crossorigin="anonymous"></script>
   <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="/styles/new.css" />
 </head>
 
-<body>
+<body >
 
   <script>
     let lottiePlayer = null;
@@ -63,7 +63,13 @@
                 <div class="profile-header">
                   <img src="<%= profilePicture ? profilePicture : '../.' + profilePicture %>" alt="Profile Avatar" class="profile-avatar" />
 
-                  <h3 class="username">Hello, <span>@amebo<%= userId %></span></h3>
+                  <h3 class="username">Hello, <span class="username">
+                    @amebo<%= userId %> 
+                    <% if(verification === true) {%>
+                    <img src="../../img/badge.png" alt="">
+                    <% } else {%>
+                   <% } %>
+                  </span></h3>
                 </div>
 
                 <div class="menu">

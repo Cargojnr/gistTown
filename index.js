@@ -23,7 +23,6 @@ import Audio from './models/Audio.js';
 import sequelize from './db.js';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime.js';
-import {redis} from "./utils/redis.js"
 dayjs.extend(relativeTime);
 
 
@@ -32,7 +31,11 @@ const options = {
     cert: fs.readFileSync("./cert.pem")
 };
 
+// import { config } from 'dotenv';
 
+// const environment = process.env.NODE_ENV || 'development';
+// const envFile = environment === 'production' ? '.env.production' : '.env';
+// config({ path: envFile });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -66,6 +69,7 @@ const io = new Server(server, {
         methods: ["GET", "POST"]
     }
 });
+// const wss = new WebSocket.Server({port});
 const saltRounds = 10;
 env.config();
 
@@ -75,6 +79,8 @@ const db = new pg.Client({
     database: process.env.DB_DATABASE,
     password: process.env.DB_PASSWORD,
     port: process.env.DB_PORT,
+    // connectionString: process.env.DATABASE_URL,
+    //   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
 });
 
 
@@ -92,6 +98,10 @@ const getLocalIPAddress = () => {
     }
     return 'localhost'; // Fallback to localhost if no address is found
 };
+
+// Load SSL Certificate and Key
+
+
 
 
 
@@ -141,6 +151,7 @@ io.on("connection", (socket) => {
   const userId = parseInt(socket.handshake.query.userId);
 
   if (userId) {
+    db.query('UPDATE users SET active_status = true WHERE id = $1', [userId]);
     console.log(`User ${userId} connected`);
     activeUsers.add(userId);
     socket.join(`user_${userId}`);
@@ -167,6 +178,7 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     if (userId && activeUsers.has(userId)) {
+        db.query('UPDATE users SET active_status = false WHERE id = $1', [userId]);
       console.log(`User ${userId} disconnected.`);
       activeUsers.delete(userId);
       socket.broadcast.emit("userLeft", userId);
@@ -177,22 +189,6 @@ io.on("connection", (socket) => {
 
 
 
-await redis.set('greeting', 'Hello from Ghana!');
-const message = await redis.get('greeting');
-console.log(message); // "Hello from Ghana!"
-
-const preloadRedis = async () => {
-    try {
-      const result = await db.query("SELECT id, username, verified, profile_picture FROM users");
-      await redis.set("users", JSON.stringify(result.rows));
-      console.log("Redis preloaded with users");
-    } catch (err) {
-      console.error("Error preloading Redis:", err);
-    }
-  };
-  
-  await preloadRedis();
-  
 
 
 app.get("/", (req, res) => {
@@ -210,28 +206,13 @@ app.get("/register", (req, res) => {
 
 app.get("/user/:id", async (req, res) => {
     const userId = req.params.id;
-    const cacheKey = `user:${userId}`;
-  
     try {
-      // Check Redis cache first
-      const cachedUser = await redis.get(cacheKey);
-      if (cachedUser) {
-        return res.json(JSON.parse(cachedUser));
-      }
-  
-      // If not cached, query the database
       const result = await db.query(
-        "SELECT id, username, profile_picture, verified FROM users WHERE id = $1",
+        "SELECT id, username, verified,profile_picture FROM users WHERE id = $1",
         [userId]
       );
-  
       if (result.rows.length > 0) {
-        const user = result.rows[0];
-  
-        // Cache the user data with a TTL (e.g., 1 hour)
-        await redis.set(cacheKey, JSON.stringify(user), { ex: 3600 });
-  
-        res.json(user);
+        res.json(result.rows[0]);
       } else {
         res.status(404).json({ error: "User not found" });
       }
@@ -240,450 +221,234 @@ app.get("/user/:id", async (req, res) => {
     }
   });
   
+  // --- Add endpoint to get all currently active users ---
   app.get("/active-users", async (req, res) => {
-    const cacheKey = 'active-users';
-  
     try {
-      // Try to get from cache first (short TTL)
-      const cached = await redis.get(cacheKey);
-      if (cached) {
-        return res.json(JSON.parse(cached));
-      }
-  
       const ids = Array.from(activeUsers);
       if (ids.length === 0) return res.json([]);
   
       const result = await db.query(
-        `SELECT id, username, profile_picture, verified FROM users WHERE id = ANY($1::int[])`,
+        `SELECT id, active_status,verified, username, profile_picture FROM users WHERE id = ANY($1::int[])`,
         [ids]
       );
-  
-      // Cache for 5 seconds
-      await redis.set(cacheKey, JSON.stringify(result.rows), { ex: 5 });
-  
       res.json(result.rows);
     } catch (err) {
       res.status(500).json({ error: "Could not retrieve active users" });
     }
   });
-  
-  
 
-  app.get("/profile", async (req, res) => {
+  // routes/user.js or wherever you define routes
+app.get('/api/active-status/:user', async (req, res) => {
+    const user = req.params.user
     if (!req.isAuthenticated()) {
-      return res.redirect('/login'); // or appropriate handling
+        return res.status(401).json({ active: false });
     }
-  
-    const userId = req.user.id;
-    const cacheKey = `profile:${userId}`;
-  
+
     try {
-      const cached = await redis.get(cacheKey);
-      if (cached) {
-        const { profileData, audioFiles } = JSON.parse(cached);
-        return res.render("profile", { 
-          userId,
-          profilePicture: req.user.profile_picture,
-          verification: req.user.verified,
-          username: req.user.username,
-          profile: profileData,
-          userAudio: audioFiles
-        });
-      }
-  
-      const result = await db.query(
-        "SELECT verified, timestamp, reported, secrets.id, reactions, profile_picture, username, user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id WHERE user_id = $1",
-        [userId]
-      );
-  
-      const audioFiles = await Audio.findAll({
-        where: { userId },
-      });
-  
-      const profileData = result.rows;
-  
-      // Cache the combined result, expire after 60 seconds
-      await redis.set(cacheKey, JSON.stringify({ profileData, audioFiles }), { ex: 60 });
-  
-      res.render("profile", { 
-        userId,
-        profilePicture: req.user.profile_picture,
-        verification: req.user.verified,
-        username: req.user.username,
-        profile: profileData,
-        userAudio: audioFiles
-      });
-  
+        const result = await db.query('SELECT active_status FROM users WHERE id = $1', [user]);
+        res.json({ active: result.rows[0].active_status });
     } catch (err) {
-      console.error(err);
-      res.status(500).send("Internal Server Error");
+        console.error(err);
+        res.status(500).json({ error: 'Error fetching active status' });
     }
-  });
+});
+
   
 
-  app.get("/profile/amebo/:user", async (req, res) => {
-    if (!req.isAuthenticated()) {
-      return res.redirect("/login");
-    }
-  
-    const userId = req.params.user;
-    const cacheKey = `profile_amebo:${userId}`;
-  
-    try {
-      const cached = await redis.get(cacheKey);
-      if (cached) {
-        const { userProfile, audioFiles, totalReactions, totalComments, verification, userPicture, userid } = JSON.parse(cached);
-        return res.render("profile", {
-          userId: req.user.id,
-          profileId: userid,
-          verification,
-          userPicture,
-          profilePicture: req.user.profile_picture,
-          userProfile,
-          userAudio: audioFiles,
-          totalComments,
-          totalReactions,
-        });
-      }
-  
-      const result = await db.query(
-        `SELECT verified, timestamp, reported, secrets.id, reactions, profile_picture, username, user_id, color, category, secret 
-         FROM secrets JOIN users ON users.id = user_id 
-         WHERE user_id = $1 
-         ORDER BY secrets.id DESC`,
-        [userId]
-      );
-  
-      if (result.rows.length === 0) {
-        return res.status(404).send("User not found");
-      }
-  
-      const userProfile = result.rows;
-      const userid = userProfile[0].user_id;
-      const verification = userProfile[0].verified;
-      const userPicture = userProfile[0].profile_picture;
-  
-      const audioFiles = await Audio.findAll({ where: { userId } });
-  
-      // Assuming totalReactions and totalComments are calculated elsewhere or added here
-      const totalReactions = 0; // You can calculate or fetch properly
-      const totalComments = 0; // You can calculate or fetch properly
-  
-      // Cache data for 60 seconds
-      await redis.set(
-        cacheKey,
-        JSON.stringify({
-          userProfile,
-          audioFiles,
-          totalReactions,
-          totalComments,
-          verification,
-          userPicture,
-          userid,
-        }),
-        { ex: 60 }
-      );
-  
-      res.render("profile", {
-        userId: req.user.id,
-        profileId: userid,
-        verification,
-        userPicture,
-        profilePicture: req.user.profile_picture,
-        userProfile,
-        userAudio: audioFiles,
-        totalComments,
-        totalReactions,
-      });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Internal Server Error");
-    }
-  });
-  
-
-  app.get("/random", async (req, res) => {
-    if (!req.isAuthenticated()) {
-      return res.redirect("feeds");
-    }
-  
-    try {
-      const mode = req.user.mode || "light";
-      const cacheKey = "random_secrets";
-  
-      let cachedData = await redis.get(cacheKey);
-      let usersSecret;
-  
-      if (cachedData) {
-        usersSecret = JSON.parse(cachedData);
-      } else {
-        const result = await db.query(
-          `SELECT secrets.id, verified, reactions, username, user_id, color, category, secret 
-           FROM secrets JOIN users ON users.id = user_id 
-           ORDER BY secrets.id DESC`
-        );
-  
-        usersSecret = result.rows;
-  
-        // Cache for 60 seconds
-        await redis.set(cacheKey, JSON.stringify(usersSecret), { ex: 60 });
-      }
-  
-      res.render("random", {
-        randomSecret: usersSecret,
-        userId: req.user.id,
-        profilePicture: req.user.profile_picture,
-        username: req.user.username,
-        mode,
-        reactions: JSON.stringify(usersSecret.reactions || {}),
-      });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Internal Server Error");
-    }
-  });
-  
-
-  app.get("/random-secret", async (req, res) => {
-    if (!req.isAuthenticated()) {
-      return res.redirect("feeds");
-    }
-  
-    try {
-      const userTheme = req.user.color || "default";
-      const mode = req.user.mode || "light";
-      const cacheKey = "random_secret_list";
-  
-      let cachedData = await redis.get(cacheKey);
-      let usersSecret;
-  
-      if (cachedData) {
-        usersSecret = JSON.parse(cachedData);
-      } else {
-        const result = await db.query(
-          `SELECT secrets.id, reactions, verified, username, user_id, color, category, secret
-           FROM secrets JOIN users ON users.id = user_id
-           ORDER BY secrets.id DESC`
-        );
-  
-        usersSecret = result.rows;
-        await redis.set(cacheKey, JSON.stringify(usersSecret), { ex: 60 });
-      }
-  
-      // Pick a random secret from first 10 or fewer if less available
-      const maxIndex = Math.min(usersSecret.length, 10);
-      const randomSecret = usersSecret[Math.floor(Math.random() * maxIndex)];
-  
-      res.json({
-        randomSecret,
-        userId: req.user.id,
-        profilePicture: req.user.profile_picture,
-        username: req.user.username,
-        theme: userTheme,
-        mode,
-        reactions: JSON.stringify(randomSecret.reactions || {}),
-      });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Internal Server Error");
-    }
-  });
-  
-
-  app.get("/feeds", async (req, res) => {
-    if (!req.isAuthenticated()) {
-      return res.redirect("login");
-    }
-  
-    const userId = req.user.id;
-  
-    try {
-      const userTheme = req.user.color || "default";
-      const mode = req.user.mode || "light";
-  
-      // Redis cache keys
-      const usersCacheKey = "all_users";
-      const secretsCacheKey = "all_secrets";
-      const audioCacheKey = "all_audio_posts";
-  
-      // 🔹 USERS: from Redis or DB
-      let allUsers;
-      const cachedUsers = await redis.get(usersCacheKey);
-      if (cachedUsers) {
+app.get("/profile", async (req, res) => {
+    if (req.isAuthenticated()) {
+        const userId = req.user.id;
         try {
-          allUsers = JSON.parse(cachedUsers);
+            const result = await db.query("SELECT active_status,verified,timestamp, reported, secrets.id, reactions,profile_picture, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id  WHERE user_id = $1", [req.user.id])
+            
+            const audioFiles = await Audio.findAll({
+                where: { userId },
+            });
+
+            const userDetails = result.rows;
+
+            res.render("profile", { userId: req.user.id, activeStatus: req.user.active_status, verification:req.user.verified, profilePicture: req.user.profile_picture, verification: req.user.verified, username: req.user.username, profile: userDetails, userAudio: audioFiles });
         } catch (err) {
-          console.warn("Redis parse error: users. Resetting...");
-          const resultUsers = await db.query("SELECT id, verified, username, profile_picture FROM users");
-          allUsers = resultUsers.rows;
-          await redis.set(usersCacheKey, JSON.stringify(allUsers), { EX: 60 });
+            console.log(err)
         }
-      } else {
-        const resultUsers = await db.query("SELECT id, verified, username, profile_picture FROM users");
-        allUsers = resultUsers.rows;
-        await redis.set(usersCacheKey, JSON.stringify(allUsers), { EX: 60 });
-      }
-  
-      // 🔹 SECRETS: from Redis or DB
-      let usersSecret;
-      const cachedSecrets = await redis.get(secretsCacheKey);
-      if (cachedSecrets) {
+    }
+
+})
+
+app.get("/profile/amebo/:user", async(req, res) => {
+    if(req.isAuthenticated()){
+        const userId = req.params.user;
+         try{
+            const result = await db.query("SELECT active_status, verified, timestamp, reported, secrets.id, reactions,profile_picture, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id WHERE user_id = $1 ORDER by secrets.id DESC", [userId])
+            
+            const userProfile = result.rows;
+            const userid = userProfile[0].user_id
+            const activeStatus = userProfile.active_status;
+            const verification = userProfile[0].verified
+            const userPicture = userProfile[0].profile_picture
+
+            const audioFiles = await Audio.findAll({
+                where: { userId },
+            });
+            
+            const totalReactions = result.reactions
+            const totalComments = result.comment
+            console.log(userPicture)
+            res.render("profile", {userId:req.user.id, profileId: userid, verification: verification, userPicture, activeStatus:  activeStatus, profilePicture: req.user.profile_picture, userProfile, userAudio: audioFiles, totalComments, totalReactions})
+
+         } catch(err){
+            console.log(err)
+         }
+    } else {
+        res.redirect("/login")
+    }
+})
+
+app.get("/random", async (req, res) => {
+    if (req.isAuthenticated()) {
         try {
-          usersSecret = JSON.parse(cachedSecrets);
+            const mode = req.user.mode || "light"
+            const result = await db.query("SELECT secrets.id, reactions, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id ORDER BY secrets.id DESC ")
+            const reportResult = await db.query("SELECT reports.status, secrets.id, user_id, category, secret FROM secrets JOIN reports ON secrets.id = reports.secret_id  ORDER BY secrets.id DESC ")
+            const usersSecret = result.rows;
+            // const randomSecret =usersSecret;
+            // const randomSecret = usersSecret[Math.floor(Math.random() * 10)]
+            console.log(reportResult)
+
+            // console.log(usersSecret)
+            res.render("random", { randomSecret: usersSecret, userId: req.user.id, activeStatus: req.user.active_status, verification:req.user.verified, profilePicture: req.user.profile_picture, username: req.user.username, mode: mode, reactions: JSON.stringify(usersSecret.reactions || {}), })
+            // console.log(usersSecret)
         } catch (err) {
-          console.warn("Redis parse error: secrets. Resetting...");
-          const resultSecrets = await db.query(`
-            SELECT timestamp, reported, verified, secrets.id, reactions, profile_picture, username, user_id, color, category, secret
-            FROM secrets 
-            JOIN users ON users.id = user_id 
-            ORDER BY secrets.id DESC
-          `);
-          usersSecret = resultSecrets.rows;
-          await redis.set(secretsCacheKey, JSON.stringify(usersSecret), { EX: 60 });
+            console.log(err)
         }
-      } else {
-        const resultSecrets = await db.query(`
-          SELECT timestamp, reported, verified, secrets.id, reactions, profile_picture, username, user_id, color, category, secret
-          FROM secrets 
-          JOIN users ON users.id = user_id 
-          ORDER BY secrets.id DESC
-        `);
-        usersSecret = resultSecrets.rows;
-        await redis.set(secretsCacheKey, JSON.stringify(usersSecret), { EX: 60 });
-      }
-  
-      // 🔹 AUDIO POSTS: from Redis or DB
-      let audioPosts;
-      const cachedAudio = await redis.get(audioCacheKey);
-      if (cachedAudio) {
+    } else {
+        res.redirect("feeds")
+    }
+})
+
+app.get("/random-secret", async (req, res) => {
+    if (req.isAuthenticated()) {
         try {
-          audioPosts = JSON.parse(cachedAudio);
+            const userTheme = req.user.color || 'default';
+            const mode = req.user.mode || "light"
+            const result = await db.query("SELECT secrets.id, reactions, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id ORDER BY secrets.id DESC ")
+            const reportResult = await db.query("SELECT reports.status, secrets.id, user_id, category, secret FROM secrets JOIN reports ON secrets.id = reports.secret_id  ORDER BY secrets.id DESC ")
+            const usersSecret = result.rows;
+            const randomSecret = usersSecret[Math.floor(Math.random() * 10)]
+            console.log(reportResult)
+
+            // console.log(usersSecret)
+            res.json({ randomSecret: randomSecret, userId: req.user.id, activeStatus: req.user.active_status, verification:req.user.verified, profilePicture: req.user.profile_picture, username: req.user.username, theme: userTheme, mode: mode, reactions: JSON.stringify(randomSecret.reactions || {}), })
+            console.log(randomSecret)
         } catch (err) {
-          console.warn("Redis parse error: audio. Resetting...");
-          const audioData = await Audio.findAll({ order: [["uploadDate", "DESC"]] });
-          audioPosts = audioData.map(audio => ({
-            id: audio.id,
-            url: audio.url,
-            user_id: audio.userId,
-            uploadDate: audio.uploadDate,
-          }));
-          await redis.set(audioCacheKey, JSON.stringify(audioPosts), { EX: 60 });
+            console.log(err)
         }
-      } else {
-        const audioData = await Audio.findAll({ order: [["uploadDate", "DESC"]] });
-        audioPosts = audioData.map(audio => ({
-          id: audio.id,
-          url: audio.url,
-          user_id: audio.userId,
-          uploadDate: audio.uploadDate,
-        }));
-        await redis.set(audioCacheKey, JSON.stringify(audioPosts), { EX: 60 });
-      }
-  
-      // 🔹 Fetch fresh user info
-      const userInfoResult = await db.query(
-        `SELECT username, verified, profile_picture FROM users WHERE id = $1`,
-        [userId]
-      );
-      const user = userInfoResult.rows[0];
-  
-      // 🔹 Format audio posts with current user's info
-      const formattedAudio = audioPosts.map(audio => ({
-        ...audio,
+    } else {
+        res.redirect("feeds")
+    }
+})
+
+
+app.get("/feeds", async (req, res) => {
+    if (req.isAuthenticated()) {
+        const userId = req.user.id
+        try {
+            const userTheme = req.user.color || 'default';
+            const mode = req.user.mode || "light"
+            const allUsers = await db.query("SELECT id, verified, username, profile_picture FROM users");
+
+            const result = await db.query("SELECT timestamp, reported, verified, secrets.id, reactions,profile_picture, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id ORDER BY secrets.id DESC ")
+
+            const audioPosts = await Audio.findAll({
+                order: [['uploadDate', 'DESC']]
+              });
+              
+
+              const userInfo = await db.query(`SELECT username,verified, profile_picture FROM users WHERE id = $1`, [userId]);
+      const user = userInfo.rows[0];
+
+      const formatted = audioPosts.map(audio => ({
+        id: audio.id,
+        url: audio.url,
+        user_id: audio.userId,
         username: user.username,
         verification: user.verified,
         profile_pic: user.profile_picture,
-        timestamp: dayjs(audio.uploadDate).fromNow(),
+        timestamp: dayjs(audio.uploadDate).fromNow()
       }));
-  
-      // 🔹 Render secrets.ejs
-      res.render("secrets", {
-        allUsers,
-        secrets: usersSecret,
-        audioPost: formattedAudio,
-        userId: req.user.id,
-        profilePicture: req.user.profile_picture,
-        username: req.user.username,
-        theme: userTheme,
-        mode,
-        reactions: usersSecret.map(secret => secret.reactions || {}),
+
+        
+
+            const usersSecret = result.rows;
+            res.render("secrets", {allUsers: allUsers.rows, secrets: usersSecret, audioPost: formatted, userId: req.user.id, activeStatus: req.user.active_status, verification:req.user.verified, profilePicture: req.user.profile_picture, username: req.user.username, theme: userTheme, mode: mode, reactions: JSON.stringify(usersSecret.map(secret => secret.reactions || {})), })
+        } catch (err) {
+            console.log(err)
+        }
+    } else {
+        res.redirect("login")
+    }
+})
+
+
+app.get("/fetch-posts/:user", async (req, res) => {
+  const { type } = req.query;
+  const userId = req.params.user;
+
+  if (req.isAuthenticated()){
+
+  try {
+    if (type === "text") {
+      const result = await db.query(`
+        SELECT timestamp, reported, secrets.id, reactions, profile_picture, username, user_id, color, category, secret
+        FROM secrets
+        JOIN users ON users.id = user_id
+        WHERE user_id = $1
+        ORDER BY secrets.id DESC
+      `, [userId]);
+
+      return res.json({ posts: result.rows });
+
+    } else if (type === "audio") {
+      const audioPosts = await Audio.findAll({
+        where: { userId },
+        order: [['uploadDate', 'DESC']]
       });
-    } catch (err) {
-      console.error("Feeds route error:", err);
-      res.status(500).send("Internal Server Error");
+
+      const userInfo = await db.query(`SELECT username, profile_picture FROM users WHERE id = $1`, [userId]);
+      const user = userInfo.rows[0];
+
+      const formatted = audioPosts.map(audio => ({
+        id: audio.id,
+        url: audio.url,
+        user_id: audio.userId,
+        username: user.username,
+        profile_pic: user.profile_picture,
+        timestamp: dayjs(audio.uploadDate).fromNow()
+      }));
+
+      return res.json({ posts: formatted });
+
+    } else {
+      return res.status(400).json({ message: "Invalid type" });
     }
-  });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+} else {
+    res.redirect("/login")
+}
+});
   
 
-  app.get("/fetch-posts/:user", async (req, res) => {
-    if (!req.isAuthenticated()) {
-      return res.redirect("/login");
-    }
-  
-    const userId = req.params.user;
-    const { type } = req.query;
-  
+app.get("/api/comment-counts", async (req, res) => {
     try {
-      if (type === "text") {
-        const cacheKey = `user_posts:text:${userId}`;
-        let cachedPosts = await redis.get(cacheKey);
-  
-        if (cachedPosts) {
-          return res.json({ posts: JSON.parse(cachedPosts) });
-        }
-  
         const result = await db.query(`
-          SELECT timestamp, reported, secrets.id, reactions, profile_picture, username, user_id, color, category, secret
-          FROM secrets
-          JOIN users ON users.id = user_id
-          WHERE user_id = $1
-          ORDER BY secrets.id DESC
-        `, [userId]);
-  
-        await redis.set(cacheKey, JSON.stringify(result.rows), { ex: 60 }); // Cache for 60 seconds
-        return res.json({ posts: result.rows });
-  
-      } else if (type === "audio") {
-        const cacheKey = `user_posts:audio:${userId}`;
-        let cachedAudioPosts = await redis.get(cacheKey);
-  
-        if (cachedAudioPosts) {
-          return res.json({ posts: JSON.parse(cachedAudioPosts) });
-        }
-  
-        const audioPosts = await Audio.findAll({
-          where: { userId },
-          order: [['uploadDate', 'DESC']]
-        });
-  
-        const userInfo = await db.query(`SELECT username, profile_picture FROM users WHERE id = $1`, [userId]);
-        const user = userInfo.rows[0];
-  
-        const formatted = audioPosts.map(audio => ({
-          id: audio.id,
-          url: audio.url,
-          user_id: audio.userId,
-          username: user.username,
-          profile_pic: user.profile_picture,
-          timestamp: dayjs(audio.uploadDate).fromNow()
-        }));
-  
-        await redis.set(cacheKey, JSON.stringify(formatted), { ex: 60 }); // Cache for 60 seconds
-        return res.json({ posts: formatted });
-  
-      } else {
-        return res.status(400).json({ message: "Invalid type" });
-      }
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: "Server error" });
-    }
-  });
-    
-
-  app.get("/api/comment-counts", async (req, res) => {
-    try {
-        const result = await db.query("SELECT secret_id, COUNT(*) AS count FROM comments GROUP BY secret_id" );
+            SELECT secret_id, COUNT(*) AS count
+            FROM comments
+            GROUP BY secret_id
+        `);
 
         // Format into a map: { [secret_id]: count }
         const counts = {};
@@ -705,7 +470,7 @@ app.get("/chat", async (req, res) => {
         const userTheme = req.user.color || 'default';
         const mode = req.user.mode || "light"
         console.log(req.user)
-        res.render("chat", { theme: userTheme, mode: mode, username: req.user.username, userId: req.user.id, profilePicture: req.user.profile_picture })
+        res.render("chat", { theme: userTheme, mode: mode, username: req.user.username, userId: req.user.id, activeStatus: req.user.active_status, verification:req.user.verified, profilePicture: req.user.profile_picture })
     } else {
         res.redirect("/login")
     }
@@ -716,7 +481,7 @@ app.get("/feedback", async (req, res) => {
         const userTheme = req.user.color || 'default';
         const mode = req.user.mode || "light"
         console.log(req.user)
-        res.render("feedback", { theme: userTheme, mode: mode, username: req.user.username, userId: req.user.id, profilePicture: req.user.profile_picture })
+        res.render("feedback", { theme: userTheme, mode: mode, username: req.user.username, userId: req.user.id, activeStatus: req.user.active_status, verification:req.user.verified, profilePicture: req.user.profile_picture })
     } else {
         res.redirect("/login")
     }
@@ -724,36 +489,26 @@ app.get("/feedback", async (req, res) => {
 
 
 app.get('/admin/reports', async (req, res) => {
+
     try {
-      const cacheKey = 'admin_reports';
-      let cached = await redis.get(cacheKey);
-  
-      if (cached) {
-        const reports = JSON.parse(cached);
-        return res.render('./admin/admin-reports', { reports, userId: req.user.id, profilePicture: req.user.profile_picture });
-      }
-  
-      const reportsQuery = `
-        SELECT reports.id, reports.reported_by, reports.secret_id, reports.comment_id, reports.reason, reports.status,
-          secret, users.username AS reported_by_username
-        FROM reports
-        LEFT JOIN secrets ON reports.secret_id = secrets.id
-        LEFT JOIN comments ON reports.comment_id = comments.id
-        LEFT JOIN users ON reports.reported_by = users.id
-        ORDER BY reports.created_at DESC;
-      `;
-      const result = await db.query(reportsQuery);
-      const reports = result.rows;
-  
-      await redis.set(cacheKey, JSON.stringify(reports), { ex: 60 }); // cache 60 seconds
-  
-      res.render('./admin/admin-reports', { reports, userId: req.user.id, profilePicture: req.user.profile_picture });
+        const reportsQuery = `
+            SELECT reports.id, reports.reported_by, reports.secret_id, reports.comment_id, reports.reason, reports.status, secret AS secret, users.username AS reported_by_username
+            FROM reports
+            LEFT JOIN secrets ON reports.secret_id = secrets.id
+            LEFT JOIN comments ON reports.comment_id = comments.id
+            LEFT JOIN users ON reports.reported_by = users.id
+            ORDER BY reports.created_at DESC;
+        `;
+        const result = await db.query(reportsQuery);
+        const reports = result.rows;
+
+        res.render('./admin/admin-reports', { reports, userId: req.user.id, activeStatus: req.user.active_status, verification:req.user.verified, profilePicture: req.user.profile_picture });
     } catch (error) {
-      console.error('Error fetching reports:', error);
-      res.status(500).render('error', { message: 'Error fetching reports' });
+        console.error('Error fetching reports:', error);
+        res.status(500).render('error', { message: 'Error fetching reports' });
     }
-  });
-  
+});
+
 app.get('/admin/reviews', async (req, res) => {
     const userTheme = req.user.color || 'default';
     const mode = req.user.mode || "light"
@@ -768,7 +523,7 @@ app.get('/admin/reviews', async (req, res) => {
 
         var count = 1;
 
-        res.render('./admin/admin-reviews', { reviews, theme: userTheme, mode: mode, userId: req.user.id, profilePicture: req.user.profile_picture, count: count });
+        res.render('./admin/admin-reviews', { reviews, theme: userTheme, mode: mode, userId: req.user.id, activeStatus: req.user.active_status, verification:req.user.verified, profilePicture: req.user.profile_picture, count: count });
     } catch (error) {
         console.error('Error fetching reports:', error);
         res.status(500).json({ message: 'Error fetching reviews' });
@@ -822,7 +577,7 @@ app.get('/admin-dashboard', async (req, res) => {
 
         var count = 1;
 
-        res.render('./admin/admin-dashboard', { reviews, users, feeds, pendingReport, flaggedReport, theme: userTheme, mode: mode, userId: req.user.id, profilePicture: req.user.profile_picture, count: count });
+        res.render('./admin/admin-dashboard', { reviews, users, feeds, pendingReport, flaggedReport, theme: userTheme, mode: mode, userId: req.user.id, activeStatus: req.user.active_status, verification:req.user.verified, profilePicture: req.user.profile_picture, count: count });
     } catch (error) {
         console.error('Error fetching reports:', error);
         res.status(500).json({ message: 'Error fetching reviews' });
@@ -861,7 +616,7 @@ app.get("/section/:section", async (req, res) => {
                 [section])
             const usersSecret = result.rows;
             // console.log(usersSecret)
-            res.render("section", { section: usersSecret, userId: req.user.id, profilePicture: req.user.profile_picture, username: req.user.username, theme: userTheme, mode: mode, reactions: JSON.stringify(usersSecret.map(secret => secret.reactions || {})), })
+            res.render("section", { section: usersSecret, userId: req.user.id, activeStatus: req.user.active_status, verification:req.user.verified, profilePicture: req.user.profile_picture, username: req.user.username, theme: userTheme, mode: mode, reactions: JSON.stringify(usersSecret.map(secret => secret.reactions || {})), })
         } catch (err) {
             console.log(err)
         }
@@ -871,68 +626,74 @@ app.get("/section/:section", async (req, res) => {
 
 })
 
-import schedule from 'node-schedule';
-
-schedule.scheduleJob('0 11 * * *', async () => {  // Every day at 11:00 AM
-  try {
-    const result = await db.query(topDiscussedQuery);
-    if (result.rows.length > 0) {
-      const topSecret = result.rows[0];
-      await redis.set(CACHE_KEY, JSON.stringify(topSecret), { ex: 86400 });
-      // Optional: emit notification here if needed
-    }
-  } catch (error) {
-    console.error('Error updating top discussed cache:', error);
-  }
-});
-
-
 
 app.get('/top-discussed', async (req, res) => {
-try {
-// Query to fetch the most discussed secret
-const topDiscussedQuery = `
-SELECT
-u.profile_picture,
-s.reactions,
-s.id,
-s.secret,
-COUNT(c.id) AS comment_count,
-s.user_id
+    try {
+        // Query to fetch the most discussed secret
+        const topDiscussedQuery = `
+          SELECT 
+  u.profile_picture, 
+  s.reactions, 
+  s.id, 
+  s.secret, 
+  COUNT(c.id) AS comment_count, 
+  s.user_id
 FROM secrets s
 LEFT JOIN comments c ON c.secret_id = s.id
 JOIN users u ON u.id = s.user_id
 GROUP BY s.id, s.secret, s.reactions, s.user_id, u.profile_picture
-ORDER BY comment_count DESC,
-COALESCE((s.reactions->'like'->>'count')::int, 0) DESC
+ORDER BY comment_count DESC, 
+         COALESCE((s.reactions->'like'->>'count')::int, 0) DESC
 LIMIT 1;
-    `;
-    const result = await db.query(topDiscussedQuery);
-
-    if (result.rows.length > 0) {
-        const topSecret = result.rows[0];
-
-        io.to(`user_${topSecret.user_id}`).emit("new-notification", {
-            type: "selected",
-            data: {
-                id: topSecret.id, // The secret ID
-                secret: topSecret.secret,
-                userId: topSecret.user_id,
-                category: topSecret.category,
-            }
-        })
 
 
-        res.json({ success: true, topSecret: topSecret, reactions: JSON.stringify(topSecret.reactions || {}) });
-    } else {
-        res.json({ success: false, topSecret: 'No trending secret found.' });
+        `;
+        const result = await db.query(topDiscussedQuery);
+
+        if (result.rows.length > 0) {
+            const topSecret = result.rows[0];
+
+            io.to(`user_${topSecret.user_id}`).emit("new-notification", {
+                type: "selected",
+                data: {
+                    id: topSecret.id, // The secret ID
+                    secret: topSecret.secret,
+                    userId: topSecret.user_id,
+                    category: topSecret.category,
+                }
+            })
+
+
+            res.json({ success: true, topSecret: topSecret, reactions: JSON.stringify(topSecret.reactions || {}) });
+        } else {
+            res.json({ success: false, topSecret: 'No trending secret found.' });
+        }
+    } catch (error) {
+        console.error('Error fetching top discussed secret:', error);
+        res.status(500).json({ error: 'Error fetching top discussed secret.' });
     }
-} catch (error) {
-    console.error('Error fetching top discussed secret:', error);
-    res.status(500).json({ error: 'Error fetching top discussed secret.' });
-}
-
 });
+
+
+app.get("/partial-submit", async (req, res) => {
+    if (req.isAuthenticated()) {
+        const userTheme = req.user.color || 'default';
+        const mode = req.user.mode || "light"
+        console.log(req.user)
+
+        const formData = {
+            submit: "Submit",
+            theme: userTheme,
+            mode: mode,
+            username: req.user.username,
+            userId: req.user.id, activeStatus: req.user.active_status, verification:req.user.verified, profilePicture: req.user.profile_picture
+        };
+
+        res.render("partials/submitForm", formData)
+    } else {
+        res.redirect("login")
+    }
+})
 
 
 
@@ -947,7 +708,7 @@ app.get("/submit", async (req, res) => {
             theme: userTheme,
             mode: mode,
             username: req.user.username,
-            userId: req.user.id, profilePicture: req.user.profile_picture
+            userId: req.user.id, activeStatus: req.user.active_status, verification:req.user.verified, profilePicture: req.user.profile_picture
         };
 
         res.render("submit", formData)
@@ -969,11 +730,6 @@ app.get("/secret/:id", async (req, res) => {
     if (!req.isAuthenticated()) {
         return res.render("login");
     }
-
-    if (isNaN(requestedId)) {
-        return res.status(400).render("error", { message: "Invalid secret ID." });
-      }
-      
 
     try {
         const userTheme = req.user.color || 'default';
@@ -1019,7 +775,7 @@ app.get("/secret/:id", async (req, res) => {
             secret: data,
             comments: commentData.length > 0 ? commentData : null,
             noComment: commentData.length === 0 ? "Share your thoughts." : null,
-            userId: req.user.id, profilePicture: req.user.profile_picture,
+            userId: req.user.id, activeStatus: req.user.active_status, verification:req.user.verified, profilePicture: req.user.profile_picture,
             totalComments: commentData.length || null,
             theme: userTheme,
             mode: mode,
@@ -1075,7 +831,7 @@ app.get("/more/:id", async (req, res) => {
             secret: data,
             comments: commentData.length > 0 ? commentData : null,
             noComment: commentData.length === 0 ? "Share your thoughts." : null,
-            userId: req.user.id, profilePicture: req.user.profile_picture,
+            userId: req.user.id, activeStatus: req.user.active_status, verification:req.user.verified, profilePicture: req.user.profile_picture,
             totalComments: commentData.length || null,
             theme: userTheme,
             mode: mode,
@@ -1086,6 +842,8 @@ app.get("/more/:id", async (req, res) => {
         res.status(500).render("error", { message: "An error occurred while fetching the secret." });
     }
 });
+
+
 
 
 
@@ -1307,7 +1065,7 @@ app.get("/notifications", async (req, res) => {
                 secrets: notifySecret,
                 reactions: notifyReaction,
                 notifications: sortedNotifications, // Pass sorted notifications to the client
-                userId: req.user.id, profilePicture: req.user.profile_picture,
+                userId: req.user.id, activeStatus: req.user.active_status, verification:req.user.verified, profilePicture: req.user.profile_picture,
                 username: req.user.username,
                 theme: userTheme,
                 mode: mode
@@ -1366,16 +1124,10 @@ app.post("/searching", async (req, res) => {
     }
   });
 
-  function escapeRegExp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  }
-  
   function highlightMatch(text, keyword) {
-    const escapedKeyword = escapeRegExp(keyword);
-    const regex = new RegExp(`(${escapedKeyword})`, "gi");
+    const regex = new RegExp(`(${keyword})`, "gi");
     return text.replace(regex, "<mark>$1</mark>");
   }
-  
   app.post("/search", async (req, res) => {
     const { search } = req.body;
   
@@ -1387,13 +1139,13 @@ app.post("/searching", async (req, res) => {
       const searchTerm = `%${search.toLowerCase()}%`;
   
       const result = await db.query(
-        `SELECT secrets.id, secret, profile_picture, timestamp, category, user_id, reactions FROM secrets JOIN users ON user_id = users.id WHERE LOWER(secret) LIKE $1 ORDER BY id DESC`,
+        `SELECT verified,secrets.id, secret, profile_picture, timestamp, category, user_id, reactions FROM secrets JOIN users ON user_id = users.id WHERE LOWER(secret) LIKE $1 ORDER BY id DESC`,
         [searchTerm]
       );
   
       res.render("searchResults", {
         userId: req.user.id,
-        profilePicture: req.user.profile_picture,
+        activeStatus: req.user.active_status, verification:req.user.verified, profilePicture: req.user.profile_picture,
         results: result.rows,
         keyword: search,
         highlightMatch,
@@ -1529,7 +1281,7 @@ app.post("/edit", async (req, res) => {
             ]);
 
             const data = result.rows[0];
-            res.render("submit", { submit: "Update", secret: data, theme: userTheme, mode: mode, userId: req.user.id, profilePicture: req.user.profile_picture })
+            res.render("submit", { submit: "Update", secret: data, theme: userTheme, mode: mode, userId: req.user.id, activeStatus: req.user.active_status, verification:req.user.verified, profilePicture: req.user.profile_picture })
         } catch (error) {
             console.log(error);
         }
@@ -1610,6 +1362,8 @@ app.post("/audio-delete", async (req, res) => {
 });
 
 app.post("/comment", async (req, res) => {
+    // const secretId = req.body.id;
+    // const comment = req.body.comment;
     const { id, commentUserId, comment } = req.body;
 
     if (comment != "") {
@@ -1664,6 +1418,8 @@ app.post("/translate", express.json(), async (req, res) => {
   });
   
 
+
+
 app.post("/review", async (req, res) => {
     const review = req.body.review;
     const rating = req.body.rating;
@@ -1710,7 +1466,7 @@ app.post("/register", async (req, res) => {
                     console.log(result);
                     req.login(user, (err) => {
                         console.log(err);
-                        res.redirect("dashboard");
+                        res.redirect("feeds");
                     })
                 }
             })

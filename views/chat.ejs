@@ -1,5 +1,11 @@
 <%- include('layout') %> 
 <link rel="stylesheet" href="/styles/chat.css" />
+<style>
+  #messages {
+  overflow-y: auto; 
+  height: 200px;
+  }
+</style>
 
 <body>
     <div class="layout-container container">
@@ -17,8 +23,8 @@
               <a href="/chat">
                 <div class="nav-main">
                   <p>
-                    <i class="nav-icon fas fa-message"></i>
-                    <span class="nav-text">Chat</span>       
+                    <i class="nav-icon fas fa-comments"></i>
+                    <span class="nav-text">ChatRoom</span>       
                   </p>
                   
                 <span class="nav-tag">New</span>
@@ -36,6 +42,18 @@
                 <span class="nav-text">My Profile</span>
               </a>
             </li>
+            <li class="nav-item blur">
+              <a aria-disabled="true">
+                <div class="nav-main">
+                  <p>
+                    <i class="nav-icon fab fa-modx"></i>
+                    <span class="nav-text">Explore</span>       
+                  </p>
+                  
+                <span class="nav-tag">Soon</span>
+              </div>
+              </a>
+            </li>
             <li class="nav-item mid-post-2">
               <a  href="/submit"class="nav-text">Compose Gist</a>
               <i  class="nav-icon fas fa-circle-plus"></i>
@@ -47,131 +65,169 @@
 
         <main>
 
-            <div id="chat-box">
-
-                <div class="chat-box">
-        <center><h2>Anonymous Chat Room <span>Connected Gossipas: <span class="users-count">0</span></span></h2></center>
-                <div id="messages" style="overflow-y: auto; height: 200px;">
-                    <div id="typing-indicator"></div>
-                </div>
-               
-                <div id="input-container">
-                    <input type="text" id="chat-input" placeholder="Type your message here..." />
-                    <button id="send-chat">Send</button>
-                    <button id="emoji-btn">😀</button>
-                    <div id="emoji-picker" style="display:none;">
-                        <span>😀</span><span>😂</span><span>😍</span><span>🥳</span><span>👍</span>
-                    </div>
-                  </div>
-                </div>
-                <button class="message-button"><i class="fas fa-message fa-2x"></i> <span class="message-count"></span></button>
-            </div>
-        </main>
-        <aside class="right-sidebar">
-
-          <div class="aside premium-aside">
-            <div class="premium-card">
-              <div class="crown-icon sparkle">👑</div>
+          <div id="chat-box">
+            <div class="chat-box">
+              <center>
+                <h2>Anonymous Chat Room
+                  <span class="connected">
+                    Connected Gossipas: <span class="users-count">0</span>
+                  </span>
+                </h2>
+              </center>
           
-              <h3 class="premium-title">Become a Top Gossipa</h3>
-              <p class="premium-text">Stand out in the World of anonymity. Get Known. Remain unseen.</p>
-          
-              <div class="trending-stats">
-                <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
+              <div id="messages">
+                <div id="typing-indicator"></div>
               </div>
           
-              <div class="avatar-hint">
-                <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
-                <p>You’re 1 step from <strong>trending</strong>…</p>
+              <div id="input-container">
+                <input type="text" id="chat-input" placeholder="Type your message..." />
+                <button id="send-chat"><i class="fas fa-paper-plane"></i></button>
+                <button id="emoji-btn">😀</button>
+                <div id="emoji-picker">
+                  <span>😀</span><span>😂</span><span>😍</span><span>🥳</span><span>👍</span>
+                </div>
               </div>
-          
-              <a href="/subscribe" class="premium-btn">Unlock Premium</a>
             </div>
+        
           </div>
-          
-       
-           <div class="aside aside-2">
-          <center>
-              <h4 class="user-count">Active Gossipas: <span id="activeCount">0</span></h4>
-          </center>
-          <ul class="nav user-list">
-          </ul>
-          <ul id="systemMessage">
-            
-          </ul>
-        </div>
+                  </main>
+                  <aside class="right-sidebar">
+                    <div class="aside premium-aside">
+                        <div class="premium-card">
+                          <div class="crown-icon sparkle">👑</div>
+                      
+                          <h3 class="premium-title">Become a Chief Gossipa</h3>
+                          <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain unknown.</p>
+                      
+                          <div class="trending-stats">
+                            <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
+                          </div>
+                      
+                          <div class="avatar-hint">
+                            <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
+                            <p>You’re 1 step from <strong>trending</strong>…</p>
+                          </div>
+                      
+                          <a href="/subscribe" class="premium-btn">Unlock Premium</a>
+                        </div>
+                      </div>
+                        
+                      <div class="aside aside-2">
+                        <center>
+                          <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Active Gossipas: <span id="activeCount">0</span></h4>
+                        </center>
+                        <ul class="nav user-list">
+                        </ul>
+                
+                      </div>
+                
+                  </aside>
+                
+                </div>
+                
+                <script>
+                    const connectedUsersMap = new Map();
+                    const userList = document.querySelector(".user-list");
+                    const userCountDisplay = document.getElementById("activeCount");
+                
+                    function updateUserCount() {
+                      userCountDisplay.textContent = connectedUsersMap.size;
+                    }
+                
+                    function userConnected(user) {
+                      if (connectedUsersMap.has(user.id)) return;
+                
+                      const userBox = document.createElement("li");
+                      userBox.className = "connected-user nav-item enter";
+                      userBox.id = `user-${user.id}`;
+                      const verifiedBadge = `${user.verified}`
+    ? `<img src="/img/badge.png" alt="Verified Badge" class="verified-badge" style="width: 16px; height: 16px;">`
+    : "";
 
-        </aside>
-       
-    </div>
-
-    <script>
-      const connectedUsersMap = new Map();
-      const userList = document.querySelector(".user-list");
-      const userCountDisplay = document.getElementById("activeCount");
-    
-      function updateUserCount() {
-        userCountDisplay.textContent = connectedUsersMap.size;
-      }
-    
-      function userConnected(user) {
-        if (connectedUsersMap.has(user.id)) return;
-    
-        const userBox = document.createElement("li");
-        userBox.className = "connected-user nav-item enter";
-        userBox.id = `user-${user.id}`;
         userBox.innerHTML = `
           <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
             <img src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
-            <p>@amebo${user.id}</p>
+            <p>
+              @amebo${user.id}
+             ${verifiedBadge}
+              </p>
           </div>
         `;
-    
-        userList.appendChild(userBox);
-        connectedUsersMap.set(user.id, userBox);
-        updateUserCount();
-    
-        // Trigger reflow for entry animation
-        requestAnimationFrame(() => {
-          userBox.classList.add("enter");
-        });
-      }
-    
-      function userDisconnected(userId) {
-        const userBox = connectedUsersMap.get(userId);
-        if (userBox) {
-          userBox.classList.add("exit");
-          userBox.classList.remove("enter");
-          setTimeout(() => {
-            userBox.remove();
-            connectedUsersMap.delete(userId);
-            updateUserCount();
-          }, 400); // CSS transition match
-        }
-      }
-    
-      socket.on("userJoined", async (userId) => {
-        try {
-          const res = await fetch(`/user/${userId}`);
-          const user = await res.json();
-          userConnected(user);
-        } catch (err) {
-          console.error("Failed to fetch user data:", err);
-        }
-      });
-    
-      socket.on("userLeft", (userId) => {
-        userDisconnected(userId);
-      });
-    
-      // Load current active users on first load
-      fetch("/active-users")
-        .then(res => res.json())
-        .then(users => {
-          users.forEach(user => userConnected(user));
-        })
-        .catch(console.error);
-    </script>
+                
+                      userList.appendChild(userBox);
+                      connectedUsersMap.set(user.id, userBox);
+                      updateUserCount();
+                
+                      // Trigger reflow for entry animation
+                      requestAnimationFrame(() => {
+                        userBox.classList.add("enter");
+                      });
+                    }
+                
+                    function userDisconnected(userId) {
+                      const userBox = connectedUsersMap.get(userId);
+                      if (userBox) {
+                        userBox.classList.add("exit");
+                        userBox.classList.remove("enter");
+                        setTimeout(() => {
+                          userBox.remove();
+                          connectedUsersMap.delete(userId);
+                          updateUserCount();
+                        }, 400); // CSS transition match
+                      }
+                    }
+                
+                    socket.on("userJoined", async (userId) => {
+                      try {
+                        const res = await fetch(`/user/${userId}`);
+                        const user = await res.json();
+                        userConnected(user);
+                      } catch (err) {
+                        console.error("Failed to fetch user data:", err);
+                      }
+                    });
+                
+                    socket.on("userLeft", (userId) => {
+                      userDisconnected(userId);
+                    });
+                
+                    // Load current active users on first load
+                    fetch("/active-users")
+                      .then(res => res.json())
+                      .then(users => {
+                        users.forEach(user => userConnected(user));
+                      })
+                      .catch(console.error);
+                  </script>
+                
+                    <script>
+                        const header = document.querySelector('header');
+                        const nextSection = document.querySelector('body').querySelector('section:not(.active)');
+                        const logo = document.getElementById('logo')
+                
+                        window.addEventListener('scroll', function () {
+                            const scrolled = window.scrollY > 0;
+                            if (scrolled) {
+                                let body = document.querySelector('body');
+                                body.style.overflowY = 'scroll';
+                                header.classList.add('scrolled');
+                            } else {
+                                header.classList.remove('scrolled');
+                            }
+                        });
+                
+                        window.onload = function () {
+                            const textArea = document.querySelector('textarea')
+                            textArea.blur();
+                        }
+                
+                
+                        function changeBg(event) {
+                            event.target.style.background = "var(--secondary-color)"
+                            event.target.style.border = "1px solid var(--primary-color)"
+                        }
+                
+                    </script>
 
     <script>
     
@@ -203,7 +259,8 @@ const messagesDiv = document.getElementById('messages');
 const userCount = document.querySelector('.users-count');
 const typingIndicator = document.getElementById('typing-indicator');
 
-const user = localStorage.getItem('userId'); // Assume user ID is stored in localStorage
+const user = parseInt(localStorage.getItem('userId'), 10); // Ensure numeric ID
+
 
 // Function to get current timestamp
 function getCurrentTimestamp() {
@@ -231,21 +288,37 @@ function saveMessage(message, type, user) {
     localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
 }
 
-// Append message to the chat UI
-function appendMessage( message, type, user, timestamp = getCurrentTimestamp()) {
+function appendMessage(message, type, userId, timestamp = new Date()) {
+  const dateObj = new Date(timestamp);
+    const dateStr = dateObj.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+
+    // Add date divider if needed
+    const lastDate = messagesDiv.getAttribute('data-last-date');
+    if (lastDate !== dateStr) {
+        const dateDivider = document.createElement('div');
+        dateDivider.className = 'date-divider';
+        dateDivider.textContent = dateStr;
+        messagesDiv.appendChild(dateDivider);
+        messagesDiv.setAttribute('data-last-date', dateStr);
+    }
+
     const msgDiv = document.createElement('div');
+    msgDiv.className = "message"
     const timeSpan = document.createElement('span');
     const msgUser = document.createElement('span');
-    msgUser.className = "user"
+
+    msgUser.className = "user";
     msgDiv.textContent = message;
-    msgUser.textContent = `~~amebo${user}~~`
-    timeSpan.textContent = ` (${timestamp})`;
+    msgUser.textContent = `gossipa${user}`;
+    timeSpan.textContent = ` (${new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})`;
+
     msgDiv.classList.add(type);
     msgDiv.appendChild(timeSpan);
     msgDiv.appendChild(msgUser);
     messagesDiv.appendChild(msgDiv);
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
+
 
 // Typing indicator timeout
 let typingTimeout;
@@ -261,28 +334,31 @@ chatInput.addEventListener('input', () => {
 });
 
 // Check if it's the first connection after page reload
-let count = 0
-if (!sessionStorage.getItem('hasJoined')) {
-    socket.on('userJoined', (message) => {
-        appendSystemMessage(message);
-       userCount.innerHTML = count++
-    });
+let count = 0;
+socket.on('userJoined', (userId) => {
+    appendSystemMessage(`👋 gossipa${userId} joined the chat`);
+    
+    // Only count new join if not already marked
+    if (!sessionStorage.getItem('hasJoined')) {
+        count++;
+        userCount.innerHTML = count;
+        sessionStorage.setItem('hasJoined', 'true');
+    }
+});
 
-    // Mark that the user has joined
-    sessionStorage.setItem('hasJoined', 'true');
-}
+
 
 window.addEventListener('beforeunload', () => {
     sessionStorage.removeItem('hasJoined'); // Remove 'hasJoined' flag when the user is about to leave
     
 });
 
-socket.on('userLeft', (message) => {
-    if (sessionStorage.getItem('hasJoined')) {
-        appendSystemMessage(message);
-        // userCount.innerHTML = count--
-    }
+socket.on('userLeft', (userId) => {
+    appendSystemMessage(`❌ gossipa${userId} left the chat`);
+    count = Math.max(0, count - 1); // avoid negative count
+    userCount.innerHTML = count;
 });
+
 
 
 function appendSystemMessage(message) {
@@ -296,14 +372,36 @@ function appendSystemMessage(message) {
 
 // Handle incoming messages
 socket.on('message', (data) => {
-    appendMessage(data.text, data.user === user ? 'sent' : 'received', new Date(data.timestamp).toLocaleTimeString());
-    saveMessage(data.text, data.user === user ? 'sent' : 'received');
+  const type = data.user === user ? 'sent' : 'received';
+    appendMessage(data.text, type, data.user, data.timestamp); // pass raw timestamp string
+    saveMessage(data.text, type, data.user);
+
+    // Clear typing if they sent a message
+    if (data.user === currentTypingUser) {
+        typingIndicator.textContent = '';
+        currentTypingUser = null;
+    }
 });
 
-// Handle typing indicator
+
+// Track who is typing
+let currentTypingUser = null;
+
 socket.on('typing', (data) => {
-    typingIndicator.textContent = ` ~~gossipa${data.user}~~ is typing...`;
+    if (data.user !== user) {
+        typingIndicator.textContent = `📝 gossipa${data.user} is typing...`;
+        currentTypingUser = data.user;
+    }
 });
+
+socket.on('stoppedTyping', () => {
+    if (currentTypingUser) {
+        typingIndicator.textContent = '';
+        currentTypingUser = null;
+    }
+});
+
+
 
 socket.on('stoppedTyping', () => {
     typingIndicator.textContent = '';
@@ -313,8 +411,6 @@ socket.on('stoppedTyping', () => {
 sendChat.addEventListener('click', () => {
     const message = chatInput.value.trim();
     if (message) {
-        // appendMessage(message, 'sent');
-        // saveMessage(message, 'sent');
         socket.emit('message', { user, text: message });
         chatInput.value = '';
     }
@@ -324,8 +420,7 @@ chatInput.addEventListener('keyup', (e) => {
   if(e.key === 'Enter'){
     const message = chatInput.value.trim();
     if (message) {
-        // appendMessage(message, 'sent');
-        // saveMessage(message, 'sent');
+
         socket.emit('message', { user, text: message });
         chatInput.value = '';
     }

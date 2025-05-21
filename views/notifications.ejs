@@ -1,6 +1,97 @@
 <%- include('layout') %>
 
+<style>
+  .shimmer-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      /* padding: 1rem; */
+    }
+
+    .shimmer-card {
+      display: flex;
+      background: var(--container-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      animation: pulse 1.5s infinite;
+    }
+
+    .shimmer-avatar {
+      width: 50px;
+      height: 50px;
+      background: var(--body-bg);
+      border-radius: 50%;
+      margin: 1rem;
+    }
+
+
+
+    .shimmer-lines {
+      flex: 1;
+      padding: 1rem 0;
+    }
+
+    .shimmer-line {
+      height: 10px;
+      background: var(--body-bg);
+      margin: 8px 0;
+      border-radius: 5px;
+    }
+
+    .shimmer-line.short {
+      width: 50%;
+    }
+
+    .shimmer-footer {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .shimmer-btn {
+      width: 40px;
+      height: 20px;
+      background: var(--body-bg);
+      border-radius: 5px;
+    }
+
+    @keyframes pulse {
+      0% {
+        background-color: var(--container-bg);
+      }
+
+      50% {
+        background-color: var(--body-bg);
+      }
+
+      100% {
+        background-color: var(--container-bg);
+      }
+    }
+
+    .shimmer {
+      background: linear-gradient(90deg, var(--container-bg) 25%, var(--body-bg) 50%, var(--container-bg) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+
+      100% {
+        background-position: 200% 0;
+      }
+    }
+
+
+</style>
+
 <body >
+  <div class="layout-container container">
+
+
   <!-- <div id="brand-logo-container">
         <h1 id="brand-logo">Anonym</h1>
     </div>
@@ -25,6 +116,61 @@
         document.getElementById("brand-logo-container").style.display = "none";
     }
     </script> -->
+    
+    <aside class="left-sidebar">
+      <div class="aside">
+        <ul class="nav">
+          <li class="nav-item current">
+            <a href="/feeds">
+              <i class="nav-icon fas fa-home"></i>
+              <span class="nav-text">Home</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/chat">
+              <div class="nav-main">
+                <p>
+                  <i class="nav-icon fas fa-comments"></i>
+                  <span class="nav-text">ChatRoom</span>       
+                </p>
+                
+              <span class="nav-tag">New</span>
+            </div>
+            </a>
+          </li>
+          <li class="nav-item mid-post-1">
+            <button id="openSubmitForm" >
+              <i class="nav-icon fas fa-plus-circle"></i>
+            </button>
+          </li>
+         <li class="nav-item">
+            <a href="/profile">
+              <i class="nav-icon fas fa-circle-user"></i>
+              <span class="nav-text">My Profile</span>
+            </a>
+          </li>
+          <li class="nav-item blur">
+            <a aria-disabled="true">
+              <div class="nav-main">
+                <p>
+                  <i class="nav-icon fab fa-modx"></i>
+                  <span class="nav-text">Explore</span>       
+                </p>
+                
+              <span class="nav-tag">Soon</span>
+            </div>
+            </a>
+          </li>
+          <li class="nav-item mid-post-2">
+            <a  href="/submit"class="nav-text">Compose Gist</a>
+            <i  class="nav-icon fas fa-circle-plus"></i>
+          </li>
+        </ul>
+      </div>
+      </aside>
+
+
+    <main>
 
   <div id="notifications">
     <div class="container">
@@ -40,19 +186,39 @@
               <p><%= loginMessage %></p>
             </div>
           </li>
-          <% } %> <% if (locals.notifications && locals.notifications.length >
-          0) { %> <% notifications.forEach((notification)=> { %>
+          <% } %> 
+          <% if (locals.notifications && locals.notifications.length >0) { %> 
+            <div id="shimmer-container" class="shimmer-container">
+              <ul>
+              <% for (let i = 0; i < notifications.length; i++) { %>
+                <li class="secret shimmer-placeholder">
+                  <div class="card">
+                    <div class="shimmer-wrapper">
+                      <div class="shimmer-card">
+                        <div class="shimmer-avatar"></div>
+                        <div class="shimmer-lines">
+                          <div class="shimmer-line short"></div>
+                          <div class="shimmer-line"></div>
+                          <div class="shimmer-line"></div>
+                          <div class="shimmer-footer">
+                            <div class="shimmer-btn"></div>
+                            <div class="shimmer-btn"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              <% } %>
+            </ul>
+            </div>
+            <% notifications.forEach((notification)=> { %>
           <li class="secret">
             <a
               class="message"
               href="<%= notification.notificationType === 'secret' ? 'secret/' + notification.id : '' %>"
             >
               <div class="card">
-                <div class="skeleton-avatar shimmer"></div>
-                <div class="skeleton-lines">
-                  <div class="skeleton-line shimmer"></div>
-                  <div class="skeleton-line shimmer short"></div>
-                </div>
                 <h4>
                   <% if (notification.notificationType === 'secret') { %>
                      New secret Posted by ~~ @anonym<%= notification.user_id %> ~~
@@ -155,6 +321,118 @@
       </div>
     </div>
   </div>
+
+</main>
+<aside class="right-sidebar">
+                    <div class="aside premium-aside">
+                        <div class="premium-card">
+                          <div class="crown-icon sparkle">👑</div>
+                      
+                          <h3 class="premium-title">Become a Chief Gossipa</h3>
+                          <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain unknown.</p>
+                      
+                          <div class="trending-stats">
+                            <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
+                          </div>
+                      
+                          <div class="avatar-hint">
+                            <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
+                            <p>You’re 1 step from <strong>trending</strong>…</p>
+                          </div>
+                      
+                          <a href="/subscribe" class="premium-btn">Unlock Premium</a>
+                        </div>
+                      </div>
+                        
+                      <div class="aside aside-2">
+                        <center>
+                          <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Active Gossipas: <span id="activeCount">0</span></h4>
+                        </center>
+                        <ul class="nav user-list">
+                        </ul>
+                
+                      </div>
+                
+                  </aside>
+                
+                </div>
+                
+                <script>
+                    const connectedUsersMap = new Map();
+                    const userList = document.querySelector(".user-list");
+                    const userCountDisplay = document.getElementById("activeCount");
+                
+                    function updateUserCount() {
+                      userCountDisplay.textContent = connectedUsersMap.size;
+                    }
+                
+                    function userConnected(user) {
+                      if (connectedUsersMap.has(user.id)) return;
+                
+                      const userBox = document.createElement("li");
+                      userBox.className = "connected-user nav-item enter";
+                      userBox.id = `user-${user.id}`;
+                      const verifiedBadge = `${user.verified}`
+    ? `<img src="/img/badge.png" alt="Verified Badge" class="verified-badge" style="width: 16px; height: 16px;">`
+    : "";
+
+        userBox.innerHTML = `
+          <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
+            <img src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
+            <p>
+              @amebo${user.id}
+             ${verifiedBadge}
+              </p>
+          </div>
+        `;
+                
+                      userList.appendChild(userBox);
+                      connectedUsersMap.set(user.id, userBox);
+                      updateUserCount();
+                
+                      // Trigger reflow for entry animation
+                      requestAnimationFrame(() => {
+                        userBox.classList.add("enter");
+                      });
+                    }
+                
+                    function userDisconnected(userId) {
+                      const userBox = connectedUsersMap.get(userId);
+                      if (userBox) {
+                        userBox.classList.add("exit");
+                        userBox.classList.remove("enter");
+                        setTimeout(() => {
+                          userBox.remove();
+                          connectedUsersMap.delete(userId);
+                          updateUserCount();
+                        }, 400); // CSS transition match
+                      }
+                    }
+                
+                    socket.on("userJoined", async (userId) => {
+                      try {
+                        const res = await fetch(`/user/${userId}`);
+                        const user = await res.json();
+                        userConnected(user);
+                      } catch (err) {
+                        console.error("Failed to fetch user data:", err);
+                      }
+                    });
+                
+                    socket.on("userLeft", (userId) => {
+                      userDisconnected(userId);
+                    });
+                
+                    // Load current active users on first load
+                    fetch("/active-users")
+                      .then(res => res.json())
+                      .then(users => {
+                        users.forEach(user => userConnected(user));
+                      })
+                      .catch(console.error);
+                  </script>
+                
+                  
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -269,6 +547,19 @@
       counter.textContent = currentCount + 1;
     });
   </script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Simulate a short loading delay (optional)
+        setTimeout(() => {
+          // Hide shimmer placeholder
+          document.getElementById("shimmer-container").style.display = "none";
+          // Show real secrets
+          document.getElementById("real-secrets").style.display = "block";
+        }, 1000); // 1s delay – tweak as needed
+      });
+    </script>
+    
+    
   <script src="/js/app.js"></script>
   <script src="/js/defaultTheme.js"></script>
 </body>

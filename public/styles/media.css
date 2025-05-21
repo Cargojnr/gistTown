@@ -26,6 +26,7 @@
 
   .mid-post-1 {
     display: flex;
+    justify-content: center;
   }
 
   .mid-post-2{
@@ -69,8 +70,12 @@
     padding-bottom: 0 !important;
   }
 
-  .left-sidebar .nav .nav-text {
+  .nav-text {
     display: none !important;
+  }
+
+  .nav-main {
+    display: block !important;
   }
 
   .left-sidebar .nav-icon {
@@ -83,6 +88,7 @@
 
   .nav-item {
     margin-bottom: 0;
+    justify-content: center;
   }
 
   
@@ -161,6 +167,7 @@ header .profiled {
 
   #feeds {
     margin-bottom: 5rem;
+    margin-top: .75rem;
   }
 
   #profile, #resultsBox {
@@ -170,6 +177,8 @@ header .profiled {
   .aside {
     margin-bottom: .75rem !important;
     z-index: 10;
+    background: var(--container-bg) !important;
+    padding: 1rem 0;
   } 
 
   #liveSearchForm {
@@ -197,7 +206,9 @@ header .profiled {
   }
 
   .nav-tag {
-    right: -100%;
+    position: absolute !important;
+    right: -50%;
+    top: -50% !important;
   }
 
   .thumb {
@@ -307,6 +318,55 @@ header .profiled {
   #feeds #secrets {
     margin-top: 1rem;
   }
+
+  #chat-box {
+    padding: 0;
+    margin-top: 0 !important;
+    width: 100% !important;
+    border-radius: 0;
+    height: 100vh;
+  }
+
+  .chat-box {
+    height: 100vh;
+    border-radius: 0;
+  }
+
+  .chat-box h2 {
+    font-size: 1.2rem;
+  }
+
+  #messages {
+    height: 65vh;
+    padding: 1rem;
+  }
+
+  .message {
+    font-size: .8rem;
+  }
+
+  #input-container {
+    flex-wrap: wrap;
+    padding: 1rem 0.5rem;
+  }
+
+  #chat-input {
+    width: 90%;
+    margin-bottom: 0.5rem;
+  }
+
+  #send-chat, #emoji-btn {
+    width: 15% !important;
+  }
+
+  .message-button {
+    bottom: 16px;
+    right: 16px;
+  }
+
+  .search-result-box {
+    margin-top: 0 !important;
+  }
 }
 
 
@@ -316,9 +376,11 @@ header .profiled {
     padding: .5rem 0 !important;
   }
 
-  header .fas {
+  header .fas,
+  header .fab {
     font-size: 1.5rem;
   }
+
   
   .topbar-icons {
     gap: .5rem;
@@ -326,7 +388,7 @@ header .profiled {
 
   #liveSearchForm {
     /* max-width: 38px;  */
-    margin: auto .5rem !important;
+    margin: 0 !important;
   }
 
   #mobileSearch {
@@ -334,7 +396,7 @@ header .profiled {
   }
   
   #mobileSearch.active {
-    width: 55vw !important;
+    width: 50vw !important;
   }
 
   .search-btn {
