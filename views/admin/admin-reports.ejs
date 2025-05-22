@@ -58,7 +58,6 @@
                                 <tr>
                                     <td><%= report.reported_by_username %></td>
                                     <td>
-                                        <%= report.secret|| '' %>
                                         <p>
                                             <span class="content">
                                               <% if (report.secret.split(" ").length > 200) { %>

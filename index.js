@@ -168,6 +168,11 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("userActivity", ({ type, username }) => {
+    pushActivity(type, username);
+  });
+  
+
   socket.on("typing", (data) => {
     socket.broadcast.emit("typing", { user: data.user });
   });
@@ -445,15 +450,21 @@ app.get("/fetch-posts/:user", async (req, res) => {
 app.get("/api/comment-counts", async (req, res) => {
     try {
         const result = await db.query(`
-            SELECT secret_id, COUNT(*) AS count
-            FROM comments
-            GROUP BY secret_id
+            SELECT secrets.id, COUNT(*) AS count
+            FROM secrets JOIN comments
+            On secrets.id = secret_id
+            GROUP BY secrets.id
         `);
 
         // Format into a map: { [secret_id]: count }
         const counts = {};
         result.rows.forEach(row => {
-            counts[row.secret_id] = parseInt(row.count);
+            if(row != null){
+                counts[row.id] = parseInt(row.count);
+            } else {
+                counts[row.id] = parseInt(0);
+            }
+        
         });
 
         res.json(counts);
@@ -531,8 +542,7 @@ app.get('/admin/reviews', async (req, res) => {
 });
 
 app.get('/admin-dashboard', async (req, res) => {
-    const userTheme = req.user.color || 'default';
-    const mode = req.user.mode || "light"
+    if(req.isAuthenticated()){
     try {
         const reviewsQuery = `
             SELECT *, username
@@ -577,11 +587,14 @@ app.get('/admin-dashboard', async (req, res) => {
 
         var count = 1;
 
-        res.render('./admin/admin-dashboard', { reviews, users, feeds, pendingReport, flaggedReport, theme: userTheme, mode: mode, userId: req.user.id, activeStatus: req.user.active_status, verification:req.user.verified, profilePicture: req.user.profile_picture, count: count });
+        res.render('./admin/admin-dashboard', { reviews, users, feeds, pendingReport, flaggedReport, userId: req.user.id, activeStatus: req.user.active_status, verification:req.user.verified, profilePicture: req.user.profile_picture, count: count });
     } catch (error) {
         console.error('Error fetching reports:', error);
         res.status(500).json({ message: 'Error fetching reviews' });
     }
+}else{
+    res.redirect("/login")
+}
 });
 
 
@@ -592,7 +605,7 @@ app.get("/feeds/:category", async (req, res) => {
     const userTheme = req.user.color || 'default';
     const mode = req.user.mode || "light"
     try {
-        const result = await db.query("SELECT secrets.id, username,user_id, color, secrets.category, reactions,  secret FROM secrets JOIN users ON users.id = user_id WHERE category = $1 ORDER BY secrets.id DESC ", [
+        const result = await db.query("SELECT secrets.id, profile_picture, verified,username,user_id, color, secrets.category, reactions,  secret FROM secrets JOIN users ON users.id = user_id WHERE category = $1 ORDER BY secrets.id DESC ", [
             category
         ])
 
@@ -1256,6 +1269,20 @@ app.post('/share', upload.single('audio'), async (req, res) => {
                     },
                 });
             }
+const user = await db.query('SELECT username, profile_picture FROM users WHERE id = $1', [userId]);
+
+if (user.rows.length > 0) {
+  const { username, profile_picture } = user.rows[0];
+
+  io.emit("admin-activity", {
+    type: "post",
+    userId,
+    username,
+    profile_picture,
+    message: `📢 Gossipa${userId} posted a new secret`,
+  });
+}
+
 
             console.log(response);
             res.json({ success: true, data: response });

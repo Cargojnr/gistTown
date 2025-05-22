@@ -167,8 +167,31 @@ header .profiled {
 
   #feeds {
     margin-bottom: 5rem;
-    margin-top: .75rem;
+    margin-top: 2rem !important;
   }
+
+  /* Full width card (long secret) */
+#feeds .secret.full-width {
+  flex: 1 1 100%;
+  width: 100% !important;
+  /* max-width: 800px; */
+}
+
+/* Half width card (short secret) */
+#feeds .secret.half-width {
+  flex: 1 1 100%; /* Two in a row */
+  width: 100% !important;
+}
+
+#feeds #secrets .card.visible {
+  margin-bottom: 0 !important;
+  padding: 1.2rem !important;
+}
+
+/* General layout */
+#feeds #secrets {
+  gap: 20px !important;
+}
 
   #profile, #resultsBox {
     margin-bottom: 7rem;
@@ -367,6 +390,49 @@ header .profiled {
   .search-result-box {
     margin-top: 0 !important;
   }
+
+  .comment-item {
+    background: var(--card-bg);
+    padding: .5rem;
+    border-radius: 12px;
+    margin-bottom: .75rem;
+  }
+
+  #comment-form {
+    width: 100%;
+  }
+
+  .comment-display{ 
+    height: 200px;
+  }
+
+
+.comment-section {
+  padding: 0;
+}
+
+#commentButton {
+  font-size: 12px;
+}
+
+.read {
+  font-size: .77rem !important;
+}
+
+#topOverlay {
+  height: 70px;
+top:  4.5rem;
+  opacity: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.2), transparent);
+}
+
+#bottomOverlay {
+  height: 50px;
+  top: auto;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+}
+
 }
 
 
@@ -457,8 +523,9 @@ header .profiled {
 
   .card-content p {
     /* font-family: "Gloria Hallelujah", cursive; */
-    font-size: 11.5px!important;
+    font-size: 13px!important;
     line-height: 1.1 !important;
+    font-weight: bold;
   }
 
   .tag {
@@ -922,31 +989,7 @@ button#next-step {
     font-size: .9rem;
   }
 
-  #comment-form {
-    width: 100%;
-  }
-
-  .comment-display{ 
-    height: 200px;
-  }
-
-  .comment-item {
-    background-color: var(--body-bg);
-    padding: 5px 10px;
-    margin-bottom: 5px;
-    border-radius: 30px;
-    font-size: 10px;
-    text-align: left;
-}
-
-.comment-section {
-  padding: 5px 0;
-}
-
-#commentButton {
-  font-size: 12px;
-}
-
+  
 .reactions {
   margin-bottom: 0;
 }

@@ -970,6 +970,8 @@ body {
     left: 45px;
      display: flex;
      align-items: center;
+     z-index: 1000;
+
   }
 
   .theme-toggle {
@@ -1627,62 +1629,6 @@ audio {
   color: #333;
 }
 
-/* Icon Circle */
-.icon-circle {
-  /* background: #f0f0f0; */
-  background: #d9d8d8;
-  border-radius: 50%;
-  width: 70px;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 15px;
-}
-
-.icon-circle.gradient-bg {
-  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-}
-
-.icon-circle.gradient-bg-alt {
-  background: linear-gradient(135deg, #a18cd1, #fbc2eb);
-}
-
-/* Card Title */
-.section-card h3 {
-  font-size: 1.5rem;
-  color: #3a3a3a;
-  margin: 10px 0;
-  color: var(--text-color);
-}
-
-/* Card Description */
-.section-card p {
-  font-size: 1rem;
-  color: #707070;
-  color: var(--text-color);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .sections-title {
-      font-size: 1.5rem;
-  }
-
-  .section-card h3 {
-      font-size: 1.2rem;
-  }
-
-  .section-card p {
-      font-size: 0.9rem;
-  }
-}
-
-
-.section-card.active {
-  background-color: #f0f0f0;
-  border: 2px solid #000;
-}
 
 #milestone-badge {
   position: fixed;
@@ -1707,103 +1653,6 @@ audio {
   display: none;
 }
 
-#trending 
-#related-gist{
-  margin: 1rem 0;
-}
-
-#related-gist {
- margin-top: 1rem;
- /* font-family: "Gloria Hallelujah", cursive; */
-}
-
-
-.trending #secrets,
-.related #secrets{
-  display: flex;
- align-items: center;
- flex-direction: row;
- gap: 10px;
- width: 100%;
- overflow-x: scroll;
-}
-
-.related #secrets {
-  transform: translate(0);
-  z-index: -1;
-}
-
-.related .secret {
-  animation: showcase 20s .2s infinite;
-}
-
-@keyframes showcase {
-
-    0% {
-      visibility: visible;
-    transform: translateX(95vh);
-  }
-
-  25% {
-     transform: translateX(0);
-  }
-
-
-  50%{
-    transform: translateX(-100vh);
-  }
-
-  75% {
-    transform: translateX(0);
-}
-
-100% {
-  /* opacity: 0; */
-  /* visibility: hidden; */
-  transform: translateX(100vh);
-}
-
-}
-
-
-.trend-box {
-  position: relative;
-  font-weight: 100 !important;
-  height: 150px;
-  width: 270px !important;
-  border: 2px solid var(--primary-color);
-  transition: opacity 0.5s ease, filter 0.5s ease;
-  overflow: hidden;
-  font-family: "Gloria Hallelujah", cursive;
-
-}
-
-.trending small,
-.related small{
-  font-size: .9rem;
-  position: absolute;
-  right: 2rem;
-}
-
-.trending .read,
-.related .read {
-  position: absolute;
-  bottom: 1rem;
-  right: 1.5rem;
-  margin-top: .25rem;
-  /* color: var(--secondary-color) !important; */
-  font-weight: bold;
-  font-style: underline;
-  font-size: 1rem;
-}
-
-.trending .controls {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-
 
 .controls button {
   background: var(--secondary-color);
@@ -1814,10 +1663,6 @@ audio {
   color: var(--text-color);
 }
 
-/* .secret-item {
-  border: 1px solid #ddd;
-  border-radius: 5px;
-} */
 
 .error {
   color: red;
@@ -2244,6 +2089,12 @@ audio {
     color: var(--text-color);
   }
 
+  .card-content {
+      transition: max-height 0.3s ease-in-out;
+      overflow: hidden;
+    
+  }
+
   .card-content p {
     font-size: 1.1rem;
     line-height: 1.6;
@@ -2416,17 +2267,17 @@ audio {
     margin-top: .2rem;
   }
 
-  .card .read {
-    display: block;
+  .read {
+    display: inline-block;
     margin-top: .2rem;
-    background: none;
-    border: none;
-    color: var(--primary-color);
-    text-align: center !important;
-    display: flex;
-    justify-self: center;
-    align-self: center;
-    cursor: pointer;
+    margin: auto 0;
+      background: none;
+      border: none;
+      color: var(--primary-color);
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-family: 'Quicksand', sans-serif !important;
   }
 
   .card:hover {
@@ -2434,15 +2285,6 @@ audio {
   }
 
   
-
-  .related-gist .secrets{
-  display: flex;
- align-items: center;
- flex-direction: row;
- gap: 10px;
- width: 100%;
- overflow-x: scroll;
-  }
 
   .no-message {
     color: var(--text-color) !important;
@@ -2475,14 +2317,22 @@ top:  4.5rem;
 
 
 /* Secret Card Default State */
+#feeds,
+#secrets-container {
+  margin-top: 1rem;
+}
+
+
 #feeds #secrets .card {
   opacity: 0;
   transform: scale(0.9) translateY(20px);
-  transition: all 0.5s ease;
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+  will-change: opacity, transform;
 }
 
 /* When card is in view */
 #feeds #secrets .card.visible {
+  margin-bottom: 0 !important;
   opacity: 1;
   transform: scale(1) translateY(0);
 }
@@ -2523,6 +2373,7 @@ top:  4.5rem;
 /* Half width card (short secret) */
 #feeds .secret.half-width {
   flex: 1 1 calc(50% - 20px); /* Two in a row */
+  /* height: 280px; */
   /* max-width: 400px; */
 }
 
@@ -2532,6 +2383,10 @@ top:  4.5rem;
   width: 100%;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
   transition: all 0.5s ease;
+}
+
+#feeds #secrets .card p {
+  padding: .2rem;
 }
 
 
@@ -2594,14 +2449,6 @@ top:  4.5rem;
     z-index: 99 !important;
   }
 
-  #selectCategory {
-    position: fixed;
-    top: 4.75rem;
-    left: 0;
-    right: 0;
-    z-index: 200;
-  }
- 
 
 /* Menu Items */
 .category-item {
@@ -2619,6 +2466,79 @@ top:  4.5rem;
   transform: scale(1.2);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
 }
+
+#selectCategory {
+  position: fixed;
+  top: 4rem;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow-x: auto;
+  background: var(--container-bg);
+  padding: 0.2 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.category-item {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  border-radius: 999px;
+  background: var(--accent-light, var(--secondary-color));
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  color: var(--text-color);
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  border: 1px solid var(--primary-color);
+}
+
+.category-item:hover {
+  transform: scale(1.1);
+  background: var(--accent-hover, var(--primary-color));
+  box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+}
+
+@keyframes shimmer-glow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+
+.category-item.active {
+  background: var(--primary-color);
+  color: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transform: scale(1.05);
+}
+
+.category-item.active,
+.category-item:hover {
+  background: linear-gradient(270deg, #ffc2e6, #ffe6f2, #ffc2e6);
+  background-size: 400% 400%;
+  animation: shimmer-glow 2.5s ease infinite;
+  color: #000;
+  font-weight: 700;
+  box-shadow: 0 0 8px rgba(255, 194, 230, 0.4);
+  border-color: #ff99d9;
+}
+
+
+
+
 
   .notifications {
     margin: .5rem auto;
@@ -2642,28 +2562,40 @@ top:  4.5rem;
 
 .comment-section {
     width: auto;
-    /* height: inherit; */
-    background-color: transparent;
+    background: transparent;
     padding: 0;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
     z-index: 0;
+    width: 100%;
+    border-radius: 12px;
 }
 
 #commentButton {
-    /* padding: 10px 20px; */
     border: none;
     border-radius: 4px;
-    background-color: var(--primary-color);
-    color: #fff;
     cursor: pointer;
     font-size: 14px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border-radius: 30px;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
 }
 
 .comment-dropdown {
     display: none;
     flex-direction: column;
     width: 100%;
+    background: var(--container-bg);
+    border-radius: 16px;
+    padding: 1rem;
+    margin-top: 0.8rem;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
 }
 
 .comment-dropdown.active {
@@ -2672,41 +2604,52 @@ top:  4.5rem;
 
 #comment-form {
   display: flex;
-  align-items: center;
   width: 100%;
-  /* margin: auto; */
-  /* gap: 10px; */
   padding-top: 20px;
   padding: .5rem;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-top: 1rem
 }
 
 #commentInput {
     width: 100%;
     padding: 10px;
-    border: 1px solid var(--text-color);
+    border: 1px solid var(--primary-color);
     border-radius: 4px;
     resize: none;
-    font-size: 14px;
     margin-bottom: 10px;
     margin-right: 10px;
+    flex: 1;
+    padding: 0.8rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    background: var(--input-bg);
+    color: var(--text-color);
 }
 
 #postCommentButton {
     padding: 19px;
     border: none;
     border-radius: 4px;
-    /* background-color: #1877f2; */
     background: var(--primary-color);
     color: var(--text-color);
     cursor: pointer;
     font-size: 14px;
     align-self: flex-start;
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    font-weight: 500;
+    transition: background 0.3s ease;
 }
 
 .comment-display {
     margin-top: 20px;
     overflow-y: scroll;
     height: 250px;
+    margin-top: 1rem;
+    overflow-y: auto;
+    padding-right: 0.5rem;
 }
 
 .total {
@@ -2715,6 +2658,9 @@ top:  4.5rem;
 }
 
 #comments {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   margin: .5rem;
 }
 
@@ -2725,122 +2671,17 @@ top:  4.5rem;
     border-radius: 30px;
     font-size: 14px;
     text-align: left;
+    background-color: var(--card-bg);
+    padding: 0.9rem 1.2rem;
+    margin-bottom: 0.8rem;
+    border-radius: 16px;
+    font-size: 0.95rem;
+    color: var(--text-color);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 .reply {
   margin: 0 .5rem;
-}
-
-.comment {
-  font-size: .9rem;
-}
-
-.user {
-  font-size: .8rem;
-  margin-bottom: .5rem;
-}
-
-#comment div {
-  padding: .5rem;
-}
-
-/* modified comment button */
-.comment-section {
-  background: transparent;
-  padding: 0;
-  position: relative;
-  z-index: 0;
-  width: 100%;
-  border-radius: 12px;
-}
-
-#commentButton {
-  background-color: var(--primary-color);
-  color: #fff;
-  border: none;
-  border-radius: 30px;
-  padding: 0.6rem 1.2rem;
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-}
-
-#commentButton:hover {
-  background-color: var(--primary-hover);
-  transform: scale(1.05);
-}
-
-.comment-dropdown {
-  display: none;
-  flex-direction: column;
-  background: var(--container-bg);
-  border-radius: 16px;
-  padding: 1rem;
-  margin-top: 0.8rem;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
-}
-
-.comment-dropdown.active {
-  display: flex;
-}
-
-#comment-form {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-#commentInput {
-  flex: 1;
-  padding: 0.8rem;
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  font-size: 0.9rem;
-  resize: none;
-  background: var(--input-bg);
-  color: var(--text-color);
-}
-
-#postCommentButton {
-  padding: 0.8rem 1rem;
-  border: none;
-  border-radius: 12px;
-  background: var(--primary-color);
-  color: #fff;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-#postCommentButton:hover {
-  background: var(--primary-hover);
-}
-
-.comment-display {
-  margin-top: 1rem;
-  height: 250px;
-  overflow-y: auto;
-  padding-right: 0.5rem;
-}
-
-#comments {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.comment-item {
-  background-color: var(--card-bg);
-  padding: 0.9rem 1.2rem;
-  margin-bottom: 0.8rem;
-  border-radius: 16px;
-  font-size: 0.95rem;
-  color: var(--text-color);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 .comment-item .user {
@@ -2854,6 +2695,18 @@ top:  4.5rem;
   font-size: 0.95rem;
   line-height: 1.4;
 }
+
+
+#comment div {
+  padding: .5rem;
+}
+
+
+#commentButton:hover {
+  background-color: var(--primary-color);
+  transform: scale(1.05);
+}
+
 
 .reply {
   font-size: 0.85rem;
@@ -3075,12 +2928,13 @@ top:  4.5rem;
     margin: 0 auto;
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    height: 100vh;
   }
   
   .chat-box {
     display: flex;
     flex-direction: column;
-    height: 75vh;
+    height: 100vh;
     border-radius: 16px;
     overflow: hidden;
     background: var(--container-bg);

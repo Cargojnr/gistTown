@@ -1190,12 +1190,12 @@ document.addEventListener("DOMContentLoaded", () => {
           userBox.className = "connected-user nav-item enter";
           userBox.id = `user-${user.id}`;
           const verifiedBadge = `${user.verified}`
-    ? `<img src="/img/badge.png" alt="Verified Badge" class="verified-badge" style="width: 16px; height: 16px;">`
+    ? `<img src="../../img/badge.png" alt="Verified Badge" class="verified-badge" style="width: 16px; height: 16px;">`
     : "";
 
         userBox.innerHTML = `
           <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
-            <img src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
+            <img src="../.${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
             <p>
               @amebo${user.id}
              ${verifiedBadge}
@@ -1560,7 +1560,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const el = document.querySelector(`[data-secret-id="${secretId}"] .comment-count`);
                 if (el) {
                   // el.textContent = `${count} comment${count !== 1 ? 's' : ''}`;
-                  el.textContent = `${count}`;
+                  el.textContent = `${count > 0 ? count : 0} `;
                 }
               });
             })
