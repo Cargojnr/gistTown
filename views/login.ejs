@@ -150,6 +150,8 @@
       <h1 id="brand-logo">GistTown</h1>
     </div>
 
+    
+
     <script>
       let lottiePlayer = null;
     
@@ -162,18 +164,15 @@
         showBrandLogo();
       });
 
-    
-      function showBrandLogo() {
-        const container = document.getElementById("brand-logo-container");
-        const animContainer = document.getElementById("brand-animation");
-    
-        container.style.display = "flex";
-        container.style.background ="var(--container-bg)"
-        document.getElementById("brand-logo").style.display = "none"; // hide text
+      function showBrandLogo(message = "") {
+  const container = document.getElementById("brand-logo-container");
+  const animContainer = document.getElementById("brand-animation");
 
-  
+  container.style.display = "flex";
+  container.style.background = "var(--container-bg)";
+  document.getElementById("brand-logo").style.display = "none";
 
-          if (!lottiePlayer) {
+  if (!lottiePlayer) {
             lottiePlayer = lottie.loadAnimation({
             container: animContainer,
             renderer: "svg",
@@ -184,8 +183,27 @@
         } else {
           lottiePlayer.goToAndPlay(0);
         }
-      }
 
+  if (message) {
+    if (!document.getElementById("login-msg")) {
+      const msg = document.createElement("p");
+      msg.id = "login-msg";
+      msg.style.marginTop = "1rem";
+      msg.style.color = "white";
+      msg.style.fontWeight = "bold";
+      container.appendChild(msg);
+    }
+    document.getElementById("login-msg").textContent = message;
+  }
+}
+
+function hideBrandLogo() {
+  const container = document.getElementById("brand-logo-container");
+  container.style.display = "none";
+  document.getElementById("brand-logo").style.display = "block";
+  const msg = document.getElementById("login-msg");
+  if (msg) msg.remove();
+}
       
       document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "hidden") {
@@ -194,11 +212,6 @@
     hideBrandLogo();
   }
 });
-    
-      function hideBrandLogo() {
-        document.getElementById("brand-logo-container").style.display = "none";
-      }
-
 
     </script>
 
@@ -282,7 +295,7 @@
         <h1>Sign in</h1>
         <p>Sign back in. Protect your secrets</p>
         <div class="form-container">
-          <form action="/login" method="POST" id="login">
+          <form method="POST" id="login" onsubmit="return false;">
             <div class="form-group">
               <label for="user">Email/Username</label>
               <input
@@ -312,6 +325,20 @@
         </div>
       </div>
     </div>
+
+    <!-- Verification Modal -->
+<div id="verifyModal" style="display: none; position: fixed; inset: 0; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+  <div style="background: white; padding: 2rem; border-radius: 10px; width: 90%; max-width: 400px;">
+    <h2>🔐 Enter Verification Code</h2>
+    <p>We sent a 6-digit code to your email.</p>
+    <form id="verifyForm" action="/verify-code" method="post">
+      <input type="text" name="code" placeholder="Enter code" required style="width: 100%; padding: 0.5rem; margin: 1rem 0;" />
+      <button type="submit" style="padding: 0.5rem 1rem;">Verify</button>
+    </form>
+    <p id="verifyError" style="color: red; display: none;"></p>
+  </div>
+</div>
+
 
     <footer>
       <div class="container">
@@ -376,21 +403,88 @@
         }
       });
     </script>
-    <script>
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-          e.preventDefault();
-          showBrandLogo();
-    
-          const form = this.form; 
 
-          setTimeout(() => {
-            form.submit();
-          }, 2400); // give animation time to play
-        });
-      });
+    <script>
+     document.querySelector('form#login').addEventListener('submit', async (e) => { 
+  e.preventDefault();
+  const form = e.target;
+  const formData = new FormData(form);
+
+  const data = {
+    username: formData.get('username'),
+    password: formData.get('password'),
+  };
+
+  try {
+    const res = await fetch('/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    const result = await res.json();
+
+    if (result.needsVerification) {
+      document.getElementById('verifyModal').style.display = 'flex';
+    } else if (result.redirect) {
+      showBrandLogo("Logging you in..."); // ⬅️ show message + animation
+      setTimeout(() => {
+        window.location.href = result.redirect;
+      }, 2400); // wait for animation to finish
+    } else {
+      showBrandLogo("Login failed."); // ⬅️ show fail message
+      setTimeout(() => {
+        alert("Login failed");
+        hideBrandLogo();
+      }, 1800);
+    }
+  } catch (err) {
+    alert("Something went wrong");
+  }
+});
+
+document.querySelector('#verifyForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const code = e.target.code.value;
+
+  const res = await fetch('/verify-code', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code }),
+  });
+
+  const result = await res.json();
+
+  if (res.ok) {
+    e.target.parentElement.style.display = "none"
+    showBrandLogo("Verification successful! Redirecting...");
+    setTimeout(() => {
+      window.location.href = '/feeds';
+    }, 2400);
+  } else {
+    document.getElementById('verifyError').textContent = result.error;
+    document.getElementById('verifyError').style.display = 'block';
+  }
+});
+
+    </script>
+
+        <script>
+      // document.querySelectorAll('.nav-btn').forEach(btn => {
+      //   btn.addEventListener('click', function(e) {
+      //     e.preventDefault();
+         
+      //     showBrandLogo();
+      //     const form = this.form; 
+
+      //     setTimeout(() => {
+      //       form.submit();
+      //     }, 2400); // give animation time to play
+      //   });
+      // });
     
     </script>
+    
 
     <script src="/js/app.js"></script>
     <script src="/js/defaultTheme.js"></script>

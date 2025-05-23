@@ -1,4 +1,10 @@
 /* Responsive tweaks */
+@media (max-width: 1200px) {
+#feeds .secret.half-width {
+  flex: 1 1 100%; /* Two in a row */
+  width: 100% !important;
+}
+}
 @media (max-width:930px) {
   aside {
     width: 200px !important;
@@ -170,6 +176,19 @@ header .profiled {
     margin-top: 2rem !important;
   }
 
+/* General layout */
+#feeds #secrets {
+  gap: 20px !important;
+}
+
+  #real-secrets #secrets {
+    gap: 10px !important;
+  }
+
+  #secrets-container {
+    gap: 1rem !important;
+  }
+
   /* Full width card (long secret) */
 #feeds .secret.full-width {
   flex: 1 1 100%;
@@ -184,13 +203,8 @@ header .profiled {
 }
 
 #feeds #secrets .card.visible {
-  margin-bottom: 0 !important;
   padding: 1.2rem !important;
-}
-
-/* General layout */
-#feeds #secrets {
-  gap: 20px !important;
+  margin-bottom: 0 !important;
 }
 
   #profile, #resultsBox {

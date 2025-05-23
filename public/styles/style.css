@@ -1691,7 +1691,6 @@ audio {
   
   .secret {
     text-align: center;
-    margin: .5rem;
     /* font-size: 2rem; */
   
   }
@@ -2296,7 +2295,7 @@ audio {
   position: fixed;
   left: 0;
   right: 0;
-  z-index: 3;
+  z-index: 5;
   pointer-events: none;
    transition: opacity 0.3s ease;
 }
@@ -2317,14 +2316,28 @@ top:  4.5rem;
 
 
 /* Secret Card Default State */
-#feeds,
+#feeds {
+  margin-top: 2rem;
+}
+
 #secrets-container {
-  margin-top: 1rem;
+  /* gap: 10px; */
+  margin-top: 2rem;
+}
+
+/* General layout */
+#real-secrets #secrets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 
 #feeds #secrets .card {
   opacity: 0;
+  margin-bottom: 0!important;
   transform: scale(0.9) translateY(20px);
   transition: opacity 0.4s ease-out, transform 0.4s ease-out;
   will-change: opacity, transform;
@@ -2332,9 +2345,9 @@ top:  4.5rem;
 
 /* When card is in view */
 #feeds #secrets .card.visible {
-  margin-bottom: 0 !important;
   opacity: 1;
   transform: scale(1) translateY(0);
+  /* margin-bottom: 0 !important; */
 }
 
 #feeds #secrets .card:first-child {
@@ -2343,9 +2356,8 @@ top:  4.5rem;
 }
 
   /* Updated Secret Cards */
-#feeds .secret {
+#real-secrets .secret {
   list-style: none;
-  margin: 10px 0;
   padding: 0;
   display: flex;
   justify-content: center;
@@ -2353,14 +2365,7 @@ top:  4.5rem;
   display: flex;
 }
 
-/* General layout */
-#feeds #secrets {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-  align-items: flex-start;
-}
+
 
 
 /* Full width card (long secret) */
