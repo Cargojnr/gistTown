@@ -22,6 +22,7 @@ import http from "http";
 import multer from "multer";
 import Audio from "./models/Audio.js";
 import { sendLoginCodeToUser } from "./utils/mailer.js";
+import {redis} from "./utils/redis.js"
 import sequelize from "./db.js";
 import rateLimit from "express-rate-limit";
 import requestIp from "request-ip";
@@ -153,19 +154,22 @@ io.on("connection", (socket) => {
 
   // 🔴 Live Gist Stream
   socket.on("live-gist", async ({ content }) => {
-    // Basic validation & sanitization
     if (typeof content !== "string" || content.length > 2000) return;
-
+  
     const sanitizedContent = content.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    // Optional: Store live snapshots to Redis or PostgreSQL for record
-    // await cache.set(`live_gist_${userId}`, sanitizedContent);
-
+  
+    try {
+      await redis.set(`live_gist_${userId}`, sanitizedContent);
+      console.log(`Cached gist for user ${userId}`);
+    } catch (err) {
+      console.error("Redis cache error:", err);
+    }
+  
     const result = await db.query(
-      "SELECT id, verified,profile_picture FROM users WHERE id = $1",
+      "SELECT id, verified, profile_picture FROM users WHERE id = $1",
       [userId]
     );
-
-    // Broadcast to others only
+  
     socket.to("audience-stream").emit("receive-live-gist", {
       userId,
       content: sanitizedContent,
@@ -174,12 +178,13 @@ io.on("connection", (socket) => {
       timestamp: Date.now(),
     });
   });
+  
 
-  socket.on("join-live-gist", async({ streamUserId}) => {
+  socket.on("join-live-gist", async({ streamUserId }) => {
     try {
       const result = await db.query(
         "SELECT profile_picture FROM users WHERE id = $1",
-        [userId]
+        [streamUserId]
       );
   
       const avatarUrl = result.rows[0]?.profile_picture;
@@ -187,7 +192,7 @@ io.on("connection", (socket) => {
       if (avatarUrl) {
         io.emit("listener-joined", {
           streamUserId,
-          listenerId: userId,
+          listenerId: streamUserId,
           avatarUrl,
         });
       }
@@ -196,9 +201,11 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("end-live-gist", ({ userId }) => {
-    io.emit("remove-live-gist", { userId });
+  socket.on("end-live-gist", async ({ userId }) => {
+    const lastContent = await redis.get(`live_gist_${userId}`);
+    io.emit("remove-live-gist", { userId, lastContent });
   });
+  
   
 
   // Clean Disconnect
