@@ -151,6 +151,7 @@ io.on("connection", (socket) => {
 
   // Broadcast login
   socket.broadcast.emit("userJoined", userId);
+  
 
   // 🔴 Live Gist Stream
   socket.on("live-gist", async ({ content }) => {
@@ -159,25 +160,48 @@ io.on("connection", (socket) => {
     const sanitizedContent = content.replace(/</g, "&lt;").replace(/>/g, "&gt;");
   
     try {
-      await redis.set(`live_gist_${userId}`, sanitizedContent);
-      console.log(`Cached gist for user ${userId}`);
+      // Save to Redis with 60s expiry
+      await redis.set(`live_gist_${userId}`, sanitizedContent, {
+        ex: 60,
+      });
+  
+      // Save/update in DB
+      await db.query(
+        `
+        INSERT INTO live_streams (user_id, content)
+        VALUES ($1, $2)
+        ON CONFLICT (user_id)
+        DO UPDATE SET content = $2, updated_at = NOW(), is_active = true
+        `,
+        [userId, sanitizedContent]
+      );
+  
+      const result = await db.query(
+        "SELECT id, verified, profile_picture FROM users WHERE id = $1",
+        [userId]
+      );
+  
+      socket.broadcast.emit("live-gist-started", {
+        userId,
+        sanitizedContent,
+      });
+  
+      socket.to("audience-stream").emit("receive-live-gist", {
+        userId,
+        content: sanitizedContent,
+        profilePicture: result.rows[0].profile_picture,
+        verification: result.rows[0].verified,
+        timestamp: Date.now(),
+      });
+
+      await redis.expire(`live_gist_${userId}`, 60); // refresh TTL
+
+  
     } catch (err) {
-      console.error("Redis cache error:", err);
+      console.error("Error saving live gist:", err);
     }
-  
-    const result = await db.query(
-      "SELECT id, verified, profile_picture FROM users WHERE id = $1",
-      [userId]
-    );
-  
-    socket.to("audience-stream").emit("receive-live-gist", {
-      userId,
-      content: sanitizedContent,
-      profilePicture: result.rows[0].profile_picture,
-      verification: result.rows[0].verified,
-      timestamp: Date.now(),
-    });
   });
+  
   
 
   socket.on("join-live-gist", async({ streamUserId }) => {
@@ -202,12 +226,58 @@ io.on("connection", (socket) => {
   });
 
   socket.on("end-live-gist", async ({ userId }) => {
-    const lastContent = await redis.get(`live_gist_${userId}`);
-    io.emit("remove-live-gist", { userId, lastContent });
+    try {
+      const content = await redis.get(`live_gist_${userId}`);
+      const endedAt = Date.now();
+  
+      // Cleanup Redis
+      await redis.del(`live_gist_${userId}`);
+  
+      // Mark stream as ended in DB
+      await db.query(
+        `UPDATE live_streams
+         SET is_active = false, updated_at = NOW()
+         WHERE user_id = $1`,
+        [userId]
+      );
+  
+      // Cache a backup for potential story save
+      await redis.set(
+        `ended_gist_${userId}`,
+        JSON.stringify({ content, endedAt }),
+        {ex : 86400 }// 24 hours
+      );
+  
+      io.emit("remove-live-gist", { userId, lastContent: content, endedAt });
+    } catch (err) {
+      console.error("Error ending stream:", err);
+    }
+  });
+  
+    socket.on("request-live-streams", async () => {
+    try {
+      const result = await db.query(`
+        SELECT ls.user_id, ls.content, u.profile_picture, u.verified
+        FROM live_streams ls
+        JOIN users u ON ls.user_id = u.id
+        WHERE ls.is_active = true
+      `);
+  
+      for (const row of result.rows) {
+        socket.emit("receive-live-gist", {
+          userId: row.user_id,
+          content: row.content,
+          profilePicture: row.profile_picture,
+          verification: row.verified,
+          timestamp: Date.now(),
+        });
+      }
+    } catch (err) {
+      console.error("Error fetching active streams:", err);
+    }
   });
   
   
-
   // Clean Disconnect
   socket.on("disconnect", () => {
     if (activeUsers.has(userId)) {
@@ -283,6 +353,61 @@ app.get("/api/active-status/:user", async (req, res) => {
     res.status(500).json({ error: "Error fetching active status" });
   }
 });
+
+app.get("/api/live-stream/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const result = await db.query(
+      `SELECT content, started_at, updated_at FROM live_streams
+       WHERE user_id = $1 AND is_active = true`,
+      [userId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "No live stream found" });
+    }
+
+    const user = await db.query(
+      "SELECT id, profile_picture, verified FROM users WHERE id = $1",
+      [userId]
+    );
+
+    return res.json({
+      stream: result.rows[0],
+      user: user.rows[0],
+    });
+  } catch (err) {
+    console.error("Failed to fetch live stream:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+// GET /api/ended-stream/:userId
+app.get("/api/ended-stream/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const cached = await redis.get(`ended_gist_${userId}`);
+    if (!cached) return res.status(404).json({ error: "No ended stream found" });
+
+    const data = JSON.parse(cached);
+    const user = await db.query("SELECT id, profile_picture, verified FROM users WHERE id = $1", [userId]);
+
+    return res.json({
+      content: data.content,
+      endedAt: data.endedAt,
+      user: user.rows[0],
+    });
+  } catch (err) {
+    console.error("Error fetching ended stream:", err);
+    res.status(500).json({ error: "Failed to fetch ended stream" });
+  }
+});
+
+
+
 
 app.get("/profile", async (req, res) => {
   if (req.isAuthenticated()) {

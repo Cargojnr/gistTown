@@ -632,7 +632,7 @@ body {
   
   .suggestion-item .text {
     display: -webkit-box;
-    -webkit-line-clamp: 2; /* limits to 2 lines */
+    line-clamp: 2; /* limits to 2 lines */
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -2771,6 +2771,13 @@ top:  4.5rem;
     transform: scaleY(1);
     opacity: 1;
   }
+}
+
+.translate-btn {
+  background: transparent;
+  color: var(--primary-color);
+  text-decoration: underline;
+  border: none;
 }
 
 
