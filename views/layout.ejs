@@ -27,7 +27,7 @@
   <div class="container">
     <div class="header">
       <img src="../img/logo/main-logo.png" alt="" id="logo">
-      <div class="topbar-icons">
+
       <form id="liveSearchForm" action="/search" method="post" autocomplete="off">
         <div class="search" id="mobileSearch">
           <button class="search-btn" type="submit" id="toggleSearch">
@@ -37,8 +37,16 @@
         </div>
         <ul id="suggestions" class="suggestion-box"></ul>
       </form>
-      
+
+      <div class="topbar-icons">
               <ul id="navbar">
+
+                <li class="navbar">
+                  <a class="nav-link" href="">
+                        <i class=" fab fa-modx fa-2x"></i>
+                  </a>
+                </li>
+
         <li class="navbar">
           <a class="nav-link" href="/notifications">
             <i class="fas fa-bell fa-2x"></i>
@@ -63,7 +71,7 @@
                 <h3 class="username">Hello, <span class="username">
                   @amebo<%= userId %> 
                   <% if(verification === true) {%>
-                  <img src="../../img/badge3.png" alt="">
+                  <img src="../../img/gossipa3.png" alt="Verifiied Badge" class="verified-badge">
                   <% } else {%>
                  <% } %>
                 </span></h3>
@@ -174,8 +182,6 @@
 
   <script>
      const header = document.querySelector("header");
- const topOverlay = document.getElementById("topOverlay")
- const bottomOverlay = document.getElementById("bottomOverlay")
  const nextSection = document
    .querySelector("body")
    .querySelector("section:not(.active)");
@@ -187,9 +193,7 @@
      let body = document.querySelector("body");
      body.style.overflowY = "scroll";
      header.classList.add("scrolled");
-     topOverlay.style.opacity = 1;
    } else {
-     topOverlay.style.opacity = 0;
      header.classList.remove("scrolled");
    }
  });

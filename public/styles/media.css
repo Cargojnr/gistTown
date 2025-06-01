@@ -201,6 +201,9 @@ header .profiled {
 }
 
 @media (max-width: 738px) {
+  .topbar-icons {
+    display: none;
+  }
 
   #feeds {
     margin-bottom: 5rem;

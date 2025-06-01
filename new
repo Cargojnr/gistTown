@@ -219,67 +219,9 @@
           <button class="category-item" data-category="random">🎲 Random</button>
 
         </form>
-            
-              <section id="live-stream-bar">
-                <!-- Sticky Start Gist Button -->
-                <button id="startStreamBtn">
-                  <div class="plus-icon">➕</div>
-                  <span>Stream Gist</span>
-                </button>
+         
               
-                <!-- Scrollable Live Streams -->
-                <div id="liveStreams" class="live-stream-scroll">
-                  <!-- Stream cards injected dynamically -->
-                </div>
-              </section>
-              
-              <!-- Fullscreen Stream Modal -->
-              <div id="streamModal" class="hidden">
-                <div class="modal-overlay">
-                  <div class="modal-content">
-                    <button id="endStreamBtn" class="end-btn">End Stream</button>
-                    <button id="closeStreamModal" class="close-btn">✖</button>
-                    <h2>🎤 Stream Your Gist</h2>
-                    <p id="listenerCount">👂 listeners</p>
-                    <div id="listenerAvatars" class="listener-avatar"></div>
-                    <div class="gist-input-wrapper">
-                      <textarea id="liveGistInput" placeholder="Type your gist..."></textarea>
-                    </div>
-                    <div class="reaction-footer">
-                      <span>Live reactions:</span>
-                      <div id="reactionCount" class="">❤️ 0</div>
-                    </div>
-                    
-                  </div>
-                </div>
-              </div>
-              
-              <div id="streamDisplay" class="hidden">
-                <div class="stream-box">
-                  <div class="stream-header">
-                    <div class="stream-user">
-                      <div class="avatar-profile">
-                        <img src="" class="profile-pic" alt="Avatar Profile">
-                      </div>
-                      <p class="username" style="color: var(--primary-color);">
-                        <span class="user"></span>
-                        <img src="" alt="Verification Badge" class="v-badge">
-                      </p>
-                      <span class="timestamp"></span>
-                    </div>
-                    <button id="closeStreamView">✖</button>
-                  </div>
-                  <div id="streamContentBox" class="stream-body">
-                    <!-- Live stream content shows here -->
-                  </div>
-                  <div class="stream-footer">
-                    <span id="liveReactionView" class="hidden">❤️ 0 reactions</span>
-                    <span id="liveListenerView">👂 0 listening</span>
-                  </div>
-
-                  <div id="floatingReactions"></div>
-                </div>
-              </div>
+             
               
 
 
