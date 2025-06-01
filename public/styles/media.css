@@ -11,8 +11,14 @@
     margin-bottom: 1rem;
   } 
 
+
   #selectCategory {
-    top: 4.7rem;
+    position: fixed;
+    top: 0rem !important;
+    z-index: 50 !important;
+    gap: .2rem;
+    right: 0;
+    left: 190px;
   }
 
   .right-sidebar {
@@ -51,12 +57,12 @@
   .left-sidebar {
     position: fixed !important;
     top: auto;
-    bottom: 0 !important;
+    bottom: -1rem !important;
     left: 0 !important;
     right: 0 !important;
     width: 100vw !important;
     z-index: 20 !important;
-    padding: .75rem;
+    padding: 1rem 0rem;
     padding-bottom: 0;
     margin: 0 !important;
     border-radius: 5px;
@@ -109,6 +115,22 @@ header .profiled {
   display: none;
 }
 
+.aside-2 {
+  display: none !important;
+}
+
+
+.aside {
+  margin-bottom: .75rem !important;
+  z-index: 10;
+  background: var(--container-bg) !important;
+  padding: 1rem 0;
+} 
+
+
+.logo{
+  display: none;
+}
 
 .search input {
   width: 0;
@@ -167,6 +189,15 @@ header .profiled {
     cursor: pointer;
   }
 
+  #selectCategory {
+    position: fixed;
+    top: 0rem !important;
+    z-index: 50 !important;
+    gap: .2rem;
+    right: 0;
+    left: 0;
+  }
+
 }
 
 @media (max-width: 738px) {
@@ -182,7 +213,7 @@ header .profiled {
 }
 
   #real-secrets #secrets {
-    gap: 10px !important;
+    gap: 20px !important;
   }
 
   #secrets-container {
@@ -211,12 +242,6 @@ header .profiled {
     margin-bottom: 7rem;
   }
 
-  .aside {
-    margin-bottom: .75rem !important;
-    z-index: 10;
-    background: var(--container-bg) !important;
-    padding: 1rem 0;
-  } 
 
   #liveSearchForm {
     width: 100%;
@@ -285,12 +310,6 @@ header .profiled {
     font-size: 1.1rem;
   }
 
-  #selectCategory {
-    position: fixed;
-    top: 4rem;
-    z-index: 5;
-    gap: .2rem;
-  }
 
   .profile-header {
     margin: 0 auto 1rem;
@@ -452,6 +471,11 @@ top:  4.5rem;
 
 
 @media (max-width: 600px) {
+  aside {
+    height: auto !important;
+    padding: .5rem 0;
+    box-shadow: .2rem .2rem .5rem rgba(0,0,0,0.4);
+  }
   .header {
     padding: .5rem 0 !important;
   }
@@ -547,6 +571,10 @@ top:  4.5rem;
     font-style: italic;
     padding: .5rem !important;
     font-size: .5rem !important;
+  }
+
+  .comment-dropdown {
+    padding: .5rem !important;
   }
 
   #countdown {

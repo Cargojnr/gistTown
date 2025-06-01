@@ -49,5 +49,7 @@ if(Notification.permission === 'granted'){
   recieveNotification({message: 'You have a new notificaton!'})
  }, 5000)
 
+
+
 });
 

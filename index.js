@@ -132,7 +132,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const activeUsers = new Set();
-
 io.on("connection", (socket) => {
   const userId = parseInt(socket.handshake.query.userId, 10);
 
@@ -142,50 +141,39 @@ io.on("connection", (socket) => {
     return;
   }
 
-  // Update online status and join user-specific & broadcast rooms
+  // Mark user active
   db.query("UPDATE users SET active_status = true WHERE id = $1", [userId]);
   activeUsers.add(userId);
   socket.join(`user_${userId}`);
-  socket.join(`audience-stream`); // Public stream room
+  socket.join("audience-stream");
+
   console.log(`🔗 User ${userId} connected`);
 
   // Broadcast login
   socket.broadcast.emit("userJoined", userId);
-  
 
-  // 🔴 Live Gist Stream
+  // 🔴 Stream Start / Update
   socket.on("live-gist", async ({ content }) => {
     if (typeof content !== "string" || content.length > 2000) return;
-  
+
     const sanitizedContent = content.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  
+
     try {
-      // Save to Redis with 60s expiry
-      await redis.set(`live_gist_${userId}`, sanitizedContent, {
-        ex: 60,
-      });
-  
-      // Save/update in DB
-      await db.query(
-        `
+      await redis.set(`live_gist_${userId}`, sanitizedContent, { ex: 60 });
+
+      await db.query(`
         INSERT INTO live_streams (user_id, content)
         VALUES ($1, $2)
         ON CONFLICT (user_id)
         DO UPDATE SET content = $2, updated_at = NOW(), is_active = true
-        `,
-        [userId, sanitizedContent]
-      );
-  
+      `, [userId, sanitizedContent]);
+
       const result = await db.query(
-        "SELECT id, verified, profile_picture FROM users WHERE id = $1",
-        [userId]
+        "SELECT profile_picture, verified FROM users WHERE id = $1", [userId]
       );
-  
-      socket.broadcast.emit("live-gist-started", {
-        userId,
-        sanitizedContent,
-      });
-  
+
+      socket.broadcast.emit("live-gist-started", { userId, sanitizedContent });
+
       socket.to("audience-stream").emit("receive-live-gist", {
         userId,
         content: sanitizedContent,
@@ -194,29 +182,24 @@ io.on("connection", (socket) => {
         timestamp: Date.now(),
       });
 
-      await redis.expire(`live_gist_${userId}`, 60); // refresh TTL
-
-  
     } catch (err) {
       console.error("Error saving live gist:", err);
     }
   });
-  
-  
 
-  socket.on("join-live-gist", async({ streamUserId }) => {
+  // 🧍 Listener joins someone’s stream
+  socket.on("join-live-gist", async ({ streamUserId }) => {
     try {
       const result = await db.query(
-        "SELECT profile_picture FROM users WHERE id = $1",
-        [streamUserId]
+        "SELECT profile_picture FROM users WHERE id = $1", [userId]
       );
-  
+
       const avatarUrl = result.rows[0]?.profile_picture;
-  
+
       if (avatarUrl) {
         io.emit("listener-joined", {
           streamUserId,
-          listenerId: streamUserId,
+          listenerId: userId,
           avatarUrl,
         });
       }
@@ -225,60 +208,63 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("end-live-gist", async ({ userId }) => {
+  // 🛑 End Stream
+  socket.on("end-live-gist", async () => {
     try {
       const content = await redis.get(`live_gist_${userId}`);
       const endedAt = Date.now();
-  
-      // Cleanup Redis
+
       await redis.del(`live_gist_${userId}`);
-  
-      // Mark stream as ended in DB
-      await db.query(
-        `UPDATE live_streams
-         SET is_active = false, updated_at = NOW()
-         WHERE user_id = $1`,
-        [userId]
-      );
-  
-      // Cache a backup for potential story save
-      await redis.set(
-        `ended_gist_${userId}`,
-        JSON.stringify({ content, endedAt }),
-        {ex : 86400 }// 24 hours
-      );
-  
+
+      await db.query(`
+        UPDATE live_streams SET is_active = false, updated_at = NOW()
+        WHERE user_id = $1
+      `, [userId]);
+
+      await redis.set(`ended_gist_${userId}`, JSON.stringify({ content, endedAt }), { ex: 86400 });
+
       io.emit("remove-live-gist", { userId, lastContent: content, endedAt });
     } catch (err) {
       console.error("Error ending stream:", err);
     }
   });
-  
-    socket.on("request-live-streams", async () => {
+
+  // ✅ Save or discard stream post-ending
+  socket.on("post-stream-decision", async ({ action }) => {
     try {
-      const result = await db.query(`
-        SELECT ls.user_id, ls.content, u.profile_picture, u.verified
-        FROM live_streams ls
-        JOIN users u ON ls.user_id = u.id
-        WHERE ls.is_active = true
-      `);
-  
-      for (const row of result.rows) {
-        socket.emit("receive-live-gist", {
-          userId: row.user_id,
-          content: row.content,
-          profilePicture: row.profile_picture,
-          verification: row.verified,
-          timestamp: Date.now(),
-        });
+      const key = `ended_gist_${userId}`;
+      const endedData = await redis.get(key);
+      if (!endedData) return;
+
+      const { content } = JSON.parse(endedData);
+
+      if (action === "save") {
+        await db.query(`
+          INSERT INTO story_streams (user_id, content, created_at, expires_at)
+          VALUES ($1, $2, NOW(), NOW() + interval '24 hours')
+        `, [userId, content]);
       }
+
+      await redis.del(key);
+
+      socket.emit("story-save-result", { success: true, saved: action === "save" });
     } catch (err) {
-      console.error("Error fetching active streams:", err);
+      console.error("Error in post-stream-decision:", err);
+      socket.emit("story-save-result", { success: false });
     }
   });
-  
-  
-  // Clean Disconnect
+
+  // 👀 View tracking
+  socket.on("story-viewed", async ({ storyId }) => {
+    try {
+      await db.query(`INSERT INTO story_views (story_id, viewer_id) VALUES ($1, $2)`, [storyId, userId]);
+      await db.query(`UPDATE story_streams SET views = views + 1 WHERE id = $1`, [storyId]);
+    } catch (err) {
+      console.error("Failed to log story view:", err);
+    }
+  });
+
+  // 🔌 Disconnect cleanup
   socket.on("disconnect", () => {
     if (activeUsers.has(userId)) {
       db.query("UPDATE users SET active_status = false WHERE id = $1", [userId]);
@@ -288,6 +274,7 @@ io.on("connection", (socket) => {
     }
   });
 });
+
 
 app.get("/", (req, res) => {
   res.render("home");
@@ -302,12 +289,12 @@ app.get("/register", (req, res) => {
   res.render("registration");
 });
 
+// Get user profile
 app.get("/user/:id", async (req, res) => {
   const userId = req.params.id;
   try {
     const result = await db.query(
-      "SELECT id, username, verified,profile_picture FROM users WHERE id = $1",
-      [userId]
+      "SELECT id, username, verified, profile_picture FROM users WHERE id = $1", [userId]
     );
     if (result.rows.length > 0) {
       res.json(result.rows[0]);
@@ -319,75 +306,83 @@ app.get("/user/:id", async (req, res) => {
   }
 });
 
-// --- Add endpoint to get all currently active users ---
+// List active users
 app.get("/active-users", async (req, res) => {
   try {
     const ids = Array.from(activeUsers);
     if (ids.length === 0) return res.json([]);
 
-    const result = await db.query(
-      `SELECT id, active_status,verified, username, profile_picture FROM users WHERE id = ANY($1::int[])`,
-      [ids]
-    );
+    const result = await db.query(`
+      SELECT id, username, verified, profile_picture FROM users
+      WHERE id = ANY($1::int[])
+    `, [ids]);
+
     res.json(result.rows);
   } catch (err) {
-    res.status(500).json({ error: "Could not retrieve active users" });
+    res.status(500).json({ error: "Failed to get active users" });
   }
 });
 
-// routes/user.js or wherever you define routes
+// Check if a user is active
 app.get("/api/active-status/:user", async (req, res) => {
-  const user = req.params.user;
-  if (!req.isAuthenticated()) {
-    return res.status(401).json({ active: false });
-  }
+  if (!req.isAuthenticated?.()) return res.status(401).json({ active: false });
 
   try {
     const result = await db.query(
-      "SELECT active_status FROM users WHERE id = $1",
-      [user]
+      "SELECT active_status FROM users WHERE id = $1", [req.params.user]
     );
-    res.json({ active: result.rows[0].active_status });
+    res.json({ active: result.rows[0]?.active_status || false });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Error fetching active status" });
+    res.status(500).json({ error: "Error checking active status" });
   }
 });
 
+// Get currently active live streams
+app.get("/api/live-streams", async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT u.id AS user_id, u.username, u.verified, u.profile_picture, s.content, s.updated_at
+      FROM live_streams s
+      JOIN users u ON u.id = s.user_id
+      WHERE s.is_active = true
+      ORDER BY s.updated_at DESC
+    `);
+
+    res.json(result.rows.map(stream => ({
+      userId: stream.user_id,
+      username: stream.username,
+      content: stream.content,
+      profilePicture: stream.profile_picture,
+      verification: stream.verified,
+      timestamp: stream.updated_at.getTime(),
+    })));
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch active streams" });
+  }
+});
+
+// Fetch single live stream
 app.get("/api/live-stream/:userId", async (req, res) => {
   const { userId } = req.params;
-
   try {
-    const result = await db.query(
-      `SELECT content, started_at, updated_at FROM live_streams
-       WHERE user_id = $1 AND is_active = true`,
-      [userId]
-    );
+    const result = await db.query(`
+      SELECT content, started_at, updated_at FROM live_streams
+      WHERE user_id = $1 AND is_active = true
+    `, [userId]);
 
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "No live stream found" });
-    }
+    if (result.rows.length === 0) return res.status(404).json({ error: "No live stream found" });
 
-    const user = await db.query(
-      "SELECT id, profile_picture, verified FROM users WHERE id = $1",
-      [userId]
-    );
+    const user = await db.query("SELECT id, profile_picture, verified FROM users WHERE id = $1", [userId]);
 
-    return res.json({
-      stream: result.rows[0],
-      user: user.rows[0],
-    });
+    res.json({ stream: result.rows[0], user: user.rows[0] });
   } catch (err) {
-    console.error("Failed to fetch live stream:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
 
-
-// GET /api/ended-stream/:userId
+// Fetch ended stream backup
 app.get("/api/ended-stream/:userId", async (req, res) => {
   const { userId } = req.params;
-
   try {
     const cached = await redis.get(`ended_gist_${userId}`);
     if (!cached) return res.status(404).json({ error: "No ended stream found" });
@@ -395,14 +390,37 @@ app.get("/api/ended-stream/:userId", async (req, res) => {
     const data = JSON.parse(cached);
     const user = await db.query("SELECT id, profile_picture, verified FROM users WHERE id = $1", [userId]);
 
-    return res.json({
+    res.json({
       content: data.content,
       endedAt: data.endedAt,
       user: user.rows[0],
     });
   } catch (err) {
-    console.error("Error fetching ended stream:", err);
     res.status(500).json({ error: "Failed to fetch ended stream" });
+  }
+});
+
+// Get all current stories
+app.get("/api/stories", async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT s.user_id, u.username, u.profile_picture, u.verified, s.content, s.created_at
+      FROM story_streams s
+      JOIN users u ON u.id = s.user_id
+      WHERE s.expires_at > NOW()
+      ORDER BY s.created_at DESC
+    `);
+
+    res.json(result.rows.map(story => ({
+      userId: story.user_id,
+      username: story.username,
+      content: story.content,
+      profilePicture: story.profile_picture,
+      verified: story.verified,
+      createdAt: story.created_at,
+    })));
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch stories" });
   }
 });
 
@@ -1433,6 +1451,7 @@ function highlightMatch(text, keyword) {
   const regex = new RegExp(`(${keyword})`, "gi");
   return text.replace(regex, "<mark>$1</mark>");
 }
+
 app.post("/search", async (req, res) => {
   const { search } = req.body;
 

@@ -54,3 +54,234 @@
             } else {
                 return res.status(400).json({ message: "Invalid type" });
               }
+
+              socket.on("receive-reaction", () => {
+                reactionTotal++;
+                reactionCount.classList.remove("hidden");
+                reactionCount.textContent = `❤️ ${reactionTotal}`;
+              
+                const float = document.createElement("div");
+                float.className = "floating-reaction";
+                float.textContent = "❤️";
+                float.style.left = `${Math.random() * 100}%`;
+                document.getElementById("floatingReactions").appendChild(float);
+                setTimeout(() => float.remove(), 1500);
+              });
+
+
+
+              socket.on("update-listener-count", (count) => {
+                listeners = count;
+                listenerCount.textContent = `👂 ${listeners} listening`;
+              });
+              
+              socket.on("listener-joined", ({ streamUserId, avatarUrl }) => {
+                if (!isStreaming || streamUserId !== currentUserId) return;
+                const icon = document.createElement("img");
+                icon.src = `../.${avatarUrl}`;
+                icon.className = "listener-avatar pop-in";
+                const avatarBox = document.getElementById("listenerAvatars");
+              if (avatarBox) avatarBox.appendChild(icon);
+              
+                setTimeout(() => {
+                  icon.classList.add("fade-out");
+                  setTimeout(() => icon.remove(), 1000);
+                }, 5000);
+              });
+
+              <header>
+                <div class="container">
+                  <div class="header">
+                    <img src="../img/logo/gossipa.png" alt="" id="logo">
+                    <div class="topbar-icons">
+                    <form id="liveSearchForm" action="/search" method="post" autocomplete="off">
+                      <div class="search" id="mobileSearch">
+                        <button class="search-btn" type="submit" id="toggleSearch">
+                          <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                        <input name="search" type="text" id="searchInput" placeholder="Search">
+                      </div>
+                      <ul id="suggestions" class="suggestion-box"></ul>
+                    </form>
+                    
+                            <ul id="navbar">
+                      <li class="navbar">
+                        <a class="nav-link" href="/notifications">
+                          <i class="fas fa-bell fa-2x"></i>
+                          <span class="counter">0</span>
+                        </a>
+                      </li>
+                      <li class="navbar profiled">
+                        <button class="nav-btn avatar-profile thumb"><img src="<%= profilePicture ?'../.' + profilePicture: profilePicture %>" alt="" class="profile-pic thumb"></button>
+                      </li>
+                      <li class="navbar dropdown">
+                        <div class="hamburger" id="hamburger">
+                          <div class="bar" id="bar1"></div>
+                          <div class="bar" id="bar3"></div>
+                        </div>
+                        </li>
+                      </div>
+                        <div id="menu" class="menu-hidden">
+                          <div class="container">
+                            <div class="profile-header">
+                              <img src="<%= profilePicture ? profilePicture : '../.' + profilePicture %>" alt="Profile Avatar" class="profile-avatar" />
+            
+                              <h3 class="username">Hello, <span class="username">
+                                @amebo<%= userId %> 
+                                <% if(verification === true) {%>
+                                <img src="../../img/badge3.png" alt="">
+                                <% } else {%>
+                               <% } %>
+                              </span></h3>
+                            </div>
+            
+                            <div class="menu">
+                              <div class="menu-nav">
+                    
+                                <ul class="pages">
+                                  <h4>Compose a gist</h4>
+                                  <li><a class="nav-link" href="/feeds">View Gist</a></li>
+                                  <li><a class="nav-link" href="/submit">Share a Gist</a></li>
+                                  <li>
+                                    <a class="nav-link" href="/notifications" class="">Notifcations</a>
+                                  </li>
+                                </ul>
+                                <ul class="account">
+                                  <h4>Account</h4>
+                                  <li>
+                                    <a class="nav-link" href="/notifications" class="">Go To Profile</a>
+                                  </li>
+                                  <li><a class="nav-link" href="/profile">Edit Profile</a></li>
+            
+                                  <li>
+                                    <form action="/logout" method="POST">
+                                      <button type="submit">Logout <i class="fas fa-right-from-bracket"></i></button>
+                                    </form>
+                                  </li>
+                                </ul>
+                              </div>
+            
+                              <ul class="socials">
+                                <li>
+                                  <a class="nav-link" target="_blank" href="https://t.me/anonymcret"><i
+                                      class="fab fa-telegram fa-2x"></i></a>
+                                </li>
+                                <li>
+                                  <a class="nav-link" target="_blank" href=""><i class="fab fa-instagram fa-2x"></i></a>
+                                </li>
+                                <li>
+                                  <a class="nav-link" target="_blank" href=""><i class="fab fa-linkedin fa-2x"></i></a>
+                                </li>
+                                <li>
+                                  <a class="nav-link" target="_blank" href=""><i class="fab fa-github fa-2x"></i></a>
+                                </li>
+                              </ul>
+                              <hr />
+                              <div class="menu-nav-alt">
+                                <ul class="info">
+                                  <h4>Information</h4>
+                                  <li><a href="">About</a></li>
+                                  <li><a href="">Security</a></li>
+                                  <li><a href="">Privacy</a></li>
+                                  <li><a href="">Blog</a></li>
+                                </ul>
+                                <ul class="support">
+                                  <h4>Support</h4>
+                                  <li><a href="">FAQ</a></li>
+                                  <li><a href="">Contact</a></li>
+                                  <li><a href="/feedback">Reviews</a></li>
+                                </ul>
+                              </div>
+                              <p class="menu-lang">
+                                <i class="fas fa-globe"></i> English
+                              </p>
+                              <button id="close">Close</button>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div id="announcement">
+               
+                </div> 
+              </header>
+
+              
+        <form id="selectCategory" class="menu-category" method="POST">
+          <button class="category-item" data-category="love">All</button>
+          <button class="category-item" data-category="love">❤️ Love</button>
+          <button class="category-item" data-category="funny">😂 Funny</button>
+          <button class="category-item" data-category="nasty">😈 Nasty</button>
+          <button class="category-item" data-category="sassy">💅 Sassy</button>
+          <button class="category-item" data-category="hilarious">🤣 Hilarious</button>
+          <button class="category-item" data-category="random">🎲 Random</button>
+
+        </form>
+            
+              <section id="live-stream-bar">
+                <!-- Sticky Start Gist Button -->
+                <button id="startStreamBtn">
+                  <div class="plus-icon">➕</div>
+                  <span>Stream Gist</span>
+                </button>
+              
+                <!-- Scrollable Live Streams -->
+                <div id="liveStreams" class="live-stream-scroll">
+                  <!-- Stream cards injected dynamically -->
+                </div>
+              </section>
+              
+              <!-- Fullscreen Stream Modal -->
+              <div id="streamModal" class="hidden">
+                <div class="modal-overlay">
+                  <div class="modal-content">
+                    <button id="endStreamBtn" class="end-btn">End Stream</button>
+                    <button id="closeStreamModal" class="close-btn">✖</button>
+                    <h2>🎤 Stream Your Gist</h2>
+                    <p id="listenerCount">👂 listeners</p>
+                    <div id="listenerAvatars" class="listener-avatar"></div>
+                    <div class="gist-input-wrapper">
+                      <textarea id="liveGistInput" placeholder="Type your gist..."></textarea>
+                    </div>
+                    <div class="reaction-footer">
+                      <span>Live reactions:</span>
+                      <div id="reactionCount" class="">❤️ 0</div>
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+              
+              <div id="streamDisplay" class="hidden">
+                <div class="stream-box">
+                  <div class="stream-header">
+                    <div class="stream-user">
+                      <div class="avatar-profile">
+                        <img src="" class="profile-pic" alt="Avatar Profile">
+                      </div>
+                      <p class="username" style="color: var(--primary-color);">
+                        <span class="user"></span>
+                        <img src="" alt="Verification Badge" class="v-badge">
+                      </p>
+                      <span class="timestamp"></span>
+                    </div>
+                    <button id="closeStreamView">✖</button>
+                  </div>
+                  <div id="streamContentBox" class="stream-body">
+                    <!-- Live stream content shows here -->
+                  </div>
+                  <div class="stream-footer">
+                    <span id="liveReactionView" class="hidden">❤️ 0 reactions</span>
+                    <span id="liveListenerView">👂 0 listening</span>
+                  </div>
+
+                  <div id="floatingReactions"></div>
+                </div>
+              </div>
+              
+
+
+            
+              

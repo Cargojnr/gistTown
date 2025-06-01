@@ -16,140 +16,132 @@
 </head>
 
 <body >
-
-  <script>
-    let lottiePlayer = null;
-
-    window.addEventListener("load", function () {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
+<script>
+  window.addEventListener("load", function () {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
 </script>
 
 
-  <header>
-    <div class="container">
-      <div class="header">
-        <a class="nav-link" href="../../feeds" id="logo"><i class="fas fa-mask fa-2x"></i></a>
-        <div class="topbar-icons">
-        <form id="liveSearchForm" action="/search" method="post" autocomplete="off">
-          <div class="search" id="mobileSearch">
-            <button class="search-btn" type="submit" id="toggleSearch">
-              <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-            <input name="search" type="text" id="searchInput" placeholder="Search">
+<header>
+  <div class="container">
+    <div class="header">
+      <img src="../img/logo/main-logo.png" alt="" id="logo">
+      <div class="topbar-icons">
+      <form id="liveSearchForm" action="/search" method="post" autocomplete="off">
+        <div class="search" id="mobileSearch">
+          <button class="search-btn" type="submit" id="toggleSearch">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+          <input name="search" type="text" id="searchInput" placeholder="Search">
+        </div>
+        <ul id="suggestions" class="suggestion-box"></ul>
+      </form>
+      
+              <ul id="navbar">
+        <li class="navbar">
+          <a class="nav-link" href="/notifications">
+            <i class="fas fa-bell fa-2x"></i>
+            <span class="counter">0</span>
+          </a>
+        </li>
+        <li class="navbar profiled">
+          <button class="nav-btn avatar-profile thumb"><img src="<%= profilePicture ?'../.' + profilePicture: profilePicture %>" alt="" class="profile-pic thumb"></button>
+        </li>
+        <li class="navbar dropdown">
+          <div class="hamburger" id="hamburger">
+            <div class="bar" id="bar1"></div>
+            <div class="bar" id="bar3"></div>
           </div>
-          <ul id="suggestions" class="suggestion-box"></ul>
-        </form>
-        
-                <ul id="navbar">
-          <li class="navbar">
-            <a class="nav-link" href="/notifications">
-              <i class="fas fa-bell fa-2x"></i>
-              <span class="counter">0</span>
-            </a>
           </li>
-          <li class="navbar profiled">
-            <button class="nav-btn avatar-profile thumb"><img src="<%= profilePicture ?'../.' + profilePicture: profilePicture %>" alt="" class="profile-pic thumb"></button>
-          </li>
-          <li class="navbar dropdown">
-            <div class="hamburger" id="hamburger">
-              <div class="bar" id="bar1"></div>
-              <!-- <div class="bar" id="bar2"></div> -->
-              <div class="bar" id="bar3"></div>
-            </div>
-            </li>
-          </div>
-            <div id="menu" class="menu-hidden">
-              <div class="container">
-                <div class="profile-header">
-                  <img src="<%= profilePicture ? profilePicture : '../.' + profilePicture %>" alt="Profile Avatar" class="profile-avatar" />
+        </div>
+          <div id="menu" class="menu-hidden">
+            <div class="container">
+              <div class="profile-header">
+                <img src="<%= profilePicture ? profilePicture : '../.' + profilePicture %>" alt="Profile Avatar" class="profile-avatar" />
 
-                  <h3 class="username">Hello, <span class="username">
-                    @amebo<%= userId %> 
-                    <% if(verification === true) {%>
-                    <img src="../../img/badge.png" alt="">
-                    <% } else {%>
-                   <% } %>
-                  </span></h3>
-                </div>
+                <h3 class="username">Hello, <span class="username">
+                  @amebo<%= userId %> 
+                  <% if(verification === true) {%>
+                  <img src="../../img/badge3.png" alt="">
+                  <% } else {%>
+                 <% } %>
+                </span></h3>
+              </div>
 
-                <div class="menu">
-                  <div class="menu-nav">
-                    <!-- <div class="menu-logo">
-                                            <i class="fas fa-mask fa-2x"></i>
-                                            <h4>bAnonym</h4>
-                                        </div> -->
-                    <ul class="pages">
-                      <h4>Compose a gist</h4>
-                      <li><a class="nav-link" href="/feeds">View Gist</a></li>
-                      <li><a class="nav-link" href="/submit">Share a Gist</a></li>
-                      <li>
-                        <a class="nav-link" href="/notifications" class="">Notifcations</a>
-                      </li>
-                    </ul>
-                    <ul class="account">
-                      <h4>Account</h4>
-                      <li>
-                        <a class="nav-link" href="/notifications" class="">Go To Profile</a>
-                      </li>
-                      <li><a class="nav-link" href="/profile">Edit Profile</a></li>
-
-                      <li>
-                        <form action="/logout" method="POST">
-                          <button type="submit">Logout <i class="fas fa-right-from-bracket"></i></button>
-                        </form>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <ul class="socials">
+              <div class="menu">
+                <div class="menu-nav">
+      
+                  <ul class="pages">
+                    <h4>Compose a gist</h4>
+                    <li><a class="nav-link" href="/feeds">View Gist</a></li>
+                    <li><a class="nav-link" href="/submit">Share a Gist</a></li>
                     <li>
-                      <a class="nav-link" target="_blank" href="https://t.me/anonymcret"><i
-                          class="fab fa-telegram fa-2x"></i></a>
-                    </li>
-                    <li>
-                      <a class="nav-link" target="_blank" href=""><i class="fab fa-instagram fa-2x"></i></a>
-                    </li>
-                    <li>
-                      <a class="nav-link" target="_blank" href=""><i class="fab fa-linkedin fa-2x"></i></a>
-                    </li>
-                    <li>
-                      <a class="nav-link" target="_blank" href=""><i class="fab fa-github fa-2x"></i></a>
+                      <a class="nav-link" href="/notifications" class="">Notifcations</a>
                     </li>
                   </ul>
-                  <hr />
-                  <div class="menu-nav-alt">
-                    <ul class="info">
-                      <h4>Information</h4>
-                      <li><a href="">About</a></li>
-                      <li><a href="">Security</a></li>
-                      <li><a href="">Privacy</a></li>
-                      <li><a href="">Blog</a></li>
-                    </ul>
-                    <ul class="support">
-                      <h4>Support</h4>
-                      <li><a href="">FAQ</a></li>
-                      <li><a href="">Contact</a></li>
-                      <li><a href="/feedback">Reviews</a></li>
-                    </ul>
-                  </div>
-                  <p class="menu-lang">
-                    <i class="fas fa-globe"></i> English
-                  </p>
-                  <button id="close">Close</button>
+                  <ul class="account">
+                    <h4>Account</h4>
+                    <li>
+                      <a class="nav-link" href="/notifications" class="">Go To Profile</a>
+                    </li>
+                    <li><a class="nav-link" href="/profile">Edit Profile</a></li>
+
+                    <li>
+                      <form action="/logout" method="POST">
+                        <button type="submit">Logout <i class="fas fa-right-from-bracket"></i></button>
+                      </form>
+                    </li>
+                  </ul>
                 </div>
+
+                <ul class="socials">
+                  <li>
+                    <a class="nav-link" target="_blank" href="https://t.me/anonymcret"><i
+                        class="fab fa-telegram fa-2x"></i></a>
+                  </li>
+                  <li>
+                    <a class="nav-link" target="_blank" href=""><i class="fab fa-instagram fa-2x"></i></a>
+                  </li>
+                  <li>
+                    <a class="nav-link" target="_blank" href=""><i class="fab fa-linkedin fa-2x"></i></a>
+                  </li>
+                  <li>
+                    <a class="nav-link" target="_blank" href=""><i class="fab fa-github fa-2x"></i></a>
+                  </li>
+                </ul>
+                <hr />
+                <div class="menu-nav-alt">
+                  <ul class="info">
+                    <h4>Information</h4>
+                    <li><a href="">About</a></li>
+                    <li><a href="">Security</a></li>
+                    <li><a href="">Privacy</a></li>
+                    <li><a href="">Blog</a></li>
+                  </ul>
+                  <ul class="support">
+                    <h4>Support</h4>
+                    <li><a href="">FAQ</a></li>
+                    <li><a href="">Contact</a></li>
+                    <li><a href="/feedback">Reviews</a></li>
+                  </ul>
+                </div>
+                <p class="menu-lang">
+                  <i class="fas fa-globe"></i> English
+                </p>
+                <button id="close">Close</button>
               </div>
             </div>
-          </li>
-        </ul>
-      </div>
+          </div>
+        </li>
+      </ul>
     </div>
-    <div id="announcement">
-   
-    </div> 
-  </header>
-
-
+  </div>
+  <div id="announcement">
+ 
+  </div> 
+</header>
+  
     <div id="milestone-badge" class="hidden">🎉 10 Reactions! 🎉</div>
 
     <div id="announcement-overlay" class="hidden">
@@ -179,6 +171,30 @@
 
   <!-- Notifications Container -->
   <div id="notification" style="position: fixed; bottom: 10px; left: 10px; z-index: 1000"></div>
+
+  <script>
+     const header = document.querySelector("header");
+ const topOverlay = document.getElementById("topOverlay")
+ const bottomOverlay = document.getElementById("bottomOverlay")
+ const nextSection = document
+   .querySelector("body")
+   .querySelector("section:not(.active)");
+ const logo = document.getElementById("logo");
+
+ window.addEventListener("scroll", function () {
+   const scrolled = window.scrollY > 0;
+   if (scrolled) {
+     let body = document.querySelector("body");
+     body.style.overflowY = "scroll";
+     header.classList.add("scrolled");
+     topOverlay.style.opacity = 1;
+   } else {
+     topOverlay.style.opacity = 0;
+     header.classList.remove("scrolled");
+   }
+ });
+  </script>
+
 
   <script>
     const currentUserId = "<%= userId %>";
@@ -309,118 +325,6 @@
       }, 5000); // 5 seconds
     }
   </script>
-
-<script>
-  const searchWrapper = document.getElementById("mobileSearch");
-  const toggleBtn = document.getElementById("toggleSearch");
-  const searchInput = document.getElementById("searchInput");
-  const suggestionsBox = document.getElementById("suggestions");
-
-  let debounceTimer;
-
-  toggleBtn.addEventListener("click", function (e) {
-  if (window.innerWidth <= 768) {
-    if (document.activeElement !== searchInput) {
-      e.preventDefault();
-      searchWrapper.classList.toggle("active");
-
-      if (searchWrapper.classList.contains("active")) {
-        searchInput.focus();
-      } else {
-        searchInput.value = "";
-        suggestionsBox.innerHTML = "";
-        suggestionsBox.style.display = "none"; // <- Hide it here
-      }
-    }
-  } else {
-    // Desktop validation
-    if (searchInput.value.trim().length === 0) {
-      e.preventDefault();
-      suggestionsBox.innerHTML = "<li class='no-result'>Please enter a search keyword</li>";
-      suggestionsBox.style.display = "block";
-    }
-  }
-});
-
-
-  // Click outside to collapse
-  document.addEventListener("click", function (e) {
-    if (
-      window.innerWidth <= 768 &&
-      !searchWrapper.contains(e.target)
-    ) {
-      searchWrapper.classList.remove("active");
-      searchInput.value = "";
-      suggestionsBox.innerHTML = "";
-    }
-  });
-
-  // Live search logic
-  searchInput.addEventListener("keyup", function (e) {
-  clearTimeout(debounceTimer);
-  const query = this.value.trim();
-
-  if (query.length === 0) {
-    e.preventDefault()
-    suggestionsBox.innerHTML = "";
-    suggestionsBox.style.display = "none"; // <- Ensure it is hidden
-    searchWrapper.classList.toggle("active");
-    return;
-  }
-
-  suggestionsBox.style.display = "none"; // Reset before debounce
-
-  debounceTimer = setTimeout(() => {
-    fetch("/searching", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ search: query })
-    })
-      .then(res => res.json())
-      .then(data => {
-        suggestionsBox.innerHTML = "";
-
-        if (data.searchResults.length === 0) {
-          suggestionsBox.innerHTML = "<li class='no-result'>No result found</li>";
-          suggestionsBox.style.display = "block"; // <- Show only when needed
-          return;
-        }
-
-        suggestionsBox.style.display = "block";
-
-        function highlightMatch(text, keyword) {
-          const regex = new RegExp(`(${keyword})`, "gi");
-          return text.replace(regex, "<mark>$1</mark>");
-        }
-
-        data.searchResults.forEach(item => {
-          const li = document.createElement("li");
-          li.classList.add("suggestion-item");
-
-          const highlightedText = highlightMatch(item.secret, query);
-          li.innerHTML = `
-            <span class="arrow">→</span>
-            <span class="text">${highlightedText}</span>
-          `;
-
-          li.addEventListener("click", () => {
-            window.location.href = `/secret/${item.id}`;
-          });
-
-          suggestionsBox.appendChild(li);
-        });
-      })
-      .catch(err => {
-        suggestionsBox.style.display = "none"; // fallback to hidden
-        console.error("Live search error:", err);
-      });
-  }, 300);
-});
-
-</script>
-
 
 </body>
 
