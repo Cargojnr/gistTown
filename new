@@ -221,9 +221,298 @@
         </form>
          
               
-             
-              
+        <script>
+          const catMenu = document.getElementById("selectCategory");
+
+          catMenu.addEventListener("wheel", (e) => {
+            if (e.deltaY === 0) return;
+            e.preventDefault();
+            catMenu.scrollLeft += e.deltaY;
+          }, { passive: false });
+
+          // Optional: Auto-scroll to active category
+          const activeCat = catMenu.querySelector(".category-item.active");
+          if (activeCat) {
+            activeCat.scrollIntoView({ behavior: "smooth", inline: "center" });
+          }
+
+          document.querySelectorAll(".category-item").forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              e.preventDefault()
+              // Haptic feedback if supported
+              if (navigator.vibrate) {
+                navigator.vibrate(10); // light tap feedback
+              }
+
+              // Optional: update active class manually
+              document.querySelectorAll(".category-item").forEach(b => b.classList.remove("active"));
+              btn.classList.add("active");
+
+              // Scroll into center
+              btn.scrollIntoView({ behavior: "smooth", inline: "center" });
+            });
+          });
+
+
+        </script>
+
+        
+    #selectCategory {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+    }
+
+
+
+<script>
+  // Gossipa - Category-Based Secret Fetcher with Shimmer UI and Haptic Feedback
+  
+  // Utility: Detect Mobile Device
+  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+  
+  document.addEventListener("DOMContentLoaded", () => {
+    const menu = document.querySelector(".menu-category");
+    const secretsContainer = document.getElementById("secrets-container");
+    const shimmerTemplate = document.getElementById("shimmerTemplate");
+    const feeds = document.querySelector("#feeds #secrets");
+    const categoryItems = document.querySelectorAll(".category-item");
+  
+    categoryItems.forEach((item) => {
+      item.addEventListener("click", async (e) => {
+        const selectedCategory = e.target.closest(".category-item").dataset.category.toLowerCase();
+  
+        // Haptic feedback (only on mobile)
+        if (isMobile && navigator.vibrate) navigator.vibrate(10);
+  
+        // Visually mark selected category
+        categoryItems.forEach((btn) => btn.classList.remove("active"));
+        item.classList.add("active");
+        item.scrollIntoView({ behavior: "smooth", inline: "center" });
+  
+        try {
+          // Begin shimmer animation
+          secretsContainer.innerHTML = "";
+          for (let i = 0; i < 3; i++) {
+            const shimmer = shimmerTemplate.content.cloneNode(true);
+            secretsContainer.appendChild(shimmer);
+          }
+          secretsContainer.classList.remove("fade-out");
+          secretsContainer.classList.add("fade-in");
+  
+          // Fetch secrets from server
+          const response = await fetch(`/feeds/${selectedCategory}`);
+          if (!response.ok) throw new Error("Failed to fetch secrets");
+  
+          const secrets = await response.json();
+          secretsContainer.innerHTML = "";
+  
+          if (Array.isArray(secrets.secrets) && secrets.secrets.length > 0) {
+            feeds.style.display = "none";
+  
+            secrets.secrets.forEach((secret) => {
+              const secretHTML = `
+               <li class="secret full-width" id="secret${ secret.id }">
+                <div class="card">
+                  <span class="tag ${secret.category}">${secret.category}</span>
+                  <div class="card-header">
+                    <div class="avatar-profile">
+                      <img src="../.${secret.profile_picture}" class="profile-pic" alt="Avatar Profile">
+                    </div>
+                    <div class="user-info">
+                      <span class="tag ${secret.category}">${secret.category}</span>
+                      <p class="username">
+                        @gossipa${secret.user_id}
+                        <img src="${secret.verified == true ? "../../img/badge.png" : " "}" style="display: ${secret.verified == true ? "inline-block" : "none"}" alt="Verification Badge" />
+                        </p>
+                    </div>
+                  </div>
+                  <div class="card-content">
+                    <p>
+                      <span class="content">${secret.secret.substring(0, 250)}...</span>
+  
+                      <button data-full="${ secret.secret }"
+                                                    data-truncated="${ secret.secret.substring(0, 250) + '...' }" class="read">Read More</button>
+                    </p>
+                  </div>
+                <div class="comment-section" data-secret-id="${ secret.id }">
+  
+                                                <div class="reactions sleek">
+                                                  <div class="secret-card" data-id="${ secret.id }">
+                                                    <div class="reactions">
+                                                      <button class="reaction-btn reaction" data-type="like">
+                                                        <span class="reaction-count">
+                                                          ${ secret.reactions.like ? secret.reactions.like.count : 0 }
+                                                        </span>
+                                                      </button>
+                                                    </div>
+  
+                                                    <div class="floating-lottie" data-type="like"></div>
+                                                  </div>
+  
+                                                  <button id="commentButton" class="reaction-btn"><i
+                                                      class="fas fa-comment"></i><span class="comment-count"></span>
+                                                  </button>
+  
+                                                </div>
+  
+                                                <div class="comment-dropdown" id="commentDropdown">
+                                                  <form class="comment-display" method="POST" id="commentDisplay">
+                                                    <ul id="comments" class="comments-list"></ul>
+                                                  </form>
+  
+                                                  <form action="/comment" method="POST" id="comment-form">
+                                                    <input type="hidden" name="id" id="secretId"
+                                                      value="${ secret.id }" />
+                                                    <input type="hidden" name="secretUserId"
+                                                      value="${ secret.user_id }" />
+                                                    <input type="hidden" name="commentUserId" value="${ secret.userId }" />
+                                                    <textarea id="commentInput" placeholder="Write a comment..."
+                                                      name="comment"></textarea>
+                                                    <button id="postCommentButton">
+                                                      Post
+                                                    </button>
+                                                  </form>
+  
+                                                </div>
+                                              </div>
+  
+  
+                                              <ul class="card-menu">
+                                                <li>
+                                                  <button class="menu-toggle-btn"><i
+                                                      class="fas fa-ellipsis-vertical"></i></button>
+                                                  <ul class="card-menu-content" style="display: none;">
+                                                    <li>
+                                                      <button class="report-btn" data-id="${ secret.id }">
+                                                        <i class="fa-regular fa-flag"></i>Report
+                                                      </button>
+                                                    </li>
+                                                    <li>
+                                                      <button class="copy-btn">
+                                                        <i class="fas fa-copy">Copy</i>
+                                                      </button>
+                                                    </li>
+                                                  </ul>
+                                                </li>
+                                              </ul>
+  
+  
+                </div>
+                </li>
+              `;
+              secretsContainer.insertAdjacentHTML("beforeend", secretHTML);
+            });
+          } else {
+            feeds.style.display = "block";
+          }
+        } catch (error) {
+          console.error(error);
+          secretsContainer.innerHTML = `<p class="error">No secrets available</p>`;
+        }
+      });
+    });
+  });
+                </script>
+
+<div id="recordContainer">
+  <h1>Record a Voice Note</h1>
+  <button id="micButton" class="mic-button" tabindex="0"><i class="fas fa-microphone"></i></button>
+
+  <!-- Canvas for waveform visualization -->
+  <!-- <canvas id="waveform"></canvas> -->
+
+  <!-- Action buttons (discard/share) -->
+  <div id="actionButtons">
+      <button id="discardRecording">Discard</button>
+      <button id="submitRecording">Share</button>
+  </div>
+
+  <!-- Audio player for playback after recording -->
+  <audio id="audioPlayer" controls style="display:none;"></audio>
+</div>
+
+
+
+
+reactionTotal = 0;
+reactionCount.textContent = "";
+reactionCount.classList.add("hidden");
+document.getElementById("floatingReactions").innerHTML = "";
 
 
             
               
+// Gossipa Live Stream Handling
+const endModal = document.getElementById('endStreamModal');
+const saveStoryBtn = document.getElementById('saveStory');
+const discardStreamBtn = document.getElementById('discardStream');
+const youAreLiveBadge = document.getElementById('liveBadge');
+const streamEndedNotice = document.getElementById('streamEndedNotice');
+const streamId = endStreamBtn?.dataset.streamId; // Presuming streamId is passed in dataset
+
+// Utility: Show modal
+function showModal(modal) {
+  modal.classList.add('visible');
+}
+
+// Utility: Hide modal
+function hideModal(modal) {
+  modal.classList.remove('visible');
+}
+
+// End button triggers confirmation modal
+endStreamBtn?.addEventListener('click', () => {
+  showModal(endModal);
+});
+
+// Save stream as story
+saveStoryBtn?.addEventListener('click', async () => {
+  try {
+    const res = await fetch(`/api/streams/${streamId}/save`, {
+      method: 'POST',
+    });
+
+    if (!res.ok) throw new Error('Failed to save');
+
+    youAreLiveBadge?.classList.add('fade-out');
+    streamEndedNotice?.classList.add('fade-in');
+    endStreamBtn?.classList.add('hide');
+
+    hideModal(endModal);
+  } catch (err) {
+    console.error('Error saving stream:', err);
+  }
+});
+
+// Discard the stream
+discardStreamBtn?.addEventListener('click', async () => {
+  try {
+    const res = await fetch(`/api/streams/${streamId}/discard`, {
+      method: 'DELETE',
+    });
+
+    if (!res.ok) throw new Error('Failed to discard');
+
+    youAreLiveBadge?.classList.add('fade-out');
+    streamEndedNotice?.classList.add('fade-in');
+    endStreamBtn?.classList.add('hide');
+
+    hideModal(endModal);
+  } catch (err) {
+    console.error('Error discarding stream:', err);
+  }
+});
+
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.className = 'gossipa-toast';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add('fade-out');
+    toast.addEventListener('animationend', () => toast.remove());
+  }, 3000);
+}

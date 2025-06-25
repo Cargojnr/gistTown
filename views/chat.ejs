@@ -10,58 +10,76 @@
 <body>
     <div class="layout-container container">
       
-      <aside class="left-sidebar">
+       <aside class="left-sidebar">
         <div class="aside">
           <ul class="nav">
             <li class="nav-item current">
               <a href="/feeds">
-                <i class="nav-icon fas fa-home"></i>
+                <i class="nav-icon fas fa-home"></i> &nbsp;
                 <span class="nav-text">Home</span>
               </a>
             </li>
+            <!-- <li class="nav-item mid-post-1">
+              <a href="submit" id="openSubmitForm">
+                <i class="nav-icon fas fa-plus-circle"></i> &nbsp;
+              </a>
+            </li> -->
             <li class="nav-item">
               <a href="/chat">
-                <div class="nav-main">
-                  <p>
-                    <i class="nav-icon fas fa-comments"></i>
-                    <span class="nav-text">ChatRoom</span>       
-                  </p>
-                  
+                <i class="nav-icon fas fa-comments"></i> &nbsp;
+                <span class="nav-text">AnonymousCity</span>
+
                 <span class="nav-tag">New</span>
-              </div>
               </a>
             </li>
-            <li class="nav-item mid-post-1">
-              <button id="openSubmitForm" >
-                <i class="nav-icon fas fa-plus-circle"></i>
-              </button>
+            <!-- <li class="nav-item">
+            <a class="nav-link" href="/notifications">
+              <i class="nav-icon fas fa-bell"></i> &nbsp;
+              <span class="nav-text">Notifcations</span>
+              <span class="counter">0</span>
+            </a>
+          </li> -->
+            <li class="nav-item chief">
+              <a href="">
+                <i class="nav-icon fas fa-bookmark"></i>
+                &nbsp;<span class="nav-text">Saved Gists</span>&nbsp;
+              </a>
             </li>
-           <li class="nav-item">
+            <li class="nav-item chief">
+              <a href="/subscribe">
+                <i class="nav-icon fas fa-award"></i>
+                &nbsp;<span class="nav-text">Become a Chief</span>&nbsp;
+                <span><img src="../../img/gossipa3.png" alt="" class="nav-icon verified-badge"></span>
+              </a>
+            </li>
+            <li class="nav-item">
               <a href="/profile">
-                <i class="nav-icon fas fa-circle-user"></i>
+                <i class="nav-icon fas fa-circle-user"></i> &nbsp;
                 <span class="nav-text">My Profile</span>
               </a>
             </li>
+
             <li class="nav-item blur">
               <a aria-disabled="true">
-                <div class="nav-main">
-                  <p>
-                    <i class="nav-icon fab fa-modx"></i>
-                    <span class="nav-text">Explore</span>       
-                  </p>
-                  
+                <i class="nav-icon fab fa-modx"></i> &nbsp;
+                <span class="nav-text">Explore</span>
+
                 <span class="nav-tag">Soon</span>
-              </div>
               </a>
             </li>
             <li class="nav-item mid-post-2">
-              <a  href="/submit"class="nav-text">Compose Gist</a>
-              <i  class="nav-icon fas fa-circle-plus"></i>
+              <a href="/submit">
+                <i class="fas fa-circle-plus nav-icon"></i>
+                &nbsp;<span class="nav-text"> Compose Gist</span>&nbsp;
+                <i class="fas fa-chevron-down"></i>
+              </a>
+
             </li>
           </ul>
         </div>
-        </aside>
-  
+
+      </aside>
+ 
 
         <main>
 
@@ -91,131 +109,294 @@
         
           </div>
                   </main>
-                  <aside class="right-sidebar">
-                    <div class="aside premium-aside">
-                        <div class="premium-card">
-                          <div class="crown-icon sparkle">👑</div>
-                      
-                          <h3 class="premium-title">Become a Chief Gossipa</h3>
-                          <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain unknown.</p>
-                      
-                          <div class="trending-stats">
-                            <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
-                          </div>
-                      
-                          <div class="avatar-hint">
-                            <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
-                            <p>You’re 1 step from <strong>trending</strong>…</p>
-                          </div>
-                      
-                          <a href="/subscribe" class="premium-btn">Unlock Premium</a>
-                        </div>
-                      </div>
-                        
-                      <div class="aside aside-2">
-                        <center>
-                          <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Active Gossipas: <span id="activeCount">0</span></h4>
-                        </center>
-                        <ul class="nav user-list">
-                        </ul>
-                
-                      </div>
-                
-                  </aside>
-                
+
+               <aside class="right-sidebar">
+
+        <div class="premium-aside">
+    <div class="premium-card">
+      <div class="crown-icon sparkle">👑</div>
+
+      <h3 class="premium-title">Become a Chief Gossipa</h3>
+      <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain Unknown.</p>
+
+      <div class="trending-stats">
+        <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
+      </div>
+
+      <div class="avatar-hint">
+        <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
+        <p>You’re 1 step from <strong>trending</strong>…</p>
+      </div>
+
+      <a href="/subscribe" class="premium-btn">Unlock  Exclusive</a>
+    </div>
+  </div>
+
+        <div class="aside-2">
+          <center>
+            <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Active
+              Gossipa
+              :<span id="activeCount">0</span></h4>
+          </center>
+          <ul class="nav user-list">
+          </ul>
+
+        </div>
+
+        <div class="inpage-footer">
+          <span>Privacy Policy</span>&nbsp;.
+          &nbsp;<span>Terms of use</span> &nbsp;.
+          &nbsp;<span>Community guidelines</span> &nbsp;.
+          <br><br>
+          &nbsp;<span>&copy; <%= new Date().getFullYear() %>, &commat; Gossipa Co. All rights reserved</span>
+        </div>
+      </aside>
+
+
+
+
+      <script src="https://unpkg.com/lottie-web@5.10.0/build/player/lottie.min.js"></script>
+      <!-- Load Day.js and the plugin via CDN -->
+      <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+      <script>
+        const searchWrapper = document.getElementById("mobileSearch");
+        const toggleBtn = document.getElementById("toggleSearch");
+        const searchInput = document.getElementById("searchInput");
+        const suggestionsBox = document.getElementById("suggestions");
+
+        let debounceTimer;
+
+        toggleBtn.addEventListener("click", function (e) {
+          if (window.innerWidth <= 768) {
+            if (document.activeElement !== searchInput) {
+              e.preventDefault();
+              searchWrapper.classList.toggle("active");
+
+              if (searchWrapper.classList.contains("active")) {
+                searchInput.focus();
+              } else {
+                searchInput.value = "";
+                suggestionsBox.innerHTML = "";
+                suggestionsBox.style.display = "none"; // <- Hide it here
+              }
+            }
+          } else {
+            // Desktop validation
+            if (searchInput.value.trim().length === 0) {
+              e.preventDefault();
+              suggestionsBox.innerHTML = "<li class='no-result'>Please enter a search keyword</li>";
+              suggestionsBox.style.display = "block";
+            }
+          }
+        });
+
+
+        // Click outside to collapse
+        document.addEventListener("click", function (e) {
+          if (
+            window.innerWidth <= 768 &&
+            !searchWrapper.contains(e.target)
+          ) {
+            searchWrapper.classList.remove("active");
+            searchInput.value = "";
+            suggestionsBox.innerHTML = "";
+          }
+        });
+
+        // Live search logic
+        searchInput.addEventListener("keyup", function (e) {
+          clearTimeout(debounceTimer);
+          const query = this.value.trim();
+
+          if (query.length === 0) {
+            e.preventDefault()
+            suggestionsBox.innerHTML = "";
+            suggestionsBox.style.display = "none"; // <- Ensure it is hidden
+            searchWrapper.classList.toggle("active");
+            return;
+          }
+
+          suggestionsBox.style.display = "none"; // Reset before debounce
+
+          debounceTimer = setTimeout(() => {
+            fetch("/searching", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({ search: query })
+            })
+              .then(res => res.json())
+              .then(data => {
+                suggestionsBox.innerHTML = "";
+
+                if (data.searchResults.length === 0) {
+                  suggestionsBox.innerHTML = "<li class='no-result'>No result found</li>";
+                  suggestionsBox.style.display = "block"; // <- Show only when needed
+                  return;
+                }
+
+                suggestionsBox.style.display = "block";
+
+                function highlightMatch(text, keyword) {
+                  const regex = new RegExp(`(${keyword})`, "gi");
+                  return text.replace(regex, "<mark>$1</mark>");
+                }
+
+                function toggleRead(e, btn, keyword) {
+                  e.stopPropagation();
+                  const textEl = btn.parentElement;
+                  const raw = textEl.getAttribute("data-full");
+                  const expanded = textEl.classList.contains("expanded");
+
+                  if (!expanded) {
+                    textEl.innerHTML = highlightMatch(raw, keyword);
+                    const newBtn = document.createElement("button");
+                    newBtn.textContent = "Show Less";
+                    newBtn.className = "read-more";
+                    newBtn.onclick = ev => toggleRead(ev, newBtn, keyword);
+                    textEl.appendChild(newBtn);
+                    textEl.classList.add("expanded");
+                  } else {
+                    const short = raw.slice(0, 150) + "...";
+                    textEl.innerHTML = highlightMatch(short, keyword);
+                    const newBtn = document.createElement("button");
+                    newBtn.textContent = "Read More";
+                    newBtn.className = "read";
+                    newBtn.onclick = ev => toggleRead(ev, newBtn, keyword);
+                    textEl.appendChild(newBtn);
+                    textEl.classList.remove("expanded");
+                  }
+                }
+
+                data.searchResults.forEach(item => {
+                  const li = document.createElement("li");
+                  li.classList.add("suggestion-item");
+
+                  const short = item.secret.length > 50 ? item.secret.slice(0, 50) + "..." : item.secret;
+                  const highlightedText = highlightMatch(item.secret, query);
+
+                  li.innerHTML = `
+            <span class="arrow">→</span>
+             <div class="search-text short-text" data-full="${item.secret.replace(/"/g, '&quot;')}">
+              ${highlightedText}
+              ${item.secret.length > 50 ? '<button class="read-more" onclick="toggleRead(event, this, \'' + query + '\')">Read More</button>' : ''}
+            </div>
+          `;
+
+                  suggestionsBox.insertBefore(li, document.getElementById("loadMore"));
+
+                  li.addEventListener("click", () => {
+                    window.location.href = `/secret/${item.id}`;
+                  });
+
+                  suggestionsBox.appendChild(li);
+                });
+              })
+              .catch(err => {
+                suggestionsBox.style.display = "none"; // fallback to hidden
+                console.error("Live search error:", err);
+              });
+          }, 300);
+        });
+
+      </script>
+
+
+      <script>
+        const connectedUsersMap = new Map();
+        const userList = document.querySelector(".user-list");
+        const userCountDisplay = document.getElementById("activeCount");
+
+        function updateUserCount() {
+          userCountDisplay.textContent = connectedUsersMap.size;
+        }
+
+        function userConnected(user) {
+          if (connectedUsersMap.has(user.id)) return;
+
+          const userBox = document.createElement("li");
+          userBox.className = "connected-user nav-item enter";
+          userBox.id = `user-${user.id}`;
+
+          const verifiedBadge = `${user.verified}`
+            ? `<img src="/img/gossipa3.png" alt="Verified Badge" class="verified-badge"">`
+            : "";
+
+          userBox.innerHTML = `
+    <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
+      <img src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
+      <p class="username">
+        <span class="user">@amebo${user.id}</span>
+       ${verifiedBadge}
+        </p>
+    </div>
+  `;
+
+          userList.appendChild(userBox);
+          connectedUsersMap.set(user.id, userBox);
+          updateUserCount();
+
+          // Trigger reflow for entry animation
+          requestAnimationFrame(() => {
+            userBox.classList.add("enter");
+          });
+        }
+
+        function userDisconnected(userId) {
+          const userBox = connectedUsersMap.get(userId);
+          if (userBox) {
+            userBox.classList.add("exit");
+            userBox.classList.remove("enter");
+            setTimeout(() => {
+              userBox.remove();
+              connectedUsersMap.delete(userId);
+              updateUserCount();
+            }, 400); // CSS transition match
+          }
+        }
+
+        socket.on("userJoined", async (userId) => {
+          try {
+            const res = await fetch(`/user/${userId}`);
+            const user = await res.json();
+            userConnected(user);
+          } catch (err) {
+            console.error("Failed to fetch user data:", err);
+          }
+        });
+
+        socket.on("userLeft", (userId) => {
+          userDisconnected(userId);
+        });
+
+        // Load current active users on first load
+        fetch("/active-users")
+          .then(res => res.json())
+          .then(users => {
+            users.forEach(user => userConnected(user));
+          })
+          .catch(console.error);
+      </script>
+
+    </div>
+
+    <script>
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          showBrandLogo();
+
+          setTimeout(() => {
+            window.location.href = this.formAction;
+          }, 2400); // give animation time to play
+        });
+      });
+
+    </script>
                 </div>
                 
-                <script>
-                    const connectedUsersMap = new Map();
-                    const userList = document.querySelector(".user-list");
-                    const userCountDisplay = document.getElementById("activeCount");
-                
-                    function updateUserCount() {
-                      userCountDisplay.textContent = connectedUsersMap.size;
-                    }
-                
-                    function userConnected(user) {
-                      if (connectedUsersMap.has(user.id)) return;
-                
-                      const userBox = document.createElement("li");
-                      userBox.className = "connected-user nav-item enter";
-                      userBox.id = `user-${user.id}`;
-                      const verifiedBadge = `${user.verified}`
-    ? `<img src="/img/badge.png" alt="Verified Badge" class="verified-badge" style="width: 16px; height: 16px;">`
-    : "";
-
-        userBox.innerHTML = `
-          <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
-            <img src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
-            <p>
-              @amebo${user.id}
-             ${verifiedBadge}
-              </p>
-          </div>
-        `;
-                
-                      userList.appendChild(userBox);
-                      connectedUsersMap.set(user.id, userBox);
-                      updateUserCount();
-                
-                      // Trigger reflow for entry animation
-                      requestAnimationFrame(() => {
-                        userBox.classList.add("enter");
-                      });
-                    }
-                
-                    function userDisconnected(userId) {
-                      const userBox = connectedUsersMap.get(userId);
-                      if (userBox) {
-                        userBox.classList.add("exit");
-                        userBox.classList.remove("enter");
-                        setTimeout(() => {
-                          userBox.remove();
-                          connectedUsersMap.delete(userId);
-                          updateUserCount();
-                        }, 400); // CSS transition match
-                      }
-                    }
-                
-                    socket.on("userJoined", async (userId) => {
-                      try {
-                        const res = await fetch(`/user/${userId}`);
-                        const user = await res.json();
-                        userConnected(user);
-                      } catch (err) {
-                        console.error("Failed to fetch user data:", err);
-                      }
-                    });
-                
-                    socket.on("userLeft", (userId) => {
-                      userDisconnected(userId);
-                    });
-                
-                    // Load current active users on first load
-                    fetch("/active-users")
-                      .then(res => res.json())
-                      .then(users => {
-                        users.forEach(user => userConnected(user));
-                      })
-                      .catch(console.error);
-                  </script>
-                
-                    <script>
-                        const header = document.querySelector('header');
-                        const nextSection = document.querySelector('body').querySelector('section:not(.active)');
-                        const logo = document.getElementById('logo')
-                
-                        window.addEventListener('scroll', function () {
-                            const scrolled = window.scrollY > 0;
-                            if (scrolled) {
-                                let body = document.querySelector('body');
-                                body.style.overflowY = 'scroll';
-                                header.classList.add('scrolled');
-                            } else {
-                                header.classList.remove('scrolled');
-                            }
-                        });
-                
+                  <script>
                         window.onload = function () {
                             const textArea = document.querySelector('textarea')
                             textArea.blur();

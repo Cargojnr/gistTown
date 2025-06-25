@@ -2,6 +2,7 @@
 <style>
     #recordContainer {
         background: linear-gradient(135deg, #1e3c72, #2a5298);
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
         display: flex;
         justify-content: center;
         align-items: center;
@@ -13,7 +14,6 @@
         border-radius: 15px;
         backdrop-filter: blur(10px);
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        margin: 1rem auto;
         color: var(--text-color);
     }
 
@@ -40,8 +40,8 @@
     }
 
     .mic-button {
-        background: #ff5f6d;
-        /* background: var(--secondary-color); */
+        /* background: #ff5f6d; */
+        background: var(--secondary-color);
         border: none;
         color: white;
         width: 80px;
@@ -93,66 +93,154 @@
         width: 100%;
         max-width: 600px;
     }
+
+    .submit {
+      position: absolute;
+      right: 0%;
+      bottom: 5%;
+      border: none;
+      background: transparent;
+      color: var(--secondary-color);
+      padding: .75rem 1rem;
+      font-size: 2.75rem !important;
+    }
+
+
+    .custom-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.custom-dropdown button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--text-color);
+}
+
+.dropdown-options {
+  position: absolute;
+  top: 120%;
+  left: 0;
+  align-items: flex-start;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  border-radius: 8px;
+  list-style: none;
+  padding: 0.5rem 0;
+  z-index: 999;
+  min-width: 150px;
+  animation: fadeIn 0.2s ease;
+}
+
+.dropdown-options li {
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 0.95rem;
+}
+
+.dropdown-options li:hover {
+  background: #f5f5f5;
+}
+
+.dropdown-options .fa-check {
+  margin-right: 8px;
+  color: green;
+}
+
+.invisible-check {
+  visibility: hidden;
+}
+
+.dropdown-options .selected .fa-check {
+  visibility: visible;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+.hidden {
+  display: none !important;
+}
+
 </style>
 
 
-<body data-theme="<%= theme %>" data-mode="<%= mode %>">
+<body>
 
-    <div class="jumbotron text-center">
-            <div class="form-container">
-                <form method="POST" action="/share" id="share">
-                    <div class="form-group category-section">
-                        <label for="category" class="category-label">Choose a category</label>
-                        <select id="category" onchange="changeBg(event)" name="category"
-                            class="form-control category-dropdown">
-                            <option value="" disabled selected>Select a category</option>
-                            <option value="confession">Confession</option>
-                            <option value="advice">Advice</option>
-                            <option value="funny">Funny</option>
-                            <option value="random">Random</option>
-                            <option value="vent">Vent</option>
-                            <option value="love">Love</option>
-                        </select>
-                    </div>
-
-
-                    <div class="form-group">
-                        <textarea class="form-control" id="input" name="secret"
-                            placeholder="Hey <%= username %> What's on your mind today!"></textarea>
-                    </div>
-
-
-                    <button type="submit" id="submit" class="btn btn-dark secret-btn">
-                        <%= submit %>
-                    </button>
-
-                </form>
-
-                <div class="or">
-                    <hr>
-                    <h4>OR</h4>
-                    <hr>
+    <div class="jumbotron text-center form-wrapper">
+        <div class="form-wrap">
+            <div class="form-transition-container">
+          <!-- TEXT FORM -->
+          <div id="textForm" class="toggle-form">
+            <form id="textSubmitForm" method="post">
+              <div class="user-details">
+                <a href="" class="avatar-profile thumb">
+                  <img src="../.<%= profilePicture %>" alt="" class="profile pic thumb">
+                </a>
+      
+                <div class="custom-dropdown">
+                  <button id="visibilityToggle" type="button">
+                    <abbr title="Views"><i class="fas fa-earth-africa"></i></abbr>
+                    <span class="nav-text">For All Gossipas</span>
+                  </button>
+                  <ul id="visibilityOptions" class="dropdown-options" hidden>
+                    <li data-value="public" class="selected"><i class="fas fa-check"></i> For All</li>
+                    <li data-value="exclusive"><i class="fas fa-check invisible-check"></i> For Chiefs</li>
+                    <li data-value="private"><i class="fas fa-check invisible-check"></i> For Myself Only</li>
+                  </ul>
                 </div>
+              </div>
+      
+              <textarea id="input" name="secret" class="input-text"
+                placeholder="Hey <%= username %> What's on your mind today!"></textarea>
+      
+              <div class="actions">
+                <button type="button" onclick="showTextForm()"><i class="fas fa-pen-to-square"></i></button>
+                <button type="button" onclick="showAudioForm()" class="create"><i class="fas fa-microphone"></i></button>
+              </div>
+      
+              <button type="submit" id="share" formaction="/share" class="create submit"><%= submit %></button>
+            </form>
+          </div>
+      
+          <!-- AUDIO FORM -->
+          <div id="audioForm" class="toggle-form hidden">
+            <div id="recordContainer">
+              <h1>Record a Voice Note</h1>
+              <button id="micButton" class="mic-button"><i class="fas fa-microphone"></i></button>
+      
+              <div id="actionButtons">
+                <button id="discardRecording">Discard</button>
+                <button id="submitRecording">Share</button>
+              </div>
+      
+              <audio id="audioPlayer" controls style="display:none;"></audio>
 
-                <div id="recordContainer">
-                    <h1>Record a Voice Note</h1>
-                    <button id="micButton" class="mic-button" tabindex="0"><i class="fas fa-microphone"></i></button>
+              <div class="voicewave">
 
-                    <!-- Canvas for waveform visualization -->
-                    <!-- <canvas id="waveform"></canvas> -->
-
-                    <!-- Action buttons (discard/share) -->
-                    <div id="actionButtons">
-                        <button id="discardRecording">Discard</button>
-                        <button id="submitRecording">Share</button>
-                    </div>
-
-                    <!-- Audio player for playback after recording -->
-                    <audio id="audioPlayer" controls style="display:none;"></audio>
-                </div>
-
-
-
+              </div>
+            </div>
+      
+            <div class="actions">
+              <button type="button" onclick="showTextForm()"><i class="fas fa-pen-to-square"></i></button>
+              <button type="button" onclick="showAudioForm()" class="create"><i class="fas fa-microphone"></i></button>
+            </div>
+          </div>
+      
+        </div>
+      </div>
+    </div>
+      
                 <div id="notification"
                     style="position: absolute !important; top: 10px !important; left: 0 !important; right: 0 !important; z-index: 1000;">
                 </div>
@@ -161,19 +249,55 @@
             <audio id="post-sound" src="/sounds/whoosh-6316.mp3" preload="auto"></audio>
 
         </div>
+        
+
+        <script>
+            
+            const toggleViewBtn = document.getElementById("visibilityToggle");
+const dropdown = document.getElementById("visibilityOptions");
+
+toggleViewBtn.addEventListener("click", (e) => {
+    // e.preventDefault()
+  const isOpen = dropdown.hasAttribute("hidden") === false;
+  dropdown.hidden = isOpen;
+  toggleViewBtn.setAttribute("aria-expanded", String(!isOpen));
+});
+
+dropdown.addEventListener("click", (e) => {
+  const selected = e.target.closest("li");
+  if (!selected) return;
+
+  // Mark selected
+  dropdown.querySelectorAll("li").forEach(li => {
+    li.classList.remove("selected");
+    li.querySelector("i").classList.add("invisible-check");
+  });
+
+  selected.classList.add("selected");
+  selected.querySelector("i").classList.remove("invisible-check");
+
+  dropdown.hidden = true;
+  toggleViewBtn.setAttribute("aria-expanded", "false");
+
+  // Use value if needed
+  const visibility = selected.dataset.value;
+  console.log("Selected:", visibility);
+});
+
+        </script>
 
     
 <script>
 
     // Handle form submission via Fetch API
-    document.getElementById('share').addEventListener('submit', async (event) => {
+    document.getElementById('textSubmitForm').addEventListener('submit', async (event) => {
         event.preventDefault(); // Prevent form's default redirect behavior
   
         const secretInput = document.getElementById('input');
         const categoryDropdown = document.getElementById('category');
         const secret = secretInput.value;
-        const category = categoryDropdown.value;
-  
+        const category = document.querySelector('#visibilityOptions .selected')?.dataset.value || "public";
+
         if (!category) {
             alert('Please select a category before sharing!');
             return;
@@ -337,28 +461,26 @@
             const data = await response.json();
   
             if (data.success) {
-                alert('Recording shared successfully!');
-                // Reset the UI
-                audioPlayer.src = '';
-                actionButtons.style.display = 'none';
-                audioPlayer.style.display = 'none';
-                audioChunks = [];
-            } else {
-                alert('Failed to share the recording. Please try again.');
-            }
-        } catch (error) {
-            console.error('Error sharing recording:', error);
-            alert('An error occurred. Please try again later.');
-        }
-    });
+    alert('Audio secret shared successfully!');
+    audioPlayer.src = '';
+    actionButtons.style.display = 'none';
+    audioPlayer.style.display = 'none';
+    audioChunks = [];
+    audioBlob = null;
+    audioUrl = null;
+}
+else {
+        alert('Failed to share audio. Please try again.');
+    }
+} catch (error) {
+    console.error('Error sharing audio:', error);
+    alert('An error occurred while sharing audio. Please try again later.');
+}
+});
+
   </script>
   
-  
-  
-  
 
-    
-    
 <script src="../../js/app.js"></script>
 <% if (locals.theme) { %>
     <script src="../../js/theme.js"></script>

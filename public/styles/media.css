@@ -5,12 +5,15 @@
   width: 100% !important;
 }
 }
-@media (max-width:930px) {
+@media (max-width:936px) {
   aside {
     width: 200px !important;
     margin-bottom: 1rem;
   } 
 
+  .nav-item, .nav-text {
+   font-size: 1rem;
+  }
 
   #selectCategory {
     position: fixed;
@@ -21,9 +24,11 @@
     left: 190px;
   }
 
-  .right-sidebar {
-    display: none;
+  .right-sidebar{
+    display: none !important;
   }
+
+
 }
 
 @media (max-width: 768px) {
@@ -66,10 +71,6 @@
     padding-bottom: 0;
     margin: 0 !important;
     border-radius: 5px;
-  }
-
-  .right-sidebar {
-    display: none;;
   }
 
   .left-sidebar .nav {
@@ -128,8 +129,29 @@ header .profiled {
 } 
 
 
-.logo{
-  display: none;
+
+#live-stream-bar{
+  padding-right: 0 !important;
+  gap: 0 !important;
+}
+
+#postContainer {
+  padding: 0 .75rem !important;
+}
+
+#startStreamBtn {
+  margin-right: .75rem;
+}
+
+
+.stream-card {
+  flex: 0 0 auto;
+  max-width: 100px !important;
+  height: 140px !important;
+}
+
+#posting{
+  padding: .75rem .2rem !important;
 }
 
 .search input {
@@ -205,9 +227,21 @@ header .profiled {
     display: none;
   }
 
+  #main-logo{
+    display: none;
+  }
+
+  #mobile-logo {
+    display: inline-block;
+  }
+
   #feeds {
     margin-bottom: 5rem;
-    margin-top: 2rem !important;
+    margin-top: 0rem !important;
+  }
+
+  #live-stream-bar {
+    margin-top: 0 !important;
   }
 
 /* General layout */
@@ -239,6 +273,11 @@ header .profiled {
 #feeds #secrets .card.visible {
   padding: 1.2rem !important;
   margin-bottom: 0 !important;
+}
+
+
+#feeds #secrets {
+  margin-top: 1rem;
 }
 
   #profile, #resultsBox {
@@ -286,6 +325,10 @@ header .profiled {
     right: 0.5rem;
     font-size: 0.7rem;
     padding: .2rem .35rem;
+  }
+
+  .chief {
+    display: none;
   }
 
   #menu {
@@ -343,14 +386,15 @@ header .profiled {
 
   #liveSearchForm {
     /* max-width: 38px;  */
-    margin: auto .75rem !important;
+    /* margin: auto .75rem !important; */
   }
+
 
   #mobileSearch {
     width: 38px;
     border: none;
     background: transparent;
-    justify-content: center;
+    /* justify-content: center; */
   }
 
   #mobileSearch.active {
@@ -372,10 +416,6 @@ header .profiled {
 
   .suggestion-box {
     top: 100%;
-  }
-
-  #feeds #secrets {
-    margin-top: 1rem;
   }
 
   #chat-box {
@@ -474,6 +514,9 @@ top:  4.5rem;
 
 
 @media (max-width: 600px) {
+  p {
+    font-size: 13px ;
+  }
   aside {
     height: auto !important;
     padding: .5rem 0;
@@ -761,9 +804,6 @@ button#next-step {
   .menu-nav {
     display: block;
     height: auto;
-    /* align-items: first baseline;
-    flex-direction: column;
-    justify-content: center; */
   }
 
   .menu-nav-alt {

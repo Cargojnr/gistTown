@@ -15,7 +15,7 @@
   <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
 </head>
 
-<body >
+<body class="main-background">
 <script>
   window.addEventListener("load", function () {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -23,132 +23,134 @@
 </script>
 
 
-<header>
-  <div class="container">
-    <div class="header">
-      <img src="../img/logo/main-logo.png" alt="" id="logo">
-
-      <form id="liveSearchForm" action="/search" method="post" autocomplete="off">
-        <div class="search" id="mobileSearch">
-          <button class="search-btn" type="submit" id="toggleSearch">
-            <i class="fa-solid fa-magnifying-glass"></i>
-          </button>
-          <input name="search" type="text" id="searchInput" placeholder="Search">
-        </div>
-        <ul id="suggestions" class="suggestion-box"></ul>
-      </form>
-
-      <div class="topbar-icons">
-              <ul id="navbar">
-
-                <li class="navbar">
-                  <a class="nav-link" href="">
-                        <i class=" fab fa-modx fa-2x"></i>
-                  </a>
-                </li>
-
-        <li class="navbar">
-          <a class="nav-link" href="/notifications">
-            <i class="fas fa-bell fa-2x"></i>
-            <span class="counter">0</span>
-          </a>
-        </li>
-        <li class="navbar profiled">
-          <button class="nav-btn avatar-profile thumb"><img src="<%= profilePicture ?'../.' + profilePicture: profilePicture %>" alt="" class="profile-pic thumb"></button>
-        </li>
-        <li class="navbar dropdown">
-          <div class="hamburger" id="hamburger">
-            <div class="bar" id="bar1"></div>
-            <div class="bar" id="bar3"></div>
+  <header>
+    <div class="container">
+      <div class="header">
+        <img src="../img/logo/main-logo.png" alt="" id="main-logo" class="logo">
+        <img src="../img/logo/mobile-logo.png" alt="" id="mobile-logo" class="logo">
+  
+        <form id="liveSearchForm" action="/search" method="post" autocomplete="off">
+          <div class="search" id="mobileSearch">
+            <button class="search-btn" type="submit" id="toggleSearch">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+            <input name="search" type="text" id="searchInput" placeholder="Search">
           </div>
+          <ul id="suggestions" class="suggestion-box"></ul>
+        </form>
+  
+        <div class="topbar-icons">
+                <ul id="navbar">
+  
+                  <li class="navbar">
+                    <a class="nav-link" href="/explore" style="color: var(--text-color);">
+                          <i class=" fab fa-modx fa-2x"></i>
+                    </a>
+                  </li>
+  
+          <li class="navbar">
+            <a class="nav-link" href="/notifications">
+              <i class="fas fa-bell fa-2x"></i>
+              <span class="counter">0</span>
+            </a>
           </li>
-        </div>
-          <div id="menu" class="menu-hidden">
-            <div class="container">
-              <div class="profile-header">
-                <img src="<%= profilePicture ? profilePicture : '../.' + profilePicture %>" alt="Profile Avatar" class="profile-avatar" />
-
-                <h3 class="username">Hello, <span class="username">
-                  @amebo<%= userId %> 
-                  <% if(verification === true) {%>
-                  <img src="../../img/gossipa3.png" alt="Verifiied Badge" class="verified-badge">
-                  <% } else {%>
-                 <% } %>
-                </span></h3>
-              </div>
-
-              <div class="menu">
-                <div class="menu-nav">
-      
-                  <ul class="pages">
-                    <h4>Compose a gist</h4>
-                    <li><a class="nav-link" href="/feeds">View Gist</a></li>
-                    <li><a class="nav-link" href="/submit">Share a Gist</a></li>
-                    <li>
-                      <a class="nav-link" href="/notifications" class="">Notifcations</a>
-                    </li>
-                  </ul>
-                  <ul class="account">
-                    <h4>Account</h4>
-                    <li>
-                      <a class="nav-link" href="/notifications" class="">Go To Profile</a>
-                    </li>
-                    <li><a class="nav-link" href="/profile">Edit Profile</a></li>
-
-                    <li>
-                      <form action="/logout" method="POST">
-                        <button type="submit">Logout <i class="fas fa-right-from-bracket"></i></button>
-                      </form>
-                    </li>
-                  </ul>
+          <li class="navbar profiled">
+            <button class="profile-btn"><img src="<%= profilePicture ?'../.' + profilePicture: profilePicture %>" alt="" class="profile-pic thumb"> <i class="fas fa-chevron-down"></i></button>
+          </li>
+          <li class="navbar dropdown">
+            <div class="hamburger" id="hamburger">
+              <div class="bar" id="bar1"></div>
+              <div class="bar" id="bar3"></div>
+            </div>
+            </li>
+          </div>
+            <div id="menu" class="menu-hidden">
+              <div class="container">
+                <div class="profile-header">
+                  <img src="<%= profilePicture ? profilePicture : '../.' + profilePicture %>" alt="Profile Avatar" class="profile-avatar" />
+  
+                  <h3 class="username">Hello, <span class="username">
+                    @amebo<%= userId %> 
+                    <% if(verification === true) {%>
+                    <img src="../../img/gossipa3.png" alt="Verifiied Badge" class="verified-badge">
+                    <% } else {%>
+                   <% } %>
+                  </span></h3>
                 </div>
-
-                <ul class="socials">
-                  <li>
-                    <a class="nav-link" target="_blank" href="https://t.me/anonymcret"><i
-                        class="fab fa-telegram fa-2x"></i></a>
-                  </li>
-                  <li>
-                    <a class="nav-link" target="_blank" href=""><i class="fab fa-instagram fa-2x"></i></a>
-                  </li>
-                  <li>
-                    <a class="nav-link" target="_blank" href=""><i class="fab fa-linkedin fa-2x"></i></a>
-                  </li>
-                  <li>
-                    <a class="nav-link" target="_blank" href=""><i class="fab fa-github fa-2x"></i></a>
-                  </li>
-                </ul>
-                <hr />
-                <div class="menu-nav-alt">
-                  <ul class="info">
-                    <h4>Information</h4>
-                    <li><a href="">About</a></li>
-                    <li><a href="">Security</a></li>
-                    <li><a href="">Privacy</a></li>
-                    <li><a href="">Blog</a></li>
+  
+                <div class="menu">
+                  <div class="menu-nav">
+        
+                    <ul class="pages">
+                      <h4>Compose a gist</h4>
+                      <li><a class="nav-link" href="/feeds">View Gist</a></li>
+                      <li><a class="nav-link" href="/submit">Share a Gist</a></li>
+                      <li>
+                        <a class="nav-link" href="/notifications" class="">Notifcations</a>
+                      </li>
+                    </ul>
+                    <ul class="account">
+                      <h4>Account</h4>
+                      <li>
+                        <a class="nav-link" href="/notifications" class="">Go To Profile</a>
+                      </li>
+                      <li><a class="nav-link" href="/profile">Edit Profile</a></li>
+  
+                      <li>
+                        <form action="/logout" method="POST">
+                          <button type="submit">Logout <i class="fas fa-right-from-bracket"></i></button>
+                        </form>
+                      </li>
+                    </ul>
+                  </div>
+  
+                  <ul class="socials">
+                    <li>
+                      <a class="nav-link" target="_blank" href="https://t.me/anonymcret"><i
+                          class="fab fa-telegram fa-2x"></i></a>
+                    </li>
+                    <li>
+                      <a class="nav-link" target="_blank" href=""><i class="fab fa-instagram fa-2x"></i></a>
+                    </li>
+                    <li>
+                      <a class="nav-link" target="_blank" href=""><i class="fab fa-linkedin fa-2x"></i></a>
+                    </li>
+                    <li>
+                      <a class="nav-link" target="_blank" href=""><i class="fab fa-github fa-2x"></i></a>
+                    </li>
                   </ul>
-                  <ul class="support">
-                    <h4>Support</h4>
-                    <li><a href="">FAQ</a></li>
-                    <li><a href="">Contact</a></li>
-                    <li><a href="/feedback">Reviews</a></li>
-                  </ul>
+                  <hr />
+                  <div class="menu-nav-alt">
+                    <ul class="info">
+                      <h4>Information</h4>
+                      <li><a href="">About</a></li>
+                      <li><a href="">Security</a></li>
+                      <li><a href="">Privacy</a></li>
+                      <li><a href="">Blog</a></li>
+                    </ul>
+                    <ul class="support">
+                      <h4>Support</h4>
+                      <li><a href="">FAQ</a></li>
+                      <li><a href="">Contact</a></li>
+                      <li><a href="/feedback">Reviews</a></li>
+                    </ul>
+                  </div>
+                  <p class="menu-lang">
+                    <i class="fas fa-globe"></i> English
+                  </p>
+                  <button id="close">Close</button>
                 </div>
-                <p class="menu-lang">
-                  <i class="fas fa-globe"></i> English
-                </p>
-                <button id="close">Close</button>
               </div>
             </div>
-          </div>
-        </li>
-      </ul>
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
-  <div id="announcement">
- 
-  </div> 
-</header>
+    <div id="announcement">
+   
+    </div> 
+  </header>
+
   
     <div id="milestone-badge" class="hidden">🎉 10 Reactions! 🎉</div>
 
@@ -179,6 +181,7 @@
 
   <!-- Notifications Container -->
   <div id="notification" style="position: fixed; bottom: 10px; left: 10px; z-index: 1000"></div>
+
 
   <script>
      const header = document.querySelector("header");
@@ -329,7 +332,6 @@
       }, 5000); // 5 seconds
     }
   </script>
-
 </body>
 
 </html>

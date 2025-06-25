@@ -1,0 +1,406 @@
+<%- include('layout') %>
+    <style>
+  .sections-container {
+    background: linear-gradient(135deg, var(--container-bg), rgba(127, 90, 240, 0.08));
+    padding: 2rem;
+    border-radius: 24px;
+    margin-bottom: 7rem;
+    box-shadow: 0 10px 30px rgba(127, 90, 240, 0.15);
+    animation: fadeInUp 0.6s ease;
+  }
+
+  .sections-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 2rem;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .sections-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+  }
+
+  .section-card {
+    background: var(--container-bg);
+    border-radius: 20px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    border: 1px solid transparent;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .section-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 24px rgba(127, 90, 240, 0.2);
+    border: 1px solid var(--primary-color);
+  }
+
+  .icon-circle {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #7f5af0, #d13d87);
+    color: white;
+    box-shadow: 0 4px 12px rgba(127, 90, 240, 0.4);
+    font-size: 1.8rem;
+  }
+
+  .section-card h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 8px;
+  }
+
+  .section-card p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+  }
+
+  @keyframes fadeInUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .sections-title {
+      font-size: 1.8rem;
+    }
+    .section-card h3 {
+      font-size: 1.2rem;
+    }
+  }
+    </style>
+
+    <body>
+        <div class="layout-container container">
+
+            <aside class="left-sidebar">
+                <div class="aside">
+                  <ul class="nav">
+                    <li class="nav-item current">
+                      <a href="/feeds">
+                        <i class="nav-icon fas fa-home"></i> &nbsp;
+                        <span class="nav-text">Home</span>
+                      </a>
+                    </li>
+                    <!-- <li class="nav-item mid-post-1">
+                      <a href="submit" id="openSubmitForm">
+                        <i class="nav-icon fas fa-plus-circle"></i> &nbsp;
+                      </a>
+                    </li> -->
+                    <li class="nav-item">
+                      <a href="/explore">
+                        <i class="nav-icon fab fa-modx"></i> &nbsp;
+                        <span class="nav-text">Explore</span>
+        
+                        <span class="nav-tag">New</span>
+                      </a>
+                    </li>
+                   
+                    <!-- <li class="nav-item">
+                    <a class="nav-link" href="/notifications">
+                      <i class="nav-icon fas fa-bell"></i> &nbsp;
+                      <span class="nav-text">Notifcations</span>
+                      <span class="counter">0</span>
+                    </a>
+                  </li> -->
+                    <li class="nav-item chief">
+                      <a href="">
+                        <i class="nav-icon fas fa-bookmark"></i>
+                        &nbsp;<span class="nav-text">Saved Gists</span>&nbsp;
+                      </a>
+                    </li>
+                    <li class="nav-item chief">
+                      <a href="/subscribe">
+                        <i class="nav-icon fas fa-award"></i>
+                        &nbsp;<span class="nav-text">Become a Chief</span>&nbsp;
+                        <span><img src="../../img/gossipa3.png" alt="" class="nav-icon verified-badge"></span>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/profile">
+                        <i class="nav-icon fas fa-circle-user"></i> &nbsp;
+                        <span class="nav-text">My Profile</span>
+                      </a>
+                    </li>
+                    <li class="nav-item blur">
+                      <a aria-disabled="true">
+                        <i class="nav-icon fas fa-comments"></i> &nbsp;
+                        <span class="nav-text">GossipaCity</span>
+        
+                        <span class="nav-tag">soon</span>
+                      </a>
+                    </li>
+                   
+                    <li class="nav-item mid-post-2">
+                      <a href="/submit">
+                        <i class="fas fa-circle-plus nav-icon"></i>
+                        &nbsp;<span class="nav-text"> Compose Gist</span>&nbsp;
+                        <i class="fas fa-chevron-down"></i>
+                      </a>
+        
+                    </li>
+                  </ul>
+                </div>
+        
+              </aside>
+            <main>
+                <div id="sections" class="sections-container">
+                    <h2 class="sections-title">Explore Your Space</h2>
+                    <form class="sections-cards">
+                      <!-- Whisper Walls -->
+                      <!-- <button class="section-card whisper-wall" formaction="/section/love" data-action="/whisper-walls">
+                    <div class="icon-circle">
+                      <i class="fas fa-feather-alt fa-2x"></i>
+                    </div>
+                    <h3>Whisper Walls</h3>
+                    <p>Swipe and support whispers anonymously.</p>
+                  </button> -->
+        
+                      <button class="section-card whisper-wall" formaction="/section/love" data-action="/whisper-walls">
+                        <div class="icon-circle">
+                          <i class="fas fa-feather-alt fa-2x"></i>
+                        </div>
+                        <h3>Heartbreaks & Relationship</h3>
+                        <p>Swipe and support whispers anonymously.</p>
+                      </button>
+        
+                      <!-- Mood Secrets -->
+                      <!-- <button class="section-card mood-secrets" formaction="random" data-action="/mood-secrets">
+                    <div class="icon-circle gradient-bg">
+                      <i class="fas fa-smile-beam fa-2x"></i>
+                    </div>
+                    <h3>Mood Secrets</h3>
+                    <p>Share secrets by mood. Feel the vibe.</p>
+                  </button> -->
+        
+                      <button class="section-card mood-secrets" formaction="random" data-action="/mood-secrets">
+                        <div class="icon-circle gradient-bg">
+                          <i class="fas fa-smile-beam fa-2x"></i>
+                        </div>
+                        <h3>Random Confessions</h3>
+                        <p>Share secrets by mood. Feel the vibe.</p>
+                      </button>
+        
+                      <!-- Support Pods -->
+                      <button class="section-card support-pods" data-action="/support-pods">
+                        <div class="icon-circle gradient-bg-alt">
+                          <i class="fas fa-hands-helping fa-2x"></i>
+                        </div>
+                        <h3>Support Pods</h3>
+                        <p>Join pods for empathetic conversations.</p>
+                      </button>
+        
+                      <!-- Time Capsule -->
+                      <button class="section-card time-capsule" data-action="/time-capsule">
+                        <div class="icon-circle gradient-bg">
+                          <i class="fas fa-hourglass-half fa-2x"></i>
+                        </div>
+                        <h3>Time Capsule</h3>
+                        <p>Write secrets to open in the future.</p>
+                      </button>
+        
+                      <!-- Inspirations & Confessions -->
+                      <button class="section-card inspirations-confessions" data-action="/inspirations">
+                        <div class="icon-circle gradient-bg-alt">
+                          <i class="fas fa-sun fa-2x"></i>
+                        </div>
+                        <h3>Inspirations</h3>
+                        <p>Share stories that uplift and inspire.</p>
+                      </button>
+                    </form>
+                  </div>
+        
+            </main>
+
+            <aside class="right-sidebar">
+                <div class="aside"></div>
+
+                <div class="premium-aside">
+                    <div class="premium-card">
+                        <div class="crown-icon sparkle">👑</div>
+
+                        <h3 class="premium-title">Become a Chief Gossipa</h3>
+                        <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain Unknown.</p>
+
+                        <div class="trending-stats">
+                            <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
+                        </div>
+
+                        <div class="avatar-hint">
+                            <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
+                            <p>You’re 1 step from <strong>trending</strong>…</p>
+                        </div>
+
+                        <a href="/subscribe" class="premium-btn">Chief Gossipa</a>
+                    </div>
+                </div>
+
+                <div class="aside-2">
+                    <center>
+                        <h4 class="user-count"><button class="dot active animate-ping-once"
+                                data-slide="0"></button>&nbsp;Meet The
+                            Chiefs
+                            :<span id="activeCount">0</span></h4>
+                    </center>
+                    <ul class="nav user-list">
+                    </ul>
+
+                </div>
+
+                <div class="inpage-footer">
+                    <span>Privacy Policy</span>&nbsp;.
+                    &nbsp;<span>Terms of use</span> &nbsp;.
+                    &nbsp;<span>Community guidelines</span> &nbsp;.
+                    <br><br>
+                    &nbsp;<span>&copy; <%= new Date().getFullYear() %>, &commat; Gossipa Co. All rights reserved</span>
+                </div>
+
+            </aside>
+
+        </div>
+        </div>
+
+
+        <script>
+            const currentUserId = "<%= userId %>";
+            const socket = io({ query: { userId: currentUserId } });
+            const counter = document.getElementById("notifyCounter");
+
+            // Handle new notifications
+            socket.on("new-notification", (data) => {
+                // Increment the notification counter
+                const currentCount = parseInt(counter.textContent) || 0;
+                counter.textContent = currentCount + 1;
+
+                const notificationsDiv = document.getElementById("notification");
+                const notification = document.createElement("div");
+                notification.className = "notification";
+
+                // Display a notification if it's a "secret" type
+                if (data.type === "secret") {
+                    notification.innerText = `New secret shared by ~~@anonym${data.data.userId}~~: "${data.data.secret}"`;
+                } else if (data.type === "selected") {
+                    notification.innerText = `~~@anonym${data.data.userId}~~ Your secret is the top most discussed for the Day...... Keep it up!"`;
+                    notificationsDiv.style.textAlign = "center"
+                } else if (data.type === "reaction") {
+                    const { reaction, count, milestone } = data.data;
+                    notification.innerText =
+                        `Your secret received a new "${reaction}" reaction! Total: ${count}.`
+                } else if (data.type === "top-secret") {
+                    notification.innerText = `Most discussed secret goes to ~~@anonym${data.data.userId}~~"`;
+                }
+
+                notificationsDiv.appendChild(notification);
+
+                // Automatically remove the notification after 5 seconds
+                setTimeout(() => {
+                    notification.remove();
+                }, 5000);
+
+            });
+        </script>
+
+
+        <script>
+            const connectedUsersMap = new Map();
+            const userList = document.querySelector(".user-list");
+            const userCountDisplay = document.getElementById("activeCount");
+
+            function updateUserCount() {
+                userCountDisplay.textContent = connectedUsersMap.size;
+            }
+
+            function userConnected(user) {
+                if (connectedUsersMap.has(user.id)) return;
+
+                const userBox = document.createElement("li");
+                userBox.className = "connected-user nav-item enter";
+                userBox.id = `user-${user.id}`;
+
+                const verifiedBadge = `${user.verified}`
+                    ? `<img src="/img/gossipa3.png" alt="Verified Badge" class="verified-badge"">`
+                    : "";
+
+                userBox.innerHTML = `
+      <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
+        <img src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
+        <p class="username">
+          <span class="user">@amebo${user.id}</span>
+         ${verifiedBadge}
+          </p>
+      </div>
+    `;
+
+                userList.appendChild(userBox);
+                connectedUsersMap.set(user.id, userBox);
+                updateUserCount();
+
+                // Trigger reflow for entry animation
+                requestAnimationFrame(() => {
+                    userBox.classList.add("enter");
+                });
+            }
+
+            function userDisconnected(userId) {
+                const userBox = connectedUsersMap.get(userId);
+                if (userBox) {
+                    userBox.classList.add("exit");
+                    userBox.classList.remove("enter");
+                    setTimeout(() => {
+                        userBox.remove();
+                        connectedUsersMap.delete(userId);
+                        updateUserCount();
+                    }, 400); // CSS transition match
+                }
+            }
+
+            socket.on("userJoined", async (userId) => {
+                try {
+                    const res = await fetch(`/user/${userId}`);
+                    const user = await res.json();
+                    userConnected(user);
+                } catch (err) {
+                    console.error("Failed to fetch user data:", err);
+                }
+            });
+
+            socket.on("userLeft", (userId) => {
+                userDisconnected(userId);
+            });
+
+            // Load current active users on first load
+            fetch("/active-users")
+                .then(res => res.json())
+                .then(users => {
+                    users.forEach(user => userConnected(user));
+                })
+                .catch(console.error);
+        </script>
+
+
+        <script src="/js/app.js"></script>
+        <script src="/js/defaultTheme.js"></script>
+        <script src="/js/tutorial.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
+    </body>

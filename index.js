@@ -500,6 +500,17 @@ app.get("/profile/amebo/:user", async (req, res) => {
   }
 });
 
+app.get("/explore", (req, res) => {
+  if(req.isAuthenticated()){
+    res.render("explore", {userId: req.user.id,
+      verification: req.user.verified,
+      profilePicture: req.user.profile_picture})
+  } else {
+    res.redirect("login")
+  }
+
+})
+
 app.get("/random", async (req, res) => {
   if (req.isAuthenticated()) {
     try {
@@ -1503,7 +1514,7 @@ app.post("/reset", async (req, res) => {
             console.log(result);
             req.login(user, (err) => {
               console.log(err);
-              res.redirect("dashboard");
+              res.redirect("feeds");
             });
           }
         });
