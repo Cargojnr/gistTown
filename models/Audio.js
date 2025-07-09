@@ -23,6 +23,14 @@ const Audio = sequelize.define('Audio', {
     type: DataTypes.INTEGER,
     allowNull: false,
 },
+reactions: {
+  type: DataTypes.JSONB,
+  defaultValue: {},
+},
+
+}, 
+{
+  tableName: "audios" // This must match your actual DB table name
 });
 
 export default Audio;

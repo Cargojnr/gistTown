@@ -1,4 +1,5 @@
 import express from "express";
+import expressLayouts from 'express-ejs-layouts';
 import bodyParser from "body-parser";
 import pg from "pg";
 import bcrypt from "bcryptjs";
@@ -105,6 +106,8 @@ db.connect()
 app.use(express.static("public"));
 app.use(express.json());
 app.set("view engine", "ejs");
+app.use(expressLayouts);
+app.set("layout", "layout");
 app.set("views", path.join(__dirname, "views"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -479,7 +482,7 @@ app.get("/profile/amebo/:user", async (req, res) => {
 
       const totalReactions = result.reactions;
       const totalComments = result.comment;
-      console.log(userPicture);
+
       res.render("profile", {
         userId: req.user.id,
         profileId: userid,
@@ -516,17 +519,10 @@ app.get("/random", async (req, res) => {
     try {
       const mode = req.user.mode || "light";
       const result = await db.query(
-        "SELECT secrets.id, reactions, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id ORDER BY secrets.id DESC "
-      );
-      const reportResult = await db.query(
-        "SELECT reports.status, secrets.id, user_id, category, secret FROM secrets JOIN reports ON secrets.id = reports.secret_id  ORDER BY secrets.id DESC "
+        "SELECT secrets.id, reactions, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id  ORDER BY secrets.id DESC "
       );
       const usersSecret = result.rows;
-      // const randomSecret =usersSecret;
-      // const randomSecret = usersSecret[Math.floor(Math.random() * 10)]
-      console.log(reportResult);
 
-      // console.log(usersSecret)
       res.render("random", {
         randomSecret: usersSecret,
         userId: req.user.id,
@@ -537,12 +533,11 @@ app.get("/random", async (req, res) => {
         mode: mode,
         reactions: JSON.stringify(usersSecret.reactions || {}),
       });
-      // console.log(usersSecret)
     } catch (err) {
       console.log(err);
     }
   } else {
-    res.redirect("feeds");
+    res.redirect("login");
   }
 });
 
@@ -559,9 +554,7 @@ app.get("/random-secret", async (req, res) => {
       );
       const usersSecret = result.rows;
       const randomSecret = usersSecret[Math.floor(Math.random() * 10)];
-      console.log(reportResult);
 
-      // console.log(usersSecret)
       res.json({
         randomSecret: randomSecret,
         userId: req.user.id,
@@ -573,7 +566,6 @@ app.get("/random-secret", async (req, res) => {
         mode: mode,
         reactions: JSON.stringify(randomSecret.reactions || {}),
       });
-      console.log(randomSecret);
     } catch (err) {
       console.log(err);
     }
@@ -592,46 +584,77 @@ app.get("/feeds", async (req, res) => {
         "SELECT id, verified, username, profile_picture FROM users"
       );
 
-      const result = await db.query(
-        "SELECT timestamp, reported, verified, secrets.id, reactions,profile_picture, username,user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id ORDER BY secrets.id DESC "
-      );
+      const secretsResult = await db.query(`
+        SELECT secrets.id, timestamp, reported, verified, reactions,
+               profile_picture, username, user_id, color, category, secret
+        FROM secrets
+        JOIN users ON users.id = user_id
+      `);
 
       const audioPosts = await Audio.findAll({
         order: [["uploadDate", "DESC"]],
       });
 
-      const userInfo = await db.query(
-        `SELECT username,verified, profile_picture FROM users WHERE id = $1`,
-        [userId]
-      );
-      const user = userInfo.rows[0];
-
-      const formatted = audioPosts.map((audio) => ({
-        id: audio.id,
-        url: audio.url,
-        user_id: audio.userId,
-        username: user.username,
-        verification: user.verified,
-        profile_pic: user.profile_picture,
-        timestamp: dayjs(audio.uploadDate).fromNow(),
+      const textPosts = secretsResult.rows.map((secret) => ({
+        ...secret,
+        type: "text",
+        timestamp: new Date(secret.timestamp),
       }));
 
-      const usersSecret = result.rows;
-      res.render("secrets", {
-        allUsers: allUsers.rows,
-        secrets: usersSecret,
-        audioPost: formatted,
-        userId: req.user.id,
-        activeStatus: req.user.active_status,
-        verification: req.user.verified,
-        profilePicture: req.user.profile_picture,
-        username: req.user.username,
-        theme: userTheme,
-        mode: mode,
-        reactions: JSON.stringify(
-          usersSecret.map((secret) => secret.reactions || {})
-        ),
-      });
+     // Step 1: Get user IDs from audio posts
+const audioUserIds = [...new Set(audioPosts.map(audio => audio.userId))];
+
+// Step 2: Query user info for those IDs
+const usersResult = await db.query(
+  `SELECT id, username, verified, profile_picture FROM users WHERE id = ANY($1)`,
+  [audioUserIds]
+);
+const userMap = {};
+usersResult.rows.forEach(user => {
+  userMap[user.id] = user;
+});
+
+
+// Step 3: Map audio posts with correct user info
+const formattedAudio = audioPosts.map((audio) => {
+  const user = userMap[audio.userId] || {
+    username: "unknown",
+    verified: false,
+    profile_picture: "/img/default-avatar.png",
+  };
+  return {
+    id: audio.id,
+    user_id: audio.userId,
+    username: user.username || "unknown",
+    verification: user.verified || false,
+    profile_picture: user.profile_picture || "/img/default-avatar.png",
+    url: audio.url,
+    type: "audio",
+    timestamp: new Date(audio.uploadDate),
+    reactions: audio.reactions || {} // ✅ Add this line
+  };
+});
+
+
+    // Combine and sort by timestamp
+    const feeds = [...textPosts, ...formattedAudio].sort(
+      (a, b) => b.timestamp - a.timestamp
+    );
+
+
+    res.render("secrets", {
+      allUsers: allUsers.rows,
+      feeds,
+      audioPost: formattedAudio, 
+      userId,
+      activeStatus: req.user.active_status,
+      verification: req.user.verified,
+      profilePicture: req.user.profile_picture,
+      username: req.user.username,
+      theme: userTheme,
+      mode,
+      title: 'Gossip feeds',
+    });
     } catch (err) {
       console.log(err);
     }
@@ -695,29 +718,39 @@ app.get("/fetch-posts/:user", async (req, res) => {
 
 app.get("/api/comment-counts", async (req, res) => {
   try {
-    const result = await db.query(`
-            SELECT secrets.id, COUNT(*) AS count
-            FROM secrets JOIN comments
-            On secrets.id = secret_id
-            GROUP BY secrets.id
-        `);
+    // Get counts for secrets
+    const secretResult = await db.query(`
+      SELECT secrets.id, COUNT(comments.*) AS count
+      FROM secrets
+      LEFT JOIN comments ON secrets.id = comments.secret_id
+      GROUP BY secrets.id
+    `);
 
-    // Format into a map: { [secret_id]: count }
+    // Get counts for audios
+    const audioResult = await db.query(`
+      SELECT audios.id, COUNT(comments.*) AS count
+      FROM audios
+      LEFT JOIN comments ON audios.id = comments.audio_id
+      GROUP BY audios.id
+    `);
+
     const counts = {};
-    result.rows.forEach((row) => {
-      if (row != null) {
-        counts[row.id] = parseInt(row.count);
-      } else {
-        counts[row.id] = parseInt(0);
-      }
+
+    secretResult.rows.forEach(row => {
+      counts[`secret-${row.id}`] = parseInt(row.count);
+    });
+
+    audioResult.rows.forEach(row => {
+      counts[`audio-${row.id}`] = parseInt(row.count);
     });
 
     res.json(counts);
   } catch (err) {
-    console.error(err);
+    console.error("Error fetching comment counts:", err);
     res.status(500).json({ error: "Error fetching comment counts" });
   }
 });
+
 
 app.get("/chat", async (req, res) => {
   if (req.isAuthenticated()) {
@@ -992,6 +1025,7 @@ app.get("/partial-submit", async (req, res) => {
     console.log(req.user);
 
     const formData = {
+      title: "Share a Gossip",
       submit: "Submit",
       theme: userTheme,
       mode: mode,
@@ -1106,7 +1140,6 @@ app.get("/secret/:id", async (req, res) => {
 
 app.get("/more/:id", async (req, res) => {
   const requestedId = parseInt(req.params.id);
-  // console.log(requestedId)
   if (!req.isAuthenticated()) {
     return res.render("login");
   }
@@ -1166,12 +1199,122 @@ app.get("/more/:id", async (req, res) => {
   }
 });
 
+app.get("/audio/:id/more", async (req, res) => {
+  const audioId = parseInt(req.params.id);
+
+  try {
+    const audio = await Audio.findByPk(audioId);
+    if (!audio) return res.status(404).json({ message: "Audio not found" });
+
+    const comments = await db.query(
+      `SELECT comment, comments.user_id, username, color, comments.id 
+       FROM comments 
+       JOIN users ON users.id = comments.user_id 
+       WHERE audio_id = $1
+       ORDER BY comments.id DESC`,
+      [audioId]
+    );
+
+    res.json({
+      audio,
+      comments: comments.rows,
+      noComment: comments.rows.length === 0 ? "Be the first to comment" : null,
+    });
+  } catch (err) {
+    console.error("Audio comments error:", err);
+    res.status(500).json({ error: "Failed to load audio comments" });
+  }
+});
+
+app.get("/comment/:type/:id", async (req, res) => {
+  const { type, id } = req.params;
+  const requestedId = parseInt(id);
+
+  if (isNaN(requestedId)) {
+    return res.status(400).json({ error: "Invalid ID" });
+  }
+
+  try {
+    if (type === "audio") {
+      const audio = await Audio.findByPk(requestedId);
+      if (!audio) return res.status(404).json({ message: "Audio not found" });
+
+      const comments = await db.query(
+        `SELECT comment, comments.user_id, username, color, comments.id 
+         FROM comments 
+         JOIN users ON users.id = comments.user_id 
+         WHERE audio_id = $1
+         ORDER BY comments.id DESC`,
+        [requestedId]
+      );
+
+      return res.json({
+        audio,
+        comments: comments.rows,
+        totalComments: comments.rows.length,
+        noComment: comments.rows.length === 0 ? "Be the first to comment" : null,
+      });
+    }
+
+    if (type === "text") {
+      if (!req.isAuthenticated()) {
+        return res.render("login");
+      }
+
+      const secretQuery = `
+        SELECT secret, secrets.id, secrets.user_id, reactions 
+        FROM secrets 
+        JOIN users ON users.id = user_id 
+        WHERE secrets.id = $1 
+        ORDER BY secrets.id DESC;
+      `;
+      const secretResult = await db.query(secretQuery, [requestedId]);
+      const data = secretResult.rows[0];
+
+      if (!data) {
+        return res.status(404).json({ message: "Secret not found" });
+      }
+
+      const commentQuery = `
+        SELECT comment, comments.user_id, username, secret, color, comments.id 
+        FROM comments 
+        JOIN users ON users.id = comments.user_id 
+        JOIN secrets ON secrets.id = secret_id 
+        WHERE secrets.id = $1 
+        ORDER BY comments.id DESC;
+      `;
+      const commentResult = await db.query(commentQuery, [requestedId]);
+
+      return res.json({
+        secret: data,
+        comments: commentResult.rows.length > 0 ? commentResult.rows : null,
+        totalComments: commentResult.rows.length,
+        noComment: commentResult.rows.length === 0 ? "Share your thoughts." : null,
+        userId: req.user.id,
+        activeStatus: req.user.active_status,
+        verification: req.user.verified,
+        profilePicture: req.user.profile_picture,
+        theme: req.user.color || "default",
+        mode: req.user.mode || "light",
+        reactions: JSON.stringify(data.reactions || {}),
+      });
+    }
+
+    return res.status(400).json({ error: "Invalid type" });
+  } catch (error) {
+    console.error("Error fetching comment data:", error);
+    res.status(500).json({ error: "Failed to load comment data" });
+  }
+});
+
+
+
 app.post("/secret/:id/react", async (req, res) => {
   const { type } = req.body; // e.g., "like", "laugh"
   const { id } = req.params;
 
   try {
-    console.log("Attempting to update reaction:", { type, id });
+
 
     const result = await db.query(
       `UPDATE secrets 
@@ -1193,13 +1336,6 @@ app.post("/secret/:id/react", async (req, res) => {
       const updatedCount = parseInt(reactions[type].count);
       const milestoneReached = updatedCount === 10;
 
-      console.log(`Sending notification to user_${user_id}`, {
-        id,
-        reaction: type,
-        count: updatedCount,
-        milestone: milestoneReached,
-      });
-
       io.to(`user_${user_id}`).emit("new-notification", {
         type: "reaction",
         data: {
@@ -1219,6 +1355,52 @@ app.post("/secret/:id/react", async (req, res) => {
     res.status(500).json({ error: "Failed to update reactions." });
   }
 });
+
+app.post("/audio/:id/react", async (req, res) => {
+  const { type } = req.body; // e.g., "like", "laugh"
+  const { id } = req.params;
+
+  try {
+    const result = await db.query(
+      `UPDATE Audios 
+       SET reactions = jsonb_set(
+         reactions,
+         $1,
+         jsonb_build_object(
+           'count', COALESCE(reactions->$2->>'count', '0')::int + 1,
+           'timestamp', to_jsonb(NOW())
+         )::jsonb
+       )
+       WHERE id = $3
+       RETURNING reactions, "userId"`,
+      [`{${type}}`, type, id]
+    );
+
+    if (result.rowCount === 1) {
+      const { reactions, userId } = result.rows[0];
+      const updatedCount = parseInt(reactions[type].count);
+      const milestoneReached = updatedCount === 10;
+
+      io.to(`user_${userId}`).emit("new-notification", {
+        type: "reaction",
+        data: {
+          id,
+          reaction: type,
+          count: updatedCount,
+          milestone: milestoneReached,
+        },
+      });
+
+      res.json({ success: true, reactions });
+    } else {
+      res.status(404).json({ success: false, error: "Audio post not found." });
+    }
+  } catch (error) {
+    console.error("Error updating audio reactions:", error);
+    res.status(500).json({ error: "Failed to update reactions." });
+  }
+});
+
 
 app.post("/report/secret/:id", async (req, res) => {
   const { reason } = req.body; // The reason for reporting
@@ -1758,6 +1940,90 @@ app.post("/comment", async (req, res) => {
   }
 });
 
+app.post("/comment/audio", async (req, res) => {
+  const { comment, audioId } = req.body;
+  const userId = req.user.id;
+
+  try {
+    await db.query(
+      `INSERT INTO comments (comment, user_id, audio_id) VALUES ($1, $2, $3)`,
+      [comment, userId, audioId]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Error adding audio comment:", err);
+    res.status(500).json({ success: false, error: "Failed to post comment" });
+  }
+});
+
+
+app.post("/comment/:type", async (req, res) => {
+  const { type } = req.params;
+  const { id, commentUserId, comment } = req.body;
+
+  const postId = parseInt(id);
+  const userId = parseInt(commentUserId);
+
+  if (!comment || comment.trim() === "") {
+    return res.status(400).json({ success: false, message: "Enter a comment" });
+  }
+
+  if (isNaN(postId) || isNaN(userId)) {
+    return res.status(400).json({ success: false, message: "Invalid ID(s)" });
+  }
+
+
+  try {
+    if (type === "audio") {
+      await db.query(
+        `INSERT INTO comments (comment, user_id, audio_id) VALUES ($1, $2, $3)`,
+        [comment,  userId, postId]
+      );
+
+      return res.json({ success: true });
+    }
+
+    if (type === "text") {
+      await db.query(
+        `INSERT INTO comments (comment, secret_id, user_id) VALUES ($1, $2, $3)`,
+        [comment,  postId, userId]
+      );
+
+      const result = await db.query(
+        `SELECT comment, username, secret, secrets.id, secrets.user_id 
+         FROM comments 
+         JOIN users ON users.id = comments.user_id 
+         JOIN secrets ON secrets.id = secret_id 
+         WHERE secrets.id = $1 
+         ORDER BY comments.id DESC 
+         LIMIT 1`,
+        [postId]
+      );
+
+      const newComment = result.rows[0];
+
+      io.emit("new-notification", {
+        type: "comment",
+        data: {
+          id: newComment.id,
+          comment: newComment.comment,
+          username: newComment.username,
+          userId: newComment.user_id,
+        },
+      });
+
+      return res.status(200).json({ success: true });
+    }
+
+    return res.status(400).json({ success: false, message: "Invalid comment type" });
+  } catch (error) {
+    console.error("Error saving comment:", error);
+    res.status(500).json({ success: false, message: "Error saving comment" });
+  }
+});
+
+
+
 app.post("/translate", express.json(), async (req, res) => {
   const { text, targetLang } = req.body;
 
@@ -1958,7 +2224,7 @@ passport.use(
           [verificationCode, expiresAt, user.id]
         );
 
-        console.log("Sending code to:", user.email);
+        console.log("Sending code to:", verificationCode, user.email);
         await sendLoginCodeToUser(user, verificationCode, ip, location);
         console.log("Code sent successfully");
 

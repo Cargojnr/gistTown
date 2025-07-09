@@ -454,11 +454,6 @@
                 <span class="nav-text">Home</span>
               </a>
             </li>
-            <!-- <li class="nav-item mid-post-1">
-              <a href="submit" id="openSubmitForm">
-                <i class="nav-icon fas fa-plus-circle"></i> &nbsp;
-              </a>
-            </li> -->
             <li class="nav-item">
               <a href="/explore">
                 <i class="nav-icon fab fa-modx"></i> &nbsp;
@@ -467,25 +462,17 @@
                 <span class="nav-tag">New</span>
               </a>
             </li>
-           
-            <!-- <li class="nav-item">
-            <a class="nav-link" href="/notifications">
-              <i class="nav-icon fas fa-bell"></i> &nbsp;
-              <span class="nav-text">Notifcations</span>
-              <span class="counter">0</span>
-            </a>
-          </li> -->
             <li class="nav-item chief">
               <a href="">
                 <i class="nav-icon fas fa-bookmark"></i>
-                &nbsp;<span class="nav-text">Saved Gists</span>&nbsp;
+                &nbsp;<span class="nav-text">Bookmarks</span>&nbsp;
               </a>
             </li>
             <li class="nav-item chief">
               <a href="/subscribe">
                 <i class="nav-icon fas fa-award"></i>
                 &nbsp;<span class="nav-text">Become a Chief</span>&nbsp;
-                <span><img src="../../img/gossipa3.png" alt="" class="nav-icon verified-badge"></span>
+                <span class="nav-text"><img src="../../img/gossipa3.png" alt="" class="nav-icon verified-badge"></span>
               </a>
             </li>
             <li class="nav-item">
@@ -503,11 +490,11 @@
               </a>
             </li>
            
-            <li class="nav-item mid-post-2">
+            <li class="nav-item">
               <a href="/submit">
                 <i class="fas fa-circle-plus nav-icon"></i>
                 &nbsp;<span class="nav-text"> Compose Gist</span>&nbsp;
-                <i class="fas fa-chevron-down"></i>
+                <i class="fas fa-chevron-down nav-text"></i>
               </a>
 
             </li>
@@ -542,14 +529,14 @@
                         <%= userProfile.length | 0 %>
                       </strong><span>Gists</span></div>
                     <div class="stat"><strong>
-                        <%= totalComments|| 0 %>
-                      </strong><span>Comments</span></div>
+                        <%= 0 %>
+                      </strong><span>Eavedroppers</span></div>
                     <div class="stat"><strong>
                         <%= totalReactions|| 0 %>
                       </strong><span>Reactions</span></div>
                   </div>
                   <button class="edit-profile-btn"
-                    style="background: linear-gradient(135deg, var(--primary-color) , var(--secondary-color))!important">Like
+                    style="background: linear-gradient(135deg, var(--primary-color) , var(--secondary-color))!important">Eavedrop on
                     Profile</button>
                 </div>
 
@@ -629,30 +616,76 @@ class=" read" style="
                               </p>
                             </div>
 
-                            <div class="reactions sleek">
-                              <div class="secret-card" data-id="<%= secret.id %>">
-                                <div class="reactions">
-
-                                  <button class="reaction-btn reaction" data-type="like">
-                                    ❤️
-                                    <span class="reaction-count">
-                                      <%= secret.reactions.like ? secret.reactions.like.count : 0 %>
-                                    </span>
-                                  </button>
-                                </div>
-
-                                <div class="floating-lottie" data-type="like"></div>
-
-
-                              </div>
+                           
 
                               <div class="comment-section" data-secret-id="<%= secret.id %>">
-                                <button id="commentButton" class="reaction-btn"><i class="fas fa-comment"></i><span
-                                    class="comment-count"></span></button>
+
+                                <div class="reactions sleek">
+                                  <div class="first-action">
+                                    <div class="secret-card" data-id="<%= secret.id %>">
+                                      <div class="reaction">
+                                          <button class="reaction-btn " data-type="hot">
+                                            <!-- <div id="gasp-animation" class="lottie-animation"></div> -->
+                                            <img src="../../img/premium-reaction.png"
+                                              alt="Premium exclusive fire, hot reaction" class="premium-reaction">
+                                            <span class="reaction-count">
+                                              <%= secret.reactions.hot ? secret.reactions.hot.count : 0 %>
+                                            </span>
+                                          </button>
+
+                                          <button class="reaction-btn " data-type="like">
+                                            <!-- <div id="like-animation" class="lottie-animation"></div> -->
+                                            👍
+                                            <span class="reaction-count">
+                                              <%= secret.reactions.like ? secret.reactions.like.count : 0 %>
+                                            </span>
+                                          </button>
+
+                                          <button class="reaction-btn " data-type="laugh">
+                                            <!-- <div id="laugh-animation" class="lottie-animation"></div> -->
+
+                                            😂
+                                            <span class="reaction-count">
+                                              <%= secret.reactions.laugh ? secret.reactions.laugh.count : 0 %>
+                                            </span>
+                                          </button>
+
+                                          <!-- <button class="reaction-btn " data-type="cry">
+
+                                                      😢
+                                                      <span class="reaction-count">
+                                                        <%= secret.reactions.cry ? secret.reactions.cry.count : 0 %>
+                                                      </span>
+                                                    </button> -->
+
+                                          <button class="reaction-btn " data-type="gasp">
+                                            <!-- <div id="gasp-animation" class="lottie-animation"></div> -->
+                                            😱
+                                            <span class="reaction-count">
+                                              <%= secret.reactions.gasp ? secret.reactions.gasp.count : 0 %>
+                                            </span>
+                                          </button>
+
+                                      </div>
+
+                                    </div>
+
+                                    <button id="commentButton"><i class="fas fa-comment"></i><span
+                                        class="comment-count"></span>
+                                    </button>
+                                  </div>
+
+                                  <ul class="second-action">
+                                    <li><i class="fas fa-bookmark"></i>&nbsp;<span id="bookmarkCount">0</span></li>
+                                  </ul>
+
+                                </div>
+
                                 <div class="comment-dropdown" id="commentDropdown">
                                   <form class="comment-display" method="POST" id="commentDisplay">
                                     <ul id="comments" class="comments-list"></ul>
                                   </form>
+
                                   <form action="/comment" method="POST" id="comment-form">
                                     <input type="hidden" name="id" id="secretId" value="<%= secret.id %>" />
                                     <input type="hidden" name="secretUserId" value="<%= secret.user_id %>" />
@@ -661,7 +694,8 @@ class=" read" style="
                                       name="comment"></textarea>
                                     <!-- <input type="text" id="commentInput" placeholder="Write a comment" name="comment"> -->
                                     <button id="postCommentButton">
-                                      Post
+                                      <!-- Post -->
+                                      <i class="fas fa-paper-plane"></i>
                                     </button>
                                     <% if (locals.message) { %>
                                       <small>
@@ -673,11 +707,9 @@ class=" read" style="
                                 </div>
                               </div>
 
-                            </div>
-
                             <ul class="card-menu">
                               <li>
-                                <button class="menu-toggle-btn"><i class="fas fa-ellipsis-vertical"></i></button>
+                                <button class="card-toggle-btn"><i class="fas fa-ellipsis-vertical"></i></button>
                                 <ul class="card-menu-content" style="display: none;">
                                   <li>
                                     <button class="report-btn" data-id="<%= secret.id %>">
@@ -956,75 +988,69 @@ class=" read" style="
                                   <div class="reactions sleek">
                                     <div class="first-action">
                                       <div class="secret-card" data-id="<%= secret.id %>">
-                                        <div class="reaction-pocket">
-                                          <button class="reaction-btn" data-type="like">
-                                            <!-- <div id="like-animation" class="lottie-animation"></div> -->
-                                            👍
-                                            <span class="reaction-count">
-                                              <%= secret.reactions.like ? secret.reactions.like.count : 0 %>
-                                            </span>
-                                          </button>
+                                        <div class="reaction">
+                                            <button class="reaction-btn " data-type="hot">
+                                              <!-- <div id="gasp-animation" class="lottie-animation"></div> -->
+                                              <img src="../../img/premium-reaction.png"
+                                                alt="Premium exclusive fire, hot reaction" class="premium-reaction">
+                                              <span class="reaction-count">
+                                                <%= secret.reactions.hot ? secret.reactions.hot.count : 0 %>
+                                              </span>
+                                            </button>
 
-                                          <button class="reaction-btn" data-type="hot">
-                                            <!-- <div id="gasp-animation" class="lottie-animation"></div> -->
-                                            <img src="../../img/premium-reaction.png"
-                                              alt="Premium exclusive fire, hot reaction" class="verified-badge"
-                                              style="height: 20px  !important; width: 18px  !important;">
-                                            <span class="reaction-count">
-                                              <%= secret.reactions.hot ? secret.reactions.hot.count : 0 %>
-                                            </span>
-                                          </button>
+                                            <button class="reaction-btn " data-type="like">
+                                              <!-- <div id="like-animation" class="lottie-animation"></div> -->
+                                              👍
+                                              <span class="reaction-count">
+                                                <%= secret.reactions.like ? secret.reactions.like.count : 0 %>
+                                              </span>
+                                            </button>
 
-                                          <button class="reaction-btn" data-type="laugh">
-                                            <!-- <div id="laugh-animation" class="lottie-animation"></div> -->
+                                            <button class="reaction-btn " data-type="laugh">
+                                              <!-- <div id="laugh-animation" class="lottie-animation"></div> -->
 
-                                            😂
-                                            <span class="reaction-count">
-                                              <%= secret.reactions.laugh ? secret.reactions.laugh.count : 0 %>
-                                            </span>
-                                          </button>
+                                              😂
+                                              <span class="reaction-count">
+                                                <%= secret.reactions.laugh ? secret.reactions.laugh.count : 0 %>
+                                              </span>
+                                            </button>
 
-                                          <!-- <button class="reaction-btn" data-type="cry">
+                                            <!-- <button class="reaction-btn " data-type="cry">
 
-                                                      😢
-                                                      <span class="reaction-count">
-                                                        <%= secret.reactions.cry ? secret.reactions.cry.count : 0 %>
-                                                      </span>
-                                                    </button> -->
+                                                        😢
+                                                        <span class="reaction-count">
+                                                          <%= secret.reactions.cry ? secret.reactions.cry.count : 0 %>
+                                                        </span>
+                                                      </button> -->
 
-                                          <button class="reaction-btn" data-type="gasp">
-                                            <!-- <div id="gasp-animation" class="lottie-animation"></div> -->
-                                            😱
-                                            <span class="reaction-count">
-                                              <%= secret.reactions.gasp ? secret.reactions.gasp.count : 0 %>
-                                            </span>
-                                          </button>
-
-                                          <div class="floating-lottie"></div>
-
+                                            <button class="reaction-btn " data-type="gasp">
+                                              <!-- <div id="gasp-animation" class="lottie-animation"></div> -->
+                                              😱
+                                              <span class="reaction-count">
+                                                <%= secret.reactions.gasp ? secret.reactions.gasp.count : 0 %>
+                                              </span>
+                                            </button>
 
                                         </div>
 
                                       </div>
 
-                                      <button id="commentButton" class="reaction-btn"><i
-                                          class="fas fa-comment"></i><span class="comment-count"></span></button>
-
+                                      <button id="commentButton"><i class="fas fa-comment"></i><span
+                                          class="comment-count"></span>
+                                      </button>
                                     </div>
 
-
                                     <ul class="second-action">
-                                      <li><i class="fas fa-bookmark"></i></li>
-                                      <li> <button class="copy-btn">
-                                          <i class="fas fa-copy"></i>
-                                        </button></li>
-
+                                      <li><i class="fas fa-bookmark"></i>&nbsp;<span id="bookmarkCount">0</span></li>
                                     </ul>
+
                                   </div>
+
                                   <div class="comment-dropdown" id="commentDropdown">
                                     <form class="comment-display" method="POST" id="commentDisplay">
                                       <ul id="comments" class="comments-list"></ul>
                                     </form>
+
                                     <form action="/comment" method="POST" id="comment-form">
                                       <input type="hidden" name="id" id="secretId" value="<%= secret.id %>" />
                                       <input type="hidden" name="secretUserId" value="<%= secret.user_id %>" />
@@ -1033,7 +1059,8 @@ class=" read" style="
                                         name="comment"></textarea>
                                       <!-- <input type="text" id="commentInput" placeholder="Write a comment" name="comment"> -->
                                       <button id="postCommentButton">
-                                        Post
+                                        <!-- Post -->
+                                        <i class="fas fa-paper-plane"></i>
                                       </button>
                                       <% if (locals.message) { %>
                                         <small>
@@ -1041,14 +1068,13 @@ class=" read" style="
                                         </small>
                                         <% } %>
                                     </form>
+
                                   </div>
-
                                 </div>
-
 
                                 <ul class="card-menu">
                                   <li>
-                                    <button class="menu-toggle-btn"><i class="fas fa-ellipsis-vertical"></i></button>
+                                    <button class="card-toggle-btn"><i class="fas fa-ellipsis-vertical"></i></button>
                                     <ul class="card-menu-content" style="display: none;">
                                       <li>
                                         <button class="report-btn" data-id="<%= secret.id %>">
@@ -2136,7 +2162,7 @@ class=" read" style="
         });
       });
 
-      document.querySelectorAll(".menu-toggle-btn").forEach((button) => {
+      document.querySelectorAll(".card-toggle-btn").forEach((button) => {
         button.addEventListener("click", (e) => {
           const menuContent = e.target.closest(".card-menu").querySelector(".card-menu-content");
           const isVisible = menuContent.style.display === "block";

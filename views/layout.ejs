@@ -8,14 +8,18 @@
   <script src="https://kit.fontawesome.com/ceb8cfc409.js" crossorigin="anonymous"></script>
   <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://unpkg.com/wavesurfer.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
   <link rel="stylesheet" href="/styles/style.css" />
   <link rel="stylesheet" href="/styles/media.css" />
   <link rel="stylesheet" href="/styles/new.css" />
   <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+  <title><%= title ? title : 'Gossipa' %></title>
 </head>
 
 <body class="main-background">
+
+  
 <script>
   window.addEventListener("load", function () {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -26,8 +30,8 @@
   <header>
     <div class="container">
       <div class="header">
-        <img src="../img/logo/main-logo.png" alt="" id="main-logo" class="logo">
-        <img src="../img/logo/mobile-logo.png" alt="" id="mobile-logo" class="logo">
+        <img src="../../img/logo/main-logo.png" alt="" id="main-logo" class="logo">
+        <img src="../../img/logo/mobile-logo.png" alt="" id="mobile-logo" class="logo">
   
         <form id="liveSearchForm" action="/search" method="post" autocomplete="off">
           <div class="search" id="mobileSearch">
@@ -42,7 +46,7 @@
         <div class="topbar-icons">
                 <ul id="navbar">
   
-                  <li class="navbar">
+                  <li class="navbar nav-text">
                     <a class="nav-link" href="/explore" style="color: var(--text-color);">
                           <i class=" fab fa-modx fa-2x"></i>
                     </a>
@@ -76,6 +80,14 @@
                     <% } else {%>
                    <% } %>
                   </span></h3>
+                </div>
+
+                <div class="theme-switch mobile-nav">
+                  <input type="checkbox" id="themeToggle" class="theme-toggle" onchange="toggleMode()" />
+                  <label for="themeToggle" class="theme-toggle-label">
+                    <span class="sun-icon">☀️</span>
+                    <span class="moon-icon">🌙</span>
+                  </label>
                 </div>
   
                 <div class="menu">
@@ -151,7 +163,72 @@
     </div> 
   </header>
 
+ 
   
+  <div class="layout-container container">
+
+    <aside class="left-sidebar">
+      <div class="aside">
+        <ul class="nav">
+          <li class="nav-item current">
+            <a href="/feeds">
+              <i class="nav-icon fas fa-home"></i> &nbsp;
+              <span class="nav-text">Home</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/explore">
+              <i class="nav-icon fab fa-modx"></i> &nbsp;
+              <span class="nav-text">Explore</span>
+
+              <span class="nav-tag">New</span>
+            </a>
+          </li>
+          <li class="nav-item chief">
+            <a href="">
+              <i class="nav-icon fas fa-bookmark"></i>
+              &nbsp;<span class="nav-text">Bookmarks</span>&nbsp;
+            </a>
+          </li>
+          <li class="nav-item chief">
+            <a href="/subscribe">
+              <i class="nav-icon fas fa-award"></i>
+              &nbsp;<span class="nav-text">Become a Chief</span>&nbsp;
+              <span class="nav-text"><img src="../../img/gossipa3.png" alt="" class="nav-icon verified-badge"></span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/profile">
+              <i class="nav-icon fas fa-circle-user"></i> &nbsp;
+              <span class="nav-text">My Profile</span>
+            </a>
+          </li>
+          <li class="nav-item blur">
+            <a href="/chat">
+              <i class="nav-icon fas fa-comments"></i> &nbsp;
+              <span class="nav-text">GossipaCity</span>
+
+              <span class="nav-tag">soon</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="/submit">
+              <i class="fas fa-circle-plus nav-icon"></i>
+              &nbsp;<span class="nav-text"> Compose Gist</span>&nbsp;
+              <i class="fas fa-chevron-down nav-text"></i>
+            </a>
+
+          </li>
+        </ul>
+      </div>
+
+    </aside>
+
+    <main>
+      <%- body %>
+    </main>
+
     <div id="milestone-badge" class="hidden">🎉 10 Reactions! 🎉</div>
 
     <div id="announcement-overlay" class="hidden">
@@ -169,7 +246,7 @@
     </div>
 
     
-    <div class="theme-switch">
+    <div class="theme-switch nav-text">
       <input type="checkbox" id="themeToggle" class="theme-toggle" onchange="toggleMode()" />
       <label for="themeToggle" class="theme-toggle-label">
         <span class="sun-icon">☀️</span>
@@ -181,6 +258,7 @@
 
   <!-- Notifications Container -->
   <div id="notification" style="position: fixed; bottom: 10px; left: 10px; z-index: 1000"></div>
+  </div>
 
 
   <script>
@@ -227,7 +305,7 @@
       } else if (data.type === "reaction") {
         const { reaction, count, milestone } = data.data;
         notification.innerText =
-          `Your secret received a new "${reaction}" reaction! Total: ${count}.`
+          `Your Gossipa received a new "${reaction}" reaction! Total: ${count}.`
       } else if (data.type === "top-secret") {
         notification.innerText = `Most discussed secret goes to ~~@anonym${data.data.userId}~~"`;
       }
@@ -276,6 +354,46 @@
     };
     
   </script>
+
+<script>
+  function updateCountdown() {
+    const countdownEl = document.getElementById("countdown");
+    // const announcement= document.getElementById("announcement");
+    if (!countdownEl) return;
+
+    const now = new Date();
+    const nextTarget = new Date();
+    nextTarget.setUTCHours(11, 0, 0, 0); // 11:00 AM GMT
+
+    if (now > nextTarget) {
+      nextTarget.setUTCDate(nextTarget.getUTCDate() + 1); // move to next day
+    }
+
+    const distance = nextTarget - now;
+
+    const hours = String(Math.floor((distance / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+    const minutes = String(Math.floor((distance / (1000 * 60)) % 60)).padStart(2, '0');
+    const seconds = String(Math.floor((distance / 1000) % 60)).padStart(2, '0');
+
+    const span = document.createElement('span')
+    span.textContent = `${hours}:${minutes}:${seconds}`
+    // span.className = 'counter'
+
+    countdownEl.textContent = `Next top gossip to be selected in:`;
+    countdownEl.appendChild(span)
+    countdownEl.style.flex = " 1 1 100% !important"
+    countdownEl.style.width = "100% !important"
+    span.style.color = "var(--secondary-color)"
+
+  }
+
+  // Start the countdown interval when DOM is ready
+  document.addEventListener("DOMContentLoaded", () => {
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  });
+</script>
+
 
   <script>
     const reactToSecret = async (secretId, type) => {
@@ -332,6 +450,8 @@
       }, 5000); // 5 seconds
     }
   </script>
+
+      <script src="/js/defaultTheme.js"></script>
 </body>
 
 </html>

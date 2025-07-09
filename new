@@ -89,125 +89,7 @@
                 }, 5000);
               });
 
-              <header>
-                <div class="container">
-                  <div class="header">
-                    <img src="../img/logo/gossipa.png" alt="" id="logo">
-                    <div class="topbar-icons">
-                    <form id="liveSearchForm" action="/search" method="post" autocomplete="off">
-                      <div class="search" id="mobileSearch">
-                        <button class="search-btn" type="submit" id="toggleSearch">
-                          <i class="fa-solid fa-magnifying-glass"></i>
-                        </button>
-                        <input name="search" type="text" id="searchInput" placeholder="Search">
-                      </div>
-                      <ul id="suggestions" class="suggestion-box"></ul>
-                    </form>
-                    
-                            <ul id="navbar">
-                      <li class="navbar">
-                        <a class="nav-link" href="/notifications">
-                          <i class="fas fa-bell fa-2x"></i>
-                          <span class="counter">0</span>
-                        </a>
-                      </li>
-                      <li class="navbar profiled">
-                        <button class="nav-btn avatar-profile thumb"><img src="<%= profilePicture ?'../.' + profilePicture: profilePicture %>" alt="" class="profile-pic thumb"></button>
-                      </li>
-                      <li class="navbar dropdown">
-                        <div class="hamburger" id="hamburger">
-                          <div class="bar" id="bar1"></div>
-                          <div class="bar" id="bar3"></div>
-                        </div>
-                        </li>
-                      </div>
-                        <div id="menu" class="menu-hidden">
-                          <div class="container">
-                            <div class="profile-header">
-                              <img src="<%= profilePicture ? profilePicture : '../.' + profilePicture %>" alt="Profile Avatar" class="profile-avatar" />
-            
-                              <h3 class="username">Hello, <span class="username">
-                                @amebo<%= userId %> 
-                                <% if(verification === true) {%>
-                                <img src="../../img/badge3.png" alt="">
-                                <% } else {%>
-                               <% } %>
-                              </span></h3>
-                            </div>
-            
-                            <div class="menu">
-                              <div class="menu-nav">
-                    
-                                <ul class="pages">
-                                  <h4>Compose a gist</h4>
-                                  <li><a class="nav-link" href="/feeds">View Gist</a></li>
-                                  <li><a class="nav-link" href="/submit">Share a Gist</a></li>
-                                  <li>
-                                    <a class="nav-link" href="/notifications" class="">Notifcations</a>
-                                  </li>
-                                </ul>
-                                <ul class="account">
-                                  <h4>Account</h4>
-                                  <li>
-                                    <a class="nav-link" href="/notifications" class="">Go To Profile</a>
-                                  </li>
-                                  <li><a class="nav-link" href="/profile">Edit Profile</a></li>
-            
-                                  <li>
-                                    <form action="/logout" method="POST">
-                                      <button type="submit">Logout <i class="fas fa-right-from-bracket"></i></button>
-                                    </form>
-                                  </li>
-                                </ul>
-                              </div>
-            
-                              <ul class="socials">
-                                <li>
-                                  <a class="nav-link" target="_blank" href="https://t.me/anonymcret"><i
-                                      class="fab fa-telegram fa-2x"></i></a>
-                                </li>
-                                <li>
-                                  <a class="nav-link" target="_blank" href=""><i class="fab fa-instagram fa-2x"></i></a>
-                                </li>
-                                <li>
-                                  <a class="nav-link" target="_blank" href=""><i class="fab fa-linkedin fa-2x"></i></a>
-                                </li>
-                                <li>
-                                  <a class="nav-link" target="_blank" href=""><i class="fab fa-github fa-2x"></i></a>
-                                </li>
-                              </ul>
-                              <hr />
-                              <div class="menu-nav-alt">
-                                <ul class="info">
-                                  <h4>Information</h4>
-                                  <li><a href="">About</a></li>
-                                  <li><a href="">Security</a></li>
-                                  <li><a href="">Privacy</a></li>
-                                  <li><a href="">Blog</a></li>
-                                </ul>
-                                <ul class="support">
-                                  <h4>Support</h4>
-                                  <li><a href="">FAQ</a></li>
-                                  <li><a href="">Contact</a></li>
-                                  <li><a href="/feedback">Reviews</a></li>
-                                </ul>
-                              </div>
-                              <p class="menu-lang">
-                                <i class="fas fa-globe"></i> English
-                              </p>
-                              <button id="close">Close</button>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div id="announcement">
-               
-                </div> 
-              </header>
-
+              
               
         <form id="selectCategory" class="menu-category" method="POST">
           <button class="category-item" data-category="love">All</button>
@@ -516,3 +398,89 @@ function showToast(message) {
     toast.addEventListener('animationend', () => toast.remove());
   }, 3000);
 }
+
+
+<script>
+  const fetchTopDiscussedSecret = async () => {
+    try {
+      const response = await fetch("/top-discussed");
+      const data = await response.json();
+      const topSecret = data.topSecret;
+
+      if (data.success) {
+        showAnnouncement(topSecret);
+      } else {
+        console.log("No trending secret to display.");
+      }
+    } catch (error) {
+      console.error("Error fetching top discussed secret:", error);
+    }
+  };
+
+  pinSecret = (topSecret) => {
+    const pinnedSection = document.getElementById("pinned");
+    pinnedSection.classList.add("visible")
+    pinnedSection.innerHTML = `
+<li class="secret">
+<div class="pin-card">
+<h3> Top Gossip </h3>
+<br/>
+<div class="card">
+<small>~~ @anonym${topSecret.user_id} ~~</small>
+
+<p>
+${topSecret.secret.substring(0, 250) + "..."}
+<center>
+<a id="pinnedButton" class="read"
+href="#secret${topSecret.id}"
+style="
+background: none;
+font-size: 1rem;
+padding: 0;
+font-weight: bold;
+display: block !important;
+"
+>View secret</a
+>
+</center>
+</p>
+
+<i class="fas fa-thumbtack pinned"></i>
+
+</div>
+</div>
+</li>
+`;
+
+
+    document.getElementById("pinnedButton").addEventListener("click", function (e) {
+      e.preventDefault()
+
+      const target = document.getElementById(`secret${topSecret.id}`);
+
+      // Smooth Scroll
+      target.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      // Add highlight effect
+      target.querySelector(".card").classList.add("highlight");
+      target.querySelector(".card").style.width = '100% !important'
+      target.querySelector("card").style.flex = '1 1 100% !important'
+
+    })
+
+    // highlightElement(pinnedSection)
+    // Set a timeout to unpin the secret after 24 hours
+    setTimeout(() => {
+      pinnedSection.innerHTML = "";
+    }, 24 * 60 * 60 * 1000); // 24 hours
+  };
+
+  // Schedule the announcement at 12:00 PM GMT
+  now = new Date();
+  targetTime = new Date();
+  targetTime.setUTCHours(11, 0, 0, 0); // 12:00 PM GMT
+  timeUntilAnnouncement = targetTime - now;
+
+  setTimeout(fetchTopDiscussedSecret, timeUntilAnnouncement);
+</script>
+

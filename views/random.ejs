@@ -1,136 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2&family=Quicksand&display=swap" rel="stylesheet">
-  <script src="https://kit.fontawesome.com/ceb8cfc409.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
-  <link rel="stylesheet" href="/styles/style.css" />
-  <link rel="stylesheet" href="/styles/media.css" />
-  <title>Document</title>
-
+<%- include("layout") %>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+<link rel="stylesheet" href="./styles/random.css">
   <style>
-    body {
-      font-family: 'Inter', 'Roboto', 'Helvetica Neue', 'Segoe UI', sans-serif !important;
-      font-family: 'Inter', sans-serif;
-      height: 100vh;
-      margin: 0;
-    }
-  
-    .main-background {
-      position: relative;
-      min-height: 100vh;
-      overflow-x: hidden;
-      overflow-y: auto;
-      background-color: var(--body-bg);
-    }
     
-    /* Glowing gradient blobs */
-    .main-background::before,
-    .main-background::after {
-      content: "";
-      position: fixed;
-      z-index: 0 !important;
-      width: 400px;
-      height: 400px;
-      border-radius: 50%;
-      filter: blur(120px);
-      opacity: 0.25;
-      pointer-events: none;
-    }
-    
-    .main-background::before {
-      top: -100px;
-      left: 0%;
-      background: radial-gradient(circle at center, var(--primary-color), transparent 70%);
-      z-index: 0 !important;
-    }
-    
-    .main-background::after {
-      bottom: -80px;
-      right: 0%;
-      background: radial-gradient(circle at center, var(--secondary-color), transparent 70%);
-      z-index: 0 !important;
-    }
-  
-  
-    #random-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 1rem;
-    }
-  
-    .wheel-container {
-      text-align: center;
-      width: 300px;
-      height: 300px;
-      margin: auto;
-    }
-  
-    .wheel {
-      width: 300px;
-      height: 300px;
-      border-radius: 50%;
-      border: 10px solid #333;
-      border: 10px solid var(--primary-color);
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-      box-shadow: 0 4px 10px var(--secondary-color);
-    }
-  
     .segment {
-      width: 50%;
-      height: 50%;
+      width: 40% !important;
       position: absolute;
-      top: 0;
-      left: 50%;
-      color: white;
+      top: 36% !important;
+      left: 5% !important;
       text-align: center;
-      line-height: 150px;
-      font-size: 18px;
       font-weight: bold;
-      transform-origin: 100% 100%;
-      transform: rotate(0deg);
+      transform-origin: 100% 100% !important;
       box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2);
       margin: 1rem;
       padding: 1rem;
     }
   
     .segment span {
-      color: #fff;
+      color: var(--text-color);
       font-size: 18px;
       font-weight: bold;
     }
+
+    .button-spinner {
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-top: 3px solid #fff;
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    vertical-align: middle;
+    animation: spinning 1s linear infinite;
+  }
   
-    .wheel-container {
-      /* position: relative; */
-      text-align: center;
-    }
+  @keyframes spinning {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
   
-    .spinner {
-      position: absolute;
-      top: 29% !important;
-      left: 49% !important;
-      display: none;
-      margin-top: -20px;
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #3498db;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      animation: spinner 1s linear infinite;
-    }
-  
-    @keyframes spinner {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  
+
     .overlay {
       position: fixed;
   top: 0;
@@ -146,16 +54,13 @@
   
     .overlay-content {
       position: fixed;
-      top: 5%;
+      top: 7%;
       bottom: 25%;
       right: 0;
       left: 0;
       margin: auto;
-      /* background: var(--body-bg); */
-  color: var(--text-color);
   border-radius: 12px;
-  padding: 24px;
-  max-width: 500px;
+  width: 50%;
   height: auto;
   text-align: center;
   animation: popin 0.4s ease;
@@ -165,6 +70,16 @@
     @keyframes popin {
   from { transform: scale(0.8); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .overlay-content{
+    width: 90% !important;
+  }
+
+  .secret-footer {
+    width: 90% !important;
+  }
 }
   
     button#closeOverlay {
@@ -186,11 +101,140 @@
     #spinBtn {
       position: relative;
     }
+
+    .secret-footer {
+      position: fixed;
+      bottom: 5rem !important;
+      width: 50%;
+  margin-top: 2rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: .5rem;
+  backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+}
+
+.reaction-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.reaction-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-color);
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.reaction-btn:hover {
+  transform: scale(1.2);
+}
+
+.reaction-icon {
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+  margin-right: 4px;
+  border-radius: 50%;
+}
+
+.reaction-count {
+  font-size: 0.9rem;
+  color: #aaa;
+  margin-left: 4px;
+}
+
+.reaction-comment-form {
+  width: 100%;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.reaction-comment-form textarea {
+  flex: 1;
+  padding: 0.6rem;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font-size: 1rem;
+  resize: none;
+  font-family: inherit;
+}
+
+.reaction-comment-form textarea::placeholder {
+  color: #888;
+}
+
+.reaction-comment-form button {
+  background: linear-gradient(135deg, #7f5af0, #d13d87);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reaction-comment-form button:hover {
+  background: linear-gradient(135deg, #9a7eff, #ff6ea0);
+}
+
+.toast {
+  background: var(--primary-faded);
+  color: var(--text-color);
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin: auto;
+  max-width: 300px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+  animation: fadein 0.3s ease, fadeout 0.3s ease 2.5s;
+}
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeout {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-10px); }
+}
+
+
+.lottie-wrapper {
+            position: absolute;
+            top: 12%;
+            left: 12%;
+            width: 280px;
+            height: 280px;
+            /* transform: translate(-50%, -50%); */
+            pointer-events: none;
+            z-index: 0;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .lottie-wrapper {
+            opacity: 1;
+        }
   
   </style>
+<body>
   
-</head>
-<body class="main-background">
+  <button class="back"><i class="fas fa-arrow-left"></i> Back</button>
   <script>
     socket.on('new-secret', (data) => {
         const notification = document.createElement('div');
@@ -207,45 +251,139 @@
         setTimeout(() => notification.remove(), 5000);
     });
   </script>
-
-  <div class="jumbotron text-center">
-    <button class="back"><i class="fas fa-arrow-left"></i> Back</button>
-    <div class="container">
-      <center>
-        <h1 class="display-3">Random Wheel</h1>
-        <p>Spin the wheel to select random confessions</p>
-      </center>
-      <div id="random-container">
-        <div class="wheel-container">
-         
-          <div class="wheel" id="wheel" style="color: var(--text-color);">
-            <!-- Dynamic segments will be inserted here by JavaScript -->
+      <div class="container">
+        <center>
+          <h1 class="display-3"> Confession Wheel </h1>
+          <p>Spin the wheel to select random confessions</p>
+        </center>
+        
+        <div id="random-container">
+          <div class="wheel-container">
            
-            <% if (locals.randomSecret) { %>
-              <% randomSecret.forEach((secret) => { %>
-                  <div class="segment" style="transform: rotate(<%= secret.id %>deg); margin: <%= secret.id %>px;">
-                    <%= secret.id %>
-                  </div>
-              <% }) %>
+            <div class="wheel" id="wheel" style="color: var(--text-color);">
              
-            <% } %>
-            
+              <!-- Dynamic segments will be inserted here by JavaScript -->
+             
+              <% if (locals.randomSecret) { %>
+                <% randomSecret.forEach((secret) => { %>
+                    <div class="segment" style="transform: rotate(<%= secret.id %>deg); margin: <%= secret.id %>px;">
+                      <%= secret.id %>
+                    </div>
+                <% }) %>
+               
+              <% } %>
+              
+            </div>
+            <div class="lottie-wrapper"></div>
+  
+            <!-- <div id="spinner" class="spinner"></div> -->
+            <button id="spinBtn">Spin</button>
+         
+          </div>
+          
+          <!-- Modal Overlay -->
+          <div id="overlay" class="overlay">
+            <div  id="pinned-secret" class="overlay-content">
+              <button id="closeOverlay">&times;</button>
+              <div id="overlay-content"></div>
+            </div>
           </div>
 
-          <div id="spinner" class="spinner"></div> <!-- Spinner -->
-          <div class="pointer" id="pointer">↑</div>
-          <button id="spinBtn">Spin the Wheel</button>
-       
-        </div>
-        
-        <!-- Modal Overlay -->
-        <div id="overlay" class="overlay">
-          <div  id="pinned-secret" class="overlay-content">
-            <button id="closeOverlay">&times;</button>
-            <div id="overlay-content"></div>
+
           </div>
-        </div>
-        
+          
+
+      <div id="notification" style="position: fixed; bottom: 2rem; left: 1rem; right: 0; z-index: 9999;"></div>
+
+
+      <script>
+        document.querySelector(".back").addEventListener("click", () => {
+          // Check if there's a referrer (i.e., user navigated here from somewhere else)
+          const from = document.referrer;
+      
+          // If previous page is from your own domain and is the Explore page
+          if (from && from.includes("/explore")) {
+            window.history.back(); // ⬅️ Go back to where they came from
+          } else {
+            window.location.href = "/explore"; // ⬅️ Fallback default
+          }
+        });
+      </script>
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+          document.querySelectorAll('.reaction-btn').forEach(button => {
+            const type = button.getAttribute('data-type');
+
+            button.addEventListener('click', () => {
+              const emojiChar = button.textContent.trim().split('\n')[0];
+              const card = button.closest('.secret-card');
+              const floatingContainer = card.querySelector('.floating-lottie');
+
+              // === 1. EMOJI BURST AROUND BUTTON ===
+              triggerEmojiBurst(button, emojiChar);
+
+              // === 2. 3D EXTRAS AROUND BUTTON ===
+              if (type === 'cry') {
+                const tear = document.createElement('span');
+                tear.className = 'emoji-particle';
+                tear.innerText = '💧';
+                tear.style.setProperty('--x', '0px');
+                tear.style.setProperty('--y', '50px');
+                button.appendChild(tear);
+                setTimeout(() => tear.remove(), 800);
+              }
+
+              if (type === 'gasp') {
+                const puff = document.createElement('span');
+                puff.className = 'emoji-particle';
+                puff.innerText = '💨';
+                puff.style.setProperty('--x', '-10px');
+                puff.style.setProperty('--y', '0px');
+                button.appendChild(puff);
+                setTimeout(() => puff.remove(), 800);
+              }
+
+
+              // === 5. REMOVE LOTTIE ANIMATION AFTER IT FINISHES ===
+              setTimeout(() => {
+                floatingContainer.classList.remove('active'); // Remove the active class
+                floatingContainer.innerHTML = ''; // Clear the Lottie animation
+              }, 2000); // Adjust the timeout to match the animation duration
+            });
+          });
+
+          function triggerEmojiBurst(container, emojiChar) {
+            const burstCount = 10;
+
+            for (let i = 0; i < burstCount; i++) {
+              const particle = document.createElement('span');
+              particle.classList.add('emoji-particle');
+              particle.innerText = emojiChar;
+
+              const angle = Math.random() * 2 * Math.PI;
+              const distance = Math.random() * 40 + 20;
+              const x = Math.cos(angle) * distance + 'px';
+              const y = Math.sin(angle) * distance + 'px';
+
+              particle.style.setProperty('--x', x);
+              particle.style.setProperty('--y', y);
+
+              container.appendChild(particle);
+              setTimeout(() => particle.remove(), 800);
+            }
+
+            container.classList.add('pop-animate');
+            setTimeout(() => container.classList.remove('pop-animate'), 300);
+          }
+        });
+      </script>
+
+
+
         <script>
           // Fetch randomSecrets data passed from the backend
   const randomSecrets = <%- JSON.stringify(randomSecret) %>; // ✅ Unescaped EJS output
@@ -259,6 +397,10 @@
           const spinner = document.getElementById('spinner');
           const overlay = document.getElementById('overlay');
           const overlayContent = document.getElementById('overlay-content');
+          const wrapper = document.querySelector('.lottie-wrapper');
+          const animations = {
+            rat: "./img/lottie/rat-search.json"
+        };
 
           // Convert randomSecrets to an array if it's an object
           const secretsArray = Array.isArray(randomSecrets) ? randomSecrets : Object.values(randomSecrets);
@@ -276,7 +418,7 @@
   return `
     <div class="segment" style="
       transform: rotate(${angleForThisSegment}deg) translateY(-120px);
-      background: radial-gradient(circle at 30% 30%, ${secret.color || '#ff6b81'}, #00000030);
+      background: radial-gradient(circle at 30% 30%, '#ff6b81' , #00000030);
       color: white;
       font-size: 14px;
       position: absolute;
@@ -294,11 +436,21 @@
 
             // Insert segments into the wheel
             wheel.innerHTML = segments;
-            
+            let searchLottieInstance;
             // Function to spin the wheel
             function spinWheel() {
+               spinBtn.disabled = true;
+  spinBtn.innerHTML = `<div class="button-spinner"></div>`;
               // Show spinner
-              spinner.style.display = 'block';
+              // spinner.style.display = 'block';
+
+              searchLottieInstance = lottie.loadAnimation({
+                        container: wrapper,
+                        renderer: 'svg',
+                        loop: true,
+                        autoplay: true,
+                        path: animations.rat
+                    });
 
               // Randomly determine a rotation angle (in degrees)
               const randomRotation = Math.floor(Math.random() * 360) + 3600; // 3600 ensures multiple rotations
@@ -310,24 +462,87 @@
               // Simulate waiting for the wheel to stop
               setTimeout(() => {
                 // Hide spinner
-                spinner.style.display = 'none';
+                // spinner.style.display = 'none';
+
+                if (searchLottieInstance) {
+                    searchLottieInstance.destroy(); // Clean up Lottie
+                }
+
+                if (wrapper) wrapper.innerHTML = '';
+
+                spinBtn.disabled = false;
+    spinBtn.innerHTML = `Spin`;
+
 
                 // Calculate which segment is selected based on the rotation
                 const selectedIndex = Math.floor((randomRotation % 360) / angle);
 
                 // Display the selected secret in the overlay
                 const selectedSecret = secretsArray[selectedIndex];
+
+                const defaultReaction = { count: 0 };
+const raw = selectedSecret.reactions || {};
+const reactions = {
+  hot: raw.hot || defaultReaction,
+  like: raw.like || defaultReaction,
+  laugh: raw.laugh || defaultReaction,
+  gasp: raw.gasp || defaultReaction,
+};
+
                 overlayContent.innerHTML = `
-                      <center>
+                      <center style="color: #fff">
         <h3 class="display-3">You've Pokenosed a Gist Amebo!</h3>
         <small>Don't kiss and tell</small>
       </center>
-      <div class="card">
+      <div class="random-card">
                   <p>${selectedSecret.secret}</p>
-                  <p>Category: ${selectedSecret.category}</p>
-                  <small>From: @gossipa${selectedSecret.user_id}</small>
+                  <span class="tag">${selectedSecret.category}</span>
+                  <small class="user">From: @gossipa${selectedSecret.user_id}</small>
                   </div>
+
+                  <div class="secret-footer secret-card" data-id="${selectedSecret.id}">
+  <div class="reaction-bar">
+   <button class="reaction-btn" data-type="hot">
+        <img src="/img/premium-reaction.png" alt="🔥" class="reaction-icon" />
+        <div class="reaction-class-wrapper">
+        <span class="reaction-count none">${reactions.hot.count}</span>
+        </div>
+      </button>
+
+      <button class="reaction-btn" data-type="like">👍
+        <div class="reaction-class-wrapper">
+        <span class="reaction-count none">${reactions.like.count}</span>
+        </div>
+      </button>
+
+      <button class="reaction-btn" data-type="laugh">😂
+        <div class="reaction-class-wrapper">
+        <span class="reaction-count none">${reactions.laugh.count}</span>
+        </div>
+      </button>
+
+      <button class="reaction-btn" data-type="gasp">😱
+        <div class="reaction-class-wrapper">
+        <span class="reaction-count none">${reactions.gasp.count}</span>
+        </div>
+      </button>
+  </div>
+
+  <form class="reaction-comment-form" id="comment-form" action="/comment" method="POST">
+    <input type="hidden" name="id" id="secretId" value="${selectedSecret.id }" />
+    <input type="hidden" name="secretUserId" value="${selectedSecret.user_id}" />
+    <input type="hidden" name="commentUserId" value="<%= userId %>" />
+    <textarea name="comment" id="commentInput" placeholder="Drop your thoughts... 🤐" required></textarea>
+    <button type="submit">Send</button>
+  </form>
+</div>
+
+
                 `;
+
+                bindReactionHandlers();
+bindCommentFormHandler();
+
                 
                 // Show the overlay with the selected data
                 overlay.style.display = 'block';
@@ -343,12 +558,233 @@
             document.getElementById('spinBtn').addEventListener('click', spinWheel);
           }
 
+
+          function bindReactionHandlers() {
+  document.querySelectorAll(".reaction-btn").forEach((button) => {
+    const animations = {
+  like: './img/lottie/like.json',
+  laugh: './img/lottie/laugh.json',
+  cry: './img/lottie/cry.json',
+  gasp: './img/lottie/gasp.json',
+  hot: './img/lottie/hot.json'
+};
+
+
+button.addEventListener("click", async (event) => {
+
+
+  const btn = event.target.closest(".reaction-btn");
+  const type = btn.getAttribute("data-type");
+  const secretCard = btn.closest(".secret-card");
+  const secretId = secretCard.getAttribute("data-id");
+
+
+  const emojiChar = btn.textContent.trim().split('\n')[0];
+  const card = btn.closest('.secret-card'); // ✅ now works
+  const floatingContainer = card.querySelector('.floating-lottie');
+  const floating = document.createElement('div');
+  floating.className = 'floating-lottie-animated';
+  card.appendChild(floating);
+
+
+  // === 1. EMOJI BURST AROUND BUTTON ===
+  triggerEmojiBurst(btn, emojiChar);
+
+  // === 2. 3D EXTRAS AROUND BUTTON ===
+  if (type === 'cry') {
+    const tear = document.createElement('span');
+    tear.className = 'emoji-particle';
+    tear.innerText = '💧';
+    tear.style.setProperty('--x', '0px');
+    tear.style.setProperty('--y', '50px');
+    button.appendChild(tear);
+    setTimeout(() => tear.remove(), 800);
+  }
+
+  if (type === 'gasp') {
+    const puff = document.createElement('span');
+    puff.className = 'emoji-particle';
+    puff.innerText = '💨';
+    puff.style.setProperty('--x', '-10px');
+    puff.style.setProperty('--y', '0px');
+    button.appendChild(puff);
+    setTimeout(() => puff.remove(), 800);
+  }
+
+
+  try {
+    const response = await fetch(`/secret/${secretId}/react`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type }),
+    });
+
+    const data = await response.json();
+
+
+    const animation = lottie.loadAnimation({
+      container: floating,
+      renderer: 'svg',
+      loop: false,
+      autoplay: true,
+      path: animations[type]
+    });
+
+    // Get button to card offset
+    const buttonRect = btn.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+
+    const startX = buttonRect.left - cardRect.left + buttonRect.width / 2;
+    const startY = buttonRect.top - cardRect.top + buttonRect.height / 2;
+
+    floating.style.left = `${startX}px`;
+    floating.style.top = `${startY}px`;
+
+    // 🎇 TRAIL PARTICLES WHILE MOVING
+    const trailEmojis = ['✨', '💥', '💨'];
+    let trailInterval = setInterval(() => {
+      const trail = document.createElement('span');
+      trail.className = 'trail-particle';
+      trail.innerText = trailEmojis[Math.floor(Math.random() * trailEmojis.length)];
+
+      // Offset from Lottie position
+      const offsetX = (Math.random() - 0.5) * 60;
+      const offsetY = (Math.random() - 0.5) * 60;
+
+      trail.style.left = `${floating.offsetLeft}px`;
+      trail.style.top = `${floating.offsetTop}px`;
+      trail.style.setProperty('--trail-x', `${offsetX}px`);
+      trail.style.setProperty('--trail-y', `${offsetY}px`);
+
+      card.appendChild(trail);
+      setTimeout(() => trail.remove(), 600);
+    }, 100);
+
+    // 🎯 Animate to center
+    setTimeout(() => {
+      floating.classList.add('to-center');
+    }, 50);
+
+    // 👋 Animate back and remove
+    setTimeout(() => {
+      floating.classList.remove('to-center');
+      floating.classList.add('to-button');
+      clearInterval(trailInterval);
+    }, 1200);
+
+    setTimeout(() => {
+      floating.remove();
+    }, 1800);
+
+
+    if (data.success) {
+      const countSpan = btn.querySelector(".reaction-count");
+                            const newCount = data.reactions[type].count || 0;
+animateCountBump(countSpan, newCount);
+btn.classList.add("bounce");
+setTimeout(() => btn.classList.remove("bounce"), 300); // Use updated count from server
+    } else {
+      console.error("Failed to update reactions:", data.error);
+    }
+  } catch (error) {
+    console.error("Error updating reactions:", error);
+  }
+
+  function animateCountBump(countSpan, newCount) {
+  const temp = document.createElement("span");
+  temp.className = "reaction-count";
+  temp.textContent = newCount;
+  temp.style.position = "absolute";
+  temp.style.transform = "translateY(100%)";
+  temp.style.transition = "transform 0.3s ease";
+
+  const wrapper = countSpan.parentElement;
+  wrapper.appendChild(temp);
+
+  requestAnimationFrame(() => {
+    countSpan.style.transform = "translateY(-100%)";
+    temp.style.transform = "translateY(0%)";
+  });
+
+  setTimeout(() => {
+    countSpan.remove();
+  }, 300);
+}
+
+
+
+  function triggerEmojiBurst(container, emojiChar) {
+    const burstCount = 10;
+
+    for (let i = 0; i < burstCount; i++) {
+      const particle = document.createElement('span');
+      particle.classList.add('emoji-particle');
+      particle.innerText = emojiChar;
+
+      const angle = Math.random() * 2 * Math.PI;
+      const distance = Math.random() * 40 + 20;
+      const x = Math.cos(angle) * distance + 'px';
+      const y = Math.sin(angle) * distance + 'px';
+
+      particle.style.setProperty('--x', x);
+      particle.style.setProperty('--y', y);
+
+      container.appendChild(particle);
+      setTimeout(() => particle.remove(), 800);
+    }
+
+    container.classList.add('pop-animate');
+    setTimeout(() => container.classList.remove('pop-animate'), 300);
+  }
+});
+  });
+}
+
+function bindCommentFormHandler() {
+  const form = document.querySelector("#comment-form");
+  if (!form) return;
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const commentSection = this.closest(".secret-footer");
+    const secretId = commentSection.querySelector("#secretId").value;
+    const secretUserId = commentSection.querySelector('[name="secretUserId"]').value;
+    const commentUserId = commentSection.querySelector('[name="commentUserId"]').value;
+    const comment = commentSection.querySelector("#commentInput").value;
+
+    fetch("/comment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: secretId, secretUserId, commentUserId, comment }),
+    })
+      .then((res) => res.json())
+      .then((response) => {
+        const notice = document.getElementById("notification");
+        if (response.success) {
+          commentSection.querySelector("#commentInput").value = "";
+          if (notice) {
+            notice.innerHTML = `<div class="toast">Thoughts shared successfully!</div>`;
+            setTimeout(() => (notice.innerHTML = ""), 3000);
+            overlay.style.display = 'none';
+          }
+        } else {
+          if (notice) {
+            notice.innerHTML = `<div class="toast">Failed to share your thoughts!</div>`;
+            setTimeout(() => (notice.innerHTML = ""), 3000);
+          }
+        }
+      })
+      .catch((err) => {
+        console.error("Comment submission error:", err);
+      });
+  });
+}
+
         </script>
-      </div>
-    </div>
-  </div>
+
+
 
   <script src="/js/app.js"></script>
-  <script src="/js/theme.js"></script>
+  <script src="/js/defaultTheme.js"></script>
 </body>
-</html> 
