@@ -105,12 +105,11 @@ db.connect()
 
 app.use(express.static("public"));
 app.use(express.json());
-app.set("view engine", "ejs");
 app.use(expressLayouts);
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set("view engine", "ejs");
 app.set("layout", "layout");
 app.set("views", path.join(__dirname, "views"));
-app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
@@ -280,16 +279,16 @@ io.on("connection", (socket) => {
 
 
 app.get("/", (req, res) => {
-  res.render("home");
+  res.render("home",  { layout: false });
 });
 app.get("/login", (req, res) => {
-  res.render("login");
+  res.render("login",  { layout: false });
 });
 app.get("/reset", (req, res) => {
-  res.render("reset");
+  res.render("reset",  { layout: false });
 });
 app.get("/register", (req, res) => {
-  res.render("registration");
+  res.render("registration",  { layout: false });
 });
 
 // Get user profile
@@ -1034,6 +1033,7 @@ app.get("/partial-submit", async (req, res) => {
       activeStatus: req.user.active_status,
       verification: req.user.verified,
       profilePicture: req.user.profile_picture,
+      layout: false
     };
 
     res.render("partials/submitForm", formData);
@@ -2098,7 +2098,6 @@ app.post("/register", async (req, res) => {
             [username, email, hash, color]
           );
           const user = result.rows[0];
-          console.log(result);
           req.login(user, (err) => {
             console.log(err);
             res.redirect("feeds");

@@ -142,6 +142,13 @@ body {
       margin-top: 2rem;
     }
 
+    img, video {
+      pointer-events: none;      /* disables interaction */
+      user-select: none;         /* disables text/image selection */
+      -webkit-user-drag: none;   /* disables drag in WebKit browsers */
+    }
+    
+
     /* Utilities Class */
     .blur {
       filter: blur(0.7px);
@@ -339,11 +346,10 @@ body {
     right: 2rem;
     font-size: 1.2rem;
     cursor: pointer;
-    color: var(--card-bg);
     background: transparent;
     font-size: 1.5rem;
     font-size: bold;
-    color: var(--text-color);
+    color: #fff;
     border-radius: 50%;
     border: none !important;
     padding: .2rem .5rem;

@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="/styles/media.css" />
   <link rel="stylesheet" href="/styles/new.css" />
   <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
-  <title><%= title ? title : 'Gossipa' %></title>
+  <title>Gossipa || <%= locals.title ? title : null%></title>
 </head>
 
 <body class="main-background">
@@ -30,8 +30,8 @@
   <header>
     <div class="container">
       <div class="header">
-        <img src="../../img/logo/main-logo.png" alt="" id="main-logo" class="logo">
-        <img src="../../img/logo/mobile-logo.png" alt="" id="mobile-logo" class="logo">
+        <img oncontextmenu="return false;"  src="../../img/logo/main-logo.png" alt="" id="main-logo" class="logo">
+        <img oncontextmenu="return false;"  src="../../img/logo/mobile-logo.png" alt="" id="mobile-logo" class="logo">
   
         <form id="liveSearchForm" action="/search" method="post" autocomplete="off">
           <div class="search" id="mobileSearch">
@@ -59,7 +59,7 @@
             </a>
           </li>
           <li class="navbar profiled">
-            <button class="profile-btn"><img src="<%= profilePicture ?'../.' + profilePicture: profilePicture %>" alt="" class="profile-pic thumb"> <i class="fas fa-chevron-down"></i></button>
+            <button class="profile-btn"><img oncontextmenu="return false;"  src="<%= profilePicture ?'../.' + profilePicture: profilePicture %>" alt="" class="profile-pic thumb"> <i class="fas fa-chevron-down"></i></button>
           </li>
           <li class="navbar dropdown">
             <div class="hamburger" id="hamburger">
@@ -71,12 +71,12 @@
             <div id="menu" class="menu-hidden">
               <div class="container">
                 <div class="profile-header">
-                  <img src="<%= profilePicture ? profilePicture : '../.' + profilePicture %>" alt="Profile Avatar" class="profile-avatar" />
+                  <img oncontextmenu="return false;"  src="<%= profilePicture ? profilePicture : '../.' + profilePicture %>" alt="Profile Avatar" class="profile-avatar" />
   
                   <h3 class="username">Hello, <span class="username">
                     @amebo<%= userId %> 
                     <% if(verification === true) {%>
-                    <img src="../../img/gossipa3.png" alt="Verifiied Badge" class="verified-badge">
+                    <img oncontextmenu="return false;"  src="../../img/gossipa3.png" alt="Verifiied Badge" class="verified-badge">
                     <% } else {%>
                    <% } %>
                   </span></h3>
@@ -194,7 +194,7 @@
             <a href="/subscribe">
               <i class="nav-icon fas fa-award"></i>
               &nbsp;<span class="nav-text">Become a Chief</span>&nbsp;
-              <span class="nav-text"><img src="../../img/gossipa3.png" alt="" class="nav-icon verified-badge"></span>
+              <span class="nav-text"><img oncontextmenu="return false;"  src="../../img/gossipa3.png" alt="" class="nav-icon verified-badge"></span>
             </a>
           </li>
           <li class="nav-item">
