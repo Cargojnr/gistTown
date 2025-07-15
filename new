@@ -484,3 +484,370 @@ display: block !important;
   setTimeout(fetchTopDiscussedSecret, timeUntilAnnouncement);
 </script>
 
+
+<script>
+                    const startBtn = document.getElementById("startStreamBtn");
+                    const streamModal = document.getElementById("streamModal");
+                    const closeModal = document.getElementById("closeStreamModal");
+                    const endStreamBtn = document.getElementById("endStreamBtn");
+                    const liveGistInput = document.getElementById("liveGistInput");
+                    const streamContentBox = document.getElementById("streamContentBox");
+                    const reactionCount = document.getElementById("reactionCount");
+                    const liveStreams = document.getElementById("liveStreams");
+                    const listenerCount = document.getElementById("listenerCount");
+                    const streamDisplay = document.getElementById("streamDisplay");
+                    const streamUser = document.querySelector(".stream-user");
+                    const closeStreamView = document.getElementById("closeStreamView");
+                    const allUserHeaders = document.querySelectorAll(`.header${window.currentUserId}`);
+                    const liveBadgeElements = document.querySelectorAll(".you-live-badge");
+                    const postContainer = document.getElementById("postContainer");
+
+                    function togglePostContainer(visible) {
+                      if (postContainer) {
+                        postContainer.style.display = visible ? "block" : "none";
+                      }
+                    }
+
+
+                    let streamTimeout;
+                    let inactivityTimeout;
+                    let isStreaming = false;
+                    let reactionTotal = 0;
+                    let listeners = 0;
+                    let myStreamCard = null;
+
+
+                    const verified = "<%= verification ? true : false %>";
+                    let userId = "<%= userId %> "
+                     userId = window.currentUserId
+                    // === STREAM INITIATION ===
+
+                    if (verified) {
+                      startBtn.addEventListener("click", () => {
+                        const label = startBtn.querySelector("span").textContent;
+
+                        if (label === "End Stream" && isStreaming) {
+                          window.socket.emit("end-live-gist", { userId: window.currentUserId });
+                          endMyStream();
+                        } else {
+                          streamModal.classList.remove("hidden");
+                          liveGistInput.focus();
+                        }
+                      });
+                    }
+
+                    if (!verified) {
+                      startBtn.setAttribute("disabled", true);
+                      startBtn.classList.add("disabled"); // add greyed-out style
+                      startBtn.title = "Subscribe as Chief Gossipa to stream live gists";
+                    }
+
+
+
+                    // === CANCEL FROM MODAL ===
+                    closeModal.addEventListener("click", () => {
+                      streamModal.classList.add("hidden");
+                      liveGistInput.value = "";
+                      reactionTotal = 0;
+                      reactionCount.classList.add("hidden");
+                      reactionCount.textContent = "";
+                    });
+
+                    // === END FROM MODAL BUTTON ===
+                    endStreamBtn.addEventListener("click", () => {
+                      if (isStreaming) {
+                        window.socket.emit("end-live-gist", { userId: window.currentUserId });
+                        endMyStream();
+                        togglePostContainer(true);
+                      }
+                    });
+
+                    // === CLOSE STREAM DISPLAY ===
+                    closeStreamView.addEventListener("click", () => {
+                      streamDisplay.classList.add("hidden");
+                    });
+
+                    // === STREAM INPUT HANDLER ===
+                    liveGistInput.addEventListener("input", (e) => {
+                      resetInactivityTimer();
+                      clearTimeout(streamTimeout);
+
+                      if (!window.socket || !window.socket.connected) return;
+
+
+                      const value = e.target.value;
+
+                      streamTimeout = setTimeout(() => {
+                        if (!value.trim()) return;
+
+                        window.socket.emit("live-gist", {
+                          userId: window.currentUserId,
+                          content: value,
+                        });
+
+                        // First-time stream start
+                        if (!isStreaming) {
+                          isStreaming = true;
+                          startBtn.querySelector("span").textContent = "End Stream";
+                          startBtn.classList.add("streaming")
+
+                          // Show live badge on user header(s)
+                          allUserHeaders.forEach(header => {
+                            const badge = header.querySelector(".you-live-badge");
+                            const username = header.querySelector(".user")?.textContent.trim();
+                            if (username === `@amebo${window.currentUserId}`) {
+                              badge?.classList.remove("hidden");
+                            }
+                          });
+
+                          // const avatarUrl = `../.${}`;
+                          myStreamCard = addLiveGistCard({
+                            userId: window.currentUserId,
+                            content: value,
+                            // avatarUrl
+                          });
+
+                          if (myStreamCard) {
+                            myStreamCard.style.display = "none"; // Don't show own card
+                          }
+
+                          if (userId === window.currentUserId) return null; // before card creation
+
+                        }
+                      }, 300);
+                    });
+
+                    // === INACTIVITY HANDLER ===
+                    function resetInactivityTimer() {
+                      clearTimeout(inactivityTimeout);
+                      inactivityTimeout = setTimeout(() => {
+                        if (isStreaming) {
+                          socket.emit("end-live-gist", { userId: window.currentUserId });
+                          endMyStream();
+                        }
+                      }, 2 * 60 * 1000); // 2 min
+                    }
+
+                    // === STREAM END ===
+                    function endMyStream() {
+
+
+                      const card = document.querySelector(`.stream-card[data-user-id="${currentUserId}"]`);
+                      if (card) card.remove();
+                      myStreamCard = null;
+                      streamModal.classList.add("hidden");
+                      startBtn.classList.remove("streaming")
+                      liveGistInput.value = "";
+
+
+                      allUserHeaders.forEach(header => {
+                        const badge = header.querySelector(".you-live-badge");
+                        const username = header.querySelector(".user")?.textContent.trim();
+                        if (username === `@amebo${window.currentUserId}`) {
+                          badge?.classList.add("hidden");
+                        }
+                      });
+
+                      startBtn.querySelector("span").textContent = "Stream Gist";
+                      isStreaming = false;
+                    }
+
+                    // === CARD CREATION ===
+                    function addLiveGistCard({ userId, content, avatarUrl, endedAt }) {
+                      let card = document.querySelector(`.stream-card[data-user-id="${userId}"]`);
+                      if (!card) {
+                        card = document.createElement("div");
+                        card.className = "stream-card active";
+                        card.dataset.userId = userId;
+                        card.innerHTML = `
+      <div class="gist-snippet">${content.slice(0, 80)}</div>
+
+    `;
+
+                        togglePostContainer(false);
+
+                        card.onclick = async () => {
+                          if (endedAt) {
+                            await showEndedStream({ userId, content, endedAt });
+                          } else {
+                            try {
+                              const response = await fetch(`/user/${userId}`);
+                              const userData = await response.json();
+
+                              streamUser.querySelector(".profile-pic").src = `../.${userData.profile_picture}`;
+                              streamUser.querySelector(".user").innerHTML = `@gossipa${userData.id}`;
+                              streamUser.querySelector(".v-badge").style.display = userData.verified ? "inline" : "none";
+                              streamUser.querySelector(".v-badge").src = userData.verified ? "../../img/badge.png" : null;
+
+                              streamContentBox.innerText = content;
+                              streamDisplay.classList.remove("hidden");
+                              streamDisplay.scrollIntoView({ behavior: "smooth" });
+
+                              socket.emit("join-live-gist", { streamUserId: userId });
+                            } catch (err) {
+                              console.error("Error loading live stream:", err);
+                            }
+                          }
+                        };
+
+                        if (userId !== window.currentUserId) {
+                          liveStreams.prepend(card);
+                        }
+                      } else {
+                        card.querySelector(".gist-snippet").innerText = content.slice(0, 80);
+                      }
+
+                      if (userId === window.currentUserId) return null;
+
+
+                      return card;
+                    }
+
+                    // === SHOW ENDED STREAM ===
+                    async function showEndedStream({ userId, content, endedAt }) {
+                      try {
+                        const response = await fetch(`/user/${userId}`);
+                        const userData = await response.json();
+
+                        document.querySelectorAll(`.header${userId}`).forEach(header => {
+                          const badge = header.querySelector(".you-live-badge");
+                          const username = header.querySelector(".user")?.textContent.trim();
+                          if (username === `@amebo${userId}`) badge?.classList.add("hidden");
+                        });
+
+                        streamUser.querySelector(".profile-pic").src = `../.${userData.profile_picture}`;
+                        streamUser.querySelector(".user").innerHTML = `@gossipa${userData.id}`;
+                        streamUser.querySelector(".v-badge").style.display = userData.verified ? "inline" : "none";
+                        streamUser.querySelector(".v-badge").src = userData.verified ? "../../img/badge.png" : null;
+
+                        streamContentBox.innerHTML = "";
+
+                        const diffSeconds = Math.floor((Date.now() - endedAt) / 1000);
+                        const timeAgo = diffSeconds < 60 ? `${diffSeconds}s ago`
+                          : diffSeconds < 3600 ? `${Math.floor(diffSeconds / 60)}m ago`
+                            : `${Math.floor(diffSeconds / 3600)}h ago`;
+
+                        const timeLabel = document.createElement("div");
+                        timeLabel.className = "stream-ended-label";
+                        timeLabel.textContent = `🛑 Stream Ended • ${timeAgo}`;
+                        streamContentBox.appendChild(timeLabel);
+
+                        const typedText = document.createElement("div");
+                        typedText.className = "typed-stream";
+                        streamContentBox.appendChild(typedText);
+
+                        let i = 0;
+                        function typeNext() {
+                          if (!content) return;
+                          if (i < content.length) {
+                            typedText.textContent += content[i++];
+                            setTimeout(typeNext, 50); // Slightly slower for visibility
+                          }
+                        }
+                        typedText.textContent = ""; // clear before typing
+                        setTimeout(() => {
+                          typeNext()
+                        }, 500);
+
+                        streamDisplay.classList.remove("hidden");
+                        streamDisplay.scrollIntoView({ behavior: "smooth" });
+
+                      } catch (err) {
+                        console.error("Error loading ended stream:", err);
+                      }
+                    }
+
+                    if (window.socket) {
+                    // === SOCKET EVENTS ===
+                    window.socket.on("live-gist-started", ({ userId }) => {
+                      document.querySelectorAll(`.header${userId}`).forEach(header => {
+                        const badge = header.querySelector(".you-live-badge");
+                        const profile = header.querySelector(".avatar-profile");
+                        const username = header.querySelector(".user")?.textContent.trim();
+                        if (username === `@amebo${userId}`) {
+                          badge?.classList.remove("hidden");
+                          profile.style.border = '4px solid var(--secondary-color)'
+                        }
+                      });
+                    });
+
+                    window.socket.on("receive-live-gist", ({ userId, content, profilePicture, verification }) => {
+                      if (userId === window.currentUserId) return;
+
+                      const avatarUrl = `../.${profilePicture}`;
+                      streamUser.querySelector(".profile-pic").src = avatarUrl;
+                      streamUser.querySelector(".user").innerHTML = `@gossipa${userId}`;
+                      streamUser.querySelector(".v-badge").style.display = verification ? "inline" : "none";
+                      streamUser.querySelector(".v-badge").src = verification ? "../../img/badge.png" : null;
+
+                      streamContentBox.innerText = content;
+                      addLiveGistCard({ userId, content, avatarUrl });
+                    });
+
+                    window.socket.on("remove-live-gist", ({ userId, lastContent, endedAt }) => {
+                      const card = document.querySelector(`.stream-card[data-user-id="${userId}"]`);
+                      if (card) {
+                        card.classList.remove("active");
+                        card.classList.add("ended");
+                        card.dataset.endedAt = endedAt;
+                        card.dataset.lastContent = lastContent;
+                        card.querySelector(".gist-snippet").innerText = lastContent.slice(0, 80);
+
+                        if (userId !== currentUserId) {
+                          card.onclick = () => showEndedStream({ userId, content: lastContent, endedAt });
+                        } else {
+                          endMyStream();
+                        }
+                      }
+                    });
+
+
+
+                    window.socket.on("active-streams", (streams) => {
+                      liveStreams.innerHTML = "";
+
+                      streams.forEach(stream => {
+                        const div = document.createElement("div");
+                        div.className = "stream-card";
+                        div.innerHTML = `
+      <img oncontextmenu="return false;"  src="${stream.profilePicture}" class="avatar" />
+      <div class="content">
+        <p class='username'> <span class="user">@gossipa${stream.userId}</span>
+          <img oncontextmenu="return false;"  scr='../img/badge.png' alt="Verified Badge" />
+          </p>
+        <p>${stream.content.slice(0, 80)}</p>
+        <span class="time">${new Date(stream.timestamp).toLocaleTimeString()}</span>
+      </div>
+    `;
+                        liveStreams.appendChild(div);
+                      });
+
+                    });
+
+                  }
+
+                    // === INITIAL SETUP ===
+                    window.addEventListener("DOMContentLoaded", () => {
+                      if (startBtn && startBtn.querySelector("span")) {
+                        startBtn.querySelector("span").textContent = "Stream Gist";
+                      }
+
+
+                      document.addEventListener("visibilitychange", () => {
+                        setTimeout(() => {
+                          if (!document.hidden) resetInactivityTimer();
+                        }, 200);
+
+
+                      });
+
+                      // Delay request to ensure socket event handlers are ready
+                      setTimeout(() => {
+                        socket.emit("request-live-streams");
+                      }, 100);
+                    });
+
+
+
+                  </script>
+

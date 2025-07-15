@@ -1,4 +1,4 @@
-<%- include('layout') %>
+
     <style>
   .sections-container {
     background: linear-gradient(135deg, var(--container-bg), rgba(127, 90, 240, 0.08));
@@ -90,68 +90,8 @@
   }
     </style>
 
-    <body>
-        <div class="layout-container container">
-
-            <aside class="left-sidebar">
-                <div class="aside">
-                  <ul class="nav">
-                    <li class="nav-item current">
-                      <a href="/feeds">
-                        <i class="nav-icon fas fa-home"></i> &nbsp;
-                        <span class="nav-text">Home</span>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="/explore">
-                        <i class="nav-icon fab fa-modx"></i> &nbsp;
-                        <span class="nav-text">Explore</span>
-        
-                        <span class="nav-tag">New</span>
-                      </a>
-                    </li>
-                    <li class="nav-item chief">
-                      <a href="">
-                        <i class="nav-icon fas fa-bookmark"></i>
-                        &nbsp;<span class="nav-text">Bookmarks</span>&nbsp;
-                      </a>
-                    </li>
-                    <li class="nav-item chief">
-                      <a href="/subscribe">
-                        <i class="nav-icon fas fa-award"></i>
-                        &nbsp;<span class="nav-text">Become a Chief</span>&nbsp;
-                        <span class="nav-text"><img src="../../img/gossipa3.png" alt="" class="nav-icon verified-badge"></span>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="/profile">
-                        <i class="nav-icon fas fa-circle-user"></i> &nbsp;
-                        <span class="nav-text">My Profile</span>
-                      </a>
-                    </li>
-                    <li class="nav-item blur">
-                      <a aria-disabled="true">
-                        <i class="nav-icon fas fa-comments"></i> &nbsp;
-                        <span class="nav-text">GossipaCity</span>
-        
-                        <span class="nav-tag">soon</span>
-                      </a>
-                    </li>
-                   
-                    <li class="nav-item">
-                      <a href="/submit">
-                        <i class="fas fa-circle-plus nav-icon"></i>
-                        &nbsp;<span class="nav-text"> Compose Gist</span>&nbsp;
-                        <i class="fas fa-chevron-down nav-text"></i>
-                      </a>
-        
-                    </li>
-                  </ul>
-                </div>
-        
-              </aside>
-        
-            <main>
+        <div id="main">
+            <section class="main">
                 <div id="sections" class="sections-container">
                     <h2 class="sections-title">Explore Your Space</h2>
                     <form class="sections-cards">
@@ -218,7 +158,7 @@
                     </form>
                   </div>
         
-            </main>
+            </section>
 
             <aside class="right-sidebar">
                 <div class="aside"></div>
@@ -266,129 +206,88 @@
             </aside>
 
         </div>
-        </div>
 
 
+       
         <script>
-            const currentUserId = "<%= userId %>";
-            const socket = io({ query: { userId: currentUserId } });
-            const counter = document.getElementById("notifyCounter");
-
-            // Handle new notifications
-            socket.on("new-notification", (data) => {
-                // Increment the notification counter
-                const currentCount = parseInt(counter.textContent) || 0;
-                counter.textContent = currentCount + 1;
-
-                const notificationsDiv = document.getElementById("notification");
-                const notification = document.createElement("div");
-                notification.className = "notification";
-
-                // Display a notification if it's a "secret" type
-                if (data.type === "secret") {
-                    notification.innerText = `New secret shared by ~~@anonym${data.data.userId}~~: "${data.data.secret}"`;
-                } else if (data.type === "selected") {
-                    notification.innerText = `~~@anonym${data.data.userId}~~ Your secret is the top most discussed for the Day...... Keep it up!"`;
-                    notificationsDiv.style.textAlign = "center"
-                } else if (data.type === "reaction") {
-                    const { reaction, count, milestone } = data.data;
-                    notification.innerText =
-                        `Your secret received a new "${reaction}" reaction! Total: ${count}.`
-                } else if (data.type === "top-secret") {
-                    notification.innerText = `Most discussed secret goes to ~~@anonym${data.data.userId}~~"`;
-                }
-
-                notificationsDiv.appendChild(notification);
-
-                // Automatically remove the notification after 5 seconds
-                setTimeout(() => {
-                    notification.remove();
-                }, 5000);
-
-            });
-        </script>
-
-
-        <script>
+          document.addEventListener("DOMContentLoaded", () => {
             const connectedUsersMap = new Map();
             const userList = document.querySelector(".user-list");
             const userCountDisplay = document.getElementById("activeCount");
-
+        
             function updateUserCount() {
-                userCountDisplay.textContent = connectedUsersMap.size;
+              if (userCountDisplay) userCountDisplay.textContent = connectedUsersMap.size;
             }
-
+        
             function userConnected(user) {
-                if (connectedUsersMap.has(user.id)) return;
-
-                const userBox = document.createElement("li");
-                userBox.className = "connected-user nav-item enter";
-                userBox.id = `user-${user.id}`;
-
-                const verifiedBadge = `${user.verified}`
-                    ? `<img src="/img/gossipa3.png" alt="Verified Badge" class="verified-badge"">`
-                    : "";
-
-                userBox.innerHTML = `
-      <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
-        <img src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
-        <p class="username">
-          <span class="user">@amebo${user.id}</span>
-         ${verifiedBadge}
-          </p>
-      </div>
-    `;
-
-                userList.appendChild(userBox);
-                connectedUsersMap.set(user.id, userBox);
-                updateUserCount();
-
-                // Trigger reflow for entry animation
-                requestAnimationFrame(() => {
-                    userBox.classList.add("enter");
-                });
+              if (connectedUsersMap.has(user.id)) return;
+        
+              const userBox = document.createElement("li");
+              userBox.className = "connected-user nav-item enter";
+              userBox.id = `user-${user.id}`;
+        
+              const verifiedBadge = user.verified
+                ? `<img oncontextmenu="return false;" src="/img/gossipa3.png" alt="Verified Badge" class="verified-badge">`
+                : "";
+        
+              userBox.innerHTML = `
+                <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
+                  <img oncontextmenu="return false;" src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
+                  <p class="username">
+                    <span class="user">@amebo${user.id}</span>
+                    ${verifiedBadge}
+                  </p>
+                </div>
+              `;
+        
+              userList?.appendChild(userBox);
+              connectedUsersMap.set(user.id, userBox);
+              updateUserCount();
+        
+              requestAnimationFrame(() => userBox.classList.add("enter"));
             }
-
+        
             function userDisconnected(userId) {
-                const userBox = connectedUsersMap.get(userId);
-                if (userBox) {
-                    userBox.classList.add("exit");
-                    userBox.classList.remove("enter");
-                    setTimeout(() => {
-                        userBox.remove();
-                        connectedUsersMap.delete(userId);
-                        updateUserCount();
-                    }, 400); // CSS transition match
-                }
+              const userBox = connectedUsersMap.get(userId);
+              if (userBox) {
+                userBox.classList.add("exit");
+                userBox.classList.remove("enter");
+                setTimeout(() => {
+                  userBox.remove();
+                  connectedUsersMap.delete(userId);
+                  updateUserCount();
+                }, 400);
+              }
             }
-
-            socket.on("userJoined", async (userId) => {
+        
+            if (window.socket) {
+              window.socket.on("userJoined", async (userId) => {
                 try {
-                    const res = await fetch(`/user/${userId}`);
-                    const user = await res.json();
-                    userConnected(user);
+                  const res = await fetch(`/user/${userId}`);
+                  const user = await res.json();
+                  userConnected(user);
                 } catch (err) {
-                    console.error("Failed to fetch user data:", err);
+                  console.error("Failed to fetch user data:", err);
                 }
-            });
-
-            socket.on("userLeft", (userId) => {
+              });
+        
+              window.socket.on("userLeft", (userId) => {
                 userDisconnected(userId);
-            });
-
-            // Load current active users on first load
+              });
+            } else {
+              console.warn("Socket.io not initialized on this page.");
+            }
+        
+            // Load currently active users
             fetch("/active-users")
-                .then(res => res.json())
-                .then(users => {
-                    users.forEach(user => userConnected(user));
-                })
-                .catch(console.error);
+              .then(res => res.json())
+              .then(users => users.forEach(userConnected))
+              .catch(console.error);
+          });
         </script>
-
-
+       
         <script src="/js/app.js"></script>
         <script src="/js/defaultTheme.js"></script>
         <script src="/js/tutorial.js"></script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
-    </body>

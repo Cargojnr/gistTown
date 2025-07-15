@@ -453,6 +453,7 @@ app.get("/profile", async (req, res) => {
         username: req.user.username,
         profile: userDetails,
         userAudio: audioFiles,
+        title: "My Profile"
       });
     } catch (err) {
       console.log(err);
@@ -504,7 +505,9 @@ app.get("/profile/amebo/:user", async (req, res) => {
 
 app.get("/explore", (req, res) => {
   if(req.isAuthenticated()){
-    res.render("explore", {userId: req.user.id,
+    res.render("explore", {
+      title: "Explore Your Space",
+      userId: req.user.id,
       verification: req.user.verified,
       profilePicture: req.user.profile_picture})
   } else {
@@ -523,6 +526,7 @@ app.get("/random", async (req, res) => {
       const usersSecret = result.rows;
 
       res.render("random", {
+        title: "Select Random Confessions",
         randomSecret: usersSecret,
         userId: req.user.id,
         activeStatus: req.user.active_status,
@@ -583,6 +587,8 @@ app.get("/feeds", async (req, res) => {
         "SELECT id, verified, username, profile_picture FROM users"
       );
 
+      const trendingQuery = await db.query("SELECT timestamp, verified, username, profile_picture,secrets.id,secret,user_id FROM secrets JOIN users ON users.id = user_id ORDER BY secrets.id DESC LIMIT 14")
+
       const secretsResult = await db.query(`
         SELECT secrets.id, timestamp, reported, verified, reactions,
                profile_picture, username, user_id, color, category, secret
@@ -599,6 +605,8 @@ app.get("/feeds", async (req, res) => {
         type: "text",
         timestamp: new Date(secret.timestamp),
       }));
+
+      const trendingGist = trendingQuery.rows
 
      // Step 1: Get user IDs from audio posts
 const audioUserIds = [...new Set(audioPosts.map(audio => audio.userId))];
@@ -644,6 +652,7 @@ const formattedAudio = audioPosts.map((audio) => {
     res.render("secrets", {
       allUsers: allUsers.rows,
       feeds,
+      trendingGist,
       audioPost: formattedAudio, 
       userId,
       activeStatus: req.user.active_status,
@@ -755,8 +764,8 @@ app.get("/chat", async (req, res) => {
   if (req.isAuthenticated()) {
     const userTheme = req.user.color || "default";
     const mode = req.user.mode || "light";
-    console.log(req.user);
     res.render("chat", {
+      title: "Connect With Gossipas",
       theme: userTheme,
       mode: mode,
       username: req.user.username,
@@ -774,8 +783,8 @@ app.get("/feedback", async (req, res) => {
   if (req.isAuthenticated()) {
     const userTheme = req.user.color || "default";
     const mode = req.user.mode || "light";
-    console.log(req.user);
     res.render("feedback", {
+      title: "Enter Your Feedback",
       theme: userTheme,
       mode: mode,
       username: req.user.username,
@@ -1820,6 +1829,7 @@ app.post("/edit", async (req, res) => {
 
       const data = result.rows[0];
       res.render("submit", {
+        title: "Edit your Secret",
         submit: "Update",
         secret: data,
         theme: userTheme,
@@ -1849,7 +1859,7 @@ app.post("/update", async (req, res) => {
       );
       const data = result.rows[0];
       console.log(data);
-      res.redirect("dashboard");
+      res.redirect("profile");
     } catch (error) {
       console.log(error);
     }

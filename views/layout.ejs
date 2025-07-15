@@ -280,46 +280,152 @@
  });
   </script>
 
+<script>
+  const searchWrapper = document.getElementById("mobileSearch");
+  const toggleBtn = document.getElementById("toggleSearch");
+  const searchInput = document.getElementById("searchInput");
+  const suggestionsBox = document.getElementById("suggestions");
 
-  <script>
-    const currentUserId = "<%= userId %>";
-    const socket = io({ query: { userId: currentUserId } });
-    const counter = document.querySelector(".counter");
+  let debounceTimer;
 
-    // Handle new notifications
-    socket.on("new-notification", (data) => {
-      // Increment the notification counter
-      const currentCount = parseInt(counter.textContent) || 0;
-      counter.textContent = currentCount + 1;
+  toggleBtn.addEventListener("click", function (e) {
+    if (window.innerWidth <= 768) {
+      if (document.activeElement !== searchInput) {
+        e.preventDefault();
+        searchWrapper.classList.toggle("active");
 
-      const notificationsDiv = document.getElementById("notification");
-      const notification = document.createElement("div");
-      notification.className = "notification";
-
-      // Display a notification if it's a "secret" type
-      if (data.type === "secret") {
-        notification.innerText = `New secret shared by ~~@anonym${data.data.userId}~~: "${data.data.secret}"`;
-      } else if (data.type === "selected") {
-        notification.innerText = `~~@anonym${data.data.userId}~~ Your secret is the top most discussed for the Day...... Keep it up!"`;
-        notificationsDiv.style.textAlign = "center"
-      } else if (data.type === "reaction") {
-        const { reaction, count, milestone } = data.data;
-        notification.innerText =
-          `Your Gossipa received a new "${reaction}" reaction! Total: ${count}.`
-      } else if (data.type === "top-secret") {
-        notification.innerText = `Most discussed secret goes to ~~@anonym${data.data.userId}~~"`;
+        if (searchWrapper.classList.contains("active")) {
+          searchInput.focus();
+        } else {
+          searchInput.value = "";
+          suggestionsBox.innerHTML = "";
+          suggestionsBox.style.display = "none"; // <- Hide it here
+        }
       }
+    } else {
+      // Desktop validation
+      if (searchInput.value.trim().length === 0) {
+        e.preventDefault();
+        suggestionsBox.innerHTML = "<li class='no-result'>Please enter a search keyword</li>";
+        suggestionsBox.style.display = "block";
+      }
+    }
+  });
 
-      notificationsDiv.appendChild(notification);
 
-      // Automatically remove the notification after 5 seconds
-      setTimeout(() => {
-        notification.remove();
-      }, 5000);
+  // Click outside to collapse
+  document.addEventListener("click", function (e) {
+    if (
+      window.innerWidth <= 768 &&
+      !searchWrapper.contains(e.target)
+    ) {
+      searchWrapper.classList.remove("active");
+      searchInput.value = "";
+      suggestionsBox.innerHTML = "";
+    }
+  });
 
-    });
-  </script>
+  // Live search logic
+  searchInput.addEventListener("keyup", function (e) {
+    clearTimeout(debounceTimer);
+    const query = this.value.trim();
 
+    if (query.length === 0) {
+      e.preventDefault()
+      suggestionsBox.innerHTML = "";
+      suggestionsBox.style.display = "none"; // <- Ensure it is hidden
+      searchWrapper.classList.toggle("active");
+      return;
+    }
+
+    suggestionsBox.style.display = "none"; // Reset before debounce
+
+    debounceTimer = setTimeout(() => {
+      fetch("/searching", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ search: query })
+      })
+        .then(res => res.json())
+        .then(data => {
+          suggestionsBox.innerHTML = "";
+
+          if (data.searchResults.length === 0) {
+            suggestionsBox.innerHTML = "<li class='no-result'>No result found</li>";
+            suggestionsBox.style.display = "block"; // <- Show only when needed
+            return;
+          }
+
+          suggestionsBox.style.display = "block";
+
+          function highlightMatch(text, keyword) {
+            const regex = new RegExp(`(${keyword})`, "gi");
+            return text.replace(regex, "<mark>$1</mark>");
+          }
+
+          function toggleRead(e, btn, keyword) {
+            e.stopPropagation();
+            const textEl = btn.parentElement;
+            const raw = textEl.getAttribute("data-full");
+            const expanded = textEl.classList.contains("expanded");
+
+            if (!expanded) {
+              textEl.innerHTML = highlightMatch(raw, keyword);
+              const newBtn = document.createElement("button");
+              newBtn.textContent = "Show Less";
+              newBtn.className = "read-more";
+              newBtn.onclick = ev => toggleRead(ev, newBtn, keyword);
+              textEl.appendChild(newBtn);
+              textEl.classList.add("expanded");
+            } else {
+              const short = raw.slice(0, 150) + "...";
+              textEl.innerHTML = highlightMatch(short, keyword);
+              const newBtn = document.createElement("button");
+              newBtn.textContent = "Read More";
+              newBtn.className = "read";
+              newBtn.onclick = ev => toggleRead(ev, newBtn, keyword);
+              textEl.appendChild(newBtn);
+              textEl.classList.remove("expanded");
+            }
+          }
+
+          data.searchResults.forEach(item => {
+            const li = document.createElement("li");
+            li.classList.add("suggestion-item");
+
+            const short = item.secret.length > 50 ? item.secret.slice(0, 50) + "..." : item.secret;
+            const highlightedText = highlightMatch(item.secret, query);
+
+            li.innerHTML = `
+      <span class="arrow">→</span>
+       <div class="search-text short-text" data-full="${item.secret.replace(/"/g, '&quot;')}">
+        ${highlightedText}
+        ${item.secret.length > 50 ? '<button class="read-more" onclick="toggleRead(event, this, \'' + query + '\')">Read More</button>' : ''}
+      </div>
+    `;
+
+            suggestionsBox.insertBefore(li, document.getElementById("loadMore"));
+
+            li.addEventListener("click", () => {
+              window.location.href = `/secret/${item.id}`;
+            });
+
+            suggestionsBox.appendChild(li);
+          });
+        })
+        .catch(err => {
+          suggestionsBox.style.display = "none"; // fallback to hidden
+          console.error("Live search error:", err);
+        });
+    }, 300);
+  });
+
+</script>
+
+
+  
   <script>
     const showAnnouncement = (secret) => {
       const overlay = document.getElementById("announcement-overlay");
@@ -450,6 +556,45 @@
       }, 5000); // 5 seconds
     }
   </script>
+  <script>
+    window.currentUserId = "<%= userId %>";
+    window.socket = io({ query: { userId: window.currentUserId } });
+    const counter = document.querySelector(".counter");
+
+    // Handle new notifications
+    socket.on("new-notification", (data) => {
+      // Increment the notification counter
+      const currentCount = parseInt(counter.textContent) || 0;
+      counter.textContent = currentCount + 1;
+
+      const notificationsDiv = document.getElementById("notification");
+      const notification = document.createElement("div");
+      notification.className = "notification";
+
+      // Display a notification if it's a "secret" type
+      if (data.type === "secret") {
+        notification.innerText = `New secret shared by ~~@gossipa${data.data.userId}~~: "${data.data.secret}"`;
+      } else if (data.type === "selected") {
+        notification.innerText = `~~@gossipa${data.data.userId}~~ Your secret is the top most discussed for the Day...... Keep it up!"`;
+        notificationsDiv.style.textAlign = "center"
+      } else if (data.type === "reaction") {
+        const { reaction, count, milestone } = data.data;
+        notification.innerText =
+          `Your Gossip received a new "${reaction}" reaction! Total: ${count}.`
+      } else if (data.type === "top-secret") {
+        notification.innerText = `Most discussed secret goes to ~~@gossipa${data.data.userId}~~"`;
+      }
+
+      notificationsDiv.appendChild(notification);
+
+      // Automatically remove the notification after 5 seconds
+      setTimeout(() => {
+        notification.remove();
+      }, 5000);
+
+    });
+  </script>
+
 
       <script src="/js/defaultTheme.js"></script>
 </body>

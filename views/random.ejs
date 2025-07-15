@@ -1,4 +1,4 @@
-<%- include("layout") %>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
 <link rel="stylesheet" href="./styles/random.css">
   <style>
@@ -49,7 +49,7 @@
   display: none;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 10;
     }
   
     .overlay-content {
@@ -232,8 +232,8 @@
         }
   
   </style>
-<body>
-  
+  <section>
+
   <button class="back"><i class="fas fa-arrow-left"></i> Back</button>
   <script>
     socket.on('new-secret', (data) => {
@@ -251,6 +251,7 @@
         setTimeout(() => notification.remove(), 5000);
     });
   </script>
+
       <div class="container">
         <center>
           <h1 class="display-3"> Confession Wheel </h1>
@@ -295,6 +296,7 @@
 
       <div id="notification" style="position: fixed; bottom: 2rem; left: 1rem; right: 0; z-index: 9999;"></div>
 
+    </section>
 
       <script>
         document.querySelector(".back").addEventListener("click", () => {
@@ -496,7 +498,6 @@ const reactions = {
       </center>
       <div class="random-card">
                   <p>${selectedSecret.secret}</p>
-                  <span class="tag">${selectedSecret.category}</span>
                   <small class="user">From: @gossipa${selectedSecret.user_id}</small>
                   </div>
 
@@ -787,4 +788,3 @@ function bindCommentFormHandler() {
 
   <script src="/js/app.js"></script>
   <script src="/js/defaultTheme.js"></script>
-</body>

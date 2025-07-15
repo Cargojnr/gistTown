@@ -107,7 +107,7 @@ body {
   
   aside {
     width: 280px;
-    border-radius: 30px;
+    border-radius: 15px;
     height: 90vh;
     overflow-y: hidden !important;
     position: sticky;
@@ -132,10 +132,12 @@ body {
       display: flex !important;
       align-items: flex-start !important;
       flex-direction: row !important;
+      justify-content: space-between;
+      width: 100%;
     }
 
     .main {
-      max-width: 900px;
+      width: 72%;
     }
 
     #profile {
@@ -252,6 +254,16 @@ body {
 
     }
 
+    .post-action {
+          display: flex;
+          gap: .5rem;
+          align-items: baseline;
+    }
+    
+    .word-count {
+      font-size: .8rem;
+      color: var(--text-muted);
+    }
     
     .you-live-badge {
       font-size: 12px;
@@ -305,6 +317,16 @@ body {
     }
 
     
+    
+.navigator {
+  width: 100%;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  transition: all 0.3s ease;
+  box-shadow: linear-gradient(to bottom, transparent, rgba(0,0,0,0.5));
+}
 
     .form-wrapper {
       position: relative;
@@ -321,14 +343,14 @@ body {
     width: 100% !important;
     height: 60vh !important;
     background: var(--container-bg);
-    position: relative;
     border-radius: 30px;
+    position: relative;
   }
 
 
   .input-text {
       width: 100% !important;
-      height: 50vh !important;
+      height: 45vh !important;
       border: none !important;
       font-family: 'Quicksand', sans-serif !important;
       padding: 1rem;
@@ -343,13 +365,13 @@ body {
   .close-btn {
     position: absolute;
     top: 2rem;
-    right: 2rem;
+    right: 3rem;
     font-size: 1.2rem;
     cursor: pointer;
-    background: transparent;
+    background: var(--card-bg);
     font-size: 1.5rem;
     font-size: bold;
-    color: #fff;
+    color: var(--text-color);
     border-radius: 50%;
     border: none !important;
     padding: .2rem .5rem;
@@ -482,23 +504,26 @@ body {
 
   .modal-overlay {
     width: 90%;
-    max-width: 600px;
     border-radius: 18px;
     position: relative;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     position: absolute !important;
     top: 15%;
-    margin: auto;
   }
   
   .modal-content {
     position: relative;
-    border-radius: 8px;
     padding: 20px;
     overflow-y: auto;
     width: 100%;
     border-radius: 30px;
-    /* margin: auto; */
+    max-width: 900px;
+  }
+
+
+  #submitFormContainer {
+    position: relative !important;
+    max-width: 900px;
   }
 
 
@@ -913,7 +938,7 @@ body {
 
   header {
     background: transparent;
-    z-index: 50 !important;
+    z-index: 100 !important;
     flex: 1 1 100%;
     width: 100%;
     transition: background 0.5s ease;
@@ -1398,7 +1423,7 @@ body {
 
   .theme-switch {
      position: fixed;
-     bottom: 50px;
+     bottom: 2.5rem;
     left: 45px;
      display: flex;
      align-items: center;

@@ -1,5 +1,9 @@
 
 <style>
+  .container {
+    padding: 0 !important;
+  }
+
     #recordContainer {
         background: linear-gradient(135deg, #1e3c72, #2a5298);
         background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
@@ -11,6 +15,7 @@
         text-align: center;
         /* background: rgba(255, 255, 255, 0.1); */
         padding: 30px;
+        margin: 1rem;
         border-radius: 15px;
         backdrop-filter: blur(10px);
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -22,22 +27,6 @@
         font-size: 24px;
     }
 
-    .or {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        gap: 20px;
-    }
-
-    .or h4 {
-        font-size: 20px;
-    }
-
-    .or hr {
-        opacity: 0.3;
-        width: 100%;
-    }
 
     .mic-button {
         /* background: #ff5f6d; */
@@ -95,14 +84,17 @@
     }
 
     .submit {
-      position: absolute;
-      right: 0%;
-      bottom: 5%;
       border: none;
       background: transparent;
       color: var(--secondary-color);
       padding: .75rem 1rem;
       font-size: 2.75rem !important;
+    }
+
+    .post-action {
+      position: absolute;
+          right: 0%;
+      bottom: 5% !important;
     }
 
 
@@ -167,6 +159,13 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+.user-details {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: .5rem;
+}
+
 
 .hidden {
   display: none !important;
@@ -177,7 +176,7 @@
 
 
 <div class="container">
-    <div class="jumbotron text-center form-wrapper main">
+    <div class="jumbotron text-center form-wrapper">
         <div class="form-wrap">
             <div class="form-transition-container">
           <!-- TEXT FORM -->
@@ -192,6 +191,7 @@
                   <button id="visibilityToggle" type="button">
                     <abbr title="Views"><i class="fas fa-earth-africa"></i></abbr>
                     <span class="nav-text">For All Gossipas</span>
+                    <span><i class="fas fa-chevron-down nav-icon"></i></span>
                   </button>
                   <ul id="visibilityOptions" class="dropdown-options" hidden>
                     <li data-value="public" class="selected"><i class="fas fa-check"></i> For All</li>
@@ -204,17 +204,34 @@
               <textarea id="input" name="secret" class="input-text"
                 placeholder="Hey <%= username %> What's on your mind today!"></textarea>
       
-              <div class="actions">
-                <button type="button" onclick="showTextForm()"><i class="fas fa-pen-to-square"></i></button>
-                <button type="button" onclick="showAudioForm()" class="create"><i class="fas fa-microphone"></i></button>
-              </div>
-      
-              <button type="submit" id="share" formaction="/share" class="create submit"><%= submit %></button>
-            </form>
+                <div class="post-action">
+                  <p class="word-count"><span id="wordCount">0</span></p>
+                  <button type="submit" id="share" formaction="/share" class="create submit"><%= submit %></button>
+                </div>
+             </form>
           </div>
       
           <!-- AUDIO FORM -->
           <div id="audioForm" class="toggle-form hidden">
+            <div class="user-details">
+              <a href="" class="avatar-profile thumb">
+                <img src="../.<%= profilePicture %>" alt="" class="profile pic thumb">
+              </a>
+    
+              <div class="custom-dropdown">
+                <button id="visibilityToggle" type="button">
+                  <abbr title="Views"><i class="fas fa-earth-africa"></i></abbr>
+                  <span class="nav-text">For All Gossipas</span>
+                  <span><i class="fas fa-chevron-down nav-icon"></i></span>
+                </button>
+                <ul id="visibilityOptions" class="dropdown-options" hidden>
+                  <li data-value="public" class="selected"><i class="fas fa-check"></i> For All</li>
+                  <li data-value="exclusive"><i class="fas fa-check invisible-check"></i> For Chiefs</li>
+                  <li data-value="private"><i class="fas fa-check invisible-check"></i> For Myself Only</li>
+                </ul>
+              </div>
+            </div>
+            
             <div id="recordContainer">
               <h1>Record a Voice Note</h1>
               <button id="micButton" class="mic-button"><i class="fas fa-microphone"></i></button>
@@ -231,13 +248,14 @@
               </div>
             </div>
       
-            <div class="actions">
-              <button type="button" onclick="showTextForm()"><i class="fas fa-pen-to-square"></i></button>
-              <button type="button" onclick="showAudioForm()" class="create"><i class="fas fa-microphone"></i></button>
-            </div>
           </div>
-      
         </div>
+
+        <div class="actions">
+          <button type="button" onclick="showTextForm()"><i class="fas fa-pen-to-square"></i></button>
+          <button type="button" onclick="showAudioForm()" class="create"><i class="fas fa-microphone"></i></button>
+        </div>
+
       </div>
     </div>
       
