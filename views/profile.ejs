@@ -1,541 +1,541 @@
+<style>
+  #profile {
+    margin-top: 0 !important;
+  }
 
-  <style>
-    #profile {
-      margin-top: 0 !important;
+  .profile-page {
+    display: flex;
+    justify-content: center;
+    padding: 4rem 1rem;
+    background: var(--container-bg);
+  }
+
+  .profile-card {
+    background: var(--body-bg);
+    padding: 2rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    width: 100%;
+  }
+
+  .avatar-wrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .profile-pic {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    z-index: 0;
+  }
+
+  .edit-icon {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: var(--primary-color);
+    color: var(--button-text);
+    border-radius: 50%;
+    padding: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s ease;
+    z-index: 10;
+  }
+
+  .edit-icon:hover {
+    background: var(--secondary-color);
+  }
+
+  .avatar-wrapper:hover::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+
+  .avatar-selector-wrapper {
+    margin: 2rem auto;
+    max-width: 90%;
+    text-align: center;
+  }
+
+  .carousel-container {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .center-highlight {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 120px;
+    height: 120px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    z-index: 10;
+    pointer-events: none;
+    box-shadow: 0 0 10px var(--primary-color);
+  }
+
+  .avatar-carousel {
+    display: flex;
+    overflow-x: auto;
+    gap: 1.5rem;
+    scroll-behavior: smooth;
+    padding: 1rem 0;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .avatar-carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .avatar-item.spacer {
+    width: calc(18vw - 45px);
+    /* 45px is half the avatar width (90px) */
+    height: 90px;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+
+  .avatar-item {
+    flex: 0 0 auto;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    overflow: hidden;
+    scroll-snap-align: center;
+    position: relative;
+    transition: all 0.3s ease;
+    transform: scale(0.7);
+    opacity: 0.4;
+  }
+
+  .avatar-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .avatar-item.active {
+    transform: scale(1.2);
+    opacity: 1;
+    z-index: 5;
+  }
+
+
+
+  .upload-btn {
+    display: inline-block;
+    margin-top: 0.5rem;
+    background: var(--primary-color);
+    color: var(--button-text);
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .upload-btn:hover {
+    background: var(--primary-hover);
+  }
+
+  .info-section h2 {
+    font-size: 1.5rem;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+  }
+
+  .bio {
+    font-size: 0.95rem;
+    color: var(--muted-text);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .profile-form .form-group {
+    margin-bottom: 1.2rem;
+  }
+
+  .profile-form label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: var(--text-color);
+    font-size: 0.9rem;
+  }
+
+  .profile-form input,
+  .profile-form textarea {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid var(--text-color);
+    border-radius: 0.6rem;
+    background: var(--input-bg);
+    color: var(--text-color);
+    font-size: 0.95rem;
+  }
+
+  .profile-form textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .save-btn {
+    background: var(--primary-color);
+    color: var(--button-text);
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 0.6rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .save-btn:hover {
+    background: var(--primary-hover);
+  }
+
+  .secret .card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem !important;
+    background: var(--container-bg);
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--body-bg);
+    flex-shrink: 0;
+  }
+
+  .profile-pic {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    z-index: 0;
+  }
+
+
+  /* Profile Header */
+  .avatar-profile {
+    width: 95px;
+    height: 95px;
+  }
+
+  .avatar-profile img.profile-pic {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary-color);
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+
+  .user-info {
+    display: flex;
+    align-items: flex-start !important;
+    flex-direction: column;
+  }
+
+  .user-info .username {
+    font-weight: bold;
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .user-info .timestamp {
+    font-size: 0.75rem;
+    color: var(--text-color);
+  }
+
+  .card-content p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0 !important;
+  }
+
+
+  .profile-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+    background: var(--glass-bg);
+    padding: 1rem;
+    border-radius: 30px;
+  }
+
+
+  .profile-info h2 {
+    margin: 0;
+    font-size: 1.8rem;
+  }
+
+  .profile-info .tagline {
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+
+  .quick-stats {
+    display: flex;
+    gap: 1.5rem;
+    margin: 1rem 0;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat strong {
+    font-size: 1.2rem;
+    color: var(--primary);
+  }
+
+  /* Buttons */
+  .edit-profile-btn,
+  .edit,
+  .delete,
+  .read-more,
+  .edit-comment,
+  .delete-comment {
+    background: var(--primary-color);
+    color: var(--text);
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    margin-top: 0.5rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .edit-profile-btn:hover,
+  .read-more:hover,
+  .edit-comment:hover,
+  .delete-comment:hover {
+    background: var(--secondary);
+  }
+
+
+  #editModal {
+    display: none;
+  }
+
+  .shimmer-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    /* padding: 1rem; */
+  }
+
+  .shimmer-card {
+    display: flex;
+    background: var(--container-bg);
+    border-radius: 10px;
+    overflow: hidden;
+    animation: pulse 1.5s infinite;
+  }
+
+  .shimmer-avatar {
+    width: 50px;
+    height: 50px;
+    background: var(--body-bg);
+    border-radius: 50%;
+    margin: 1rem;
+  }
+
+
+
+  .shimmer-lines {
+    flex: 1;
+    padding: 1rem 0;
+  }
+
+  .shimmer-line {
+    height: 10px;
+    background: var(--body-bg);
+    margin: 8px 0;
+    border-radius: 5px;
+  }
+
+  .shimmer-line.short {
+    width: 50%;
+  }
+
+  .shimmer-line.tiny {
+    width: 30%;
+  }
+
+  .shimmer-footer {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .shimmer-btn {
+    width: 40px;
+    height: 20px;
+    background: var(--body-bg);
+    border-radius: 5px;
+  }
+
+  @keyframes pulse {
+    0% {
+      background-color: var(--container-bg);
     }
 
-    .profile-page {
-      display: flex;
-      justify-content: center;
-      padding: 4rem 1rem;
-      background: var(--container-bg);
-    }
-
-    .profile-card {
-      background: var(--body-bg);
-      padding: 2rem;
-      border-radius: 1.5rem;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-      max-width: 600px;
-      width: 100%;
-    }
-
-    .avatar-wrapper {
-      position: relative;
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      overflow: hidden;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .profile-pic {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      z-index: 0;
-    }
-
-    .edit-icon {
-      position: absolute;
-      bottom: 5px;
-      right: 5px;
-      background: var(--primary-color);
-      color: var(--button-text);
-      border-radius: 50%;
-      padding: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: background 0.3s ease;
-      z-index: 10;
-    }
-
-    .edit-icon:hover {
-      background: var(--secondary-color);
-    }
-
-    .avatar-wrapper:hover::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      background: rgba(0, 0, 0, 0.2);
-    }
-
-
-    .avatar-selector-wrapper {
-      margin: 2rem auto;
-      max-width: 90%;
-      text-align: center;
-    }
-
-    .carousel-container {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .center-highlight {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 50%;
-      width: 120px;
-      height: 120px;
-      transform: translateX(-50%);
-      border-radius: 50%;
-      z-index: 10;
-      pointer-events: none;
-      box-shadow: 0 0 10px var(--primary-color);
-    }
-
-    .avatar-carousel {
-      display: flex;
-      overflow-x: auto;
-      gap: 1.5rem;
-      scroll-behavior: smooth;
-      padding: 1rem 0;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none;
-    }
-
-    .avatar-carousel::-webkit-scrollbar {
-      display: none;
-    }
-
-    .avatar-item.spacer {
-      width: calc(18vw - 45px);
-      /* 45px is half the avatar width (90px) */
-      height: 90px;
-      pointer-events: none;
-      opacity: 0;
-    }
-
-
-    .avatar-item {
-      flex: 0 0 auto;
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      overflow: hidden;
-      scroll-snap-align: center;
-      position: relative;
-      transition: all 0.3s ease;
-      transform: scale(0.7);
-      opacity: 0.4;
-    }
-
-    .avatar-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 50%;
-    }
-
-    .avatar-item.active {
-      transform: scale(1.2);
-      opacity: 1;
-      z-index: 5;
-    }
-
-
-
-    .upload-btn {
-      display: inline-block;
-      margin-top: 0.5rem;
-      background: var(--primary-color);
-      color: var(--button-text);
-      padding: 0.4rem 1rem;
-      font-size: 0.9rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    .upload-btn:hover {
-      background: var(--primary-hover);
-    }
-
-    .info-section h2 {
-      font-size: 1.5rem;
-      color: var(--text-color);
-      margin-bottom: 0.5rem;
-    }
-
-    .bio {
-      font-size: 0.95rem;
-      color: var(--muted-text);
-      margin-bottom: 1.5rem;
-      text-align: center;
-    }
-
-    .profile-form .form-group {
-      margin-bottom: 1.2rem;
-    }
-
-    .profile-form label {
-      display: block;
-      margin-bottom: 0.4rem;
-      color: var(--text-color);
-      font-size: 0.9rem;
-    }
-
-    .profile-form input,
-    .profile-form textarea {
-      width: 100%;
-      padding: 0.6rem;
-      border: 1px solid var(--text-color);
-      border-radius: 0.6rem;
-      background: var(--input-bg);
-      color: var(--text-color);
-      font-size: 0.95rem;
-    }
-
-    .profile-form textarea {
-      resize: vertical;
-      min-height: 100px;
-    }
-
-    .save-btn {
-      background: var(--primary-color);
-      color: var(--button-text);
-      padding: 0.6rem 1.2rem;
-      border: none;
-      border-radius: 0.6rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    .save-btn:hover {
-      background: var(--primary-hover);
-    }
-
-    .secret .card {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      padding: 2rem !important;
-      background: var(--container-bg);
-      border-radius: 1.5rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      position: relative;
-    }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .avatar {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
+    50% {
       background-color: var(--body-bg);
-      flex-shrink: 0;
     }
 
-    .profile-pic {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-      z-index: 0;
+    100% {
+      background-color: var(--container-bg);
+    }
+  }
+
+  .shimmer {
+    background: linear-gradient(90deg, var(--container-bg) 25%, var(--body-bg) 50%, var(--container-bg) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
     }
 
-
-    /* Profile Header */
-    .avatar-profile {
-      width: 95px;
-      height: 95px;
+    100% {
+      background-position: 200% 0;
     }
+  }
+</style>
 
-    .avatar-profile img.profile-pic {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid var(--primary-color);
-      cursor: pointer;
-      transition: transform 0.3s;
-    }
+<div id="main">
+  <section class="main">
 
-    .user-info {
-      display: flex;
-      align-items: flex-start !important;
-      flex-direction: column;
-    }
+    <div class="jumbotron text-center">
 
-    .user-info .username {
-      font-weight: bold;
-      font-size: 1rem;
-      margin: 0;
-    }
+      <% if(locals.userProfile){ %>
+        <div id="profile">
+          <div class="profile-header ">
+            <div class="avatar-profile editable-avatar">
+              <img src="../.<%= userPicture %>" alt="Avatar" class="profile-pic" onclick="editAvatar()">
+              <p id="active-status" class="status">
+                <%= activeStatus ? '🟢 ' : '🔴' ; %>
+              </p>
+            </div>
+            <small class="username">@amebo<%= profileId %>
+                <% if(verification===true) {%>
+                  <img src="../../img/gossipa3.png" class="verified-badge" alt="">
+                  <% } else {%>
+                    <% } %>
+            </small>
 
-    .user-info .timestamp {
-      font-size: 0.75rem;
-      color: var(--text-color);
-    }
+            <div class="quick-stats">
+              <div class="stat"><strong>
+                  <%= userProfile.length | 0 %>
+                </strong><span>Gists</span></div>
+              <div class="stat"><strong>
+                  <%= 0 %>
+                </strong><span>Eavedroppers</span></div>
+              <div class="stat"><strong>
+                  <%= totalReactions|| 0 %>
+                </strong><span>Reactions</span></div>
+            </div>
+            <button class="edit-profile-btn"
+              style="background: linear-gradient(135deg, var(--primary-color) , var(--secondary-color))!important">Eavedrop
+              on
+              Profile</button>
+          </div>
 
-    .card-content p {
-      font-size: 1.1rem;
-      line-height: 1.6;
-      margin: 0 !important;
-    }
+          <hr style="margin-top: 2rem;">
+          <form id="navigator">
+            <input type="hidden" id="user" name="user" value="<%= profileId %>">
+            <button class="current navigation text" data-type="text">Text</button>
+            <button class="navigation audio" data-type="audio">Audio</button>
+          </form>
 
+          <ul id="userPostsContainer">
+            <% if (locals.userProfile) { %>
 
-    .profile-header {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      flex-wrap: wrap;
-      background: var(--glass-bg);
-      padding: 1rem;
-      border-radius: 30px;
-    }
-
-
-    .profile-info h2 {
-      margin: 0;
-      font-size: 1.8rem;
-    }
-
-    .profile-info .tagline {
-      color: var(--text-muted);
-      font-style: italic;
-      margin-bottom: 1rem;
-    }
-
-    .quick-stats {
-      display: flex;
-      gap: 1.5rem;
-      margin: 1rem 0;
-    }
-
-    .stat {
-      text-align: center;
-    }
-
-    .stat strong {
-      font-size: 1.2rem;
-      color: var(--primary);
-    }
-
-    /* Buttons */
-    .edit-profile-btn,
-    .edit,
-    .delete,
-    .read-more,
-    .edit-comment,
-    .delete-comment {
-      background: var(--primary-color);
-      color: var(--text);
-      border: none;
-      border-radius: 8px;
-      padding: 0.5rem 1rem;
-      margin-top: 0.5rem;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    .edit-profile-btn:hover,
-    .read-more:hover,
-    .edit-comment:hover,
-    .delete-comment:hover {
-      background: var(--secondary);
-    }
-
-
-    #editModal {
-      display: none;
-    }
-
-    .shimmer-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      /* padding: 1rem; */
-    }
-
-    .shimmer-card {
-      display: flex;
-      background: var(--container-bg);
-      border-radius: 10px;
-      overflow: hidden;
-      animation: pulse 1.5s infinite;
-    }
-
-    .shimmer-avatar {
-      width: 50px;
-      height: 50px;
-      background: var(--body-bg);
-      border-radius: 50%;
-      margin: 1rem;
-    }
-
-
-
-    .shimmer-lines {
-      flex: 1;
-      padding: 1rem 0;
-    }
-
-    .shimmer-line {
-      height: 10px;
-      background: var(--body-bg);
-      margin: 8px 0;
-      border-radius: 5px;
-    }
-
-    .shimmer-line.short {
-      width: 50%;
-    }
-
-    .shimmer-line.tiny {
-      width: 30%;
-    }
-
-    .shimmer-footer {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-
-    .shimmer-btn {
-      width: 40px;
-      height: 20px;
-      background: var(--body-bg);
-      border-radius: 5px;
-    }
-
-    @keyframes pulse {
-      0% {
-        background-color: var(--container-bg);
-      }
-
-      50% {
-        background-color: var(--body-bg);
-      }
-
-      100% {
-        background-color: var(--container-bg);
-      }
-    }
-
-    .shimmer {
-      background: linear-gradient(90deg, var(--container-bg) 25%, var(--body-bg) 50%, var(--container-bg) 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-    }
-
-    @keyframes shimmer {
-      0% {
-        background-position: -200% 0;
-      }
-
-      100% {
-        background-position: 200% 0;
-      }
-    }
-  </style>
-
-      <div id="main">
-      <section class="main">
-
-        <div class="jumbotron text-center">
-
-            <% if(locals.userProfile){ %>
-              <div id="profile">
-                <div class="profile-header ">
-                  <div class="avatar-profile editable-avatar">
-                    <img src="../.<%= userPicture %>" alt="Avatar" class="profile-pic" onclick="editAvatar()">
-                    <p id="active-status" class="status">
-                      <%= activeStatus ? '🟢 ' : '🔴' ; %>
-                    </p>
-                  </div>
-                  <small class="username">@amebo<%= profileId %>
-                      <% if(verification===true) {%>
-                        <img src="../../img/gossipa3.png" class="verified-badge" alt="">
-                        <% } else {%>
-                          <% } %>
-                  </small>
-
-                  <div class="quick-stats">
-                    <div class="stat"><strong>
-                        <%= userProfile.length | 0 %>
-                      </strong><span>Gists</span></div>
-                    <div class="stat"><strong>
-                        <%= 0 %>
-                      </strong><span>Eavedroppers</span></div>
-                    <div class="stat"><strong>
-                        <%= totalReactions|| 0 %>
-                      </strong><span>Reactions</span></div>
-                  </div>
-                  <button class="edit-profile-btn"
-                    style="background: linear-gradient(135deg, var(--primary-color) , var(--secondary-color))!important">Eavedrop on
-                    Profile</button>
-                </div>
-
-                <hr style="margin-top: 2rem;">
-                <form id="navigator">
-                  <input type="hidden" id="user" name="user" value="<%= profileId %>">
-                  <button class="current navigation text" data-type="text">Text</button>
-                  <button class="navigation audio" data-type="audio">Audio</button>
-                </form>
-
-                <ul id="userPostsContainer">
-                  <% if (locals.userProfile) { %>
-
-                    <% userProfile.forEach((secret)=> { %>
-                      <% const isLongSecret=secret.secret.split(" ").length > 17;
+              <% userProfile.forEach((secret)=> { %>
+                <% const isLongSecret=secret.secret.split(" ").length > 17;
              %>
           <li class=" secret <%=isLongSecret ? 'full-width' : 'half-width' %>" id="secret<%= secret.id %>">
 
+                    <div class="card">
+
+                      <!-- Shimmer Template -->
+                      <template id="shimmerTemplate">
+                        <li class="secret shimmer-card">
                           <div class="card">
-
-                            <!-- Shimmer Template -->
-                            <template id="shimmerTemplate">
-                              <li class="secret shimmer-card">
-                                <div class="card">
-                                  <div class="card-header">
-                                    <div class="user-info">
-                                      <div class="shimmer-line tiny"></div>
-                                    </div>
-                                  </div>
-                                  <div class="card-content">
-                                    <div class="shimmer-line"></div>
-                                    <div class="shimmer-line"></div>
-                                  </div>
-                                  <div class="shimmer-footer">
-                                    <div class="shimmer-btn"></div>
-                                    <div class="shimmer-btn"></div>
-                                  </div>
-                                </div>
-                              </li>
-                            </template>
-
-
                             <div class="card-header">
                               <div class="user-info">
-
-                                <span class="timestamp" data-raw="<%= secret.timestamp %>"></span>
+                                <div class="shimmer-line tiny"></div>
                               </div>
-
                             </div>
-
                             <div class="card-content">
-                              <p>
-                                <span class="content">
-                                  <% if (secret.secret.split(" ").length > 200) { %>
+                              <div class="shimmer-line"></div>
+                              <div class="shimmer-line"></div>
+                            </div>
+                            <div class="shimmer-footer">
+                              <div class="shimmer-btn"></div>
+                              <div class="shimmer-btn"></div>
+                            </div>
+                          </div>
+                        </li>
+                      </template>
+
+
+                      <div class="card-header">
+                        <div class="user-info">
+
+                          <span class="timestamp" data-raw="<%= secret.timestamp %>"></span>
+                        </div>
+
+                      </div>
+
+                      <div class="card-content">
+                        <p>
+                          <span class="content">
+                            <% if (secret.secret.split(" ").length > 200) { %>
 <%= secret.secret.substring(0, 250) + " ..." %>
-                                    <% } else { %>
-                                      <%= secret.secret %>
-                                        <% } %>
-                                </span>
-                                <% if (secret.secret.split(" ").length > 200) { %>
+                              <% } else { %>
+                                <%= secret.secret %>
+                                  <% } %>
+                          </span>
+                          <% if (secret.secret.split(" ").length > 200) { %>
 
     <button
 class=" read" style="
@@ -547,49 +547,49 @@ class=" read" style="
   font-weight: bold;
   font-family: 'Courier New', Courier, monospace !important;
 " data-full="<%= secret.secret %>" data-truncated="<%= secret.secret.substring(0, 250) + '...' %>">
-                                  Read More
-                                  </button>
+                            Read More
+                            </button>
 
 
-                                  <% } %>
-                              </p>
-                            </div>
+                            <% } %>
+                        </p>
+                      </div>
 
-                           
 
-                              <div class="comment-section" data-secret-id="<%= secret.id %>">
 
-                                <div class="reactions sleek">
-                                  <div class="first-action">
-                                    <div class="secret-card" data-id="<%= secret.id %>">
-                                      <div class="reaction">
-                                          <button class="reaction-btn " data-type="hot">
-                                            <!-- <div id="gasp-animation" class="lottie-animation"></div> -->
-                                            <img src="../../img/premium-reaction.png"
-                                              alt="Premium exclusive fire, hot reaction" class="premium-reaction">
-                                            <span class="reaction-count">
-                                              <%= secret.reactions.hot ? secret.reactions.hot.count : 0 %>
-                                            </span>
-                                          </button>
+                      <div class="comment-section" data-secret-id="<%= secret.id %>">
 
-                                          <button class="reaction-btn " data-type="like">
-                                            <!-- <div id="like-animation" class="lottie-animation"></div> -->
-                                            👍
-                                            <span class="reaction-count">
-                                              <%= secret.reactions.like ? secret.reactions.like.count : 0 %>
-                                            </span>
-                                          </button>
+                        <div class="reactions sleek">
+                          <div class="first-action">
+                            <div class="secret-card" data-id="<%= secret.id %>">
+                              <div class="reaction">
+                                <button class="reaction-btn " data-type="hot">
+                                  <!-- <div id="gasp-animation" class="lottie-animation"></div> -->
+                                  <img src="../../img/premium-reaction.png" alt="Premium exclusive fire, hot reaction"
+                                    class="premium-reaction">
+                                  <span class="reaction-count">
+                                    <%= secret.reactions.hot ? secret.reactions.hot.count : 0 %>
+                                  </span>
+                                </button>
 
-                                          <button class="reaction-btn " data-type="laugh">
-                                            <!-- <div id="laugh-animation" class="lottie-animation"></div> -->
+                                <button class="reaction-btn " data-type="like">
+                                  <!-- <div id="like-animation" class="lottie-animation"></div> -->
+                                  👍
+                                  <span class="reaction-count">
+                                    <%= secret.reactions.like ? secret.reactions.like.count : 0 %>
+                                  </span>
+                                </button>
 
-                                            😂
-                                            <span class="reaction-count">
-                                              <%= secret.reactions.laugh ? secret.reactions.laugh.count : 0 %>
-                                            </span>
-                                          </button>
+                                <button class="reaction-btn " data-type="laugh">
+                                  <!-- <div id="laugh-animation" class="lottie-animation"></div> -->
 
-                                          <!-- <button class="reaction-btn " data-type="cry">
+                                  😂
+                                  <span class="reaction-count">
+                                    <%= secret.reactions.laugh ? secret.reactions.laugh.count : 0 %>
+                                  </span>
+                                </button>
+
+                                <!-- <button class="reaction-btn " data-type="cry">
 
                                                       😢
                                                       <span class="reaction-count">
@@ -597,312 +597,310 @@ class=" read" style="
                                                       </span>
                                                     </button> -->
 
-                                          <button class="reaction-btn " data-type="gasp">
-                                            <!-- <div id="gasp-animation" class="lottie-animation"></div> -->
-                                            😱
-                                            <span class="reaction-count">
-                                              <%= secret.reactions.gasp ? secret.reactions.gasp.count : 0 %>
-                                            </span>
-                                          </button>
+                                <button class="reaction-btn " data-type="gasp">
+                                  <!-- <div id="gasp-animation" class="lottie-animation"></div> -->
+                                  😱
+                                  <span class="reaction-count">
+                                    <%= secret.reactions.gasp ? secret.reactions.gasp.count : 0 %>
+                                  </span>
+                                </button>
 
-                                      </div>
-
-                                    </div>
-
-                                    <button id="commentButton"><i class="fas fa-comment"></i><span
-                                        class="comment-count"></span>
-                                    </button>
-                                  </div>
-
-                                  <ul class="second-action">
-                                    <li><i class="fas fa-bookmark"></i>&nbsp;<span id="bookmarkCount">0</span></li>
-                                  </ul>
-
-                                </div>
-
-                                <div class="comment-dropdown" id="commentDropdown">
-                                  <form class="comment-display" method="POST" id="commentDisplay">
-                                    <ul id="comments" class="comments-list"></ul>
-                                  </form>
-
-                                  <form action="/comment" method="POST" id="comment-form">
-                                    <input type="hidden" name="id" id="secretId" value="<%= secret.id %>" />
-                                    <input type="hidden" name="secretUserId" value="<%= secret.user_id %>" />
-                                    <input type="hidden" name="commentUserId" value="<%= userId %>" />
-                                    <textarea id="commentInput" placeholder="Write a comment..."
-                                      name="comment"></textarea>
-                                    <!-- <input type="text" id="commentInput" placeholder="Write a comment" name="comment"> -->
-                                    <button id="postCommentButton">
-                                      <!-- Post -->
-                                      <i class="fas fa-paper-plane"></i>
-                                    </button>
-                                    <% if (locals.message) { %>
-                                      <small>
-                                        <%= message %>
-                                      </small>
-                                      <% } %>
-                                  </form>
-
-                                </div>
                               </div>
 
-                            <ul class="card-menu">
-                              <li>
-                                <button class="card-toggle-btn"><i class="fas fa-ellipsis-vertical"></i></button>
-                                <ul class="card-menu-content" style="display: none;">
-                                  <li>
-                                    <button class="report-btn" data-id="<%= secret.id %>">
-                                      <i class="fa-regular fa-flag"></i>Report
-                                    </button>
-                                  </li>
-                                  <li>
-                                    <button class="copy-btn">
-                                      <i class="fas fa-copy">Copy</i>
-                                    </button>
-                                  </li>
-                                </ul>
-                          </div>
-                          </li>
-
-                          <% }) %>
-
-                            <script>
-                              document.addEventListener('DOMContentLoaded', function () {
-
-                                document.querySelectorAll('.reaction-btn').forEach(button => {
-                                  const type = button.getAttribute('data-type');
-
-                                  button.addEventListener('click', () => {
-                                    const emojiChar = button.textContent.trim().split('\n')[0];
-                                    const card = button.closest('.secret-card');
-                                    const floatingContainer = card.querySelector('.floating-lottie');
-
-                                    // === 1. EMOJI BURST AROUND BUTTON ===
-                                    triggerEmojiBurst(button, emojiChar);
-
-                                    // === 2. 3D EXTRAS AROUND BUTTON ===
-                                    if (type === 'cry') {
-                                      const tear = document.createElement('span');
-                                      tear.className = 'emoji-particle';
-                                      tear.innerText = '💧';
-                                      tear.style.setProperty('--x', '0px');
-                                      tear.style.setProperty('--y', '50px');
-                                      button.appendChild(tear);
-                                      setTimeout(() => tear.remove(), 800);
-                                    }
-
-                                    if (type === 'gasp') {
-                                      const puff = document.createElement('span');
-                                      puff.className = 'emoji-particle';
-                                      puff.innerText = '💨';
-                                      puff.style.setProperty('--x', '-10px');
-                                      puff.style.setProperty('--y', '0px');
-                                      button.appendChild(puff);
-                                      setTimeout(() => puff.remove(), 800);
-                                    }
-
-
-                                    // === 5. REMOVE LOTTIE ANIMATION AFTER IT FINISHES ===
-                                    setTimeout(() => {
-                                      floatingContainer.classList.remove('active'); // Remove the active class
-                                      floatingContainer.innerHTML = ''; // Clear the Lottie animation
-                                    }, 2000); // Adjust the timeout to match the animation duration
-                                  });
-                                });
-
-                                function triggerEmojiBurst(container, emojiChar) {
-                                  const burstCount = 10;
-
-                                  for (let i = 0; i < burstCount; i++) {
-                                    const particle = document.createElement('span');
-                                    particle.classList.add('emoji-particle');
-                                    particle.innerText = emojiChar;
-
-                                    const angle = Math.random() * 2 * Math.PI;
-                                    const distance = Math.random() * 40 + 20;
-                                    const x = Math.cos(angle) * distance + 'px';
-                                    const y = Math.sin(angle) * distance + 'px';
-
-                                    particle.style.setProperty('--x', x);
-                                    particle.style.setProperty('--y', y);
-
-                                    container.appendChild(particle);
-                                    setTimeout(() => particle.remove(), 800);
-                                  }
-
-                                  container.classList.add('pop-animate');
-                                  setTimeout(() => container.classList.remove('pop-animate'), 300);
-                                }
-                              });
-                            </script>
-
-                            <center class="bottom-message" id="scrollEndMessage">
-                              <p>Reached last Gossips. Scroll back to top </p>
-                            </center>
-
-                            <script>
-                              document.addEventListener('DOMContentLoaded', () => {
-                                const scrollEndMessage = document.getElementById('scrollEndMessage');
-
-                                window.addEventListener('scroll', () => {
-                                  const scrollPosition = window.scrollY + window.innerHeight;
-                                  const pageHeight = document.body.offsetHeight;
-
-                                  if (scrollPosition >= pageHeight - 50) {
-                                    // User reached near bottom
-                                    scrollEndMessage.style.opacity = '1';
-                                    scrollEndMessage.style.zIndex = '100'
-                                  } else {
-                                    scrollEndMessage.style.opacity = '0';
-                                  }
-                                });
-                              });
-                            </script>
-
-
-
-
-                            <% } else {%>
-                              <li class="secret">
-                                <div class="card">
-                                  <div class="card-content">No Posts</div>
-                                </div>
-                              </li>
-                              <% } %>
-
-                </ul>
-              </div>
-              <% } else if(locals.profile){ %>
-                <div id="profile">
-                  <div class="profile-header ">
-                    <div class="avatar-profile editable-avatar">
-                      <img src="../.<%= profilePicture %>" alt="Avatar" class="profile-pic" onclick="editAvatar()">
-                      <p id="active-status" class="status">
-
-                      </p>
-                    </div>
-
-                    <% if(verification===true) {%>
-                      <small class="username">@amebo<%= userId %> <img src="img/gossipa3.png" class="verified-badge"
-                            alt=""></small>
-                      <% } else {%>
-                        <small class="username">@amebo<%= userId %></small>
-                        <% } %>
-
-
-
-
-                          <div class="quick-stats">
-                            <div class="stat"><strong>
-                                <%= profile.length | 0 %>
-                              </strong><span>Gists</span></div>
-                            <div class="stat"><strong>
-                                <%= 0 %>
-                              </strong><span>Audience</span></div>
-                            <div class="stat"><strong>
-                                <%= 0 %>
-                              </strong><span>Reactions</span></div>
-                          </div>
-                          <div class="card-footer">
-                            <button class="edit-profile-btn"><i class="fas fa-pen"></i>&nbsp;Edit Profile</button>
-                            <button class="edit-profile-btn"
-                              style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));">Get
-                              verified</button>
-                          </div>
-                  </div>
-
-                  <hr style="margin-top: 2rem;">
-                  <form id="navigator">
-                    <input type="hidden" id="user" name="user" value="<%= userId %>">
-                    <button class="navigation current text" type="button" data-type="text">Text</button>
-                    <button class="navigation audio" type="button" data-type="audio">Audio</button>
-                  </form>
-
-                  <div id="shimmer-container" class="shimmer-container">
-                    <ul>
-                      <% for (let i=0; i < profile.length; i++) { %>
-                        <li class="secret shimmer-placeholder">
-                          <div class="card">
-                            <div class="shimmer-wrapper">
-                              <div class="shimmer-card">
-                                <div class="shimmer-lines">
-                                  <div class="shimmer-line short"></div>
-                                  <div class="shimmer-line"></div>
-                                  <div class="shimmer-line"></div>
-                                  <div class="shimmer-footer">
-                                    <div class="shimmer-btn"></div>
-                                    <div class="shimmer-btn"></div>
-                                  </div>
-                                </div>
-                              </div>
                             </div>
+
+                            <button id="commentButton"><i class="fas fa-comment"></i><span class="comment-count"></span>
+                            </button>
+                          </div>
+
+                          <ul class="second-action">
+                            <li><i class="fas fa-bookmark"></i>&nbsp;<span id="bookmarkCount">0</span></li>
+                          </ul>
+
+                        </div>
+
+                        <div class="comment-dropdown" id="commentDropdown">
+                          <form class="comment-display" method="POST" id="commentDisplay">
+                            <ul id="comments" class="comments-list"></ul>
+                          </form>
+
+                          <form action="/comment" method="POST" id="comment-form">
+                            <input type="hidden" name="id" id="secretId" value="<%= secret.id %>" />
+                            <input type="hidden" name="secretUserId" value="<%= secret.user_id %>" />
+                            <input type="hidden" name="commentUserId" value="<%= userId %>" />
+                            <textarea id="commentInput" placeholder="Write a comment..." name="comment"></textarea>
+                            <!-- <input type="text" id="commentInput" placeholder="Write a comment" name="comment"> -->
+                            <button id="postCommentButton">
+                              <!-- Post -->
+                              <i class="fas fa-paper-plane"></i>
+                            </button>
+                            <% if (locals.message) { %>
+                              <small>
+                                <%= message %>
+                              </small>
+                              <% } %>
+                          </form>
+
+                        </div>
+                      </div>
+
+                      <ul class="card-menu">
+                        <li>
+                          <button class="card-toggle-btn"><i class="fas fa-ellipsis-vertical"></i></button>
+                          <ul class="card-menu-content" style="display: none;">
+                            <li>
+                              <button class="report-btn" data-id="<%= secret.id %>">
+                                <i class="fa-regular fa-flag"></i>Report
+                              </button>
+                            </li>
+                            <li>
+                              <button class="copy-btn">
+                                <i class="fas fa-copy">Copy</i>
+                              </button>
+                            </li>
+                          </ul>
+                    </div>
+                    </li>
+
+                    <% }) %>
+
+                      <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+
+                          document.querySelectorAll('.reaction-btn').forEach(button => {
+                            const type = button.getAttribute('data-type');
+
+                            button.addEventListener('click', () => {
+                              const emojiChar = button.textContent.trim().split('\n')[0];
+                              const card = button.closest('.secret-card');
+                              const floatingContainer = card.querySelector('.floating-lottie');
+
+                              // === 1. EMOJI BURST AROUND BUTTON ===
+                              triggerEmojiBurst(button, emojiChar);
+
+                              // === 2. 3D EXTRAS AROUND BUTTON ===
+                              if (type === 'cry') {
+                                const tear = document.createElement('span');
+                                tear.className = 'emoji-particle';
+                                tear.innerText = '💧';
+                                tear.style.setProperty('--x', '0px');
+                                tear.style.setProperty('--y', '50px');
+                                button.appendChild(tear);
+                                setTimeout(() => tear.remove(), 800);
+                              }
+
+                              if (type === 'gasp') {
+                                const puff = document.createElement('span');
+                                puff.className = 'emoji-particle';
+                                puff.innerText = '💨';
+                                puff.style.setProperty('--x', '-10px');
+                                puff.style.setProperty('--y', '0px');
+                                button.appendChild(puff);
+                                setTimeout(() => puff.remove(), 800);
+                              }
+
+
+                              // === 5. REMOVE LOTTIE ANIMATION AFTER IT FINISHES ===
+                              setTimeout(() => {
+                                floatingContainer.classList.remove('active'); // Remove the active class
+                                floatingContainer.innerHTML = ''; // Clear the Lottie animation
+                              }, 2000); // Adjust the timeout to match the animation duration
+                            });
+                          });
+
+                          function triggerEmojiBurst(container, emojiChar) {
+                            const burstCount = 10;
+
+                            for (let i = 0; i < burstCount; i++) {
+                              const particle = document.createElement('span');
+                              particle.classList.add('emoji-particle');
+                              particle.innerText = emojiChar;
+
+                              const angle = Math.random() * 2 * Math.PI;
+                              const distance = Math.random() * 40 + 20;
+                              const x = Math.cos(angle) * distance + 'px';
+                              const y = Math.sin(angle) * distance + 'px';
+
+                              particle.style.setProperty('--x', x);
+                              particle.style.setProperty('--y', y);
+
+                              container.appendChild(particle);
+                              setTimeout(() => particle.remove(), 800);
+                            }
+
+                            container.classList.add('pop-animate');
+                            setTimeout(() => container.classList.remove('pop-animate'), 300);
+                          }
+                        });
+                      </script>
+
+                      <center class="bottom-message" id="scrollEndMessage">
+                        <p>Reached last Gossips. Scroll back to top </p>
+                      </center>
+
+                      <script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                          const scrollEndMessage = document.getElementById('scrollEndMessage');
+
+                          window.addEventListener('scroll', () => {
+                            const scrollPosition = window.scrollY + window.innerHeight;
+                            const pageHeight = document.body.offsetHeight;
+
+                            if (scrollPosition >= pageHeight - 50) {
+                              // User reached near bottom
+                              scrollEndMessage.style.opacity = '1';
+                              scrollEndMessage.style.zIndex = '100'
+                            } else {
+                              scrollEndMessage.style.opacity = '0';
+                            }
+                          });
+                        });
+                      </script>
+
+
+
+
+                      <% } else {%>
+                        <li class="secret">
+                          <div class="card">
+                            <div class="card-content">No Posts</div>
                           </div>
                         </li>
                         <% } %>
-                    </ul>
-                  </div>
 
-                  <div id="real-secrets" style="display: none;">
-                    <ul id="userPostsContainer" class="t">
-                      <% if (locals.profile) { %>
+          </ul>
+        </div>
+        <% } else if(locals.profile){ %>
+          <div id="profile">
+            <div class="profile-header ">
+              <div class="avatar-profile editable-avatar">
+                <img src="../.<%= profilePicture %>" alt="Avatar" class="profile-pic" onclick="editAvatar()">
+                <p id="active-status" class="status">
+
+                </p>
+              </div>
+
+              <% if(verification===true) {%>
+                <small class="username">@amebo<%= userId %> <img src="img/gossipa3.png" class="verified-badge"
+                      alt=""></small>
+                <% } else {%>
+                  <small class="username">@amebo<%= userId %></small>
+                  <% } %>
 
 
-                        <% profile.forEach((secret)=> { %>
-                          <% const isLongSecret=secret.secret.split(" ").length > 17;
+
+
+                    <div class="quick-stats">
+                      <div class="stat"><strong>
+                          <%= profile.length | 0 %>
+                        </strong><span>Gists</span></div>
+                      <div class="stat"><strong>
+                          <%= 0 %>
+                        </strong><span>Audience</span></div>
+                      <div class="stat"><strong>
+                          <%= 0 %>
+                        </strong><span>Reactions</span></div>
+                    </div>
+                    <div class="card-footer">
+                      <button class="edit-profile-btn"><i class="fas fa-pen"></i>&nbsp;Edit Profile</button>
+                      <button class="edit-profile-btn"
+                        style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));">Get
+                        verified</button>
+                    </div>
+            </div>
+
+            <hr style="margin-top: 2rem;">
+            <form id="navigator">
+              <input type="hidden" id="user" name="user" value="<%= userId %>">
+              <button class="navigation current text" type="button" data-type="text">Text</button>
+              <button class="navigation audio" type="button" data-type="audio">Audio</button>
+            </form>
+
+            <div id="shimmer-container" class="shimmer-container">
+              <ul>
+                <% for (let i=0; i < profile.length; i++) { %>
+                  <li class="secret shimmer-placeholder">
+                    <div class="card">
+                      <div class="shimmer-wrapper">
+                        <div class="shimmer-card">
+                          <div class="shimmer-lines">
+                            <div class="shimmer-line short"></div>
+                            <div class="shimmer-line"></div>
+                            <div class="shimmer-line"></div>
+                            <div class="shimmer-footer">
+                              <div class="shimmer-btn"></div>
+                              <div class="shimmer-btn"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <% } %>
+              </ul>
+            </div>
+
+            <div id="real-secrets" style="display: none;">
+              <ul id="userPostsContainer" class="t">
+                <% if (locals.profile) { %>
+
+
+                  <% profile.forEach((secret)=> { %>
+                    <% const isLongSecret=secret.secret.split(" ").length > 17;
                  %>
               <li class=" secret full-width gist-list" id="secret<%= secret.id %>">
 
-                              <div class="card">
+                      <div class="card">
 
 
-                                <template id="shimmerTemplate">
-                                  <li class="secret shimmer-wrapper">
-                                    <div class="card shimmer-card">
+                        <template id="shimmerTemplate">
+                          <li class="secret shimmer-wrapper">
+                            <div class="card shimmer-card">
 
-                                      <div class="card-header">
-                                        <div class="user-info">
-                                          <div class="shimmer-avatar"></div>
-                                          <div class="shimmer-lines">
-                                            <div class="shimmer-line short"></div>
-                                            <div class="shimmer-line tiny"></div>
-                                          </div>
-                                        </div>
-
-                                        <div class="card-content">
-                                          <div class="shimmer-lines">
-                                            <div class="shimmer-line short"></div>
-                                            <div class="shimmer-line"></div>
-                                            <div class="shimmer-line"></div>
-                                          </div>
-                                        </div>
-
-                                        <div class="shimmer-footer">
-                                          <div class="shimmer-btn"></div>
-                                          <div class="shimmer-btn"></div>
-                                        </div>
-
-                                      </div>
-                                  </li>
-                                </template>
-
-
-                                <div class="card-header">
-                                  <div class="user-info">
-                                    <span class="timestamp" data-raw="<%= secret.timestamp %>"></span>
+                              <div class="card-header">
+                                <div class="user-info">
+                                  <div class="shimmer-avatar"></div>
+                                  <div class="shimmer-lines">
+                                    <div class="shimmer-line short"></div>
+                                    <div class="shimmer-line tiny"></div>
                                   </div>
-
                                 </div>
 
                                 <div class="card-content">
-                                  <p>
-                                    <span class="content">
-                                      <% if (secret.secret.split(" ").length > 200) { %>
+                                  <div class="shimmer-lines">
+                                    <div class="shimmer-line short"></div>
+                                    <div class="shimmer-line"></div>
+                                    <div class="shimmer-line"></div>
+                                  </div>
+                                </div>
+
+                                <div class="shimmer-footer">
+                                  <div class="shimmer-btn"></div>
+                                  <div class="shimmer-btn"></div>
+                                </div>
+
+                              </div>
+                          </li>
+                        </template>
+
+
+                        <div class="card-header">
+                          <div class="user-info">
+                            <span class="timestamp" data-raw="<%= secret.timestamp %>"></span>
+                          </div>
+
+                        </div>
+
+                        <div class="card-content">
+                          <p>
+                            <span class="content">
+                              <% if (secret.secret.split(" ").length > 200) { %>
     <%= secret.secret.substring(0, 250) + " ..." %>
-                                        <% } else { %>
-                                          <%= secret.secret %>
-                                            <% } %>
-                                    </span>
-                                    <% if (secret.secret.split(" ").length > 200) { %>
+                                <% } else { %>
+                                  <%= secret.secret %>
+                                    <% } %>
+                            </span>
+                            <% if (secret.secret.split(" ").length > 200) { %>
     
         <button
     class=" read" style="
@@ -914,47 +912,47 @@ class=" read" style="
       font-weight: bold;
       font-family: 'Courier New', Courier, monospace !important;
     " data-full="<%= secret.secret %>" data-truncated="<%= secret.secret.substring(0, 250) + '...' %>">
-                                      Read More
-                                      </button>
+                              Read More
+                              </button>
 
 
-                                      <% } %>
-                                  </p>
-                                </div>
+                              <% } %>
+                          </p>
+                        </div>
 
-                                <div class="comment-section" data-secret-id="<%= secret.id %>">
+                        <div class="comment-section" data-secret-id="<%= secret.id %>">
 
-                                  <div class="reactions sleek">
-                                    <div class="first-action">
-                                      <div class="secret-card" data-id="<%= secret.id %>">
-                                        <div class="reaction">
-                                            <button class="reaction-btn " data-type="hot">
-                                              <!-- <div id="gasp-animation" class="lottie-animation"></div> -->
-                                              <img src="../../img/premium-reaction.png"
-                                                alt="Premium exclusive fire, hot reaction" class="premium-reaction">
-                                              <span class="reaction-count">
-                                                <%= secret.reactions.hot ? secret.reactions.hot.count : 0 %>
-                                              </span>
-                                            </button>
+                          <div class="reactions sleek">
+                            <div class="first-action">
+                              <div class="secret-card" data-id="<%= secret.id %>">
+                                <div class="reaction">
+                                  <button class="reaction-btn " data-type="hot">
+                                    <!-- <div id="gasp-animation" class="lottie-animation"></div> -->
+                                    <img src="../../img/premium-reaction.png" alt="Premium exclusive fire, hot reaction"
+                                      class="premium-reaction">
+                                    <span class="reaction-count">
+                                      <%= secret.reactions.hot ? secret.reactions.hot.count : 0 %>
+                                    </span>
+                                  </button>
 
-                                            <button class="reaction-btn " data-type="like">
-                                              <!-- <div id="like-animation" class="lottie-animation"></div> -->
-                                              👍
-                                              <span class="reaction-count">
-                                                <%= secret.reactions.like ? secret.reactions.like.count : 0 %>
-                                              </span>
-                                            </button>
+                                  <button class="reaction-btn " data-type="like">
+                                    <!-- <div id="like-animation" class="lottie-animation"></div> -->
+                                    👍
+                                    <span class="reaction-count">
+                                      <%= secret.reactions.like ? secret.reactions.like.count : 0 %>
+                                    </span>
+                                  </button>
 
-                                            <button class="reaction-btn " data-type="laugh">
-                                              <!-- <div id="laugh-animation" class="lottie-animation"></div> -->
+                                  <button class="reaction-btn " data-type="laugh">
+                                    <!-- <div id="laugh-animation" class="lottie-animation"></div> -->
 
-                                              😂
-                                              <span class="reaction-count">
-                                                <%= secret.reactions.laugh ? secret.reactions.laugh.count : 0 %>
-                                              </span>
-                                            </button>
+                                    😂
+                                    <span class="reaction-count">
+                                      <%= secret.reactions.laugh ? secret.reactions.laugh.count : 0 %>
+                                    </span>
+                                  </button>
 
-                                            <!-- <button class="reaction-btn " data-type="cry">
+                                  <!-- <button class="reaction-btn " data-type="cry">
 
                                                         😢
                                                         <span class="reaction-count">
@@ -962,438 +960,437 @@ class=" read" style="
                                                         </span>
                                                       </button> -->
 
-                                            <button class="reaction-btn " data-type="gasp">
-                                              <!-- <div id="gasp-animation" class="lottie-animation"></div> -->
-                                              😱
-                                              <span class="reaction-count">
-                                                <%= secret.reactions.gasp ? secret.reactions.gasp.count : 0 %>
-                                              </span>
-                                            </button>
+                                  <button class="reaction-btn " data-type="gasp">
+                                    <!-- <div id="gasp-animation" class="lottie-animation"></div> -->
+                                    😱
+                                    <span class="reaction-count">
+                                      <%= secret.reactions.gasp ? secret.reactions.gasp.count : 0 %>
+                                    </span>
+                                  </button>
 
-                                        </div>
-
-                                      </div>
-
-                                      <button id="commentButton"><i class="fas fa-comment"></i><span
-                                          class="comment-count"></span>
-                                      </button>
-                                    </div>
-
-                                    <ul class="second-action">
-                                      <li><i class="fas fa-bookmark"></i>&nbsp;<span id="bookmarkCount">0</span></li>
-                                    </ul>
-
-                                  </div>
-
-                                  <div class="comment-dropdown" id="commentDropdown">
-                                    <form class="comment-display" method="POST" id="commentDisplay">
-                                      <ul id="comments" class="comments-list"></ul>
-                                    </form>
-
-                                    <form action="/comment" method="POST" id="comment-form">
-                                      <input type="hidden" name="id" id="secretId" value="<%= secret.id %>" />
-                                      <input type="hidden" name="secretUserId" value="<%= secret.user_id %>" />
-                                      <input type="hidden" name="commentUserId" value="<%= userId %>" />
-                                      <textarea id="commentInput" placeholder="Write a comment..."
-                                        name="comment"></textarea>
-                                      <!-- <input type="text" id="commentInput" placeholder="Write a comment" name="comment"> -->
-                                      <button id="postCommentButton">
-                                        <!-- Post -->
-                                        <i class="fas fa-paper-plane"></i>
-                                      </button>
-                                      <% if (locals.message) { %>
-                                        <small>
-                                          <%= message %>
-                                        </small>
-                                        <% } %>
-                                    </form>
-
-                                  </div>
                                 </div>
 
-                                <div class="card-menu">
-                                    <button class="card-toggle-btn"><i class="fas fa-ellipsis-vertical"></i></button>
-                                    <ul class="card-menu-content" style="display: none;">
-                                      <li>
-                                        <button class="report-btn" data-id="<%= secret.id %>">
-                                          <i class="fa-regular fa-flag"></i>Report
-                                        </button>
-                                      </li>
-                                      <li>
-                                        <button class="copy-btn">
-                                          <i class="fas fa-copy">Copy</i>
-                                        </button>
-                                      </li>
-
-                                      <form method="post" id="update">
-                                        <input type="hidden" name="id" id="secId" value="<%= secret.id %>" />
-                  
-                                        <button class="edit" type="submit" formaction="/edit">
-                                          <abbr title="edit">
-                                            <i class="fas fa-file-pen"></i>
-                                          </abbr>
-                                        </button>
-                  
-                  
-                                        <button class="delete" type="click">
-                                          <abbr title="delete">
-                                            <i class="fas fa-trash"></i>
-                                          </abbr>
-                                        </button>
-                  
-                                      </form>
-
-                                    </ul>
-                                  </div>
                               </div>
-                              </li>
 
-                              <% }) %>
+                              <button id="commentButton"><i class="fas fa-comment"></i><span
+                                  class="comment-count"></span>
+                              </button>
+                            </div>
 
-                              <script>
-                                const gistList = document.querySelectorAll(".gist-list")
-                                gistList.forEach(list => {
-                                  const deleteBtn = list.querySelector(".delete");
-                    
-                                  deleteBtn.addEventListener("click", async (e) => {
-                                    const secId = document.getElementById('secId').value;
-                                    e.preventDefault();
-                    
-                                    if (confirm("Are you sure you want to delete this secret?")) {
-                                      try {
-                    
-                                        const response = await fetch(`/delete`, {
-                                          method: 'POST',
-                                          headers: { 'Content-Type': 'application/json' },
-                                          body: JSON.stringify({ secId })
-                                        });
-                    
-                                        const data = await response.json();
-                    
-                                        console.log(data)
-                    
-                                        if (data) {
-                    
-                                          alert(data.message)
-                                          list.style.display = "none"
-                                        } else {
-                                          alert(data.error)
-                                        }
-                                      } catch (error) {
-                                        console.error('Error deleting gist', error);
-                                      }
-                                    } else {
-                                      e.preventDefault();
-                                    }
+                            <ul class="second-action">
+                              <li><i class="fas fa-bookmark"></i>&nbsp;<span id="bookmarkCount">0</span></li>
+                            </ul>
+
+                          </div>
+
+                          <div class="comment-dropdown" id="commentDropdown">
+                            <form class="comment-display" method="POST" id="commentDisplay">
+                              <ul id="comments" class="comments-list"></ul>
+                            </form>
+
+                            <form action="/comment" method="POST" id="comment-form">
+                              <input type="hidden" name="id" id="secretId" value="<%= secret.id %>" />
+                              <input type="hidden" name="secretUserId" value="<%= secret.user_id %>" />
+                              <input type="hidden" name="commentUserId" value="<%= userId %>" />
+                              <textarea id="commentInput" placeholder="Write a comment..." name="comment"></textarea>
+                              <!-- <input type="text" id="commentInput" placeholder="Write a comment" name="comment"> -->
+                              <button id="postCommentButton">
+                                <!-- Post -->
+                                <i class="fas fa-paper-plane"></i>
+                              </button>
+                              <% if (locals.message) { %>
+                                <small>
+                                  <%= message %>
+                                </small>
+                                <% } %>
+                            </form>
+
+                          </div>
+                        </div>
+
+                        <div class="card-menu">
+                          <button class="card-toggle-btn"><i class="fas fa-ellipsis-vertical"></i></button>
+                          <ul class="card-menu-content" style="display: none;">
+                            <li>
+                              <button class="report-btn" data-id="<%= secret.id %>">
+                                <i class="fa-regular fa-flag"></i>Report
+                              </button>
+                            </li>
+                            <li>
+                              <button class="copy-btn">
+                                <i class="fas fa-copy">Copy</i>
+                              </button>
+                            </li>
+
+                            <form method="post" id="update">
+                              <input type="hidden" name="id" id="secId" value="<%= secret.id %>" />
+
+                              <button class="edit" type="submit" formaction="/edit">
+                                <abbr title="edit">
+                                  <i class="fas fa-file-pen"></i>
+                                </abbr>
+                              </button>
+
+
+                              <button class="delete" type="click">
+                                <abbr title="delete">
+                                  <i class="fas fa-trash"></i>
+                                </abbr>
+                              </button>
+
+                            </form>
+
+                          </ul>
+                        </div>
+                      </div>
+                      </li>
+
+                      <% }) %>
+
+                        <script>
+                          const gistList = document.querySelectorAll(".gist-list")
+                          gistList.forEach(list => {
+                            const deleteBtn = list.querySelector(".delete");
+
+                            deleteBtn.addEventListener("click", async (e) => {
+                              const secId = document.getElementById('secId').value;
+                              e.preventDefault();
+
+                              if (confirm("Are you sure you want to delete this secret?")) {
+                                try {
+
+                                  const response = await fetch(`/delete`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ secId })
                                   });
-                                });
-                    
-                              </script>
-                    
 
-                              <script>
-                                function renderAudioFiles(audioFiles) {
-                    
-                                const audioList = document.querySelectorAll(".audio-list")
-                    
-                                audioList.forEach(list => {
-                                  const deleteButton = list.querySelector(".audio-delete")
-                                  deleteButton.addEventListener('click', async (e) => {
-                                    e.preventDefault();
-                                    const audioId = list.querySelector("#audioId").value;
-                    
-                    
-                                    // e.preventDefault();
-                                    if (confirm("Are you sure you want to delete this secret?")) {
-                                      try {
-                    
-                                        const response = await fetch(`/audio-delete/${audioId}`, {
-                                          method: 'POST',
-                                          headers: { 'Content-Type': 'application/json' },
-                                          body: JSON.stringify({ audioId })
-                                        });
-                    
-                                        const data = await response.json();
-                    
-                                        console.log(data)
-                    
-                                        if (data) {
-                    
-                                          alert(data.message)
-                                          list.querySelector("#audioContainer").style.display = "none"
-                                          e.target.style.display = "none"
-                                        } else {
-                                          alert(data.error)
-                                        }
-                                      } catch (error) {
-                                        console.error('Error deleting audio file:', error);
-                                      }
-                                    } else {
-                                      e.preventDefault();
-                                    }
-                    
-                                  });
-                    
-                                });
+                                  const data = await response.json();
+
+                                  console.log(data)
+
+                                  if (data) {
+
+                                    alert(data.message)
+                                    list.style.display = "none"
+                                  } else {
+                                    alert(data.error)
+                                  }
+                                } catch (error) {
+                                  console.error('Error deleting gist', error);
+                                }
+                              } else {
+                                e.preventDefault();
                               }
-                              </script>
-                    
+                            });
+                          });
 
-                                <script>
-                                  document.addEventListener('DOMContentLoaded', function () {
-
-                                    document.querySelectorAll('.reaction-btn').forEach(button => {
-                                      const type = button.getAttribute('data-type');
-
-                                      button.addEventListener('click', () => {
-                                        const emojiChar = button.textContent.trim().split('\n')[0];
-                                        const card = button.closest('.secret-card');
-                                        const floatingContainer = card.querySelector('.floating-lottie');
-
-                                        // === 1. EMOJI BURST AROUND BUTTON ===
-                                        triggerEmojiBurst(button, emojiChar);
-
-                                        // === 2. 3D EXTRAS AROUND BUTTON ===
-                                        if (type === 'cry') {
-                                          const tear = document.createElement('span');
-                                          tear.className = 'emoji-particle';
-                                          tear.innerText = '💧';
-                                          tear.style.setProperty('--x', '0px');
-                                          tear.style.setProperty('--y', '50px');
-                                          button.appendChild(tear);
-                                          setTimeout(() => tear.remove(), 800);
-                                        }
-
-                                        if (type === 'gasp') {
-                                          const puff = document.createElement('span');
-                                          puff.className = 'emoji-particle';
-                                          puff.innerText = '💨';
-                                          puff.style.setProperty('--x', '-10px');
-                                          puff.style.setProperty('--y', '0px');
-                                          button.appendChild(puff);
-                                          setTimeout(() => puff.remove(), 800);
-                                        }
+                        </script>
 
 
-                                        // === 5. REMOVE LOTTIE ANIMATION AFTER IT FINISHES ===
-                                        setTimeout(() => {
-                                          floatingContainer.classList.remove('active'); // Remove the active class
-                                          floatingContainer.innerHTML = ''; // Clear the Lottie animation
-                                        }, 2000); // Adjust the timeout to match the animation duration
-                                      });
+                        <script>
+                          function renderAudioFiles(audioFiles) {
+
+                            const audioList = document.querySelectorAll(".audio-list")
+
+                            audioList.forEach(list => {
+                              const deleteButton = list.querySelector(".audio-delete")
+                              deleteButton.addEventListener('click', async (e) => {
+                                e.preventDefault();
+                                const audioId = list.querySelector("#audioId").value;
+
+
+                                // e.preventDefault();
+                                if (confirm("Are you sure you want to delete this secret?")) {
+                                  try {
+
+                                    const response = await fetch(`/audio-delete/${audioId}`, {
+                                      method: 'POST',
+                                      headers: { 'Content-Type': 'application/json' },
+                                      body: JSON.stringify({ audioId })
                                     });
 
-                                    function triggerEmojiBurst(container, emojiChar) {
-                                      const burstCount = 10;
+                                    const data = await response.json();
 
-                                      for (let i = 0; i < burstCount; i++) {
-                                        const particle = document.createElement('span');
-                                        particle.classList.add('emoji-particle');
-                                        particle.innerText = emojiChar;
+                                    console.log(data)
 
-                                        const angle = Math.random() * 2 * Math.PI;
-                                        const distance = Math.random() * 40 + 20;
-                                        const x = Math.cos(angle) * distance + 'px';
-                                        const y = Math.sin(angle) * distance + 'px';
+                                    if (data) {
 
-                                        particle.style.setProperty('--x', x);
-                                        particle.style.setProperty('--y', y);
-
-                                        container.appendChild(particle);
-                                        setTimeout(() => particle.remove(), 800);
-                                      }
-
-                                      container.classList.add('pop-animate');
-                                      setTimeout(() => container.classList.remove('pop-animate'), 300);
+                                      alert(data.message)
+                                      list.querySelector("#audioContainer").style.display = "none"
+                                      e.target.style.display = "none"
+                                    } else {
+                                      alert(data.error)
                                     }
-                                  });
-                                </script>
+                                  } catch (error) {
+                                    console.error('Error deleting audio file:', error);
+                                  }
+                                } else {
+                                  e.preventDefault();
+                                }
 
-                                <center class="bottom-message" id="scrollEndMessage">
-                                  <p>Reached last Gossips. Scroll back to top </p>
-                                </center>
+                              });
 
-                                <script>
-                                  document.addEventListener('DOMContentLoaded', () => {
-                                    const scrollEndMessage = document.getElementById('scrollEndMessage');
-
-                                    window.addEventListener('scroll', () => {
-                                      const scrollPosition = window.scrollY + window.innerHeight;
-                                      const pageHeight = document.body.offsetHeight;
-
-                                      if (scrollPosition >= pageHeight - 50) {
-                                        // User reached near bottom
-                                        scrollEndMessage.style.opacity = '1';
-                                        scrollEndMessage.style.zIndex = '100'
-                                      } else {
-                                        scrollEndMessage.style.opacity = '0';
-                                      }
-                                    });
-                                  });
-                                </script>
+                            });
+                          }
+                        </script>
 
 
+                        <script>
+                          document.addEventListener('DOMContentLoaded', function () {
 
-                                <% } else {%>
+                            document.querySelectorAll('.reaction-btn').forEach(button => {
+                              const type = button.getAttribute('data-type');
 
-                                  <% } %>
+                              button.addEventListener('click', () => {
+                                const emojiChar = button.textContent.trim().split('\n')[0];
+                                const card = button.closest('.secret-card');
+                                const floatingContainer = card.querySelector('.floating-lottie');
 
-                    </ul>
+                                // === 1. EMOJI BURST AROUND BUTTON ===
+                                triggerEmojiBurst(button, emojiChar);
+
+                                // === 2. 3D EXTRAS AROUND BUTTON ===
+                                if (type === 'cry') {
+                                  const tear = document.createElement('span');
+                                  tear.className = 'emoji-particle';
+                                  tear.innerText = '💧';
+                                  tear.style.setProperty('--x', '0px');
+                                  tear.style.setProperty('--y', '50px');
+                                  button.appendChild(tear);
+                                  setTimeout(() => tear.remove(), 800);
+                                }
+
+                                if (type === 'gasp') {
+                                  const puff = document.createElement('span');
+                                  puff.className = 'emoji-particle';
+                                  puff.innerText = '💨';
+                                  puff.style.setProperty('--x', '-10px');
+                                  puff.style.setProperty('--y', '0px');
+                                  button.appendChild(puff);
+                                  setTimeout(() => puff.remove(), 800);
+                                }
+
+
+                                // === 5. REMOVE LOTTIE ANIMATION AFTER IT FINISHES ===
+                                setTimeout(() => {
+                                  floatingContainer.classList.remove('active'); // Remove the active class
+                                  floatingContainer.innerHTML = ''; // Clear the Lottie animation
+                                }, 2000); // Adjust the timeout to match the animation duration
+                              });
+                            });
+
+                            function triggerEmojiBurst(container, emojiChar) {
+                              const burstCount = 10;
+
+                              for (let i = 0; i < burstCount; i++) {
+                                const particle = document.createElement('span');
+                                particle.classList.add('emoji-particle');
+                                particle.innerText = emojiChar;
+
+                                const angle = Math.random() * 2 * Math.PI;
+                                const distance = Math.random() * 40 + 20;
+                                const x = Math.cos(angle) * distance + 'px';
+                                const y = Math.sin(angle) * distance + 'px';
+
+                                particle.style.setProperty('--x', x);
+                                particle.style.setProperty('--y', y);
+
+                                container.appendChild(particle);
+                                setTimeout(() => particle.remove(), 800);
+                              }
+
+                              container.classList.add('pop-animate');
+                              setTimeout(() => container.classList.remove('pop-animate'), 300);
+                            }
+                          });
+                        </script>
+
+                        <center class="bottom-message" id="scrollEndMessage">
+                          <p>Reached last Gossips. Scroll back to top </p>
+                        </center>
+
+                        <script>
+                          document.addEventListener('DOMContentLoaded', () => {
+                            const scrollEndMessage = document.getElementById('scrollEndMessage');
+
+                            window.addEventListener('scroll', () => {
+                              const scrollPosition = window.scrollY + window.innerHeight;
+                              const pageHeight = document.body.offsetHeight;
+
+                              if (scrollPosition >= pageHeight - 50) {
+                                // User reached near bottom
+                                scrollEndMessage.style.opacity = '1';
+                                scrollEndMessage.style.zIndex = '100'
+                              } else {
+                                scrollEndMessage.style.opacity = '0';
+                              }
+                            });
+                          });
+                        </script>
+
+
+
+                        <% } else {%>
+
+                          <% } %>
+
+              </ul>
+            </div>
+          </div>
+
+
+
+          <section id="editModal" class="profile-page">
+            <div class="profile-card">
+              <div class="avatar-wrapper">
+                <img src="<%= profile.profile_picture %>" alt="User Avatar" class="profile-pic" />
+                <label for="avatar-upload" class="edit-icon">
+                  <i class="fas fa-pen"></i>
+                </label>
+                <input type="file" id="avatar-upload" accept="image/*" style="display: none;" />
+              </div>
+
+              <div class="avatar-selector-wrapper">
+                <h3 class="display-3">Select Your Avatar</h3>
+                <div class="carousel-container">
+                  <div class="center-highlight"></div>
+                  <div class="avatar-carousel" id="avatarCarousel">
+                    <div class="avatar-item spacer"></div> <!-- before -->
+
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/dog.jpg" alt="Dog" /></div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/carmel.jpg" alt="Carmel" /></div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/monkey.jpg" alt="Monkey" /></div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/elephant.jpg" alt="Elephant" /></div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/bird.jpg" alt="Bird" /></div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/carmel.jpg" alt="Carmel" /></div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/lioness.jpg" alt="Lioness" /></div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/cute dog.jpg" alt="Dog" /></div>
+                    <div class="avatar-item active"><img src="./img/avatars/thumbs/girrafe.jpg" alt="Girrafe" />
+                    </div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/sheep.jpg" alt="Sheep" /></div>
+                    <!-- Add more avatars -->
+
+                    <div class="avatar-item spacer"></div> <!-- after -->
                   </div>
                 </div>
 
-
-
-                <section id="editModal" class="profile-page">
-                  <div class="profile-card">
-                    <div class="avatar-wrapper">
-                      <img src="<%= profile.profile_picture %>" alt="User Avatar" class="profile-pic" />
-                      <label for="avatar-upload" class="edit-icon">
-                        <i class="fas fa-pen"></i>
-                      </label>
-                      <input type="file" id="avatar-upload" accept="image/*" style="display: none;" />
-                    </div>
-
-                    <div class="avatar-selector-wrapper">
-                      <h3 class="display-3">Select Your Avatar</h3>
-                      <div class="carousel-container">
-                        <div class="center-highlight"></div>
-                        <div class="avatar-carousel" id="avatarCarousel">
-                          <div class="avatar-item spacer"></div> <!-- before -->
-
-                          <div class="avatar-item"><img src="./img/avatars/thumbs/dog.jpg" alt="Dog" /></div>
-                          <div class="avatar-item"><img src="./img/avatars/thumbs/carmel.jpg" alt="Carmel" /></div>
-                          <div class="avatar-item"><img src="./img/avatars/thumbs/monkey.jpg" alt="Monkey" /></div>
-                          <div class="avatar-item"><img src="./img/avatars/thumbs/elephant.jpg" alt="Elephant" /></div>
-                          <div class="avatar-item"><img src="./img/avatars/thumbs/bird.jpg" alt="Bird" /></div>
-                          <div class="avatar-item"><img src="./img/avatars/thumbs/carmel.jpg" alt="Carmel" /></div>
-                          <div class="avatar-item"><img src="./img/avatars/thumbs/lioness.jpg" alt="Lioness" /></div>
-                          <div class="avatar-item"><img src="./img/avatars/thumbs/cute dog.jpg" alt="Dog" /></div>
-                          <div class="avatar-item active"><img src="./img/avatars/thumbs/girrafe.jpg" alt="Girrafe" />
-                          </div>
-                          <div class="avatar-item"><img src="./img/avatars/thumbs/sheep.jpg" alt="Sheep" /></div>
-                          <!-- Add more avatars -->
-
-                          <div class="avatar-item spacer"></div> <!-- after -->
-                        </div>
-                      </div>
-
-                    </div>
+              </div>
 
 
 
 
-                    <div class="info-section">
-                      <h2>@amebo<%= userId %>
-                      </h2>
-                      <p class="bio">Your short bio goes here...</p>
+              <div class="info-section">
+                <h2>@amebo<%= userId %>
+                </h2>
+                <p class="bio">Your short bio goes here...</p>
 
-                      <form class="profile-form">
-                        <div class="form-group">
-                          <label for="displayName">Display Name</label>
-                          <input type="text" id="displayName" value="John Doe" />
-                        </div>
-                        <div class="form-group">
-                          <label for="email">Email</label>
-                          <input type="email" id="email" value="john@example.com" />
-                        </div>
-                        <div class="form-group">
-                          <label for="bio">Bio</label>
-                          <textarea id="bio">Tell us about yourself...</textarea>
-                        </div>
-
-                        <button type="submit" class="save-btn">Save Changes</button>
-                      </form>
-                    </div>
+                <form class="profile-form">
+                  <div class="form-group">
+                    <label for="displayName">Display Name</label>
+                    <input type="text" id="displayName" value="John Doe" />
                   </div>
-                </section>
-                <script>
-                  const carousel = document.getElementById('avatarCarousel');
-                  const avatarItems = document.querySelectorAll('.avatar-item');
+                  <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" value="john@example.com" />
+                  </div>
+                  <div class="form-group">
+                    <label for="bio">Bio</label>
+                    <textarea id="bio">Tell us about yourself...</textarea>
+                  </div>
 
-                  function updateCenterSelection() {
-                    let closest = null;
-                    let closestDistance = Infinity;
-
-                    document.querySelectorAll('.avatar-item:not(.spacer)').forEach(item => {
-                      const rect = item.getBoundingClientRect();
-                      const centerX = window.innerWidth / 2;
-                      const itemCenter = rect.left + rect.width / 2;
-                      const distance = Math.abs(centerX - itemCenter);
-
-                      if (distance < closestDistance) {
-                        closestDistance = distance;
-                        closest = item;
-                      }
-                    });
-
-                    document.querySelectorAll('.avatar-item').forEach(item =>
-                      item.classList.remove('active')
-                    );
-                    if (closest) closest.classList.add('active');
-                  }
-
-
-                  function scrollToCenter(element) {
-                    const carouselRect = carousel.getBoundingClientRect();
-                    const elementRect = element.getBoundingClientRect();
-                    const offset = (elementRect.left + elementRect.width / 2) - (carouselRect.left + carouselRect.width / 2);
-                    carousel.scrollBy({ left: offset, behavior: 'smooth' });
-                  }
-
-                  avatarItems.forEach(item => {
-                    item.addEventListener('click', () => {
-                      scrollToCenter(item);
-                    });
-                  });
-
-                  carousel.addEventListener('scroll', () => {
-                    window.requestAnimationFrame(updateCenterSelection);
-                  });
-
-                  // Initial call
-                  updateCenterSelection();
-                </script>
-                <% } %>
-
-          </div>
-      </section>
-
-      <aside class="right-sidebar">
-
-
-        <div class="premium-aside">
-          <div class="premium-card">
-            <div class="crown-icon sparkle">👑</div>
-
-            <h3 class="premium-title">Become a Chief Gossipa</h3>
-            <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain Unknown.</p>
-
-            <div class="trending-stats">
-              <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
+                  <button type="submit" class="save-btn">Save Changes</button>
+                </form>
+              </div>
             </div>
+          </section>
+          <script>
+            const carousel = document.getElementById('avatarCarousel');
+            const avatarItems = document.querySelectorAll('.avatar-item');
 
-            <div class="avatar-hint">
-              <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
-              <p>You’re 1 step from <strong>trending</strong>…</p>
-            </div>
+            function updateCenterSelection() {
+              let closest = null;
+              let closestDistance = Infinity;
 
-            <a href="/subscribe" class="premium-btn">Unlock Exclusive</a>
-          </div>
+              document.querySelectorAll('.avatar-item:not(.spacer)').forEach(item => {
+                const rect = item.getBoundingClientRect();
+                const centerX = window.innerWidth / 2;
+                const itemCenter = rect.left + rect.width / 2;
+                const distance = Math.abs(centerX - itemCenter);
+
+                if (distance < closestDistance) {
+                  closestDistance = distance;
+                  closest = item;
+                }
+              });
+
+              document.querySelectorAll('.avatar-item').forEach(item =>
+                item.classList.remove('active')
+              );
+              if (closest) closest.classList.add('active');
+            }
+
+
+            function scrollToCenter(element) {
+              const carouselRect = carousel.getBoundingClientRect();
+              const elementRect = element.getBoundingClientRect();
+              const offset = (elementRect.left + elementRect.width / 2) - (carouselRect.left + carouselRect.width / 2);
+              carousel.scrollBy({ left: offset, behavior: 'smooth' });
+            }
+
+            avatarItems.forEach(item => {
+              item.addEventListener('click', () => {
+                scrollToCenter(item);
+              });
+            });
+
+            carousel.addEventListener('scroll', () => {
+              window.requestAnimationFrame(updateCenterSelection);
+            });
+
+            // Initial call
+            updateCenterSelection();
+          </script>
+          <% } %>
+
+    </div>
+  </section>
+
+  <aside class="right-sidebar">
+
+
+    <div class="premium-aside">
+      <div class="premium-card">
+        <div class="crown-icon sparkle">👑</div>
+
+        <h3 class="premium-title">Become a Chief Gossipa</h3>
+        <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain Unknown.</p>
+
+        <div class="trending-stats">
+          <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
         </div>
 
-        <div class="aside-2">
-          <center>
-            <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Meet The
-              Chiefs
-              :<span id="activeCount">0</span></h4>
-          </center>
-          <ul class="nav user-list">
-          </ul>
-
+        <div class="avatar-hint">
+          <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
+          <p>You’re 1 step from <strong>trending</strong>…</p>
         </div>
 
-        <!-- <button id="message-popup" class="aside-2 none">
+        <a href="/subscribe" class="premium-btn">Unlock Exclusive</a>
+      </div>
+    </div>
+
+    <div class="aside-2">
+      <center>
+        <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Meet The
+          Chiefs
+          :<span id="activeCount">0</span></h4>
+      </center>
+      <ul class="nav user-list">
+      </ul>
+
+    </div>
+
+    <!-- <button id="message-popup" class="aside-2 none">
           <p class="message-pgrph"> <i class="nav-icon fas fa-comments fa-2x"></i>Messages
             <span class="message-count"></span>
           </p>
@@ -1406,71 +1403,71 @@ class=" read" style="
           </ul>
         </button> -->
 
-        <div class="inpage-footer">
-          <span>Privacy Policy</span>&nbsp;.
-          &nbsp;<span>Terms of use</span> &nbsp;.
-          &nbsp;<span>Community guidelines</span> &nbsp;.
-          <br><br>
-          &nbsp;<span>&copy; <%= new Date().getFullYear() %>, &commat; Gossipa Co. All rights reserved</span>
-        </div>
-      </aside>
+    <div class="inpage-footer">
+      <span>Privacy Policy</span>&nbsp;.
+      &nbsp;<span>Terms of use</span> &nbsp;.
+      &nbsp;<span>Community guidelines</span> &nbsp;.
+      <br><br>
+      &nbsp;<span>&copy; <%= new Date().getFullYear() %>, &commat; Gossipa Co. All rights reserved</span>
     </div>
+  </aside>
+</div>
 
-    <!-- Load Day.js and the plugin via CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+<!-- Load Day.js and the plugin via CDN -->
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
 
-    <script src="https://unpkg.com/wavesurfer.js"></script>
-    <script>
-      document.addEventListener("beforeunload", () => {
-        const user = document.querySelector("input[name='user']").value;
-        fetch(`/api/active-status/${user}`)
-          .then(res => res.json())
-          .then(data => {
-            const statusEl = document.getElementById("active-status");
-            if (statusEl) {
-              statusEl.textContent = data.active ? '🟢 ' : '🔴';
-            }
-          })
-          .catch(err => console.error('Error fetching active status', err));
-      });
-
-      // Fetch active status on initial page load
-      document.addEventListener("DOMContentLoaded", () => {
-        const user = document.querySelector("input[name='user']").value;
-        fetch(`/api/active-status/${user}`)
-          .then(res => res.json())
-          .then(data => {
-            const statusEl = document.getElementById("active-status");
-            if (statusEl) {
-              statusEl.textContent = data.active ? '🟢' : '🔴';
-            }
-          })
-          .catch(err => console.error('Error fetching active status', err));
-      });
-
-    </script>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const connectedUsersMap = new Map();
-        const userList = document.querySelector(".user-list");
-        const userCountDisplay = document.getElementById("activeCount");
-    
-        function updateUserCount() {
-          if (userCountDisplay) userCountDisplay.textContent = connectedUsersMap.size;
+<script src="https://unpkg.com/wavesurfer.js"></script>
+<script>
+  document.addEventListener("beforeunload", () => {
+    const user = document.querySelector("input[name='user']").value;
+    fetch(`/api/active-status/${user}`)
+      .then(res => res.json())
+      .then(data => {
+        const statusEl = document.getElementById("active-status");
+        if (statusEl) {
+          statusEl.textContent = data.active ? '🟢 ' : '🔴';
         }
-    
-        function userConnected(user) {
-          if (connectedUsersMap.has(user.id)) return;
-    
-          const userBox = document.createElement("li");
-          userBox.className = "connected-user nav-item enter";
-          userBox.id = `user-${user.id}`;
-    
-          const verifiedBadge = user.verified
-            ? `<img oncontextmenu="return false;" src="/img/gossipa3.png" alt="Verified Badge" class="verified-badge">`
-            : "";
-    
-          userBox.innerHTML = `
+      })
+      .catch(err => console.error('Error fetching active status', err));
+  });
+
+  // Fetch active status on initial page load
+  document.addEventListener("DOMContentLoaded", () => {
+    const user = document.querySelector("input[name='user']").value;
+    fetch(`/api/active-status/${user}`)
+      .then(res => res.json())
+      .then(data => {
+        const statusEl = document.getElementById("active-status");
+        if (statusEl) {
+          statusEl.textContent = data.active ? '🟢' : '🔴';
+        }
+      })
+      .catch(err => console.error('Error fetching active status', err));
+  });
+
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const connectedUsersMap = new Map();
+    const userList = document.querySelector(".user-list");
+    const userCountDisplay = document.getElementById("activeCount");
+
+    function updateUserCount() {
+      if (userCountDisplay) userCountDisplay.textContent = connectedUsersMap.size;
+    }
+
+    function userConnected(user) {
+      if (connectedUsersMap.has(user.id)) return;
+
+      const userBox = document.createElement("li");
+      userBox.className = "connected-user nav-item enter";
+      userBox.id = `user-${user.id}`;
+
+      const verifiedBadge = user.verified
+        ? `<img oncontextmenu="return false;" src="/img/gossipa3.png" alt="Verified Badge" class="verified-badge">`
+        : "";
+
+      userBox.innerHTML = `
             <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
               <img oncontextmenu="return false;" src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
               <p class="username">
@@ -1479,165 +1476,165 @@ class=" read" style="
               </p>
             </div>
           `;
-    
-          userList?.appendChild(userBox);
-          connectedUsersMap.set(user.id, userBox);
+
+      userList?.appendChild(userBox);
+      connectedUsersMap.set(user.id, userBox);
+      updateUserCount();
+
+      requestAnimationFrame(() => userBox.classList.add("enter"));
+    }
+
+    function userDisconnected(userId) {
+      const userBox = connectedUsersMap.get(userId);
+      if (userBox) {
+        userBox.classList.add("exit");
+        userBox.classList.remove("enter");
+        setTimeout(() => {
+          userBox.remove();
+          connectedUsersMap.delete(userId);
           updateUserCount();
-    
-          requestAnimationFrame(() => userBox.classList.add("enter"));
+        }, 400);
+      }
+    }
+
+    if (window.socket) {
+      window.socket.on("userJoined", async (userId) => {
+        try {
+          const res = await fetch(`/user/${userId}`);
+          const user = await res.json();
+          userConnected(user);
+        } catch (err) {
+          console.error("Failed to fetch user data:", err);
         }
-    
-        function userDisconnected(userId) {
-          const userBox = connectedUsersMap.get(userId);
-          if (userBox) {
-            userBox.classList.add("exit");
-            userBox.classList.remove("enter");
-            setTimeout(() => {
-              userBox.remove();
-              connectedUsersMap.delete(userId);
-              updateUserCount();
-            }, 400);
-          }
-        }
-    
-        if (window.socket) {
-          window.socket.on("userJoined", async (userId) => {
-            try {
-              const res = await fetch(`/user/${userId}`);
-              const user = await res.json();
-              userConnected(user);
-            } catch (err) {
-              console.error("Failed to fetch user data:", err);
-            }
-          });
-    
-          window.socket.on("userLeft", (userId) => {
-            userDisconnected(userId);
-          });
-        } else {
-          console.warn("Socket.io not initialized on this page.");
-        }
-    
-        // Load currently active users
-        fetch("/active-users")
-          .then(res => res.json())
-          .then(users => users.forEach(userConnected))
-          .catch(console.error);
       });
-    </script>
-   
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const navigatorForm = document.getElementById("navigator");
-        const postsContainer = document.getElementById("userPostsContainer");
-        const text = document.querySelector(".text")
-        const audio = document.querySelector(".audio")
-        const shimmerTemplate = document.getElementById("shimmerTemplate");
-        const userId = navigatorForm.querySelector("#user").value;
 
-        navigatorForm.addEventListener("click", async (e) => {
-          if (e.target.tagName === "BUTTON") {
-            e.preventDefault();
-            const type = e.target.dataset.type;
+      window.socket.on("userLeft", (userId) => {
+        userDisconnected(userId);
+      });
+    } else {
+      console.warn("Socket.io not initialized on this page.");
+    }
 
-            postsContainer.classList.add("fade-out");
+    // Load currently active users
+    fetch("/active-users")
+      .then(res => res.json())
+      .then(users => users.forEach(userConnected))
+      .catch(console.error);
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const navigatorForm = document.getElementById("navigator");
+    const postsContainer = document.getElementById("userPostsContainer");
+    const text = document.querySelector(".text")
+    const audio = document.querySelector(".audio")
+    const shimmerTemplate = document.getElementById("shimmerTemplate");
+    const userId = navigatorForm.querySelector("#user").value;
+
+    navigatorForm.addEventListener("click", async (e) => {
+      if (e.target.tagName === "BUTTON") {
+        e.preventDefault();
+        const type = e.target.dataset.type;
+
+        postsContainer.classList.add("fade-out");
 
 
-            try {
-              const res = await fetch(`/fetch-posts/${userId}?type=${type}`);
-              const data = await res.json();
+        try {
+          const res = await fetch(`/fetch-posts/${userId}?type=${type}`);
+          const data = await res.json();
 
-              setTimeout(() => {
-                postsContainer.innerHTML = "";
-                for (let i = 0; i < data.posts.length; i++) {
-                  const shimmer = shimmerTemplate.content.cloneNode(true);
-                  postsContainer.appendChild(shimmer);
-                }
-                postsContainer.classList.remove("fade-out");
-                postsContainer.classList.add("fade-in");
-              }, 500);
-
-
-              setTimeout(() => {
-                postsContainer.innerHTML = "";
-
-                if (res.ok && data.posts) {
-                  renderPosts(data.posts, type);
-
-                  if (type === "audio") {
-                    text.classList.remove("current")
-                    audio.classList.add("current")
-                    data.posts.forEach(post => {
-                      const waveformElement = document.querySelector(`#waveform-${post.id}`);
-                      const canvas = document.getElementById(`visualizer-${post.id}`);
-                      const audioUrl = post.url;
-
-                      if (waveformElement && canvas && audioUrl) {
-                        const wave = WaveSurfer.create({
-                          container: waveformElement,
-                          waveColor: "#ddd",
-                          progressColor: "#555",
-                          height: 40,
-                          responsive: true,
-                          barWidth: 2,
-                          barGap: 2
-                        });
-
-                        wave.load(audioUrl);
-
-                        const playBtn = document.querySelector(`.wave-play-btn[data-id='${post.id}']`);
-                        if (playBtn) {
-                          playBtn.addEventListener("click", () => wave.playPause());
-                          wave.on("play", () => playBtn.innerText = "⏸️");
-                          wave.on("pause", () => playBtn.innerText = "▶️");
-                          wave.on("finish", () => playBtn.innerText = "▶️");
-                        }
-
-                        wave.on("ready", () => {
-                          const audio = wave.media;
-                          setupVisualizer(audio, canvas, wave);
-                        });
-                      } else {
-                        console.warn("Waveform element, canvas, or audio URL missing for post:", post.id);
-                      }
-                    });
-                  }
-                } else {
-                  postsContainer.innerHTML = `<li>No ${type} posts found.</li>`;
-                }
-              }, 1000);
-            } catch (err) {
-              console.error("Fetch error:", err);
-              postsContainer.innerHTML = `<li>Error loading ${type} posts.</li>`;
+          setTimeout(() => {
+            postsContainer.innerHTML = "";
+            for (let i = 0; i < data.posts.length; i++) {
+              const shimmer = shimmerTemplate.content.cloneNode(true);
+              postsContainer.appendChild(shimmer);
             }
-          }
+            postsContainer.classList.remove("fade-out");
+            postsContainer.classList.add("fade-in");
+          }, 500);
 
-          text.classList.add("current")
-          audio.classList.remove("current")
-        });
 
-        function renderPosts(posts, type) {
-          postsContainer.innerHTML = posts.map(post => {
-            const id = post.id;
-            const timestamp = dayjs(post.timestamp).fromNow() || new Date().toLocaleString();
-            const category = post.category || "random";
-            const likeCount = post.reactions?.like?.count || 0;
-            const commentCount = post.comments?.length || 0;
-            const isAudio = type === "audio";
+          setTimeout(() => {
+            postsContainer.innerHTML = "";
 
-            const categoryText = isAudio
-              ? "🎧"
-              : {
-                funny: "<i class='fas fa-laugh'></i>",
-                love: "<i class='fas fa-heart'></i>",
-                nasty: "<i class='fas fa-skull-crossbones'></i>",
-                sassy: "<i class='fas fa-face-meh'></i>",
-                hilarious: "<i class='fas fa-teeth-open'></i>",
-                random: "<i class='fas fa-shuffle'></i>"
-              }[category] || "<i class='fas fa-shuffle'></i>";
+            if (res.ok && data.posts) {
+              renderPosts(data.posts, type);
 
-            const cardContent = isAudio
-              ? `
+              if (type === "audio") {
+                text.classList.remove("current")
+                audio.classList.add("current")
+                data.posts.forEach(post => {
+                  const waveformElement = document.querySelector(`#waveform-${post.id}`);
+                  const canvas = document.getElementById(`visualizer-${post.id}`);
+                  const audioUrl = post.url;
+
+                  if (waveformElement && canvas && audioUrl) {
+                    const wave = WaveSurfer.create({
+                      container: waveformElement,
+                      waveColor: "#ddd",
+                      progressColor: "#555",
+                      height: 40,
+                      responsive: true,
+                      barWidth: 2,
+                      barGap: 2
+                    });
+
+                    wave.load(audioUrl);
+
+                    const playBtn = document.querySelector(`.wave-play-btn[data-id='${post.id}']`);
+                    if (playBtn) {
+                      playBtn.addEventListener("click", () => wave.playPause());
+                      wave.on("play", () => playBtn.innerText = "⏸️");
+                      wave.on("pause", () => playBtn.innerText = "▶️");
+                      wave.on("finish", () => playBtn.innerText = "▶️");
+                    }
+
+                    wave.on("ready", () => {
+                      const audio = wave.media;
+                      setupVisualizer(audio, canvas, wave);
+                    });
+                  } else {
+                    console.warn("Waveform element, canvas, or audio URL missing for post:", post.id);
+                  }
+                });
+              }
+            } else {
+              postsContainer.innerHTML = `<li>No ${type} posts found.</li>`;
+            }
+          }, 1000);
+        } catch (err) {
+          console.error("Fetch error:", err);
+          postsContainer.innerHTML = `<li>Error loading ${type} posts.</li>`;
+        }
+      }
+
+      text.classList.add("current")
+      audio.classList.remove("current")
+    });
+
+    function renderPosts(posts, type) {
+      postsContainer.innerHTML = posts.map(post => {
+        const id = post.id;
+        const timestamp = dayjs(post.timestamp).fromNow() || new Date().toLocaleString();
+        const category = post.category || "random";
+        const likeCount = post.reactions?.like?.count || 0;
+        const commentCount = post.comments?.length || 0;
+        const isAudio = type === "audio";
+
+        const categoryText = isAudio
+          ? "🎧"
+          : {
+            funny: "<i class='fas fa-laugh'></i>",
+            love: "<i class='fas fa-heart'></i>",
+            nasty: "<i class='fas fa-skull-crossbones'></i>",
+            sassy: "<i class='fas fa-face-meh'></i>",
+            hilarious: "<i class='fas fa-teeth-open'></i>",
+            random: "<i class='fas fa-shuffle'></i>"
+          }[category] || "<i class='fas fa-shuffle'></i>";
+
+        const cardContent = isAudio
+          ? `
                 <div class="audio-visualizer-card">
                   <div class="audio-wave-wrapper">
                     <div class="waveform visually-hidden" id="waveform-${id}"></div>
@@ -1647,9 +1644,9 @@ class=" read" style="
                   
                 </div>
               `
-              : `<p class="content-preview">${truncateText(post.secret, 250)}</p>`;
+          : `<p class="content-preview">${truncateText(post.secret, 250)}</p>`;
 
-            return `
+        return `
               <li class="secret fade-in full-width">
                 <div class="card">
                   
@@ -1686,102 +1683,487 @@ class=" read" style="
                 </div>
               </li>
             `;
-          }).join("");
+      }).join("");
+    }
+
+    function truncateText(text, maxLength) {
+      return !text || text.length <= maxLength ? text : text.substring(0, maxLength) + '...';
+    }
+
+    function setupVisualizer(audioElement, canvas, waveInstance) {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const analyser = audioCtx.createAnalyser();
+      const source = audioCtx.createMediaElementSource(audioElement);
+      const ctx = canvas.getContext("2d");
+
+      source.connect(analyser);
+      analyser.connect(audioCtx.destination);
+      analyser.fftSize = 256;
+
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+
+      const width = canvas.width;
+      const height = canvas.height;
+      const barWidth = width / bufferLength;
+
+      function draw() {
+        requestAnimationFrame(draw);
+        analyser.getByteFrequencyData(dataArray);
+        ctx.clearRect(0, 0, width, height);
+        dataArray.forEach((value, i) => {
+          const barHeight = (value / 255) * height;
+          const hue = (i / bufferLength) * 360;
+          ctx.fillStyle = `hsl(${hue}, 70%, 50%)`;
+          ctx.fillRect(i * barWidth, height - barHeight, barWidth - 1, barHeight);
+        });
+      }
+
+      const startDrawing = () => {
+        audioCtx.resume();
+        draw();
+      };
+
+      // Sync drawing to play events
+      if (waveInstance) {
+        waveInstance.on("play", startDrawing);
+      } else {
+        audioElement.onplay = startDrawing;
+      }
+    }
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+
+    document.querySelectorAll('.reaction').forEach(button => {
+      const type = button.getAttribute('data-type');
+
+      button.addEventListener('click', () => {
+        const emojiChar = button.textContent.trim().split('\n')[0];
+        const card = button.closest('.secret-card');
+        const floatingContainer = card.querySelector('.floating-lottie');
+
+        // === 1. EMOJI BURST AROUND BUTTON ===
+        triggerEmojiBurst(button, emojiChar);
+
+        // === 2. 3D EXTRAS AROUND BUTTON ===
+        if (type === 'cry') {
+          const tear = document.createElement('span');
+          tear.className = 'emoji-particle';
+          tear.innerText = '💧';
+          tear.style.setProperty('--x', '0px');
+          tear.style.setProperty('--y', '50px');
+          button.appendChild(tear);
+          setTimeout(() => tear.remove(), 800);
         }
 
-        function truncateText(text, maxLength) {
-          return !text || text.length <= maxLength ? text : text.substring(0, maxLength) + '...';
+        if (type === 'gasp') {
+          const puff = document.createElement('span');
+          puff.className = 'emoji-particle';
+          puff.innerText = '💨';
+          puff.style.setProperty('--x', '-10px');
+          puff.style.setProperty('--y', '0px');
+          button.appendChild(puff);
+          setTimeout(() => puff.remove(), 800);
         }
 
-        function setupVisualizer(audioElement, canvas, waveInstance) {
-          const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-          const analyser = audioCtx.createAnalyser();
-          const source = audioCtx.createMediaElementSource(audioElement);
-          const ctx = canvas.getContext("2d");
 
-          source.connect(analyser);
-          analyser.connect(audioCtx.destination);
-          analyser.fftSize = 256;
+        // === 5. REMOVE LOTTIE ANIMATION AFTER IT FINISHES ===
+        setTimeout(() => {
+          floatingContainer.classList.remove('active'); // Remove the active class
+          floatingContainer.innerHTML = ''; // Clear the Lottie animation
+        }, 2000); // Adjust the timeout to match the animation duration
+      });
+    });
 
-          const bufferLength = analyser.frequencyBinCount;
-          const dataArray = new Uint8Array(bufferLength);
-          canvas.width = canvas.offsetWidth;
-          canvas.height = canvas.offsetHeight;
+    function triggerEmojiBurst(container, emojiChar) {
+      const burstCount = 10;
 
-          const width = canvas.width;
-          const height = canvas.height;
-          const barWidth = width / bufferLength;
+      for (let i = 0; i < burstCount; i++) {
+        const particle = document.createElement('span');
+        particle.classList.add('emoji-particle');
+        particle.innerText = emojiChar;
 
-          function draw() {
-            requestAnimationFrame(draw);
-            analyser.getByteFrequencyData(dataArray);
-            ctx.clearRect(0, 0, width, height);
-            dataArray.forEach((value, i) => {
-              const barHeight = (value / 255) * height;
-              const hue = (i / bufferLength) * 360;
-              ctx.fillStyle = `hsl(${hue}, 70%, 50%)`;
-              ctx.fillRect(i * barWidth, height - barHeight, barWidth - 1, barHeight);
-            });
+        const angle = Math.random() * 2 * Math.PI;
+        const distance = Math.random() * 40 + 20;
+        const x = Math.cos(angle) * distance + 'px';
+        const y = Math.sin(angle) * distance + 'px';
+
+        particle.style.setProperty('--x', x);
+        particle.style.setProperty('--y', y);
+
+        container.appendChild(particle);
+        setTimeout(() => particle.remove(), 800);
+      }
+
+      container.classList.add('pop-animate');
+      setTimeout(() => container.classList.remove('pop-animate'), 300);
+    }
+  });
+</script>
+
+<script>
+  dayjs.extend(window.dayjs_plugin_relativeTime);
+
+  document.querySelectorAll('.timestamp').forEach((timeElem) => {
+    const rawTimestamp = timeElem.getAttribute('data-raw');
+    if (rawTimestamp) {
+      const formatted = dayjs(rawTimestamp).fromNow();
+      timeElem.textContent = formatted;
+    }
+  });
+</script>
+
+<script>
+  const header = document.querySelector('header');
+  const nextSection = document.querySelector('body').querySelector('section:not(.active)');
+  const logo = document.getElementById('logo')
+
+  window.addEventListener('scroll', function () {
+    const scrolled = window.scrollY > 0;
+    if (scrolled) {
+      let body = document.querySelector('body');
+      body.style.overflowY = 'scroll';
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    fetch("/api/comment-counts")
+      .then(res => res.json())
+      .then(counts => {
+        Object.entries(counts).forEach(([secretId, count]) => {
+          const el = document.querySelector(`[data-secret-id="${secretId}"] .comment-count`);
+          if (el) {
+            // el.textContent = `${count} comment${count !== 1 ? 's' : ''}`;
+            el.textContent = `${count > 0 ? count : 0} `;
           }
+        });
+      })
+      .catch(err => console.error("Failed to fetch comment counts", err));
+  });
+</script>
 
-          const startDrawing = () => {
-            audioCtx.resume();
-            draw();
-          };
+<script>
+  $(document).ready(function () {
+    $(".comment-section").each(function () {
+      const commentSection = $(this);
 
-          // Sync drawing to play events
-          if (waveInstance) {
-            waveInstance.on("play", startDrawing);
-          } else {
-            audioElement.onplay = startDrawing;
+      // Submit comment form
+      commentSection.find("#comment-form").on("submit", function (e) {
+        e.preventDefault();
+
+        const secretId = commentSection.find("#secretId").val();
+        const secretUserId = commentSection.find('[name="secretUserId"]').val();
+        const commentUserId = commentSection.find('[name="commentUserId"]').val();
+        const comment = commentSection.find("#commentInput").val();
+        const commentDisplay = commentSection.find("#commentDisplay");
+
+        $.ajax({
+          url: "/comment",
+          type: "POST",
+          data: {
+            id: secretId,
+            secretUserId,
+            commentUserId,
+            comment,
+          },
+          success: async function (response) {
+            if (response.success) {
+              try {
+                const fetchResponse = await fetch(`/more/${secretId}`);
+                if (!fetchResponse.ok) throw new Error("Failed to fetch comments");
+
+                const data = await fetchResponse.json();
+                const comments = data.comments;
+
+                if (comments) {
+                  let commentDisp = comments.map((comment) => `
+                        <li class="comment-item">
+                          <div>
+                            <small class="user"><strong>@anonym${comment.user_id}</strong></small>
+                            <p class="comment">${comment.comment}</p>
+                            <button class="translate-btn" data-id="${comment.id}" data-text="${comment.comment}">Translate</button>
+                            <p class="translated-text" id="translated-${comment.id}"></p>
+                          </div>
+                        </li>
+                      `).join("");
+
+                  commentDisplay.html(`
+                        <ul id="comments">
+                          <p class="total">All comments: ${data.totalComments}</p>
+                          ${commentDisp}
+                        </ul>
+                      `);
+                } else {
+                  commentDisplay.html(`
+                        <ul id="comments">
+                          <p class="total">${data.noComment}</p>
+                        </ul>
+                      `);
+                }
+              } catch (err) {
+                console.log(err);
+              }
+
+              commentSection.find("#commentInput").val(""); // clear input
+            } else {
+              console.log("Failed to post comment:", response.message);
+            }
+          },
+          error: function (err) {
+            console.log("Error submitting comment:", err);
+          },
+        });
+      });
+
+      // Translation handler (delegated for dynamic buttons)
+      commentSection.on("click", ".translate-btn", function (e) {
+        e.preventDefault();
+        const btn = $(this);
+        const commentText = btn.data("text");
+        const commentId = btn.data("id");
+        const translatedBox = commentSection.find(`#translated-${commentId}`);
+
+        $.ajax({
+          url: "/translate",
+          type: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({ text: commentText, targetLang: "en" }),
+          success: function (res) {
+            if (res.translated) {
+              translatedBox.text(res.translated);
+            } else {
+              translatedBox.text("Translation failed.");
+            }
+          },
+          error: function (err) {
+            translatedBox.text("Error translating comment.");
+          },
+        });
+      });
+    });
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const commentSections = document.querySelectorAll(".comment-section");
+
+    commentSections.forEach(async (section) => {
+      const secretId = section.querySelector("#secretId").value;
+      const commentList = section.querySelector(".comments-list");
+
+      // Toggle dropdown
+      section.querySelector("#commentButton").addEventListener("click", () => {
+        const dropdown = section.querySelector(".comment-dropdown");
+        dropdown.classList.toggle("active");
+
+        const icon = section.querySelector("#commentButton i");
+        icon.className = dropdown.classList.contains("active")
+          ? "fas fa-comment-slash"
+          : "fas fa-comment";
+      });
+
+      // Fetch and display comments
+      try {
+        const response = await fetch(`/more/${secretId}`);
+        const data = await response.json();
+        const comments = data.comments;
+
+        if (comments && comments.length > 0) {
+          section.querySelector(".comment-display").insertAdjacentHTML(
+            "afterbegin",
+            `<p class="total">All comments: ${data.totalComments}</p>`
+          );
+
+          comments.forEach((comment) => {
+            const li = document.createElement("li");
+            li.className = "comment-item";
+            li.innerHTML = `
+              <div>
+                <small class="user"><strong>@anonym${comment.user_id}</strong></small>
+                <p class="comment">${comment.comment}</p>
+              </div>
+              <button type="button" class="translate-btn" data-id="${comment.id}" data-text="${comment.comment}">Translate</button>
+              <p class="translated-text" id="translated-${secretId}-${comment.id}"></p>
+            `;
+            commentList.appendChild(li);
+          });
+        } else {
+          commentList.innerHTML = `<p class="total">${data.noComment}</p>`;
+        }
+      } catch (err) {
+        console.error("Error loading comments:", err);
+      }
+
+      // Delegate click for Translate buttons inside this section
+      commentList.addEventListener("click", async (e) => {
+        if (e.target.classList.contains("translate-btn")) {
+          const btn = e.target;
+          const text = btn.dataset.text;
+          const id = btn.dataset.id;
+          const output = section.querySelector(`#translated-${secretId}-${id}`);
+
+          output.innerText = "Translating...";
+
+          try {
+            const res = await fetch("/translate", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ text, targetLang: "en" }),
+            });
+
+            const result = await res.json();
+            if (result.translated) {
+              output.innerText = result.translated;
+            } else {
+              output.innerText = "Translation failed.";
+            }
+          } catch (err) {
+            output.innerText = "Error translating comment.";
+            console.error(err);
           }
         }
       });
-    </script>
+    });
+  });
+</script>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-
-        document.querySelectorAll('.reaction').forEach(button => {
-          const type = button.getAttribute('data-type');
-
-          button.addEventListener('click', () => {
-            const emojiChar = button.textContent.trim().split('\n')[0];
-            const card = button.closest('.secret-card');
-            const floatingContainer = card.querySelector('.floating-lottie');
-
-            // === 1. EMOJI BURST AROUND BUTTON ===
-            triggerEmojiBurst(button, emojiChar);
-
-            // === 2. 3D EXTRAS AROUND BUTTON ===
-            if (type === 'cry') {
-              const tear = document.createElement('span');
-              tear.className = 'emoji-particle';
-              tear.innerText = '💧';
-              tear.style.setProperty('--x', '0px');
-              tear.style.setProperty('--y', '50px');
-              button.appendChild(tear);
-              setTimeout(() => tear.remove(), 800);
-            }
-
-            if (type === 'gasp') {
-              const puff = document.createElement('span');
-              puff.className = 'emoji-particle';
-              puff.innerText = '💨';
-              puff.style.setProperty('--x', '-10px');
-              puff.style.setProperty('--y', '0px');
-              button.appendChild(puff);
-              setTimeout(() => puff.remove(), 800);
-            }
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".reaction").forEach((button) => {
+      const animations = {
+        like: './img/lottie/love4.json',
+        laugh: './img/lottie/laugh.json',
+        cry: './img/lottie/cry.json',
+        gasp: './img/lottie/gasp.json'
+      };
 
 
-            // === 5. REMOVE LOTTIE ANIMATION AFTER IT FINISHES ===
-            setTimeout(() => {
-              floatingContainer.classList.remove('active'); // Remove the active class
-              floatingContainer.innerHTML = ''; // Clear the Lottie animation
-            }, 2000); // Adjust the timeout to match the animation duration
+      button.addEventListener("click", async (event) => {
+        const btn = event.target.closest(".reaction");
+        const type = btn.getAttribute("data-type");
+        const secretCard = btn.closest(".secret-card");
+        const secretId = secretCard.getAttribute("data-id");
+
+
+        const emojiChar = btn.textContent.trim().split('\n')[0];
+        const card = btn.closest('.secret');
+        const floatingContainer = card.querySelector('.floating-lottie');
+        const floating = document.createElement('div');
+        floating.className = 'floating-lottie-animated';
+        card.appendChild(floating);
+
+
+        // === 1. EMOJI BURST AROUND BUTTON ===
+        triggerEmojiBurst(btn, emojiChar);
+
+        // === 2. 3D EXTRAS AROUND BUTTON ===
+        if (type === 'cry') {
+          const tear = document.createElement('span');
+          tear.className = 'emoji-particle';
+          tear.innerText = '💧';
+          tear.style.setProperty('--x', '0px');
+          tear.style.setProperty('--y', '50px');
+          button.appendChild(tear);
+          setTimeout(() => tear.remove(), 800);
+        }
+
+        if (type === 'gasp') {
+          const puff = document.createElement('span');
+          puff.className = 'emoji-particle';
+          puff.innerText = '💨';
+          puff.style.setProperty('--x', '-10px');
+          puff.style.setProperty('--y', '0px');
+          button.appendChild(puff);
+          setTimeout(() => puff.remove(), 800);
+        }
+
+
+        try {
+          const response = await fetch(`/secret/${secretId}/react`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ type }),
           });
-        });
+
+          const data = await response.json();
+
+
+          const animation = lottie.loadAnimation({
+            container: floating,
+            renderer: 'svg',
+            loop: false,
+            autoplay: true,
+            path: animations[type]
+          });
+
+          // Get button to card offset
+          const buttonRect = button.getBoundingClientRect();
+          const cardRect = card.getBoundingClientRect();
+
+          const startX = buttonRect.left - cardRect.left + buttonRect.width / 2;
+          const startY = buttonRect.top - cardRect.top + buttonRect.height / 2;
+
+          floating.style.left = `${startX}px`;
+          floating.style.top = `${startY}px`;
+
+          // 🎇 TRAIL PARTICLES WHILE MOVING
+          const trailEmojis = ['✨', '💥', '💨'];
+          let trailInterval = setInterval(() => {
+            const trail = document.createElement('span');
+            trail.className = 'trail-particle';
+            trail.innerText = trailEmojis[Math.floor(Math.random() * trailEmojis.length)];
+
+            // Offset from Lottie position
+            const offsetX = (Math.random() - 0.5) * 60;
+            const offsetY = (Math.random() - 0.5) * 60;
+
+            trail.style.left = `${floating.offsetLeft}px`;
+            trail.style.top = `${floating.offsetTop}px`;
+            trail.style.setProperty('--trail-x', `${offsetX}px`);
+            trail.style.setProperty('--trail-y', `${offsetY}px`);
+
+            card.appendChild(trail);
+            setTimeout(() => trail.remove(), 600);
+          }, 100);
+
+          // 🎯 Animate to center
+          setTimeout(() => {
+            floating.classList.add('to-center');
+          }, 50);
+
+          // 👋 Animate back and remove
+          setTimeout(() => {
+            floating.classList.remove('to-center');
+            floating.classList.add('to-button');
+            clearInterval(trailInterval);
+          }, 1200);
+
+          setTimeout(() => {
+            floating.remove();
+          }, 1800);
+
+
+          if (data.success) {
+            const countSpan = btn.querySelector(".reaction-count");
+            countSpan.textContent = data.reactions[type].count || 0; // Use updated count from server
+          } else {
+            console.error("Failed to update reactions:", data.error);
+          }
+        } catch (error) {
+          console.error("Error updating reactions:", error);
+        }
+
 
         function triggerEmojiBurst(container, emojiChar) {
           const burstCount = 10;
@@ -1807,500 +2189,115 @@ class=" read" style="
           setTimeout(() => container.classList.remove('pop-animate'), 300);
         }
       });
-    </script>
+    });
+  });
 
-    <script>
-      dayjs.extend(window.dayjs_plugin_relativeTime);
 
-      document.querySelectorAll('.timestamp').forEach((timeElem) => {
-        const rawTimestamp = timeElem.getAttribute('data-raw');
-        if (rawTimestamp) {
-          const formatted = dayjs(rawTimestamp).fromNow();
-          timeElem.textContent = formatted;
-        }
+  document.querySelectorAll(".read").forEach((button) => {
+    button.addEventListener("click", (e) => {
+      const contentSpan = e.target.previousElementSibling;
+      const isTruncated = e.target.textContent === "Read More";
+
+      if (isTruncated) {
+        // Show full content
+        contentSpan.textContent = e.target.dataset.full;
+        e.target.textContent = "See Less";
+      } else {
+        // Reapply truncated content
+        contentSpan.textContent = e.target.dataset.truncated;
+        e.target.textContent = "Read More";
+      }
+    });
+  });
+
+  document.querySelectorAll(".card-toggle-btn").forEach((button) => {
+    button.addEventListener("click", (e) => {
+      const menuContent = e.target.closest(".card-menu").querySelector(".card-menu-content");
+      const isVisible = menuContent.style.display === "block";
+
+      // Hide all other menus
+      document.querySelectorAll(".card-menu-content").forEach((menu) => {
+        menu.style.display = "none";
       });
-    </script>
 
-    <script>
-      const header = document.querySelector('header');
-      const nextSection = document.querySelector('body').querySelector('section:not(.active)');
-      const logo = document.getElementById('logo')
+      // Toggle current menu
+      menuContent.style.display = isVisible ? "none" : "block";
 
-      window.addEventListener('scroll', function () {
-        const scrolled = window.scrollY > 0;
-        if (scrolled) {
-          let body = document.querySelector('body');
-          body.style.overflowY = 'scroll';
-          header.classList.add('scrolled');
+      // Stop event propagation to prevent immediate hiding
+      e.stopPropagation();
+    });
+  });
+
+  // Hide menu when clicking elsewhere
+  document.addEventListener("click", () => {
+    document.querySelectorAll(".card-menu-content").forEach((menu) => {
+      menu.style.display = "none";
+    });
+  });
+
+
+  document.addEventListener("click", function (event) {
+    if (event.target.closest(".fas.fa-copy")) {
+      const button = event.target.closest(".fas.fa-copy");
+
+      // Find the closest card container to get the content
+      const cardContainer = button.closest(".card");
+
+      // Extract the content inside the card container
+      const contentToCopy = cardContainer.querySelector(".content")?.innerText;
+
+      if (contentToCopy) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          // Use Clipboard API if available
+          navigator.clipboard
+            .writeText(contentToCopy)
+            .then(() => {
+              alert("Content copied to clipboard!");
+            })
+            .catch((err) => {
+              console.error("Failed to copy: ", err);
+              alert("Failed to copy content.");
+            });
         } else {
-          header.classList.remove('scrolled');
-        }
-      });
-    </script>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        fetch("/api/comment-counts")
-          .then(res => res.json())
-          .then(counts => {
-            Object.entries(counts).forEach(([secretId, count]) => {
-              const el = document.querySelector(`[data-secret-id="${secretId}"] .comment-count`);
-              if (el) {
-                // el.textContent = `${count} comment${count !== 1 ? 's' : ''}`;
-                el.textContent = `${count > 0 ? count : 0} `;
-              }
-            });
-          })
-          .catch(err => console.error("Failed to fetch comment counts", err));
-      });
-    </script>
-
-    <script>
-      $(document).ready(function () {
-        $(".comment-section").each(function () {
-          const commentSection = $(this);
-
-          // Submit comment form
-          commentSection.find("#comment-form").on("submit", function (e) {
-            e.preventDefault();
-
-            const secretId = commentSection.find("#secretId").val();
-            const secretUserId = commentSection.find('[name="secretUserId"]').val();
-            const commentUserId = commentSection.find('[name="commentUserId"]').val();
-            const comment = commentSection.find("#commentInput").val();
-            const commentDisplay = commentSection.find("#commentDisplay");
-
-            $.ajax({
-              url: "/comment",
-              type: "POST",
-              data: {
-                id: secretId,
-                secretUserId,
-                commentUserId,
-                comment,
-              },
-              success: async function (response) {
-                if (response.success) {
-                  try {
-                    const fetchResponse = await fetch(`/more/${secretId}`);
-                    if (!fetchResponse.ok) throw new Error("Failed to fetch comments");
-
-                    const data = await fetchResponse.json();
-                    const comments = data.comments;
-
-                    if (comments) {
-                      let commentDisp = comments.map((comment) => `
-                        <li class="comment-item">
-                          <div>
-                            <small class="user"><strong>@anonym${comment.user_id}</strong></small>
-                            <p class="comment">${comment.comment}</p>
-                            <button class="translate-btn" data-id="${comment.id}" data-text="${comment.comment}">Translate</button>
-                            <p class="translated-text" id="translated-${comment.id}"></p>
-                          </div>
-                        </li>
-                      `).join("");
-
-                      commentDisplay.html(`
-                        <ul id="comments">
-                          <p class="total">All comments: ${data.totalComments}</p>
-                          ${commentDisp}
-                        </ul>
-                      `);
-                    } else {
-                      commentDisplay.html(`
-                        <ul id="comments">
-                          <p class="total">${data.noComment}</p>
-                        </ul>
-                      `);
-                    }
-                  } catch (err) {
-                    console.log(err);
-                  }
-
-                  commentSection.find("#commentInput").val(""); // clear input
-                } else {
-                  console.log("Failed to post comment:", response.message);
-                }
-              },
-              error: function (err) {
-                console.log("Error submitting comment:", err);
-              },
-            });
-          });
-
-          // Translation handler (delegated for dynamic buttons)
-          commentSection.on("click", ".translate-btn", function (e) {
-            e.preventDefault();
-            const btn = $(this);
-            const commentText = btn.data("text");
-            const commentId = btn.data("id");
-            const translatedBox = commentSection.find(`#translated-${commentId}`);
-
-            $.ajax({
-              url: "/translate",
-              type: "POST",
-              contentType: "application/json",
-              data: JSON.stringify({ text: commentText, targetLang: "en" }),
-              success: function (res) {
-                if (res.translated) {
-                  translatedBox.text(res.translated);
-                } else {
-                  translatedBox.text("Translation failed.");
-                }
-              },
-              error: function (err) {
-                translatedBox.text("Error translating comment.");
-              },
-            });
-          });
-        });
-      });
-    </script>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const commentSections = document.querySelectorAll(".comment-section");
-
-        commentSections.forEach(async (section) => {
-          const secretId = section.querySelector("#secretId").value;
-          const commentList = section.querySelector(".comments-list");
-
-          // Toggle dropdown
-          section.querySelector("#commentButton").addEventListener("click", () => {
-            const dropdown = section.querySelector(".comment-dropdown");
-            dropdown.classList.toggle("active");
-
-            const icon = section.querySelector("#commentButton i");
-            icon.className = dropdown.classList.contains("active")
-              ? "fas fa-comment-slash"
-              : "fas fa-comment";
-          });
-
-          // Fetch and display comments
+          // Fallback for unsupported browsers
+          const tempInput = document.createElement("textarea");
+          tempInput.value = contentToCopy;
+          document.body.appendChild(tempInput);
+          tempInput.select();
           try {
-            const response = await fetch(`/more/${secretId}`);
-            const data = await response.json();
-            const comments = data.comments;
-
-            if (comments && comments.length > 0) {
-              section.querySelector(".comment-display").insertAdjacentHTML(
-                "afterbegin",
-                `<p class="total">All comments: ${data.totalComments}</p>`
-              );
-
-              comments.forEach((comment) => {
-                const li = document.createElement("li");
-                li.className = "comment-item";
-                li.innerHTML = `
-              <div>
-                <small class="user"><strong>@anonym${comment.user_id}</strong></small>
-                <p class="comment">${comment.comment}</p>
-              </div>
-              <button type="button" class="translate-btn" data-id="${comment.id}" data-text="${comment.comment}">Translate</button>
-              <p class="translated-text" id="translated-${secretId}-${comment.id}"></p>
-            `;
-                commentList.appendChild(li);
-              });
-            } else {
-              commentList.innerHTML = `<p class="total">${data.noComment}</p>`;
-            }
+            document.execCommand("copy");
+            alert("Content copied to clipboard!");
+            button.innerHTML = "Copied!"
           } catch (err) {
-            console.error("Error loading comments:", err);
+            console.error("Fallback copy failed: ", err);
+            alert("Copy failed. Please copy manually.");
           }
-
-          // Delegate click for Translate buttons inside this section
-          commentList.addEventListener("click", async (e) => {
-            if (e.target.classList.contains("translate-btn")) {
-              const btn = e.target;
-              const text = btn.dataset.text;
-              const id = btn.dataset.id;
-              const output = section.querySelector(`#translated-${secretId}-${id}`);
-
-              output.innerText = "Translating...";
-
-              try {
-                const res = await fetch("/translate", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ text, targetLang: "en" }),
-                });
-
-                const result = await res.json();
-                if (result.translated) {
-                  output.innerText = result.translated;
-                } else {
-                  output.innerText = "Translation failed.";
-                }
-              } catch (err) {
-                output.innerText = "Error translating comment.";
-                console.error(err);
-              }
-            }
-          });
-        });
-      });
-    </script>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        document.querySelectorAll(".reaction").forEach((button) => {
-          const animations = {
-            like: './img/lottie/love4.json',
-            laugh: './img/lottie/laugh.json',
-            cry: './img/lottie/cry.json',
-            gasp: './img/lottie/gasp.json'
-          };
-
-
-          button.addEventListener("click", async (event) => {
-            const btn = event.target.closest(".reaction");
-            const type = btn.getAttribute("data-type");
-            const secretCard = btn.closest(".secret-card");
-            const secretId = secretCard.getAttribute("data-id");
-
-
-            const emojiChar = btn.textContent.trim().split('\n')[0];
-            const card = btn.closest('.secret');
-            const floatingContainer = card.querySelector('.floating-lottie');
-            const floating = document.createElement('div');
-            floating.className = 'floating-lottie-animated';
-            card.appendChild(floating);
-
-
-            // === 1. EMOJI BURST AROUND BUTTON ===
-            triggerEmojiBurst(btn, emojiChar);
-
-            // === 2. 3D EXTRAS AROUND BUTTON ===
-            if (type === 'cry') {
-              const tear = document.createElement('span');
-              tear.className = 'emoji-particle';
-              tear.innerText = '💧';
-              tear.style.setProperty('--x', '0px');
-              tear.style.setProperty('--y', '50px');
-              button.appendChild(tear);
-              setTimeout(() => tear.remove(), 800);
-            }
-
-            if (type === 'gasp') {
-              const puff = document.createElement('span');
-              puff.className = 'emoji-particle';
-              puff.innerText = '💨';
-              puff.style.setProperty('--x', '-10px');
-              puff.style.setProperty('--y', '0px');
-              button.appendChild(puff);
-              setTimeout(() => puff.remove(), 800);
-            }
-
-
-            try {
-              const response = await fetch(`/secret/${secretId}/react`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ type }),
-              });
-
-              const data = await response.json();
-
-
-              const animation = lottie.loadAnimation({
-                container: floating,
-                renderer: 'svg',
-                loop: false,
-                autoplay: true,
-                path: animations[type]
-              });
-
-              // Get button to card offset
-              const buttonRect = button.getBoundingClientRect();
-              const cardRect = card.getBoundingClientRect();
-
-              const startX = buttonRect.left - cardRect.left + buttonRect.width / 2;
-              const startY = buttonRect.top - cardRect.top + buttonRect.height / 2;
-
-              floating.style.left = `${startX}px`;
-              floating.style.top = `${startY}px`;
-
-              // 🎇 TRAIL PARTICLES WHILE MOVING
-              const trailEmojis = ['✨', '💥', '💨'];
-              let trailInterval = setInterval(() => {
-                const trail = document.createElement('span');
-                trail.className = 'trail-particle';
-                trail.innerText = trailEmojis[Math.floor(Math.random() * trailEmojis.length)];
-
-                // Offset from Lottie position
-                const offsetX = (Math.random() - 0.5) * 60;
-                const offsetY = (Math.random() - 0.5) * 60;
-
-                trail.style.left = `${floating.offsetLeft}px`;
-                trail.style.top = `${floating.offsetTop}px`;
-                trail.style.setProperty('--trail-x', `${offsetX}px`);
-                trail.style.setProperty('--trail-y', `${offsetY}px`);
-
-                card.appendChild(trail);
-                setTimeout(() => trail.remove(), 600);
-              }, 100);
-
-              // 🎯 Animate to center
-              setTimeout(() => {
-                floating.classList.add('to-center');
-              }, 50);
-
-              // 👋 Animate back and remove
-              setTimeout(() => {
-                floating.classList.remove('to-center');
-                floating.classList.add('to-button');
-                clearInterval(trailInterval);
-              }, 1200);
-
-              setTimeout(() => {
-                floating.remove();
-              }, 1800);
-
-
-              if (data.success) {
-                const countSpan = btn.querySelector(".reaction-count");
-                countSpan.textContent = data.reactions[type].count || 0; // Use updated count from server
-              } else {
-                console.error("Failed to update reactions:", data.error);
-              }
-            } catch (error) {
-              console.error("Error updating reactions:", error);
-            }
-
-
-            function triggerEmojiBurst(container, emojiChar) {
-              const burstCount = 10;
-
-              for (let i = 0; i < burstCount; i++) {
-                const particle = document.createElement('span');
-                particle.classList.add('emoji-particle');
-                particle.innerText = emojiChar;
-
-                const angle = Math.random() * 2 * Math.PI;
-                const distance = Math.random() * 40 + 20;
-                const x = Math.cos(angle) * distance + 'px';
-                const y = Math.sin(angle) * distance + 'px';
-
-                particle.style.setProperty('--x', x);
-                particle.style.setProperty('--y', y);
-
-                container.appendChild(particle);
-                setTimeout(() => particle.remove(), 800);
-              }
-
-              container.classList.add('pop-animate');
-              setTimeout(() => container.classList.remove('pop-animate'), 300);
-            }
-          });
-        });
-      });
-
-
-      document.querySelectorAll(".read").forEach((button) => {
-        button.addEventListener("click", (e) => {
-          const contentSpan = e.target.previousElementSibling;
-          const isTruncated = e.target.textContent === "Read More";
-
-          if (isTruncated) {
-            // Show full content
-            contentSpan.textContent = e.target.dataset.full;
-            e.target.textContent = "See Less";
-          } else {
-            // Reapply truncated content
-            contentSpan.textContent = e.target.dataset.truncated;
-            e.target.textContent = "Read More";
-          }
-        });
-      });
-
-      document.querySelectorAll(".card-toggle-btn").forEach((button) => {
-        button.addEventListener("click", (e) => {
-          const menuContent = e.target.closest(".card-menu").querySelector(".card-menu-content");
-          const isVisible = menuContent.style.display === "block";
-
-          // Hide all other menus
-          document.querySelectorAll(".card-menu-content").forEach((menu) => {
-            menu.style.display = "none";
-          });
-
-          // Toggle current menu
-          menuContent.style.display = isVisible ? "none" : "block";
-
-          // Stop event propagation to prevent immediate hiding
-          e.stopPropagation();
-        });
-      });
-
-      // Hide menu when clicking elsewhere
-      document.addEventListener("click", () => {
-        document.querySelectorAll(".card-menu-content").forEach((menu) => {
-          menu.style.display = "none";
-        });
-      });
-
-
-      document.addEventListener("click", function (event) {
-        if (event.target.closest(".fas.fa-copy")) {
-          const button = event.target.closest(".fas.fa-copy");
-
-          // Find the closest card container to get the content
-          const cardContainer = button.closest(".card");
-
-          // Extract the content inside the card container
-          const contentToCopy = cardContainer.querySelector(".content")?.innerText;
-
-          if (contentToCopy) {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-              // Use Clipboard API if available
-              navigator.clipboard
-                .writeText(contentToCopy)
-                .then(() => {
-                  alert("Content copied to clipboard!");
-                })
-                .catch((err) => {
-                  console.error("Failed to copy: ", err);
-                  alert("Failed to copy content.");
-                });
-            } else {
-              // Fallback for unsupported browsers
-              const tempInput = document.createElement("textarea");
-              tempInput.value = contentToCopy;
-              document.body.appendChild(tempInput);
-              tempInput.select();
-              try {
-                document.execCommand("copy");
-                alert("Content copied to clipboard!");
-                button.innerHTML = "Copied!"
-              } catch (err) {
-                console.error("Fallback copy failed: ", err);
-                alert("Copy failed. Please copy manually.");
-              }
-              document.body.removeChild(tempInput);
-            }
-          } else {
-            console.error("No content to copy.");
-            alert("Nothing to copy.");
-          }
+          document.body.removeChild(tempInput);
         }
-      });
+      } else {
+        console.error("No content to copy.");
+        alert("Nothing to copy.");
+      }
+    }
+  });
 
-    </script>
+</script>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // Simulate a short loading delay (optional)
-        setTimeout(() => {
-          // Hide shimmer placeholder
-          document.getElementById("shimmer-container").style.display = "none";
-          // Show real secrets
-          document.getElementById("real-secrets").style.display = "block";
-        }, 1000); // 1s delay – tweak as needed
-      });
-    </script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Simulate a short loading delay (optional)
+    setTimeout(() => {
+      // Hide shimmer placeholder
+      document.getElementById("shimmer-container").style.display = "none";
+      // Show real secrets
+      document.getElementById("real-secrets").style.display = "block";
+    }, 1000); // 1s delay – tweak as needed
+  });
+</script>
 
 
 
-    <script src="/js/app.js"></script>
-    <script src="/js/generate-thumbnails.js"></script>
+<script src="/js/app.js"></script>
+<script src="/js/generate-thumbnails.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>

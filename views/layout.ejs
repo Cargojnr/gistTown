@@ -14,25 +14,26 @@
   <link rel="stylesheet" href="/styles/media.css" />
   <link rel="stylesheet" href="/styles/new.css" />
   <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
-  <title>Gossipa || <%= locals.title ? title : null%></title>
+  <title>Gossipa || <%= locals.title ? title : null%>
+  </title>
 </head>
 
 <body class="main-background">
 
-  
-<script>
-  window.addEventListener("load", function () {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-</script>
+
+  <script>
+    window.addEventListener("load", function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  </script>
 
 
   <header>
     <div class="container">
       <div class="header">
-        <img oncontextmenu="return false;"  src="../../img/logo/main-logo.png" alt="" id="main-logo" class="logo">
-        <img oncontextmenu="return false;"  src="../../img/logo/mobile-logo.png" alt="" id="mobile-logo" class="logo">
-  
+        <img oncontextmenu="return false;" src="../../img/logo/main-logo.png" alt="" id="main-logo" class="logo">
+        <img oncontextmenu="return false;" src="../../img/logo/mobile-logo.png" alt="" id="mobile-logo" class="logo">
+
         <form id="liveSearchForm" action="/search" method="post" autocomplete="off">
           <div class="search" id="mobileSearch">
             <button class="search-btn" type="submit" id="toggleSearch">
@@ -42,129 +43,134 @@
           </div>
           <ul id="suggestions" class="suggestion-box"></ul>
         </form>
-  
-        <div class="topbar-icons">
-                <ul id="navbar">
-  
-                  <li class="navbar nav-text">
-                    <a class="nav-link" href="/explore" style="color: var(--text-color);">
-                          <i class=" fab fa-modx fa-2x"></i>
-                    </a>
-                  </li>
-  
-          <li class="navbar">
-            <a class="nav-link" href="/notifications">
-              <i class="fas fa-bell fa-2x"></i>
-              <span class="counter">0</span>
-            </a>
-          </li>
-          <li class="navbar profiled">
-            <button class="profile-btn"><img oncontextmenu="return false;"  src="<%= profilePicture ?'../.' + profilePicture: profilePicture %>" alt="" class="profile-pic thumb"> <i class="fas fa-chevron-down"></i></button>
-          </li>
-          <li class="navbar dropdown">
-            <div class="hamburger" id="hamburger">
-              <div class="bar" id="bar1"></div>
-              <div class="bar" id="bar3"></div>
-            </div>
-            </li>
-          </div>
-            <div id="menu" class="menu-hidden">
-              <div class="container">
-                <div class="profile-header">
-                  <img oncontextmenu="return false;"  src="<%= profilePicture ? profilePicture : '../.' + profilePicture %>" alt="Profile Avatar" class="profile-avatar" />
-  
-                  <h3 class="username">Hello, <span class="username">
-                    @amebo<%= userId %> 
-                    <% if(verification === true) {%>
-                    <img oncontextmenu="return false;"  src="../../img/gossipa3.png" alt="Verifiied Badge" class="verified-badge">
-                    <% } else {%>
-                   <% } %>
-                  </span></h3>
-                </div>
 
-                <div class="theme-switch mobile-nav">
-                  <input type="checkbox" id="themeToggle" class="theme-toggle" onchange="toggleMode()" />
-                  <label for="themeToggle" class="theme-toggle-label">
-                    <span class="sun-icon">☀️</span>
-                    <span class="moon-icon">🌙</span>
-                  </label>
-                </div>
-  
-                <div class="menu">
-                  <div class="menu-nav">
-        
-                    <ul class="pages">
-                      <h4>Compose a gist</h4>
-                      <li><a class="nav-link" href="/feeds">View Gist</a></li>
-                      <li><a class="nav-link" href="/submit">Share a Gist</a></li>
-                      <li>
-                        <a class="nav-link" href="/notifications" class="">Notifcations</a>
-                      </li>
-                    </ul>
-                    <ul class="account">
-                      <h4>Account</h4>
-                      <li>
-                        <a class="nav-link" href="/notifications" class="">Go To Profile</a>
-                      </li>
-                      <li><a class="nav-link" href="/profile">Edit Profile</a></li>
-  
-                      <li>
-                        <form action="/logout" method="POST">
-                          <button type="submit">Logout <i class="fas fa-right-from-bracket"></i></button>
-                        </form>
-                      </li>
-                    </ul>
-                  </div>
-  
-                  <ul class="socials">
-                    <li>
-                      <a class="nav-link" target="_blank" href="https://t.me/anonymcret"><i
-                          class="fab fa-telegram fa-2x"></i></a>
-                    </li>
-                    <li>
-                      <a class="nav-link" target="_blank" href=""><i class="fab fa-instagram fa-2x"></i></a>
-                    </li>
-                    <li>
-                      <a class="nav-link" target="_blank" href=""><i class="fab fa-linkedin fa-2x"></i></a>
-                    </li>
-                    <li>
-                      <a class="nav-link" target="_blank" href=""><i class="fab fa-github fa-2x"></i></a>
-                    </li>
-                  </ul>
-                  <hr />
-                  <div class="menu-nav-alt">
-                    <ul class="info">
-                      <h4>Information</h4>
-                      <li><a href="">About</a></li>
-                      <li><a href="">Security</a></li>
-                      <li><a href="">Privacy</a></li>
-                      <li><a href="">Blog</a></li>
-                    </ul>
-                    <ul class="support">
-                      <h4>Support</h4>
-                      <li><a href="">FAQ</a></li>
-                      <li><a href="">Contact</a></li>
-                      <li><a href="/feedback">Reviews</a></li>
-                    </ul>
-                  </div>
-                  <p class="menu-lang">
-                    <i class="fas fa-globe"></i> English
-                  </p>
-                  <button id="close">Close</button>
-                </div>
+        <div class="topbar-icons">
+          <ul id="navbar">
+
+            <li class="navbar nav-text">
+              <a class="nav-link" href="/explore" style="color: var(--text-color);">
+                <i class=" fab fa-modx fa-2x"></i>
+              </a>
+            </li>
+
+            <li class="navbar">
+              <a class="nav-link" href="/notifications">
+                <i class="fas fa-bell fa-2x"></i>
+                <span class="counter">0</span>
+              </a>
+            </li>
+            <li class="navbar profiled">
+              <button class="profile-btn"><img oncontextmenu="return false;"
+                  src="<%= profilePicture ?'../.' + profilePicture: profilePicture %>" alt="" class="profile-pic thumb">
+                <i class="fas fa-chevron-down"></i></button>
+            </li>
+            <li class="navbar dropdown">
+              <div class="hamburger" id="hamburger">
+                <div class="bar" id="bar1"></div>
+                <div class="bar" id="bar3"></div>
               </div>
+            </li>
+        </div>
+        <div id="menu" class="menu-hidden">
+          <div class="container">
+            <div class="profile-header">
+              <img oncontextmenu="return false;"
+                src="<%= profilePicture ? profilePicture : '../../' + profilePicture %>" alt="Profile Avatar"
+                class="profile-avatar" />
+
+              <h3 class="username">Hello, <span class="username">
+                  @amebo<%= userId %>
+                    <% if(verification===true) {%>
+                      <img oncontextmenu="return false;" src="../../img/gossipa3.png" alt="Verifiied Badge"
+                        class="verified-badge">
+                      <% } else {%>
+                        <% } %>
+                </span></h3>
             </div>
-          </li>
+
+            <div class="theme-switch ">
+              <input type="checkbox" id="themeToggle" class="theme-toggle" onchange="toggleMode()" />
+              <label for="themeToggle" class="theme-toggle-label">
+                <span class="sun-icon">☀️</span>
+                <span class="moon-icon">🌙</span>
+              </label>
+            </div>
+
+            <div class="menu">
+              <div class="menu-nav">
+
+                <ul class="pages">
+                  <h4>Compose a gist</h4>
+                  <li><a class="nav-link" href="/feeds">View Gist</a></li>
+                  <li><a class="nav-link" href="/submit">Share a Gist</a></li>
+                  <li>
+                    <a class="nav-link" href="/notifications" class="">Notifcations</a>
+                  </li>
+                </ul>
+                <ul class="account">
+                  <h4>Account</h4>
+                  <li>
+                    <a class="nav-link" href="/notifications" class="">Go To Profile</a>
+                  </li>
+                  <li><a class="nav-link" href="/profile">Edit Profile</a></li>
+
+                  <li>
+                    <form action="/logout" method="POST">
+                      <button type="submit">Logout <i class="fas fa-right-from-bracket"></i></button>
+                    </form>
+                  </li>
+                </ul>
+              </div>
+
+              <ul class="socials">
+                <li>
+                  <a class="nav-link" target="_blank" href="https://t.me/anonymcret"><i
+                      class="fab fa-telegram fa-2x"></i></a>
+                </li>
+                <li>
+                  <a class="nav-link" target="_blank" href=""><i class="fab fa-instagram fa-2x"></i></a>
+                </li>
+                <li>
+                  <a class="nav-link" target="_blank" href=""><i class="fab fa-linkedin fa-2x"></i></a>
+                </li>
+                <li>
+                  <a class="nav-link" target="_blank" href=""><i class="fab fa-github fa-2x"></i></a>
+                </li>
+              </ul>
+              <hr />
+              <div class="menu-nav-alt">
+                <ul class="info">
+                  <h4>Information</h4>
+                  <li><a href="">About</a></li>
+                  <li><a href="">Security</a></li>
+                  <li><a href="">Privacy</a></li>
+                  <li><a href="">Blog</a></li>
+                </ul>
+                <ul class="support">
+                  <h4>Support</h4>
+                  <li><a href="">FAQ</a></li>
+                  <li><a href="">Contact</a></li>
+                  <li><a href="/feedback">Reviews</a></li>
+                </ul>
+              </div>
+              <p class="menu-lang">
+                <i class="fas fa-globe"></i> English
+              </p>
+              <button id="close">Close</button>
+            </div>
+          </div>
+        </div>
+        </li>
         </ul>
       </div>
     </div>
     <div id="announcement">
-   
-    </div> 
+
+    </div>
   </header>
 
- 
-  
+
+
   <div class="layout-container container">
 
     <aside class="left-sidebar">
@@ -194,7 +200,8 @@
             <a href="/subscribe">
               <i class="nav-icon fas fa-award"></i>
               &nbsp;<span class="nav-text">Become a Chief</span>&nbsp;
-              <span class="nav-text"><img oncontextmenu="return false;"  src="../../img/gossipa3.png" alt="" class="nav-icon verified-badge"></span>
+              <span class="nav-text"><img oncontextmenu="return false;" src="../../img/gossipa3.png" alt=""
+                  class="nav-icon verified-badge"></span>
             </a>
           </li>
           <li class="nav-item">
@@ -245,7 +252,7 @@
       <button id="close-announcement" class="btn btn-dark btn-lg">Close</button>
     </div>
 
-    
+
     <div class="theme-switch nav-text">
       <input type="checkbox" id="themeToggle" class="theme-toggle" onchange="toggleMode()" />
       <label for="themeToggle" class="theme-toggle-label">
@@ -256,149 +263,149 @@
 
     <!-- Content of each page will be injected here -->
 
-  <!-- Notifications Container -->
-  <div id="notification" style="position: fixed; bottom: 10px; left: 10px; z-index: 1000"></div>
+    <!-- Notifications Container -->
+    <div id="notification" style="position: fixed; bottom: 10px; left: 10px; z-index: 1000"></div>
   </div>
 
 
   <script>
-     const header = document.querySelector("header");
- const nextSection = document
-   .querySelector("body")
-   .querySelector("section:not(.active)");
- const logo = document.getElementById("logo");
+    const header = document.querySelector("header");
+    const nextSection = document
+      .querySelector("body")
+      .querySelector("section:not(.active)");
+    const logo = document.getElementById("logo");
 
- window.addEventListener("scroll", function () {
-   const scrolled = window.scrollY > 0;
-   if (scrolled) {
-     let body = document.querySelector("body");
-     body.style.overflowY = "scroll";
-     header.classList.add("scrolled");
-   } else {
-     header.classList.remove("scrolled");
-   }
- });
+    window.addEventListener("scroll", function () {
+      const scrolled = window.scrollY > 0;
+      if (scrolled) {
+        let body = document.querySelector("body");
+        body.style.overflowY = "scroll";
+        header.classList.add("scrolled");
+      } else {
+        header.classList.remove("scrolled");
+      }
+    });
   </script>
 
-<script>
-  const searchWrapper = document.getElementById("mobileSearch");
-  const toggleBtn = document.getElementById("toggleSearch");
-  const searchInput = document.getElementById("searchInput");
-  const suggestionsBox = document.getElementById("suggestions");
+  <script>
+    const searchWrapper = document.getElementById("mobileSearch");
+    const toggleBtn = document.getElementById("toggleSearch");
+    const searchInput = document.getElementById("searchInput");
+    const suggestionsBox = document.getElementById("suggestions");
 
-  let debounceTimer;
+    let debounceTimer;
 
-  toggleBtn.addEventListener("click", function (e) {
-    if (window.innerWidth <= 768) {
-      if (document.activeElement !== searchInput) {
-        e.preventDefault();
-        searchWrapper.classList.toggle("active");
+    toggleBtn.addEventListener("click", function (e) {
+      if (window.innerWidth <= 768) {
+        if (document.activeElement !== searchInput) {
+          e.preventDefault();
+          searchWrapper.classList.toggle("active");
 
-        if (searchWrapper.classList.contains("active")) {
-          searchInput.focus();
-        } else {
-          searchInput.value = "";
-          suggestionsBox.innerHTML = "";
-          suggestionsBox.style.display = "none"; // <- Hide it here
+          if (searchWrapper.classList.contains("active")) {
+            searchInput.focus();
+          } else {
+            searchInput.value = "";
+            suggestionsBox.innerHTML = "";
+            suggestionsBox.style.display = "none"; // <- Hide it here
+          }
+        }
+      } else {
+        // Desktop validation
+        if (searchInput.value.trim().length === 0) {
+          e.preventDefault();
+          suggestionsBox.innerHTML = "<li class='no-result'>Please enter a search keyword</li>";
+          suggestionsBox.style.display = "block";
         }
       }
-    } else {
-      // Desktop validation
-      if (searchInput.value.trim().length === 0) {
-        e.preventDefault();
-        suggestionsBox.innerHTML = "<li class='no-result'>Please enter a search keyword</li>";
-        suggestionsBox.style.display = "block";
+    });
+
+
+    // Click outside to collapse
+    document.addEventListener("click", function (e) {
+      if (
+        window.innerWidth <= 768 &&
+        !searchWrapper.contains(e.target)
+      ) {
+        searchWrapper.classList.remove("active");
+        searchInput.value = "";
+        suggestionsBox.innerHTML = "";
       }
-    }
-  });
+    });
 
+    // Live search logic
+    searchInput.addEventListener("keyup", function (e) {
+      clearTimeout(debounceTimer);
+      const query = this.value.trim();
 
-  // Click outside to collapse
-  document.addEventListener("click", function (e) {
-    if (
-      window.innerWidth <= 768 &&
-      !searchWrapper.contains(e.target)
-    ) {
-      searchWrapper.classList.remove("active");
-      searchInput.value = "";
-      suggestionsBox.innerHTML = "";
-    }
-  });
+      if (query.length === 0) {
+        e.preventDefault()
+        suggestionsBox.innerHTML = "";
+        suggestionsBox.style.display = "none"; // <- Ensure it is hidden
+        searchWrapper.classList.toggle("active");
+        return;
+      }
 
-  // Live search logic
-  searchInput.addEventListener("keyup", function (e) {
-    clearTimeout(debounceTimer);
-    const query = this.value.trim();
+      suggestionsBox.style.display = "none"; // Reset before debounce
 
-    if (query.length === 0) {
-      e.preventDefault()
-      suggestionsBox.innerHTML = "";
-      suggestionsBox.style.display = "none"; // <- Ensure it is hidden
-      searchWrapper.classList.toggle("active");
-      return;
-    }
+      debounceTimer = setTimeout(() => {
+        fetch("/searching", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ search: query })
+        })
+          .then(res => res.json())
+          .then(data => {
+            suggestionsBox.innerHTML = "";
 
-    suggestionsBox.style.display = "none"; // Reset before debounce
-
-    debounceTimer = setTimeout(() => {
-      fetch("/searching", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ search: query })
-      })
-        .then(res => res.json())
-        .then(data => {
-          suggestionsBox.innerHTML = "";
-
-          if (data.searchResults.length === 0) {
-            suggestionsBox.innerHTML = "<li class='no-result'>No result found</li>";
-            suggestionsBox.style.display = "block"; // <- Show only when needed
-            return;
-          }
-
-          suggestionsBox.style.display = "block";
-
-          function highlightMatch(text, keyword) {
-            const regex = new RegExp(`(${keyword})`, "gi");
-            return text.replace(regex, "<mark>$1</mark>");
-          }
-
-          function toggleRead(e, btn, keyword) {
-            e.stopPropagation();
-            const textEl = btn.parentElement;
-            const raw = textEl.getAttribute("data-full");
-            const expanded = textEl.classList.contains("expanded");
-
-            if (!expanded) {
-              textEl.innerHTML = highlightMatch(raw, keyword);
-              const newBtn = document.createElement("button");
-              newBtn.textContent = "Show Less";
-              newBtn.className = "read-more";
-              newBtn.onclick = ev => toggleRead(ev, newBtn, keyword);
-              textEl.appendChild(newBtn);
-              textEl.classList.add("expanded");
-            } else {
-              const short = raw.slice(0, 150) + "...";
-              textEl.innerHTML = highlightMatch(short, keyword);
-              const newBtn = document.createElement("button");
-              newBtn.textContent = "Read More";
-              newBtn.className = "read";
-              newBtn.onclick = ev => toggleRead(ev, newBtn, keyword);
-              textEl.appendChild(newBtn);
-              textEl.classList.remove("expanded");
+            if (data.searchResults.length === 0) {
+              suggestionsBox.innerHTML = "<li class='no-result'>No result found</li>";
+              suggestionsBox.style.display = "block"; // <- Show only when needed
+              return;
             }
-          }
 
-          data.searchResults.forEach(item => {
-            const li = document.createElement("li");
-            li.classList.add("suggestion-item");
+            suggestionsBox.style.display = "block";
 
-            const short = item.secret.length > 50 ? item.secret.slice(0, 50) + "..." : item.secret;
-            const highlightedText = highlightMatch(item.secret, query);
+            function highlightMatch(text, keyword) {
+              const regex = new RegExp(`(${keyword})`, "gi");
+              return text.replace(regex, "<mark>$1</mark>");
+            }
 
-            li.innerHTML = `
+            function toggleRead(e, btn, keyword) {
+              e.stopPropagation();
+              const textEl = btn.parentElement;
+              const raw = textEl.getAttribute("data-full");
+              const expanded = textEl.classList.contains("expanded");
+
+              if (!expanded) {
+                textEl.innerHTML = highlightMatch(raw, keyword);
+                const newBtn = document.createElement("button");
+                newBtn.textContent = "Show Less";
+                newBtn.className = "read-more";
+                newBtn.onclick = ev => toggleRead(ev, newBtn, keyword);
+                textEl.appendChild(newBtn);
+                textEl.classList.add("expanded");
+              } else {
+                const short = raw.slice(0, 150) + "...";
+                textEl.innerHTML = highlightMatch(short, keyword);
+                const newBtn = document.createElement("button");
+                newBtn.textContent = "Read More";
+                newBtn.className = "read";
+                newBtn.onclick = ev => toggleRead(ev, newBtn, keyword);
+                textEl.appendChild(newBtn);
+                textEl.classList.remove("expanded");
+              }
+            }
+
+            data.searchResults.forEach(item => {
+              const li = document.createElement("li");
+              li.classList.add("suggestion-item");
+
+              const short = item.secret.length > 50 ? item.secret.slice(0, 50) + "..." : item.secret;
+              const highlightedText = highlightMatch(item.secret, query);
+
+              li.innerHTML = `
       <span class="arrow">→</span>
        <div class="search-text short-text" data-full="${item.secret.replace(/"/g, '&quot;')}">
         ${highlightedText}
@@ -406,26 +413,26 @@
       </div>
     `;
 
-            suggestionsBox.insertBefore(li, document.getElementById("loadMore"));
+              suggestionsBox.insertBefore(li, document.getElementById("loadMore"));
 
-            li.addEventListener("click", () => {
-              window.location.href = `/secret/${item.id}`;
+              li.addEventListener("click", () => {
+                window.location.href = `/secret/${item.id}`;
+              });
+
+              suggestionsBox.appendChild(li);
             });
-
-            suggestionsBox.appendChild(li);
+          })
+          .catch(err => {
+            suggestionsBox.style.display = "none"; // fallback to hidden
+            console.error("Live search error:", err);
           });
-        })
-        .catch(err => {
-          suggestionsBox.style.display = "none"; // fallback to hidden
-          console.error("Live search error:", err);
-        });
-    }, 300);
-  });
+      }, 300);
+    });
 
-</script>
+  </script>
 
 
-  
+
   <script>
     const showAnnouncement = (secret) => {
       const overlay = document.getElementById("announcement-overlay");
@@ -458,47 +465,47 @@
         pinSecret(secret);
       });
     };
-    
+
   </script>
 
-<script>
-  function updateCountdown() {
-    const countdownEl = document.getElementById("countdown");
-    // const announcement= document.getElementById("announcement");
-    if (!countdownEl) return;
+  <script>
+    function updateCountdown() {
+      const countdownEl = document.getElementById("countdown");
+      // const announcement= document.getElementById("announcement");
+      if (!countdownEl) return;
 
-    const now = new Date();
-    const nextTarget = new Date();
-    nextTarget.setUTCHours(11, 0, 0, 0); // 11:00 AM GMT
+      const now = new Date();
+      const nextTarget = new Date();
+      nextTarget.setUTCHours(11, 0, 0, 0); // 11:00 AM GMT
 
-    if (now > nextTarget) {
-      nextTarget.setUTCDate(nextTarget.getUTCDate() + 1); // move to next day
+      if (now > nextTarget) {
+        nextTarget.setUTCDate(nextTarget.getUTCDate() + 1); // move to next day
+      }
+
+      const distance = nextTarget - now;
+
+      const hours = String(Math.floor((distance / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+      const minutes = String(Math.floor((distance / (1000 * 60)) % 60)).padStart(2, '0');
+      const seconds = String(Math.floor((distance / 1000) % 60)).padStart(2, '0');
+
+      const span = document.createElement('span')
+      span.textContent = `${hours}:${minutes}:${seconds}`
+      // span.className = 'counter'
+
+      countdownEl.textContent = `Next top gossip to be selected in:`;
+      countdownEl.appendChild(span)
+      countdownEl.style.flex = " 1 1 100% !important"
+      countdownEl.style.width = "100% !important"
+      span.style.color = "var(--secondary-color)"
+
     }
 
-    const distance = nextTarget - now;
-
-    const hours = String(Math.floor((distance / (1000 * 60 * 60)) % 24)).padStart(2, '0');
-    const minutes = String(Math.floor((distance / (1000 * 60)) % 60)).padStart(2, '0');
-    const seconds = String(Math.floor((distance / 1000) % 60)).padStart(2, '0');
-
-    const span = document.createElement('span')
-    span.textContent = `${hours}:${minutes}:${seconds}`
-    // span.className = 'counter'
-
-    countdownEl.textContent = `Next top gossip to be selected in:`;
-    countdownEl.appendChild(span)
-    countdownEl.style.flex = " 1 1 100% !important"
-    countdownEl.style.width = "100% !important"
-    span.style.color = "var(--secondary-color)"
-
-  }
-
-  // Start the countdown interval when DOM is ready
-  document.addEventListener("DOMContentLoaded", () => {
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
-  });
-</script>
+    // Start the countdown interval when DOM is ready
+    document.addEventListener("DOMContentLoaded", () => {
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    });
+  </script>
 
 
   <script>
@@ -596,7 +603,7 @@
   </script>
 
 
-      <script src="/js/defaultTheme.js"></script>
+  <script src="/js/defaultTheme.js"></script>
 </body>
 
 </html>

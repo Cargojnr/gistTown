@@ -1,5 +1,4 @@
-
-    <style>
+<style>
   .sections-container {
     background: linear-gradient(135deg, var(--container-bg), rgba(127, 90, 240, 0.08));
     padding: 2rem;
@@ -74,6 +73,7 @@
       transform: translateY(20px);
       opacity: 0;
     }
+
     to {
       transform: translateY(0);
       opacity: 1;
@@ -84,153 +84,158 @@
     .sections-title {
       font-size: 1.8rem;
     }
+
     .section-card h3 {
       font-size: 1.2rem;
     }
   }
-    </style>
+</style>
 
-        <div id="main">
-            <section class="main">
-                <div id="sections" class="sections-container">
-                    <h2 class="sections-title">Explore Your Space</h2>
-                    <form class="sections-cards">
-                      <!-- Whisper Walls -->
-                      <!-- <button class="section-card whisper-wall" formaction="/section/love" data-action="/whisper-walls">
+<div id="main">
+  <section class="main">
+    <div id="sections" class="sections-container">
+      <h2 class="sections-title">Explore Your Space</h2>
+      <form class="sections-cards">
+        <!-- Whisper Walls -->
+        <!-- <button class="section-card whisper-wall" formaction="/section/love" data-action="/whisper-walls">
                     <div class="icon-circle">
                       <i class="fas fa-feather-alt fa-2x"></i>
                     </div>
                     <h3>Whisper Walls</h3>
                     <p>Swipe and support whispers anonymously.</p>
                   </button> -->
-        
-                      <button class="section-card whisper-wall" formaction="/section/love" data-action="/whisper-walls">
-                        <div class="icon-circle">
-                          <i class="fas fa-feather-alt fa-2x"></i>
-                        </div>
-                        <h3>Heartbreaks & Relationship</h3>
-                        <p>Swipe and support whispers anonymously.</p>
-                      </button>
-        
-                      <!-- Mood Secrets -->
-                      <!-- <button class="section-card mood-secrets" formaction="random" data-action="/mood-secrets">
+
+        <button class="section-card whisper-wall" formaction="/section/love" data-action="/whisper-walls">
+          <span class="counter nav-tag">BETA</span>
+          <div class="icon-circle">
+            <i class="fas fa-feather-alt fa-2x"></i>
+          </div>
+          <h3>Heartbreaks & Relationship</h3>
+          <p>Swipe and support whispers anonymously.</p>
+        </button>
+
+        <!-- Mood Secrets -->
+        <!-- <button class="section-card mood-secrets" formaction="random" data-action="/mood-secrets">
                     <div class="icon-circle gradient-bg">
                       <i class="fas fa-smile-beam fa-2x"></i>
                     </div>
                     <h3>Mood Secrets</h3>
                     <p>Share secrets by mood. Feel the vibe.</p>
                   </button> -->
-        
-                      <button class="section-card mood-secrets" formaction="random" data-action="/mood-secrets">
-                        <div class="icon-circle gradient-bg">
-                          <i class="fas fa-smile-beam fa-2x"></i>
-                        </div>
-                        <h3>Random Confessions</h3>
-                        <p>Share secrets by mood. Feel the vibe.</p>
-                      </button>
-        
-                      <!-- Support Pods -->
-                      <button class="section-card support-pods" data-action="/support-pods">
-                        <div class="icon-circle gradient-bg-alt">
-                          <i class="fas fa-hands-helping fa-2x"></i>
-                        </div>
-                        <h3>Support Pods</h3>
-                        <p>Join pods for empathetic conversations.</p>
-                      </button>
-        
-                      <!-- Time Capsule -->
-                      <button class="section-card time-capsule" data-action="/time-capsule">
-                        <div class="icon-circle gradient-bg">
-                          <i class="fas fa-hourglass-half fa-2x"></i>
-                        </div>
-                        <h3>Time Capsule</h3>
-                        <p>Write secrets to open in the future.</p>
-                      </button>
-        
-                      <!-- Inspirations & Confessions -->
-                      <button class="section-card inspirations-confessions" data-action="/inspirations">
-                        <div class="icon-circle gradient-bg-alt">
-                          <i class="fas fa-sun fa-2x"></i>
-                        </div>
-                        <h3>Inspirations</h3>
-                        <p>Share stories that uplift and inspire.</p>
-                      </button>
-                    </form>
-                  </div>
-        
-            </section>
 
-            <aside class="right-sidebar">
-                <div class="aside"></div>
+        <button class="section-card mood-secrets" formaction="random" data-action="/mood-secrets">
+          <span class="counter nav-tag">BETA</span>
+          <div class="icon-circle gradient-bg">
+            <i class="fas fa-smile-beam fa-2x"></i>
+          </div>
+          <h3>Random Confessions</h3>
+          <p>Share secrets by mood. Feel the vibe.</p>
+        </button>
 
-                <div class="premium-aside">
-                    <div class="premium-card">
-                        <div class="crown-icon sparkle">👑</div>
+        <!-- Support Pods -->
+        <button class="section-card blur support-pods" disabled="true" data-action="/support-pods">
+          <span class="counter nav-tag">SOON</span>
+          <div class="icon-circle gradient-bg-alt">
+            <i class="fas fa-hands-helping fa-2x"></i>
+          </div>
+          <h3>Support Pods</h3>
+          <p>Join pods for empathetic conversations.</p>
+        </button>
 
-                        <h3 class="premium-title">Become a Chief Gossipa</h3>
-                        <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain Unknown.</p>
+        <!-- Time Capsule -->
+        <button class="section-card blur time-capsule" disabled="true" data-action="/time-capsule">
+          <span class="counter nav-tag">SOON</span>
+          <div class="icon-circle gradient-bg">
+            <i class="fas fa-hourglass-half fa-2x"></i>
+          </div>
+          <h3>Time Capsule</h3>
+          <p>Write secrets to open in the future.</p>
+        </button>
 
-                        <div class="trending-stats">
-                            <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
-                        </div>
+        <!-- Inspirations & Confessions -->
+        <button class="section-card blur inspirations-confessions" disabled="true" data-action="/inspirations">
+          <span class="counter nav-tag">SOON</span>
+          <div class="icon-circle gradient-bg-alt">
+            <i class="fas fa-sun fa-2x"></i>
+          </div>
+          <h3>Inspirations</h3>
+          <p>Share stories that uplift and inspire.</p>
+        </button>
+      </form>
+    </div>
 
-                        <div class="avatar-hint">
-                            <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
-                            <p>You’re 1 step from <strong>trending</strong>…</p>
-                        </div>
+  </section>
 
-                        <a href="/subscribe" class="premium-btn">Chief Gossipa</a>
-                    </div>
-                </div>
+  <aside class="right-sidebar">
+    <div class="aside"></div>
 
-                <div class="aside-2">
-                    <center>
-                        <h4 class="user-count"><button class="dot active animate-ping-once"
-                                data-slide="0"></button>&nbsp;Meet The
-                            Chiefs
-                            :<span id="activeCount">0</span></h4>
-                    </center>
-                    <ul class="nav user-list">
-                    </ul>
+    <div class="premium-aside">
+      <div class="premium-card">
+        <div class="crown-icon sparkle">👑</div>
 
-                </div>
+        <h3 class="premium-title">Become a Chief Gossipa</h3>
+        <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain Unknown.</p>
 
-                <div class="inpage-footer">
-                    <span>Privacy Policy</span>&nbsp;.
-                    &nbsp;<span>Terms of use</span> &nbsp;.
-                    &nbsp;<span>Community guidelines</span> &nbsp;.
-                    <br><br>
-                    &nbsp;<span>&copy; <%= new Date().getFullYear() %>, &commat; Gossipa Co. All rights reserved</span>
-                </div>
-
-            </aside>
-
+        <div class="trending-stats">
+          <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
         </div>
 
+        <div class="avatar-hint">
+          <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
+          <p>You’re 1 step from <strong>trending</strong>…</p>
+        </div>
 
-       
-        <script>
-          document.addEventListener("DOMContentLoaded", () => {
-            const connectedUsersMap = new Map();
-            const userList = document.querySelector(".user-list");
-            const userCountDisplay = document.getElementById("activeCount");
-        
-            function updateUserCount() {
-              if (userCountDisplay) userCountDisplay.textContent = connectedUsersMap.size;
-            }
-        
-            function userConnected(user) {
-              if (connectedUsersMap.has(user.id)) return;
-        
-              const userBox = document.createElement("li");
-              userBox.className = "connected-user nav-item enter";
-              userBox.id = `user-${user.id}`;
-        
-              const verifiedBadge = user.verified
-                ? `<img oncontextmenu="return false;" src="/img/gossipa3.png" alt="Verified Badge" class="verified-badge">`
-                : "";
-        
-              userBox.innerHTML = `
+        <a href="/subscribe" class="premium-btn">Chief Gossipa</a>
+      </div>
+    </div>
+
+    <div class="aside-2">
+      <center>
+        <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Meet The
+          Chiefs
+          :<span id="activeCount">0</span></h4>
+      </center>
+      <ul class="nav user-list">
+      </ul>
+
+    </div>
+
+    <div class="inpage-footer">
+      <span>Privacy Policy</span>&nbsp;.
+      &nbsp;<span>Terms of use</span> &nbsp;.
+      &nbsp;<span>Community guidelines</span> &nbsp;.
+      <br><br>
+      &nbsp;<span>&copy; <%= new Date().getFullYear() %>, &commat; Gossipa Co. All rights reserved</span>
+    </div>
+
+  </aside>
+
+</div>
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const connectedUsersMap = new Map();
+    const userList = document.querySelector(".user-list");
+    const userCountDisplay = document.getElementById("activeCount");
+
+    function updateUserCount() {
+      if (userCountDisplay) userCountDisplay.textContent = connectedUsersMap.size;
+    }
+
+    function userConnected(user) {
+      if (connectedUsersMap.has(user.id)) return;
+
+      const userBox = document.createElement("li");
+      userBox.className = "connected-user nav-item enter";
+      userBox.id = `user-${user.id}`;
+
+      const verifiedBadge = user.verified
+        ? `<img oncontextmenu="return false;" src="/img/gossipa3.png" alt="Verified Badge" class="verified-badge">`
+        : "";
+
+      userBox.innerHTML = `
                 <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
                   <img oncontextmenu="return false;" src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
                   <p class="username">
@@ -239,55 +244,55 @@
                   </p>
                 </div>
               `;
-        
-              userList?.appendChild(userBox);
-              connectedUsersMap.set(user.id, userBox);
-              updateUserCount();
-        
-              requestAnimationFrame(() => userBox.classList.add("enter"));
-            }
-        
-            function userDisconnected(userId) {
-              const userBox = connectedUsersMap.get(userId);
-              if (userBox) {
-                userBox.classList.add("exit");
-                userBox.classList.remove("enter");
-                setTimeout(() => {
-                  userBox.remove();
-                  connectedUsersMap.delete(userId);
-                  updateUserCount();
-                }, 400);
-              }
-            }
-        
-            if (window.socket) {
-              window.socket.on("userJoined", async (userId) => {
-                try {
-                  const res = await fetch(`/user/${userId}`);
-                  const user = await res.json();
-                  userConnected(user);
-                } catch (err) {
-                  console.error("Failed to fetch user data:", err);
-                }
-              });
-        
-              window.socket.on("userLeft", (userId) => {
-                userDisconnected(userId);
-              });
-            } else {
-              console.warn("Socket.io not initialized on this page.");
-            }
-        
-            // Load currently active users
-            fetch("/active-users")
-              .then(res => res.json())
-              .then(users => users.forEach(userConnected))
-              .catch(console.error);
-          });
-        </script>
-       
-        <script src="/js/app.js"></script>
-        <script src="/js/defaultTheme.js"></script>
-        <script src="/js/tutorial.js"></script>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
+      userList?.appendChild(userBox);
+      connectedUsersMap.set(user.id, userBox);
+      updateUserCount();
+
+      requestAnimationFrame(() => userBox.classList.add("enter"));
+    }
+
+    function userDisconnected(userId) {
+      const userBox = connectedUsersMap.get(userId);
+      if (userBox) {
+        userBox.classList.add("exit");
+        userBox.classList.remove("enter");
+        setTimeout(() => {
+          userBox.remove();
+          connectedUsersMap.delete(userId);
+          updateUserCount();
+        }, 400);
+      }
+    }
+
+    if (window.socket) {
+      window.socket.on("userJoined", async (userId) => {
+        try {
+          const res = await fetch(`/user/${userId}`);
+          const user = await res.json();
+          userConnected(user);
+        } catch (err) {
+          console.error("Failed to fetch user data:", err);
+        }
+      });
+
+      window.socket.on("userLeft", (userId) => {
+        userDisconnected(userId);
+      });
+    } else {
+      console.warn("Socket.io not initialized on this page.");
+    }
+
+    // Load currently active users
+    fetch("/active-users")
+      .then(res => res.json())
+      .then(users => users.forEach(userConnected))
+      .catch(console.error);
+  });
+</script>
+
+<script src="/js/app.js"></script>
+<script src="/js/defaultTheme.js"></script>
+<script src="/js/tutorial.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>

@@ -47,7 +47,7 @@
     flex-direction: column;
     align-items: center;
     padding: 1rem;
-    height: 80vh !important;
+    height: 75vh !important;
     gap: 0 !important;
   }
 
@@ -70,6 +70,37 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     box-shadow: 0 4px 10px var(--secondary-color);
   }
+
+  @media (max-width: 600px) {
+    .wheel-container {
+      width: 350px;
+      height: 350px;
+    }
+    .wheel {
+      width: 320px;
+      height: 320px;
+      margin: auto !important;
+    }
+
+    .segment {
+      width: 20% !important;
+      position: absolute;
+      top: 35%  !important;
+      left: 25%  !important;
+      /* transform-origin: -150% -100% !important; */
+    }
+
+    .lottie-wrapper {
+      position: absolute;
+      top: 10% !important;
+      left: 15% !important;
+      width: 250px !important;
+      height: 250px !important;
+     
+  }
+  }
+
+
 
   .wheel-container {
     text-align: center;

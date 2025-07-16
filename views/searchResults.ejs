@@ -1,243 +1,187 @@
+<style>
+  .search-result-box {
+    margin: .5rem;
+    padding: 20px;
+    /* background: #1e1e1e; */
+    background: var(--container-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    color: var(--text-color);
+  }
 
-  <%- include("layout") %>
-  
-  <style>
-    .search-result-box {
-      margin: 30px auto 40px;
-      padding: 20px;
-      /* background: #1e1e1e; */
-      background: var(--container-bg);
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      color: var(--text-color);
-    }
+  .search-result-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 15px 0;
+    border-bottom: 1px solid #333;
+    gap: 15px;
+  }
 
-    .search-result-item {
-      display: flex;
-      align-items: flex-start;
-      padding: 15px 0;
-      border-bottom: 1px solid #333;
-      gap: 15px;
-    }
+  .search-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ffd54f;
+  }
 
-    .search-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #ffd54f;
-    }
+  .search-content {
+    flex: 1;
+  }
 
-    .search-content {
-      flex: 1;
-    }
+  .search-meta {
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #aaa;
+    gap: 8px;
+    margin-bottom: 5px;
+  }
 
-    .search-meta {
-      display: flex;
-      align-items: center;
-      font-size: 0.85rem;
-      color: #aaa;
-      gap: 8px;
-      margin-bottom: 5px;
-    }
+  .search-meta .badge {
+    background: #444;
+    color: #ffd54f;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    text-transform: capitalize;
+  }
 
-    .search-meta .badge {
-      background: #444;
-      color: #ffd54f;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      text-transform: capitalize;
-    }
+  .search-meta .timestamp {
+    font-style: italic;
+  }
 
-    .search-meta .timestamp {
-      font-style: italic;
-    }
+  .search-text mark {
+    background: #ffd54f;
+    color: black;
+    padding: 0 2px;
+    border-radius: 2px;
+  }
 
-    .search-text mark {
-      background: #ffd54f;
-      color: black;
-      padding: 0 2px;
-      border-radius: 2px;
-    }
+  .read-more {
+    background: none;
+    border: none;
+    color: #ffd54f;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 0.9rem;
+  }
 
-    .read-more {
-      background: none;
-      border: none;
-      color: #ffd54f;
-      font-weight: bold;
-      cursor: pointer;
-      margin-left: 10px;
-      font-size: 0.9rem;
-    }
+  .read-more:hover {
+    text-decoration: underline;
+  }
 
-    .read-more:hover {
-      text-decoration: underline;
-    }
+  .no-result {
+    text-align: center;
+    padding: 10px;
+    color: #888;
+  }
 
-    .no-result {
-      text-align: center;
-      padding: 10px;
-      color: #888;
-    }
+  .reactions {
+    font-size: 0.8rem;
+    margin-top: 5px;
+    color: #bbb;
+  }
 
-    .reactions {
-      font-size: 0.8rem;
-      margin-top: 5px;
-      color: #bbb;
-    }
-
-    .load-more {
-      text-align: center;
-      margin-top: 20px;
-      cursor: pointer;
-      color: #ffd54f;
-      font-weight: bold;
-    }
+  .load-more {
+    text-align: center;
+    margin-top: 20px;
+    cursor: pointer;
+    color: #ffd54f;
+    font-weight: bold;
+  }
 
   .shimmer-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      /* padding: 1rem; */
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    /* padding: 1rem; */
+  }
+
+  .shimmer-card {
+    display: flex;
+    background: var(--container-bg);
+    border-radius: 10px;
+    overflow: hidden;
+    animation: pulse 1.5s infinite;
+  }
+
+  .shimmer-avatar {
+    width: 50px;
+    height: 50px;
+    background: var(--body-bg);
+    border-radius: 50%;
+    margin: 1rem;
+  }
+
+
+
+  .shimmer-lines {
+    flex: 1;
+    padding: 1rem 0;
+  }
+
+  .shimmer-line {
+    height: 10px;
+    background: var(--body-bg);
+    margin: 8px 0;
+    border-radius: 5px;
+  }
+
+  .shimmer-line.short {
+    width: 50%;
+  }
+
+  .shimmer-footer {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .shimmer-btn {
+    width: 40px;
+    height: 20px;
+    background: var(--body-bg);
+    border-radius: 5px;
+  }
+
+  @keyframes pulse {
+    0% {
+      background-color: var(--container-bg);
     }
 
-    .shimmer-card {
-      display: flex;
-      background: var(--container-bg);
-      border-radius: 10px;
-      overflow: hidden;
-      animation: pulse 1.5s infinite;
+    50% {
+      background-color: var(--body-bg);
     }
 
-    .shimmer-avatar {
-      width: 50px;
-      height: 50px;
-      background: var(--body-bg);
-      border-radius: 50%;
-      margin: 1rem;
+    100% {
+      background-color: var(--container-bg);
+    }
+  }
+
+  .shimmer {
+    background: linear-gradient(90deg, var(--container-bg) 25%, var(--body-bg) 50%, var(--container-bg) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
     }
 
-
-
-    .shimmer-lines {
-      flex: 1;
-      padding: 1rem 0;
+    100% {
+      background-position: 200% 0;
     }
+  }
+</style>
 
-    .shimmer-line {
-      height: 10px;
-      background: var(--body-bg);
-      margin: 8px 0;
-      border-radius: 5px;
-    }
-
-    .shimmer-line.short {
-      width: 50%;
-    }
-
-    .shimmer-footer {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-
-    .shimmer-btn {
-      width: 40px;
-      height: 20px;
-      background: var(--body-bg);
-      border-radius: 5px;
-    }
-
-    @keyframes pulse {
-      0% {
-        background-color: var(--container-bg);
-      }
-
-      50% {
-        background-color: var(--body-bg);
-      }
-
-      100% {
-        background-color: var(--container-bg);
-      }
-    }
-
-    .shimmer {
-      background: linear-gradient(90deg, var(--container-bg) 25%, var(--body-bg) 50%, var(--container-bg) 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-    }
-
-    @keyframes shimmer {
-      0% {
-        background-position: -200% 0;
-      }
-
-      100% {
-        background-position: 200% 0;
-      }
-    }
-
-  </style>
-<body>
-  <div class="layout-container container">
-    <aside class="left-sidebar">
-      <div class="aside">
-        <ul class="nav">
-          <li class="nav-item current">
-            <a href="/feeds">
-              <i class="nav-icon fas fa-home"></i>
-              <span class="nav-text">Home</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="/chat">
-              <div class="nav-main">
-                <p>
-                  <i class="nav-icon fas fa-comments"></i>
-                  <span class="nav-text">ChatRoom</span>       
-                </p>
-                
-              <span class="nav-tag">New</span>
-            </div>
-            </a>
-          </li>
-          <li class="nav-item mid-post-1">
-            <button id="openSubmitForm" >
-              <i class="nav-icon fas fa-plus-circle"></i>
-            </button>
-          </li>
-         <li class="nav-item">
-            <a href="/profile">
-              <i class="nav-icon fas fa-circle-user"></i>
-              <span class="nav-text">My Profile</span>
-            </a>
-          </li>
-          <li class="nav-item blur">
-            <a aria-disabled="true">
-              <div class="nav-main">
-                <p>
-                  <i class="nav-icon fab fa-modx"></i>
-                  <span class="nav-text">Explore</span>       
-                </p>
-                
-              <span class="nav-tag">Soon</span>
-            </div>
-            </a>
-          </li>
-          <li class="nav-item mid-post-2">
-            <a  href="/submit"class="nav-text">Compose Gist</a>
-            <i  class="nav-icon fas fa-circle-plus"></i>
-          </li>
-        </ul>
-      </div>
-      </aside>
- 
-    <main>
-      <div id="shimmer-container" class="shimmer-container">
-        <ul>
-        <% for (let i = 0; i < results.length; i++) { %>
+<div id="main">
+  <section class="main">
+    <div id="shimmer-container" class="shimmer-container full-width">
+      <ul>
+        <% for (let i=0; i < results.length; i++) { %>
           <li class="shimmer-placeholder">
             <div class="search-result-item ">
               <div class="shimmer-wrapper">
@@ -256,79 +200,83 @@
               </div>
             </div>
           </li>
-        <% } %>
+          <% } %>
       </ul>
-      </div>
+    </div>
 
-  <div class="search-result-box" id="resultsBox">
-    <% if (results.length === 0) { %>
-      <div class="no-result">No results found for "<%= keyword %>"</div>
-    <% } else { %>
-      
-      <% results.slice(0, 8).forEach((item, index) => { 
-        const isLong = item.secret.length > 150;
-        const shortText = isLong ? item.secret.slice(0, 150) + "..." : item.secret;
-      %>
-      <div class="search-result-item" data-index="<%= index %>">
-        <img class="search-avatar" src="<%= item.profile_picture %>" alt="Avatar">
-        <div class="search-content">
-          <div class="search-meta">
-            <span class="username">
-              @gossipa<%= item.user_id %>
-              <% if(item.verified === true) {%>
-                       <img src="../../img/gossipa3.png" alt="" class="verified-badge">
-                       <% } else {%>
+    <div class="search-result-box" id="resultsBox">
+      <% if (results.length===0) { %>
+        <div class="no-result">No results found for "<%= keyword %>"</div>
+        <% } else { %>
+          <h2>Results Found</h2>
+
+          <% results.slice(0, 8).forEach((item, index)=> {
+            const isLong = item.secret.length > 150;
+            const shortText = isLong ? item.secret.slice(0, 150) + "..." : item.secret;
+            %>
+            <div class="search-result-item" data-index="<%= index %>">
+              <img class="search-avatar" src="<%= item.profile_picture %>" alt="Avatar">
+              <div class="search-content">
+                <div class="search-meta">
+                  <span class="username">
+                    @gossipa<%= item.user_id %>
+                      <% if(item.verified===true) {%>
+                        <img src="../../img/gossipa3.png" alt="" class="verified-badge">
+                        <% } else {%>
+                          <% } %>
+                  </span>
+                  <span class="badge">
+                    <%= item.category ? item.category : "random" %>
+                  </span>
+                  <span class="timestamp" data-raw="<%= item.timestamp %>"></span>
+                </div>
+                <div class="search-text short-text" data-full="<%= item.secret.replace(/" /g, '&quot;' ) %>">
+                  <%- highlightMatch(shortText, keyword) %>
+                    <% if (isLong) { %>
+                      <button class="read-more" onclick="toggleRead(event, this, '<%= keyword %>')">Read More</button>
                       <% } %>
-              </span>
-            <span class="badge"><%= item.category ? item.category : "random" %></span>
-            <span class="timestamp" data-raw="<%= item.timestamp %>"></span>
-          </div>
-          <div class="search-text short-text" data-full="<%= item.secret.replace(/"/g, '&quot;') %>">
-            <%- highlightMatch(shortText, keyword) %>
-            <% if (isLong) { %>
-              <button class="read-more" onclick="toggleRead(event, this, '<%= keyword %>')">Read More</button>
-            <% } %>
-          </div>
-          <div class="reactions">❤️ <%= Object.keys(item.reactions || {}).length %> reactions</div>
-        </div>
-      </div>
-      <% }) %>
-      <% if (results.length > 8) {%>
-      <div id="loadMore" class="load-more">Load More</div>
-      <% } %>
-    <% } %>
-  </div>
-</main>
+                </div>
+                <div class="reactions">❤️ <%= Object.keys(item.reactions || {}).length %> reactions</div>
+              </div>
+            </div>
+            <% }) %>
+              <% if (results.length> 8) {%>
+                <div id="loadMore" class="load-more">Load More</div>
+                <% } %>
+                  <% } %>
+    </div>
+  </section>
 
-<aside class="right-sidebar">
+  <aside class="right-sidebar">
     <div class="aside premium-aside">
-        <div class="premium-card">
-          <div class="crown-icon sparkle">👑</div>
-      
-          <h3 class="premium-title">Become a Chief Gossipa</h3>
-          <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain unknown.</p>
-      
-          <div class="trending-stats">
-            <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
-          </div>
-      
-          <div class="avatar-hint">
-            <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
-            <p>You’re 1 step from <strong>trending</strong>…</p>
-          </div>
-      
-          <a href="/subscribe" class="premium-btn">Unlock Premium</a>
-        </div>
-      </div>
-        
-      <div class="aside aside-2">
-        <center>
-          <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Active Gossipas: <span id="activeCount">0</span></h4>
-        </center>
-        <ul class="nav user-list">
-        </ul>
+      <div class="premium-card">
+        <div class="crown-icon sparkle">👑</div>
 
+        <h3 class="premium-title">Become a Chief Gossipa</h3>
+        <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain unknown.</p>
+
+        <div class="trending-stats">
+          <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
+        </div>
+
+        <div class="avatar-hint">
+          <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
+          <p>You’re 1 step from <strong>trending</strong>…</p>
+        </div>
+
+        <a href="/subscribe" class="premium-btn">Unlock Premium</a>
       </div>
+    </div>
+
+    <div class="aside aside-2">
+      <center>
+        <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Active
+          Gossipas: <span id="activeCount">0</span></h4>
+      </center>
+      <ul class="nav user-list">
+      </ul>
+
+    </div>
 
   </aside>
 
@@ -336,14 +284,15 @@
 
 
 <!-- Load Day.js and the plugin via CDN -->
-      <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
 <script>
+  document.addEventListener("DOMContentLoaded", () => {
     const connectedUsersMap = new Map();
     const userList = document.querySelector(".user-list");
     const userCountDisplay = document.getElementById("activeCount");
 
     function updateUserCount() {
-      userCountDisplay.textContent = connectedUsersMap.size;
+      if (userCountDisplay) userCountDisplay.textContent = connectedUsersMap.size;
     }
 
     function userConnected(user) {
@@ -352,147 +301,149 @@
       const userBox = document.createElement("li");
       userBox.className = "connected-user nav-item enter";
       userBox.id = `user-${user.id}`;
-      const verifiedBadge = `${user.verified}`
-    ? `<img src="/img/badge.png" alt="Verified Badge" class="verified-badge" style="width: 16px; height: 16px;">`
-    : "";
 
-        userBox.innerHTML = `
-          <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
-            <img src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
-            <p>
-              @amebo${user.id}
-             ${verifiedBadge}
+      const verifiedBadge = user.verified
+        ? `<img oncontextmenu="return false;" src="/img/gossipa3.png" alt="Verified Badge" class="verified-badge">`
+        : "";
+
+      userBox.innerHTML = `
+            <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
+              <img oncontextmenu="return false;" src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
+              <p class="username">
+                <span class="user">@amebo${user.id}</span>
+                ${verifiedBadge}
               </p>
-          </div>
-        `;
+            </div>
+          `;
 
-      userList.appendChild(userBox);
+      userList?.appendChild(userBox);
       connectedUsersMap.set(user.id, userBox);
       updateUserCount();
 
-      // Trigger reflow for entry animation
-      requestAnimationFrame(() => {
-        userBox.classList.add("enter");
-      });
+      requestAnimationFrame(() => userBox.classList.add("enter"));
     }
 
     function userDisconnected(userId) {
       const userBox = connectedUsersMap.get(userId);
       if (userBox) {
         userBox.classList.add("exit");
-        userBox.classList.remove("enter");
+        userBox.classList.remove("center");
         setTimeout(() => {
           userBox.remove();
           connectedUsersMap.delete(userId);
           updateUserCount();
-        }, 400); // CSS transition match
+        }, 400);
       }
     }
 
-    socket.on("userJoined", async (userId) => {
-      try {
-        const res = await fetch(`/user/${userId}`);
-        const user = await res.json();
-        userConnected(user);
-      } catch (err) {
-        console.error("Failed to fetch user data:", err);
-      }
-    });
+    if (window.socket) {
+      window.socket.on("userJoined", async (userId) => {
+        try {
+          const res = await fetch(`/user/${userId}`);
+          const user = await res.json();
+          userConnected(user);
+        } catch (err) {
+          console.error("Failed to fetch user data:", err);
+        }
+      });
 
-    socket.on("userLeft", (userId) => {
-      userDisconnected(userId);
-    });
+      window.socket.on("userLeft", (userId) => {
+        userDisconnected(userId);
+      });
+    } else {
+      console.warn("Socket.io not initialized on this page.");
+    }
 
-    // Load current active users on first load
+    // Load currently active users
     fetch("/active-users")
       .then(res => res.json())
-      .then(users => {
-        users.forEach(user => userConnected(user));
-      })
+      .then(users => users.forEach(userConnected))
       .catch(console.error);
-  </script>
-
-    <script>
-        const header = document.querySelector('header');
-        const nextSection = document.querySelector('body').querySelector('section:not(.active)');
-        const logo = document.getElementById('logo')
-
-        window.addEventListener('scroll', function () {
-            const scrolled = window.scrollY > 0;
-            if (scrolled) {
-                let body = document.querySelector('body');
-                body.style.overflowY = 'scroll';
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        });
-
-        window.onload = function () {
-            const textArea = document.querySelector('textarea')
-            textArea.blur();
-        }
+  });
+</script>
 
 
-        function changeBg(event) {
-            event.target.style.background = "var(--secondary-color)"
-            event.target.style.border = "1px solid var(--primary-color)"
-        }
+<script>
+  const header = document.querySelector('header');
+  const nextSection = document.querySelector('body').querySelector('section:not(.active)');
+  const logo = document.getElementById('logo')
 
-    </script>
-
-  </div>
-
-  <script>
-    function goToSecret(id) {
-      window.location.href = `/secret/${id}`;
+  window.addEventListener('scroll', function () {
+    const scrolled = window.scrollY > 0;
+    if (scrolled) {
+      let body = document.querySelector('body');
+      body.style.overflowY = 'scroll';
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
     }
+  });
 
-    function highlightMatch(text, keyword) {
-      const regex = new RegExp("(" + keyword + ")", "gi");
-      return text.replace(regex, "<mark>$1</mark>");
+  window.onload = function () {
+    const textArea = document.querySelector('textarea')
+    textArea.blur();
+  }
+
+
+  function changeBg(event) {
+    event.target.style.background = "var(--secondary-color)"
+    event.target.style.border = "1px solid var(--primary-color)"
+  }
+
+</script>
+
+</div>
+
+<script>
+  function goToSecret(id) {
+    window.location.href = `/secret/${id}`;
+  }
+
+  function highlightMatch(text, keyword) {
+    const regex = new RegExp("(" + keyword + ")", "gi");
+    return text.replace(regex, "<mark>$1</mark>");
+  }
+
+  function toggleRead(e, btn, keyword) {
+    e.stopPropagation();
+    const textEl = btn.parentElement;
+    const raw = textEl.getAttribute("data-full");
+    const expanded = textEl.classList.contains("expanded");
+
+    if (!expanded) {
+      textEl.innerHTML = highlightMatch(raw, keyword);
+      const newBtn = document.createElement("button");
+      newBtn.textContent = "Show Less";
+      newBtn.className = "read-more";
+      newBtn.onclick = ev => toggleRead(ev, newBtn, keyword);
+      textEl.appendChild(newBtn);
+      textEl.classList.add("expanded");
+    } else {
+      const short = raw.slice(0, 150) + "...";
+      textEl.innerHTML = highlightMatch(short, keyword);
+      const newBtn = document.createElement("button");
+      newBtn.textContent = "Read More";
+      newBtn.className = "read-more";
+      newBtn.onclick = ev => toggleRead(ev, newBtn, keyword);
+      textEl.appendChild(newBtn);
+      textEl.classList.remove("expanded");
     }
+  }
 
-    function toggleRead(e, btn, keyword) {
-      e.stopPropagation();
-      const textEl = btn.parentElement;
-      const raw = textEl.getAttribute("data-full");
-      const expanded = textEl.classList.contains("expanded");
+  // Lazy loading
+  const results = <% - JSON.stringify(results) %>;
+  let currentIndex = 10;
 
-      if (!expanded) {
-        textEl.innerHTML = highlightMatch(raw, keyword);
-        const newBtn = document.createElement("button");
-        newBtn.textContent = "Show Less";
-        newBtn.className = "read-more";
-        newBtn.onclick = ev => toggleRead(ev, newBtn, keyword);
-        textEl.appendChild(newBtn);
-        textEl.classList.add("expanded");
-      } else {
-        const short = raw.slice(0, 150) + "...";
-        textEl.innerHTML = highlightMatch(short, keyword);
-        const newBtn = document.createElement("button");
-        newBtn.textContent = "Read More";
-        newBtn.className = "read-more";
-        newBtn.onclick = ev => toggleRead(ev, newBtn, keyword);
-        textEl.appendChild(newBtn);
-        textEl.classList.remove("expanded");
-      }
-    }
+  document.getElementById("loadMore")?.addEventListener("click", () => {
+    const box = document.getElementById("resultsBox");
+    const keyword = "<%= keyword %>";
 
-    // Lazy loading
-    const results = <%- JSON.stringify(results) %>;
-    let currentIndex = 10;
-
-    document.getElementById("loadMore")?.addEventListener("click", () => {
-      const box = document.getElementById("resultsBox");
-      const keyword = "<%= keyword %>";
-
-      const chunk = results.slice(currentIndex, currentIndex + 10);
-      chunk.forEach(item => {
-        const short = item.secret.length > 150 ? item.secret.slice(0, 150) + "..." : item.secret;
-        const div = document.createElement("div");
-        div.className = "search-result-item";
-        div.innerHTML = `
+    const chunk = results.slice(currentIndex, currentIndex + 10);
+    chunk.forEach(item => {
+      const short = item.secret.length > 150 ? item.secret.slice(0, 150) + "..." : item.secret;
+      const div = document.createElement("div");
+      div.className = "search-result-item";
+      div.innerHTML = `
           <img class="search-avatar" src="${item.profile_picture}" alt="Avatar">
           <div class="search-content">
             <div class="search-meta">
@@ -506,41 +457,39 @@
             </div>
             <div class="reactions">❤️ ${Object.keys(item.reactions || {}).length} reactions</div>
           </div>`;
-        box.insertBefore(div, document.getElementById("loadMore"));
-      });
-
-      currentIndex += 10;
-      if (currentIndex >= results.length) {
-        document.getElementById("loadMore").style.display = "none";
-      }
+      box.insertBefore(div, document.getElementById("loadMore"));
     });
-  </script>
-  <script>
-      dayjs.extend(window.dayjs_plugin_relativeTime);
 
-      document.querySelectorAll('.timestamp').forEach((timeElem) => {
-        const rawTimestamp = timeElem.getAttribute('data-raw');
-        if (rawTimestamp) {
-          const formatted = dayjs(rawTimestamp).fromNow();
-          timeElem.textContent = formatted;
-        }
-      });
-    </script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // Simulate a short loading delay (optional)
-        setTimeout(() => {
-          // Hide shimmer placeholder
-          document.getElementById("shimmer-container").style.display = "none";
-          // Show real secrets
-          document.getElementById("real-secrets").style.display = "block";
-        }, 1000); // 1s delay – tweak as needed
-      });
-    </script>
-   
+    currentIndex += 10;
+    if (currentIndex >= results.length) {
+      document.getElementById("loadMore").style.display = "none";
+    }
+  });
+</script>
+<script>
+  dayjs.extend(window.dayjs_plugin_relativeTime);
 
-  
+  document.querySelectorAll('.timestamp').forEach((timeElem) => {
+    const rawTimestamp = timeElem.getAttribute('data-raw');
+    if (rawTimestamp) {
+      const formatted = dayjs(rawTimestamp).fromNow();
+      timeElem.textContent = formatted;
+    }
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Simulate a short loading delay (optional)
+    setTimeout(() => {
+      // Hide shimmer placeholder
+      document.getElementById("shimmer-container").style.display = "none";
+      // Show real secrets
+      document.getElementById("real-secrets").style.display = "block";
+    }, 1000); // 1s delay – tweak as needed
+  });
+</script>
+
+
+
 <script src="/js/defaultTheme.js"></script>
-    <script src="/js/app.js"></script>  
-</body>
-</html>
+<script src="/js/app.js"></script>

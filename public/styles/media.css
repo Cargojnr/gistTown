@@ -40,6 +40,9 @@ font-family: 'Quicksand', sans-serif;
 }
 }
 @media (max-width:936px) {
+  p {
+    font-size: .9rem !important;
+  }
   .main {
     width: 100%;
   }
@@ -72,6 +75,10 @@ font-family: 'Quicksand', sans-serif;
 
   #liveSearchForm {
     width: 350px;
+  }
+
+  .trend-box {
+    height: 200px !important;
   }
 
 
@@ -247,26 +254,6 @@ header .profiled {
     flex: 1;
   }
 
-  .search {
-    position: relative;
-    display: flex;
-    align-items: center;
-    transition: all 0.3s ease;
-  }
-
-  .search input {
-    width: 0;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-  }
-
-  .search.active input {
-    width: 150px;
-    opacity: 1;
-    visibility: visible;
-    margin-left: 8px;
-  }
 
   .search-btn {
     background: none;
@@ -274,6 +261,43 @@ header .profiled {
     font-size: 20px;
     padding: 0 8px;
     cursor: pointer;
+  }
+
+  #liveSearchForm {
+    max-width: 500px; 
+    margin: auto ;
+    margin-right: .9rem !important;
+  }
+
+
+  #mobileSearch {
+    width: 38px;
+    border: none;
+    background: transparent;
+    /* justify-content: center; */
+  }
+
+  #mobileSearch.active {
+    width: 60vw !important;
+    border: 1px solid var(--primary-color);
+    background: var(--container-bg);
+    border-radius: 30px;
+  }
+
+  #searchInput {
+    display: none;
+    padding: .2rem;
+  }
+
+  #mobileSearch.active #searchInput {
+    display: block;
+    width: 100%;
+  }
+
+  .suggestion-box {
+    top: 100%;
+    width: 98% ;
+    left: 2%;
   }
 
   #selectCategory {
@@ -436,6 +460,8 @@ header .profiled {
   .suggestion-box {
     font-size: 0.85rem;
     max-height: 180px;
+    left: 0 !important;
+    width: 85%;
   }
 
   .suggestion-item .text:hover::after {
@@ -692,9 +718,21 @@ top:  4.5rem;
     font-size: 1.2rem;
   }
 
+  .suggestion-box {
+    font-size: 0.85rem;
+    max-height: 180px;
+    left: 0 !important;
+    width: 70%;
+  }
+
+
   #selectCategory {
     position: fixed;
     top: 3.3rem;
+  }
+
+  #trending h2 {
+    padding: 0 !important;
   }
 
   .trend-box {

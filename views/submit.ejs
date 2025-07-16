@@ -1,427 +1,426 @@
+<style>
+  .form-container {
+    margin-top: 2rem !important;
+  }
 
-    <style>
-        .form-container {
-            margin-top: 2rem !important;
-        }
+  .avatar-and-type {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
 
-        .avatar-and-type {
-          display: flex;
-          align-items: center;
-          gap: .5rem;
-        }
+  .gossip-select.fancy-select {
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    border: 1px solid #444;
+    background: linear-gradient(145deg, #2b2b2b, #1f1f1f);
+    color: #f0f0f0;
+    font-size: 0.9rem;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
 
-        .gossip-select.fancy-select {
-  padding: 0.5rem 1rem;
-  border-radius: 25px;
-  border: 1px solid #444;
-  background: linear-gradient(145deg, #2b2b2b, #1f1f1f);
-  color: #f0f0f0;
-  font-size: 0.9rem;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
-}
+  .gossip-select.fancy-select:hover {
+    background: #2a2a2a;
+    box-shadow: 0 0 5px #888;
+  }
 
-.gossip-select.fancy-select:hover {
-  background: #2a2a2a;
-  box-shadow: 0 0 5px #888;
-}
+  .gossip-dropdown {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    opacity: 0;
+    margin-top: 0.5rem;
+  }
 
-.gossip-dropdown {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease, opacity 0.3s ease;
-  opacity: 0;
-  margin-top: 0.5rem;
-}
-
-.gossip-dropdown.show {
-  max-height: 100px;
-  opacity: 1;
-}
-
-.mobile-only {
-  display: none;
-}
-
-@media (max-width: 600px) {
-  .desktop-only {
-    display: none;
+  .gossip-dropdown.show {
+    max-height: 100px;
+    opacity: 1;
   }
 
   .mobile-only {
-    display: block;
+    display: none;
   }
 
-  .gossip-select.full {
+  @media (max-width: 600px) {
+    .desktop-only {
+      display: none;
+    }
+
+    .mobile-only {
+      display: block;
+    }
+
+    .gossip-select.full {
+      width: 100%;
+    }
+  }
+
+  #recordContainer {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 40vh;
+    text-align: center;
+    /* background: rgba(255, 255, 255, 0.1); */
+    padding: 30px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    margin: 1rem auto;
+  }
+
+  h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: var(--text-color) !important;
+  }
+
+  .or {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 20px;
+  }
+
+  .or h4 {
+    font-size: 20px;
+  }
+
+  .or hr {
+    opacity: 0.3;
     width: 100%;
   }
-}
 
-        #recordContainer {
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            height: 40vh;
-            text-align: center;
-            /* background: rgba(255, 255, 255, 0.1); */
-            padding: 30px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            margin: 1rem auto;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-            font-size: 24px;
-            color: var(--text-color) !important;
-        }
-
-        .or {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            gap: 20px;
-        }
-
-        .or h4 {
-            font-size: 20px;
-        }
-
-        .or hr {
-            opacity: 0.3;
-            width: 100%;
-        }
-
-        .mic-button {
-            background: #ff5f6d;
-            /* background: var(--secondary-color); */
-            border: none;
-            color: white;
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            font-size: 24px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            position: relative;
-        }
+  .mic-button {
+    background: #ff5f6d;
+    /* background: var(--secondary-color); */
+    border: none;
+    color: white;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    position: relative;
+  }
 
 
-        .lottie-wrapper {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 80px;
-            height: 80px;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
+  .lottie-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
 
-        .mic-button.recording .lottie-wrapper {
-            opacity: 1;
-            animation: orbit 2s linear infinite;
-        }
+  .mic-button.recording .lottie-wrapper {
+    opacity: 1;
+    animation: orbit 2s linear infinite;
+  }
 
-        @keyframes orbit {
-            0% {
-                transform: translate(-50%, -50%) rotate(0deg) scale(1);
-            }
+  @keyframes orbit {
+    0% {
+      transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    }
 
-            50% {
-                transform: translate(-50%, -50%) rotate(180deg) scale(1.1);
-            }
+    50% {
+      transform: translate(-50%, -50%) rotate(180deg) scale(1.1);
+    }
 
-            100% {
-                transform: translate(-50%, -50%) rotate(360deg) scale(1);
-            }
-        }
+    100% {
+      transform: translate(-50%, -50%) rotate(360deg) scale(1);
+    }
+  }
 
-        .mic-button:active {
-            background: #ff3b4a;
-        }
+  .mic-button:active {
+    background: #ff3b4a;
+  }
 
-        .mic-button.recording {
-            animation: glow 1.5s infinite;
-        }
+  .mic-button.recording {
+    animation: glow 1.5s infinite;
+  }
 
-        @keyframes glow {
-            0% {
-                box-shadow: 0 0 10px #ff5f6d, 0 0 20px #ff5f6d, 0 0 30px #ff5f6d;
-            }
+  @keyframes glow {
+    0% {
+      box-shadow: 0 0 10px #ff5f6d, 0 0 20px #ff5f6d, 0 0 30px #ff5f6d;
+    }
 
-            50% {
-                box-shadow: 0 0 20px #ff5f6d, 0 0 30px #ff5f6d, 0 0 40px #ff5f6d;
-            }
+    50% {
+      box-shadow: 0 0 20px #ff5f6d, 0 0 30px #ff5f6d, 0 0 40px #ff5f6d;
+    }
 
-            100% {
-                box-shadow: 0 0 10px #ff5f6d, 0 0 20px #ff5f6d, 0 0 30px #ff5f6d;
-            }
-        }
+    100% {
+      box-shadow: 0 0 10px #ff5f6d, 0 0 20px #ff5f6d, 0 0 30px #ff5f6d;
+    }
+  }
 
-        #actionButtons {
-            display: none;
-            margin-top: 20px;
-        }
+  #actionButtons {
+    display: none;
+    margin-top: 20px;
+  }
 
-        #actionButtons button {
-            background: var(--primary-color);
-            color: var(--text-color);
-            padding: .5rem .75rem;
-            border-radius: 5px;
-            border: none;
-        }
+  #actionButtons button {
+    background: var(--primary-color);
+    color: var(--text-color);
+    padding: .5rem .75rem;
+    border-radius: 5px;
+    border: none;
+  }
 
-        audio {
-            margin-top: 20px;
-            width: 100%;
-            max-width: 600px;
-        }
-    </style>
+  audio {
+    margin-top: 20px;
+    width: 100%;
+    max-width: 600px;
+  }
+</style>
 
-    <div id="main">
+<div id="main">
 
-        <section class="main">      
-           
-        <% if (locals.secret) { %>
-            <div class="form-container">
-                
-       
-                <form action="/update" method="POST" id="share">
-                    <input type="hidden" name="id" value="<%= secret.id %>" class="form-control">
-                    <div class="form-group">
-                        <textarea class="form-control" name="secret"><%= secret.secret %></textarea>
-                    </div>
+  <section class="main">
 
-                   
-                      
-                    <div class="form-group category-section">
-                        <label for="category" class="category-label">Choose a category</label>
-                        <select id="category"
-                            style="background : var(--secondary-color); border : 1px solid var(--primary-color);"
-                            name="category" class="form-control category-dropdown">
-                            <option value="<%= secret.category%>" selected>
-                                <%= secret.category %>
-                            </option>
-                            <option value="confession">Confession</option>
-                            <option value="advice">Advice</option>
-                            <option value="funny">Funny</option>
-                            <option value="random">Random</option>
-                            <option value="vent">Vent</option>
-                            <option value="love">Love</option>
-                        </select>
-                    </div>
+    <% if (locals.secret) { %>
+      <div class="form-container">
 
-                    <button type="submit" class="btn btn-dark secret-btn">
-                        <%= submit %>
-                    </button>
 
-                </form>
-            </div>
-            <% } else { %>
-
-                <div class="form-container">
-                    <form method="POST" action="/share" id="share">
-
-                        <div class="form-top">
-                          <div class="avatar-and-type">
-                            <div class="avatar-profile">
-                              <img src="<%= profilePicture %>" class="profile-pic" alt="Avatar Profile">
-                            </div>
-                    
-                            <!-- Gossip Type Selector (desktop) -->
-                            <div class="gossip-type-selector desktop-only">
-                              <select name="gossipType" class="gossip-select fancy-select">
-                                <option disabled selected>🌟 Choose Gossip Type</option>
-                                <option value="disappearing">⏳ Disappearing Gossip</option>
-                                <option value="scheduled">📅 Scheduled Gossip</option>
-                                <option value="private">🔒 Private Gossip</option>
-                              </select>
-                            </div>
-                    
-                            <!-- Mobile toggle chevron -->
-                            <div class="mobile-only gossip-type-toggle" onclick="toggleGossipMenu()">
-                              <i class="fa-solid fa-chevron-down"></i>
-                            </div>
-                          </div>
-                    
-                          <!-- Slide-down Dropdown on Mobile -->
-                          <div id="gossipDropdown" class="mobile-only gossip-dropdown hidden">
-                            <select name="gossipType" class="gossip-select full fancy-select">
-                              <option disabled selected>🌟 Choose Gossip Type</option>
-                              <option value="disappearing">⏳ Disappearing Gossip</option>
-                              <option value="scheduled">📅 Scheduled Gossip</option>
-                              <option value="private">🔒 Private Gossip</option>
-                            </select>
-                          </div>
-                        </div>
-                    
-                        <!-- Category + textarea (unchanged) -->
-                        <div class="form-group category-section">
-                          <label for="category" class="category-label">Choose a category</label>
-                          <select id="category" onchange="changeBg(event)" name="category" class="form-control category-dropdown">
-                            <option value="" disabled selected>Select a category</option>
-                            <option value="confession">Confession</option>
-                            <option value="advice">Advice</option>
-                            <option value="funny">Funny</option>
-                            <option value="random">Random</option>
-                            <option value="vent">Vent</option>
-                            <option value="love">Love</option>
-                          </select>
-                        </div>
-                    
-                        <div class="form-group">
-                          <textarea class="form-control" id="input" name="secret"
-                            placeholder="Hey <%= username %>, what's popping?"></textarea>
-                        </div>
-                    
-                        <button type="submit" id="submit" class="btn btn-dark secret-btn">
-                          <%= submit %>
-                        </button>
-                      </form>
-
-                    <div class="or">
-                        <hr>
-                        <h4>OR</h4>
-                        <hr>
-                    </div>
-
-                    <div id="recordContainer">
-                        <h1>Record a Voice Note</h1>
-                        <button id="micButton" class="mic-button" tabindex="0">
-                            <div class="lottie-wrapper"></div>
-                            <i class="fas fa-microphone"></i>
-                        </button>
-
-                        <!-- Canvas for waveform visualization -->
-                        <!-- <canvas id="waveform"></canvas> -->
-
-                        <!-- Action buttons (discard/share) -->
-                        <div id="actionButtons">
-                            <button id="discardRecording">Discard</button>
-                            <button id="submitRecording">Share</button>
-                        </div>
-
-                        <!-- Audio player for playback after recording -->
-                        <audio id="audioPlayer" controls style="display:none;"></audio>
-                    </div>
+        <form action="/update" method="POST" id="share">
+          <input type="hidden" name="id" value="<%= secret.id %>" class="form-control">
+          <div class="form-group">
+            <textarea class="form-control" name="secret"><%= secret.secret %></textarea>
+          </div>
 
 
 
-                    <div id="notification"
-                        style="position: absolute !important; top: 10px !important; left: 0 !important; right: 0 !important; z-index: 1000;">
-                    </div>
+          <div class="form-group category-section">
+            <label for="category" class="category-label">Choose a category</label>
+            <select id="category" style="background : var(--secondary-color); border : 1px solid var(--primary-color);"
+              name="category" class="form-control category-dropdown">
+              <option value="<%= secret.category%>" selected>
+                <%= secret.category %>
+              </option>
+              <option value="confession">Confession</option>
+              <option value="advice">Advice</option>
+              <option value="funny">Funny</option>
+              <option value="random">Random</option>
+              <option value="vent">Vent</option>
+              <option value="love">Love</option>
+            </select>
+          </div>
 
-                    <script>
+          <button type="submit" class="btn btn-dark secret-btn">
+            <%= submit %>
+          </button>
 
-                        // Handle form submission via Fetch API
-                        document.getElementById('share').addEventListener('submit', async (event) => {
-                            event.preventDefault(); // Prevent form's default redirect behavior
+        </form>
+      </div>
+      <% } else { %>
 
-                            const secretInput = document.getElementById('input');
-                            const categoryDropdown = document.getElementById('category');
-                            const secret = secretInput.value;
-                            const category = categoryDropdown.value;
+        <div class="form-container">
+          <form method="POST" action="/share" id="share">
 
-                            if (!category) {
-                                alert('Please select a category before sharing!');
-                                return;
-                            }
-
-                            try {
-                                const response = await fetch('/share', {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({
-                                        secret,
-                                        category,
-                                        contentType: 'text' // Indicate that this is a text submission
-                                    }),
-                                });
-
-                                const data = await response.json();
-
-                                if (data.success) {
-                                    alert('Secret shared successfully!');
-                                    secretInput.value = ''; // Clear the input field
-                                } else {
-                                    alert('Failed to share the secret. Please try again.');
-                                }
-                            } catch (error) {
-                                console.error('Error:', error);
-                                alert('An error occurred. Please try again later.');
-                            }
-                        });
-                    </script>
+            <div class="form-top">
+              <div class="avatar-and-type">
+                <div class="avatar-profile">
+                  <img src="<%= profilePicture %>" class="profile-pic" alt="Avatar Profile">
                 </div>
-                <audio id="post-sound" src="/sounds/whoosh-6316.mp3" preload="auto"></audio>
-                <% } %>
 
-                    
-                            <hr>
-                            <br>
-                        
-</section>
+                <!-- Gossip Type Selector (desktop) -->
+                <div class="gossip-type-selector desktop-only">
+                  <select name="gossipType" class="gossip-select fancy-select">
+                    <option disabled selected>🌟 Choose Gossip Type</option>
+                    <option value="disappearing">⏳ Disappearing Gossip</option>
+                    <option value="scheduled">📅 Scheduled Gossip</option>
+                    <option value="private">🔒 Private Gossip</option>
+                  </select>
+                </div>
 
-<aside class="right-sidebar">
-    <div class="aside premium-aside">
-        <div class="premium-card">
-          <div class="crown-icon sparkle">👑</div>
-      
-          <h3 class="premium-title">Become a Chief Gossipa</h3>
-          <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain unknown.</p>
-      
-          <div class="trending-stats">
-            <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
+                <!-- Mobile toggle chevron -->
+                <div class="mobile-only gossip-type-toggle" onclick="toggleGossipMenu()">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </div>
+              </div>
+
+              <!-- Slide-down Dropdown on Mobile -->
+              <div id="gossipDropdown" class="mobile-only gossip-dropdown hidden">
+                <select name="gossipType" class="gossip-select full fancy-select">
+                  <option disabled selected>🌟 Choose Gossip Type</option>
+                  <option value="disappearing">⏳ Disappearing Gossip</option>
+                  <option value="scheduled">📅 Scheduled Gossip</option>
+                  <option value="private">🔒 Private Gossip</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Category + textarea (unchanged) -->
+            <div class="form-group category-section">
+              <label for="category" class="category-label">Choose a category</label>
+              <select id="category" onchange="changeBg(event)" name="category" class="form-control category-dropdown">
+                <option value="" disabled selected>Select a category</option>
+                <option value="confession">Confession</option>
+                <option value="advice">Advice</option>
+                <option value="funny">Funny</option>
+                <option value="random">Random</option>
+                <option value="vent">Vent</option>
+                <option value="love">Love</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <textarea class="form-control" id="input" name="secret"
+                placeholder="Hey <%= username %>, what's popping?"></textarea>
+            </div>
+
+            <button type="submit" id="submit" class="btn btn-dark secret-btn">
+              <%= submit %>
+            </button>
+          </form>
+
+          <div class="or">
+            <hr>
+            <h4>OR</h4>
+            <hr>
           </div>
-      
-          <div class="avatar-hint">
-            <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
-            <p>You’re 1 step from <strong>trending</strong>…</p>
+
+          <div id="recordContainer">
+            <h1>Record a Voice Note</h1>
+            <button id="micButton" class="mic-button" tabindex="0">
+              <div class="lottie-wrapper"></div>
+              <i class="fas fa-microphone"></i>
+            </button>
+
+            <!-- Canvas for waveform visualization -->
+            <!-- <canvas id="waveform"></canvas> -->
+
+            <!-- Action buttons (discard/share) -->
+            <div id="actionButtons">
+              <button id="discardRecording">Discard</button>
+              <button id="submitRecording">Share</button>
+            </div>
+
+            <!-- Audio player for playback after recording -->
+            <audio id="audioPlayer" controls style="display:none;"></audio>
           </div>
-      
-          <a href="/subscribe" class="premium-btn">Unlock Premium</a>
+
+
+
+          <div id="notification"
+            style="position: absolute !important; top: 10px !important; left: 0 !important; right: 0 !important; z-index: 1000;">
+          </div>
+
+          <script>
+
+            // Handle form submission via Fetch API
+            document.getElementById('share').addEventListener('submit', async (event) => {
+              event.preventDefault(); // Prevent form's default redirect behavior
+
+              const secretInput = document.getElementById('input');
+              const categoryDropdown = document.getElementById('category');
+              const secret = secretInput.value;
+              const category = categoryDropdown.value;
+
+              if (!category) {
+                alert('Please select a category before sharing!');
+                return;
+              }
+
+              try {
+                const response = await fetch('/share', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    secret,
+                    category,
+                    contentType: 'text' // Indicate that this is a text submission
+                  }),
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                  alert('Secret shared successfully!');
+                  secretInput.value = ''; // Clear the input field
+                } else {
+                  alert('Failed to share the secret. Please try again.');
+                }
+              } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again later.');
+              }
+            });
+          </script>
         </div>
-      </div>
-        
-      <div class="aside aside-2">
-        <center>
-          <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Active Gossipas: <span id="activeCount">0</span></h4>
-        </center>
-        <ul class="nav user-list">
-        </ul>
+        <audio id="post-sound" src="/sounds/whoosh-6316.mp3" preload="auto"></audio>
+        <% } %>
 
+
+          <hr>
+          <br>
+
+  </section>
+
+  <aside class="right-sidebar">
+    <div class="aside premium-aside">
+      <div class="premium-card">
+        <div class="crown-icon sparkle">👑</div>
+
+        <h3 class="premium-title">Become a Chief Gossipa</h3>
+        <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain unknown.</p>
+
+        <div class="trending-stats">
+          <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
+        </div>
+
+        <div class="avatar-hint">
+          <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
+          <p>You’re 1 step from <strong>trending</strong>…</p>
+        </div>
+
+        <a href="/subscribe" class="premium-btn">Unlock Premium</a>
       </div>
+    </div>
+
+    <div class="aside aside-2">
+      <center>
+        <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Active
+          Gossipas: <span id="activeCount">0</span></h4>
+      </center>
+      <ul class="nav user-list">
+      </ul>
+
+    </div>
 
   </aside>
 
 </div>
 
 <script>
-    const connectedUsersMap = new Map();
-    const userList = document.querySelector(".user-list");
-    const userCountDisplay = document.getElementById("activeCount");
+  const connectedUsersMap = new Map();
+  const userList = document.querySelector(".user-list");
+  const userCountDisplay = document.getElementById("activeCount");
 
-    function updateUserCount() {
-      userCountDisplay.textContent = connectedUsersMap.size;
-    }
+  function updateUserCount() {
+    userCountDisplay.textContent = connectedUsersMap.size;
+  }
 
-    function userConnected(user) {
-      if (connectedUsersMap.has(user.id)) return;
+  function userConnected(user) {
+    if (connectedUsersMap.has(user.id)) return;
 
-      const userBox = document.createElement("li");
-      userBox.className = "connected-user nav-item enter";
-      userBox.id = `user-${user.id}`;
-      const verifiedBadge = `${user.verified}`
-    ? `<img src="/img/badge.png" alt="Verified Badge" class="verified-badge" style="width: 16px; height: 16px;">`
-    : "";
+    const userBox = document.createElement("li");
+    userBox.className = "connected-user nav-item enter";
+    userBox.id = `user-${user.id}`;
+    const verifiedBadge = `${user.verified}`
+      ? `<img src="/img/badge.png" alt="Verified Badge" class="verified-badge" style="width: 16px; height: 16px;">`
+      : "";
 
-        userBox.innerHTML = `
+    userBox.innerHTML = `
           <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
             <img src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
             <p>
@@ -431,271 +430,271 @@
           </div>
         `;
 
-      userList.appendChild(userBox);
-      connectedUsersMap.set(user.id, userBox);
-      updateUserCount();
+    userList.appendChild(userBox);
+    connectedUsersMap.set(user.id, userBox);
+    updateUserCount();
 
-      // Trigger reflow for entry animation
-      requestAnimationFrame(() => {
-        userBox.classList.add("enter");
-      });
-    }
-
-    function userDisconnected(userId) {
-      const userBox = connectedUsersMap.get(userId);
-      if (userBox) {
-        userBox.classList.add("exit");
-        userBox.classList.remove("enter");
-        setTimeout(() => {
-          userBox.remove();
-          connectedUsersMap.delete(userId);
-          updateUserCount();
-        }, 400); // CSS transition match
-      }
-    }
-
-    socket.on("userJoined", async (userId) => {
-      try {
-        const res = await fetch(`/user/${userId}`);
-        const user = await res.json();
-        userConnected(user);
-      } catch (err) {
-        console.error("Failed to fetch user data:", err);
-      }
+    // Trigger reflow for entry animation
+    requestAnimationFrame(() => {
+      userBox.classList.add("enter");
     });
+  }
 
-    socket.on("userLeft", (userId) => {
-      userDisconnected(userId);
-    });
+  function userDisconnected(userId) {
+    const userBox = connectedUsersMap.get(userId);
+    if (userBox) {
+      userBox.classList.add("exit");
+      userBox.classList.remove("enter");
+      setTimeout(() => {
+        userBox.remove();
+        connectedUsersMap.delete(userId);
+        updateUserCount();
+      }, 400); // CSS transition match
+    }
+  }
 
-    // Load current active users on first load
-    fetch("/active-users")
-      .then(res => res.json())
-      .then(users => {
-        users.forEach(user => userConnected(user));
-      })
-      .catch(console.error);
-  </script>
+  socket.on("userJoined", async (userId) => {
+    try {
+      const res = await fetch(`/user/${userId}`);
+      const user = await res.json();
+      userConnected(user);
+    } catch (err) {
+      console.error("Failed to fetch user data:", err);
+    }
+  });
 
-    <script>
-        const header = document.querySelector('header');
-        const nextSection = document.querySelector('body').querySelector('section:not(.active)');
-        const logo = document.getElementById('logo')
+  socket.on("userLeft", (userId) => {
+    userDisconnected(userId);
+  });
 
-        window.addEventListener('scroll', function () {
-            const scrolled = window.scrollY > 0;
-            if (scrolled) {
-                let body = document.querySelector('body');
-                body.style.overflowY = 'scroll';
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
+  // Load current active users on first load
+  fetch("/active-users")
+    .then(res => res.json())
+    .then(users => {
+      users.forEach(user => userConnected(user));
+    })
+    .catch(console.error);
+</script>
+
+<script>
+  const header = document.querySelector('header');
+  const nextSection = document.querySelector('body').querySelector('section:not(.active)');
+  const logo = document.getElementById('logo')
+
+  window.addEventListener('scroll', function () {
+    const scrolled = window.scrollY > 0;
+    if (scrolled) {
+      let body = document.querySelector('body');
+      body.style.overflowY = 'scroll';
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  });
+
+  window.onload = function () {
+    const textArea = document.querySelector('textarea')
+    textArea.blur();
+  }
+
+
+  function changeBg(event) {
+    event.target.style.background = "var(--secondary-color)"
+    event.target.style.border = "1px solid var(--primary-color)"
+  }
+
+</script>
+<script>
+  // Prevent scrolling while holding the microphone button
+  document.body.addEventListener('touchmove', (e) => {
+    if (isRecording) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  let mediaRecorder;
+  let audioChunks = [];
+  let audioBlob;
+  let audioUrl;
+  // let analyser, canvas, canvasCtx, bufferLength, dataArray;
+  let isRecording = false;
+
+  const micButton = document.getElementById('micButton');
+  const discardButton = document.getElementById('discardRecording');
+  const submitButton = document.getElementById('submitRecording');
+  const audioPlayer = document.getElementById('audioPlayer');
+  // const waveformCanvas = document.getElementById('waveform');
+  const actionButtons = document.getElementById('actionButtons');
+  const type = micButton.getAttribute('data-type');
+  const wrapper = micButton.querySelector('.lottie-wrapper');
+
+  const animations = {
+    mic: "./img/lottie/mic.json"
+  };
+
+
+  // Start recording on mousedown or touchstart
+  micButton.addEventListener('mousedown', startRecording);
+  micButton.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    console.log('Touch Start');
+    startRecording();
+  });
+
+  // Stop recording on mouseup or touchend
+  micButton.addEventListener('mouseup', stopRecording);
+  micButton.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    console.log('Touch End');
+    stopRecording();
+  });
+
+  // Prevent default behavior for touch events
+  micButton.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+  });
+
+  // Prevent context menu on long press
+  micButton.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+  });
+
+
+  let micLottieInstance;
+
+  // Start recording function
+  function startRecording() {
+    if (isRecording) return;
+    // Request permission to access the user's microphone
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+
+        micLottieInstance = lottie.loadAnimation({
+          container: wrapper,
+          renderer: 'svg',
+          loop: true,
+          autoplay: true,
+          path: animations.mic
         });
 
-        window.onload = function () {
-            const textArea = document.querySelector('textarea')
-            textArea.blur();
-        }
+        // Create MediaRecorder instance
+        mediaRecorder = new MediaRecorder(stream);
 
+        // Start recording
+        mediaRecorder.start();
 
-        function changeBg(event) {
-            event.target.style.background = "var(--secondary-color)"
-            event.target.style.border = "1px solid var(--primary-color)"
-        }
-
-    </script>
-    <script>
-        // Prevent scrolling while holding the microphone button
-        document.body.addEventListener('touchmove', (e) => {
-            if (isRecording) {
-                e.preventDefault();
-            }
-        }, { passive: false });
-
-        let mediaRecorder;
-        let audioChunks = [];
-        let audioBlob;
-        let audioUrl;
-        // let analyser, canvas, canvasCtx, bufferLength, dataArray;
-        let isRecording = false;
-
-        const micButton = document.getElementById('micButton');
-        const discardButton = document.getElementById('discardRecording');
-        const submitButton = document.getElementById('submitRecording');
-        const audioPlayer = document.getElementById('audioPlayer');
-        // const waveformCanvas = document.getElementById('waveform');
-        const actionButtons = document.getElementById('actionButtons');
-        const type = micButton.getAttribute('data-type');
-        const wrapper = micButton.querySelector('.lottie-wrapper');
-
-        const animations = {
-            mic: "./img/lottie/mic.json"
+        // Capture audio data during recording
+        mediaRecorder.ondataavailable = event => {
+          audioChunks.push(event.data); // Collect audio chunks
         };
 
+        // When recording stops, create the audio blob and URL
+        mediaRecorder.onstop = () => {
+          audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+          audioUrl = URL.createObjectURL(audioBlob);
+          audioPlayer.src = audioUrl;
 
-        // Start recording on mousedown or touchstart
-        micButton.addEventListener('mousedown', startRecording);
-        micButton.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            console.log('Touch Start');
-            startRecording();
-        });
+          // Show the action buttons after recording is stopped
+          actionButtons.style.display = 'block';
+          audioPlayer.style.display = 'block'; // Show the audio player for playback
+        };
 
-        // Stop recording on mouseup or touchend
-        micButton.addEventListener('mouseup', stopRecording);
-        micButton.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            console.log('Touch End');
-            stopRecording();
-        });
+      })
+      .catch(error => {
+        console.error('Error accessing microphone:', error);
+      });
 
-        // Prevent default behavior for touch events
-        micButton.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-        });
+    isRecording = true;
+    micButton.classList.add('recording');
+  }
 
-        // Prevent context menu on long press
-        micButton.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-        });
+  // Stop recording function
+  function stopRecording() {
+    if (mediaRecorder && isRecording) {
+      mediaRecorder.stop(); // Stop recording
+      isRecording = false;
+      micButton.classList.remove('recording');
 
+      if (micLottieInstance) {
+        micLottieInstance.destroy(); // Clean up Lottie
+      }
 
-        let micLottieInstance;
+      const wrapper = document.querySelector('.lottie-wrapper');
+      wrapper.innerHTML = ''; // Clear SVG from DOM
+    }
+  }
 
-        // Start recording function
-        function startRecording() {
-            if (isRecording) return;
-            // Request permission to access the user's microphone
-            navigator.mediaDevices.getUserMedia({ audio: true })
-                .then(stream => {
+  // Discard the recording
+  discardButton.addEventListener('click', () => {
+    audioPlayer.src = ''; // Reset the audio player
+    actionButtons.style.display = 'none'; // Hide the action buttons
+    audioPlayer.style.display = 'none'; // Hide the audio player
+    audioChunks = []; // Clear the audio chunks
+  });
 
-                    micLottieInstance = lottie.loadAnimation({
-                        container: wrapper,
-                        renderer: 'svg',
-                        loop: true,
-                        autoplay: true,
-                        path: animations.mic
-                    });
+  // Submit the recording (share it)
+  // Submit the recording (share it)
+  submitButton.addEventListener('click', async () => {
+    const categoryDropdown = document.getElementById('category');
+    const category = categoryDropdown.value;
 
-                    // Create MediaRecorder instance
-                    mediaRecorder = new MediaRecorder(stream);
+    if (!category) {
+      alert('Please select a category before sharing!');
+      return;
+    }
 
-                    // Start recording
-                    mediaRecorder.start();
+    try {
+      // Create a FormData object to send the audio file and category
+      const formData = new FormData();
+      formData.append('audio', audioBlob, 'voice-note.wav');
+      formData.append('category', category);
+      formData.append('contentType', 'audio'); // Indicate that this is an audio submission
 
-                    // Capture audio data during recording
-                    mediaRecorder.ondataavailable = event => {
-                        audioChunks.push(event.data); // Collect audio chunks
-                    };
+      // Send the audio file to the server
+      const response = await fetch('/share', {
+        method: 'POST',
+        body: formData,
+      });
 
-                    // When recording stops, create the audio blob and URL
-                    mediaRecorder.onstop = () => {
-                        audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                        audioUrl = URL.createObjectURL(audioBlob);
-                        audioPlayer.src = audioUrl;
+      const data = await response.json();
 
-                        // Show the action buttons after recording is stopped
-                        actionButtons.style.display = 'block';
-                        audioPlayer.style.display = 'block'; // Show the audio player for playback
-                    };
-
-                })
-                .catch(error => {
-                    console.error('Error accessing microphone:', error);
-                });
-
-            isRecording = true;
-            micButton.classList.add('recording');
-        }
-
-        // Stop recording function
-        function stopRecording() {
-            if (mediaRecorder && isRecording) {
-                mediaRecorder.stop(); // Stop recording
-                isRecording = false;
-                micButton.classList.remove('recording');
-
-                if (micLottieInstance) {
-                    micLottieInstance.destroy(); // Clean up Lottie
-                }
-
-                const wrapper = document.querySelector('.lottie-wrapper');
-                wrapper.innerHTML = ''; // Clear SVG from DOM
-            }
-        }
-
-        // Discard the recording
-        discardButton.addEventListener('click', () => {
-            audioPlayer.src = ''; // Reset the audio player
-            actionButtons.style.display = 'none'; // Hide the action buttons
-            audioPlayer.style.display = 'none'; // Hide the audio player
-            audioChunks = []; // Clear the audio chunks
-        });
-
-        // Submit the recording (share it)
-        // Submit the recording (share it)
-        submitButton.addEventListener('click', async () => {
-            const categoryDropdown = document.getElementById('category');
-            const category = categoryDropdown.value;
-
-            if (!category) {
-                alert('Please select a category before sharing!');
-                return;
-            }
-
-            try {
-                // Create a FormData object to send the audio file and category
-                const formData = new FormData();
-                formData.append('audio', audioBlob, 'voice-note.wav');
-                formData.append('category', category);
-                formData.append('contentType', 'audio'); // Indicate that this is an audio submission
-
-                // Send the audio file to the server
-                const response = await fetch('/share', {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    alert('Recording shared successfully!');
-                    // Reset the UI
-                    audioPlayer.src = '';
-                    actionButtons.style.display = 'none';
-                    audioPlayer.style.display = 'none';
-                    audioChunks = [];
-                } else {
-                    alert('Failed to share the recording. Please try again.');
-                }
-            } catch (error) {
-                console.error('Error sharing recording:', error);
-                alert('An error occurred. Please try again later.');
-            }
-        });
-    </script>
+      if (data.success) {
+        alert('Recording shared successfully!');
+        // Reset the UI
+        audioPlayer.src = '';
+        actionButtons.style.display = 'none';
+        audioPlayer.style.display = 'none';
+        audioChunks = [];
+      } else {
+        alert('Failed to share the recording. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error sharing recording:', error);
+      alert('An error occurred. Please try again later.');
+    }
+  });
+</script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
 
 <script>
-    function toggleGossipMenu() {
-      const dropdown = document.getElementById("gossipDropdown");
-      dropdown.classList.toggle("show");
-    }
-  </script>
-  
+  function toggleGossipMenu() {
+    const dropdown = document.getElementById("gossipDropdown");
+    dropdown.classList.toggle("show");
+  }
+</script>
+
 
 <script>
-    window.addEventListener("DOMContentLoaded", () => {
-      const modal = document.getElementById("submitModal");
-  
-      if (modal && modal.style.display !== "none") {
-        const script = document.createElement("script");
-        script.src = "/js/shareModal.js";
-        document.body.appendChild(script);
-      }
-    });
-  </script>
+  window.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("submitModal");
+
+    if (modal && modal.style.display !== "none") {
+      const script = document.createElement("script");
+      script.src = "/js/shareModal.js";
+      document.body.appendChild(script);
+    }
+  });
+</script>
 <script src="/js/defaultTheme.js"></script>
-    <script src="/js/app.js"></script>     
+<script src="/js/app.js"></script>

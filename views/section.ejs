@@ -1,628 +1,646 @@
-<%- include("layout") %>
-  <style>
-    body {
-        height: 100vh;
-        width: 100vw;
-        font-family: 'Inter', 'Roboto', 'Helvetica Neue', 'Segoe UI', sans-serif !important;
-        font-family: 'Inter', sans-serif;
-    }
-
-    .start-tutorial-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 10px 15px;
-  font-size: 14px;
-  cursor: pointer;
-  z-index: 100;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  animation: pulse 2s infinite;
-}
-
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(127, 90, 240, 0.4);
+<style>
+  body {
+    height: 100vh;
+    width: 100vw;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    font-family: 'Inter', 'Roboto', 'Helvetica Neue', 'Segoe UI', sans-serif !important;
+    font-family: 'Inter', sans-serif;
   }
-  70% {
-    transform: scale(1.05);
-    box-shadow: 0 0 0 10px rgba(127, 90, 240, 0);
+
+
+  section {
+    height: 60vh;
+    overflow: hidden;
   }
-  100% {
-    transform: scale(1);
+
+
+  .start-tutorial-btn {
+    position: fixed;
+    bottom: 5.5rem;
+    right: 20px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    z-index: 100;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    animation: pulse 2s infinite;
   }
-}
 
 
-#gesture-demo {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 9999;
-}
-#gesture-demo {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #333;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 10px;
-  z-index: 100;
-  opacity: 0.9;
-}
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgba(127, 90, 240, 0.4);
+    }
 
+    70% {
+      transform: scale(1.05);
+      box-shadow: 0 0 0 10px rgba(127, 90, 240, 0);
+    }
 
-.gesture-hand {
-  font-size: 2.5rem;
-  animation: swipe-left-right 2s ease-in-out infinite;
-  opacity: 0.8;
-}
-
-
-
-@keyframes swipe-left-right {
-  0% {
-    transform: translateX(0) translateY(0);
+    100% {
+      transform: scale(1);
+    }
   }
-  30% {
-    transform: translateX(-80px) translateY(-10px);
+
+
+  #gesture-demo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 9999;
   }
-  60% {
-    transform: translateX(80px) translateY(10px);
+
+  #gesture-demo {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    z-index: 100;
+    opacity: 0.9;
   }
-  100% {
-    transform: translateX(0) translateY(0);
+
+
+  .gesture-hand {
+    font-size: 2.5rem;
+    animation: swipe-left-right 2s ease-in-out infinite;
+    opacity: 0.8;
   }
-}
 
 
-  
 
-    #tutorial-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      z-index: 99;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      visibility: visible;
-      opacity: 1;
-      pointer-events: auto;
-      margin: auto;
-      /* Enable interactions */
+  @keyframes swipe-left-right {
+    0% {
+      transform: translateX(0) translateY(0);
     }
 
-
-    /* Tutorial container: Show without opacity transitions */
-    #tutorial-container {
-      opacity: 1;
-      /* Ensure it's visible immediately */
-      pointer-events: auto;
-      /* Allow interactions */
+    30% {
+      transform: translateX(-80px) translateY(-10px);
     }
 
-    /* Remove the transition on tutorial step */
-    .tutorial-step {
-      font-family: "Gloria Hallelujah", cursive;
-      opacity: 1;
-      /* Make sure it's visible immediately */
-      color: #fff;
+    60% {
+      transform: translateX(80px) translateY(10px);
     }
 
-    /* Tutorial Step: No transition, just show it directly */
-    .tutorial-step.hidden {
-      opacity: 0;
+    100% {
+      transform: translateX(0) translateY(0);
     }
-
-    .highlight {
-      border: 3px solid #ffdd00;
-      /* Yellow highlight */
-      box-shadow: 0 0 10px rgba(255, 221, 0, 0.7);
-      /* Glowing effect */
-    }
-
-
-    button.skip-btn {
-      background: #ff4444;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      padding: 10px 15px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    button#next-step {
-      padding: 10px 20px;
-      font-size: 18px;
-      background: linear-gradient(90deg, #ffcc00, #ff9900);
-      border: none;
-      border-radius: 10px;
-      color: #222;
-      cursor: pointer;
-      margin: 10px;
-      transition: transform 0.3s ease-in-out;
-    }
-
-    button.skip-btn:hover {
-      background: #ff2222;
-    }
+  }
 
 
 
-    #tutorial-overlay.hidden {
-      display: none;
-    }
 
-    #progress-bar-container {
-      width: 100%;
-      background-color: #e0e0e0;
-      border-radius: 5px;
-      margin: 10px auto;
-    }
+  #tutorial-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 99;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    margin: auto;
+    /* Enable interactions */
+  }
 
-    #progress-bar {
-      width: 0%;
-      height: 5px;
-      /* background-color: #76c7c0; */
-      background: var(--primary-color);
-      border-radius: 5px;
-      transition: width 0.3s;
-    }
 
-    .highlight {
-      border: 3px solid #ffdd00;
-      /* Yellow highlight */
-      box-shadow: 0 0 10px rgba(255, 221, 0, 0.7);
-      /* Glowing effect */
-    }
+  /* Tutorial container: Show without opacity transitions */
+  #tutorial-container {
+    opacity: 1;
+    /* Ensure it's visible immediately */
+    pointer-events: auto;
+    /* Allow interactions */
+  }
 
-    .tooltip {
-      position: absolute;
-      /* bottom: 5rem; */
-      /* z-index: 100; */
-      background-color: rgba(0, 0, 0, 0.8);
-      color: white;
-      padding: 5px 10px;
-      border-radius: 5px;
-      font-size: 12px;
-      visibility: hidden;
-      opacity: 0;
-      transition: opacity 0.3s ease-in-out;
-    }
+  /* Remove the transition on tutorial step */
+  .tutorial-step {
+    font-family: "Gloria Hallelujah", cursive;
+    opacity: 1;
+    /* Make sure it's visible immediately */
+    color: #fff;
+  }
 
-    /* Show Tooltip on Hover */
-    .tooltip.show {
-      visibility: visible;
-      opacity: 1;
-    }
+  /* Tutorial Step: No transition, just show it directly */
+  .tutorial-step.hidden {
+    opacity: 0;
+  }
 
-    #dating-container {
-      padding-top: 5%;
-        display: flex;
-        justify-content: center;
-        /* align-items: center; */
-        flex-direction: column;
-        text-align: center;
-        width: 100%;
-        margin: .5rem auto !important;
-    }
+  .highlight {
+    border: 3px solid #ffdd00;
+    /* Yellow highlight */
+    box-shadow: 0 0 10px rgba(255, 221, 0, 0.7);
+    /* Glowing effect */
+  }
 
-    .dating-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
 
-    #prev, #next {
-       padding: 1rem 1.5rem;
-       border: none;
-       border-radius: 50%;
-       font-size: 1.1rem;
-       background: var(--secondary-color);
-       color: var(--text-color);
-       backdrop-filter: .1rem .1rem ;
-    }
+  button.skip-btn {
+    background: #ff4444;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
 
-    #dating-container h1{
-   text-align: center !important;
-   padding-left: .5rem !important;
-font-size: 2rem !important;
-   }
+  button#next-step {
+    padding: 10px 20px;
+    font-size: 18px;
+    background: linear-gradient(90deg, #ffcc00, #ff9900);
+    border: none;
+    border-radius: 10px;
+    color: #222;
+    cursor: pointer;
+    margin: 10px;
+    transition: transform 0.3s ease-in-out;
+  }
 
-   .bottom-line {
+  button.skip-btn:hover {
+    background: #ff2222;
+  }
+
+
+
+  #tutorial-overlay.hidden {
+    display: none;
+  }
+
+  #progress-bar-container {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    margin: 10px auto;
+  }
+
+  #progress-bar {
+    width: 0%;
+    height: 5px;
+    /* background-color: #76c7c0; */
+    background: var(--primary-color);
+    border-radius: 5px;
+    transition: width 0.3s;
+  }
+
+  .highlight {
+    border: 3px solid #ffdd00;
+    /* Yellow highlight */
+    box-shadow: 0 0 10px rgba(255, 221, 0, 0.7);
+    /* Glowing effect */
+  }
+
+  .tooltip {
+    position: absolute;
+    /* bottom: 5rem; */
+    /* z-index: 100; */
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  /* Show Tooltip on Hover */
+  .tooltip.show {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  #dating-container {
+    padding-top: 1%;
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    flex-direction: column;
+    text-align: center;
+    width: 100%;
+    margin: .5rem auto !important;
+  }
+
+  .dating-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  #prev,
+  #next {
+    padding: 1rem 1.5rem;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    background: var(--secondary-color);
+    color: var(--text-color);
+    backdrop-filter: .1rem .1rem;
+  }
+
+  #dating-container h1 {
+    text-align: center !important;
+    padding-left: .5rem !important;
+    font-size: 2rem !important;
+  }
+
+  .bottom-line {
     background: var(--secondary-color);
     width: 40px;
     height: 5px;
     margin: auto;
     border-radius: 30px;
-   }
+  }
 
-    #card-container {
-        padding: 3% 0;
-        position: relative;
-        width: 400px !important;
-        height: 450px !important;
-        perspective: 1000px !important; 
-        /* padding-left: 0 !important; */
-    }
-    .card {
-        width: 100% !important;
-        height: 100% !important;
-        height: 450px !important;
-        background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        margin: auto;
-        /* padding: 20px; */
-        position: absolute;
-        top: 0;
-        /* left: 10%; */
-        /* right: 10%; */
-        transform-origin: center;
-        transition: transform 0.5s ease-in-out;
-        overflow-y: auto;
-        z-index: 1;
-        font-family: 'Quicksand', sans-serif;
-    }
+  #card-container {
+    padding: 3% 0;
+    position: relative;
+    width: 400px !important;
+    height: 450px !important;
+    perspective: 1000px !important;
+    /* padding-left: 0 !important; */
+  }
 
-    .card:first-child {
-z-index: 2 !important;  /* Top card gets a higher z-index */
-}
-    .card:hover {
-        transform: rotateY(15deg) rotateX(10deg) scale(1.05);
-    }
-    .section-actions {
-        display: flex;
-        gap: 10px;
-    }
-    .section-actions button {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: transform 0.2s ease-in-out;
-    }
-    .dislike {
-        background-color: #ff4c4c;
-        color: white;
-    }
-    .like {
-        background-color: #4caf50;
-        color: white;
-    }
+  .card {
+    width: 100% !important;
+    height: 100% !important;
+    height: 450px !important;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: auto;
+    /* padding: 20px; */
+    position: absolute;
+    top: 0;
+    /* left: 10%; */
+    /* right: 10%; */
+    transform-origin: center;
+    transition: transform 0.5s ease-in-out;
+    overflow-y: auto;
+    z-index: 1;
+    font-family: 'Quicksand', sans-serif;
+  }
 
-    .card-stack {
-  position: relative;
-  height: 500px;
-  overflow: visible;
-  perspective: 1000px;
-}
+  .card:first-child {
+    z-index: 2 !important;
+    /* Top card gets a higher z-index */
+  }
 
-.swipe-card {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 100%;
-  max-width: 500px;
-  transform: translateX(-50%);
-  background: var(--container-bg);
-  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-  color: var(--text-color);
-  padding: 1.5rem;
-  border-radius: 20px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  will-change: transform;
-  font-family: 'Quicksand', sans-serif;
-}
+  .card:hover {
+    transform: rotateY(15deg) rotateX(10deg) scale(1.05);
+  }
 
-.swipe-card.removed {
-  opacity: 0;
-  pointer-events: none;
-}
+  .section-actions {
+    display: flex;
+    gap: 10px;
+  }
 
-.swipe-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1rem;
-}
+  .section-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+  }
 
-.gossipa-comment-form {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--border-color, #444);
-  padding: 1rem;
-  border-radius: 15px;
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
-}
+  .dislike {
+    background-color: #ff4c4c;
+    color: white;
+  }
 
-.gossipa-comment-form textarea {
-  background: transparent;
-  border: none;
-  resize: none;
-  color: var(--text-color, #eee);
-  font-size: 1rem;
-  line-height: 1.5;
-  min-height: 80px;
-  font-family: 'Courier New', Courier, monospace;
-  border-bottom: 1px solid #333;
-  padding-bottom: 0.5rem;
-  outline: none;
-}
+  .like {
+    background-color: #4caf50;
+    color: white;
+  }
 
-.gossipa-comment-form textarea::placeholder {
-  color: var(--text-muted, #888);
-  font-style: italic;
-}
+  .card-stack {
+    position: relative;
+    height: 500px;
+    overflow: visible;
+    perspective: 1000px;
+  }
 
-.comment-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+  .swipe-card {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 100%;
+    max-width: 500px;
+    transform: translateX(-50%);
+    background: var(--container-bg);
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    color: var(--text-color);
+    padding: 1.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    will-change: transform;
+    font-family: 'Quicksand', sans-serif;
+  }
 
-.comment-footer .hint {
-  font-size: 0.85rem;
-  color: var(--text-muted, #888);
-}
+  .swipe-card.removed {
+    opacity: 0;
+    pointer-events: none;
+  }
 
-.gossipa-comment-form .submit-btn {
-  background: linear-gradient(135deg, #7f5af0, #d13d87);
-  color: #fff;
-  border: none;
-  padding: 0.4rem 1.2rem;
-  font-weight: bold;
-  font-size: 0.9rem;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
+  .swipe-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
 
-.gossipa-comment-form .submit-btn:hover {
-  background: linear-gradient(135deg, #9f7fff, #ff67a6);
-}
+  .gossipa-comment-form {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color, #444);
+    padding: 1rem;
+    border-radius: 15px;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
 
-.comment-message {
-  color: #f88;
-  font-size: 0.85rem;
-  text-align: right;
-}
+  .gossipa-comment-form textarea {
+    background: transparent;
+    border: none;
+    resize: none;
+    color: var(--text-color, #eee);
+    font-size: 1rem;
+    line-height: 1.5;
+    min-height: 80px;
+    font-family: 'Courier New', Courier, monospace;
+    border-bottom: 1px solid #333;
+    padding-bottom: 0.5rem;
+    outline: none;
+  }
 
+  .gossipa-comment-form textarea::placeholder {
+    color: var(--text-muted, #888);
+    font-style: italic;
+  }
 
+  .comment-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
+  .comment-footer .hint {
+    font-size: 0.85rem;
+    color: var(--text-muted, #888);
+  }
+
+  .gossipa-comment-form .submit-btn {
+    background: linear-gradient(135deg, #7f5af0, #d13d87);
+    color: #fff;
+    border: none;
+    padding: 0.4rem 1.2rem;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .gossipa-comment-form .submit-btn:hover {
+    background: linear-gradient(135deg, #9f7fff, #ff67a6);
+  }
+
+  .comment-message {
+    color: #f88;
+    font-size: 0.85rem;
+    text-align: right;
+  }
 </style>
-</head>
-  
-<body>
-
-    <script>
-        socket.on('new-secret', (data) => {
-            // Display a modern toast notification
-            const notification = document.createElement('div');
-            notification.innerText = `New secret shared: ${data.secret}`;
-            notification.style.position = 'fixed';
-            notification.style.bottom = '10px';
-            notification.style.right = '10px';
-            notification.style.backgroundColor = '#4caf50';
-            notification.style.color = '#fff';
-            notification.style.padding = '10px';
-            notification.style.borderRadius = '5px';
-            document.body.appendChild(notification);
-    
-            // Remove notification after 5 seconds
-            setTimeout(() => notification.remove(), 5000);
-        });
-    </script>
-
-    <div class=" container">
-
-      
-      <button id="start-tutorial-btn" class="start-tutorial-btn">Start Tour</button>
 
 
-        <div id="tutorial-overlay" class="hidden">
+<script>
+  socket.on('new-secret', (data) => {
+    // Display a modern toast notification
+    const notification = document.createElement('div');
+    notification.innerText = `New secret shared: ${data.secret}`;
+    notification.style.position = 'fixed';
+    notification.style.bottom = '10px';
+    notification.style.right = '10px';
+    notification.style.backgroundColor = '#4caf50';
+    notification.style.color = '#fff';
+    notification.style.padding = '10px';
+    notification.style.borderRadius = '5px';
+    document.body.appendChild(notification);
 
-            <div class="tutorial-step">
-              <div class="tutorial-text">
-                            <h2> Welcome to Room of Advice and Learning</h2>
-                <p>Feel free to share or read content in a judgment-free zone.</p>
-              </div>
-    
-                <div id="progress-bar-container">
-                    <div id="progress-bar"></div>
-                </div>
-                <button id="next-step">Next</button>
-                <button class="skip-btn">Skip</button>
-            </div>
+    // Remove notification after 5 seconds
+    setTimeout(() => notification.remove(), 5000);
+  });
+</script>
+
+<section>
+
+  <div class=" container">
+
+
+    <button id="start-tutorial-btn" class="start-tutorial-btn">Start Tour</button>
+
+
+    <div id="tutorial-overlay" class="hidden">
+
+      <div class="tutorial-step">
+        <div class="tutorial-text">
+          <h2> Welcome to Room of Advice and Learning</h2>
+          <p>Feel free to share or read content in a judgment-free zone.</p>
         </div>
 
-        <button class="back"><i class="fas fa-arrow-left"></i> Back</button>
-          
-        <div id="dating-container">
-            <h1>Dating & Relationship Advice</h1>
-            <div class="bottom-line"></div>
-            <div class="dating-container">
+        <div id="progress-bar-container">
+          <div id="progress-bar"></div>
+        </div>
+        <button id="next-step">Next</button>
+        <button class="skip-btn">Skip</button>
+      </div>
+    </div>
 
-              <button id="prev"><i class="fas fa-chevron-left"></i></button>
-          
-              <div id="card-container" class="card-stack">
+    <button class="back"><i class="fas fa-arrow-left"></i> Back</button>
 
-                <!-- inside #card-container (below the cards ideally) -->
-<div id="gesture-demo" class="">
-  <div class="gesture-hand">👆</div>
-  <p style="margin-top: 8px;">Swipe left or right</p>
-</div>
+    <div id="dating-container">
+      <h1>Dating & Relationship Advice</h1>
+      <div class="bottom-line"></div>
+      <div class="dating-container">
 
-                <% section.forEach((secret, i) => { %>
-                  <div class="swipe-card" data-id="<%= secret.id %>" style="z-index:<%= section.length - i %>">
-                    <div class="card-content">
-                      <small>~~ @amebo<%= secret.user_id %> ~~</small>
-                      <p>
-                        <span class="content">
-                          <% if (secret.secret.split(" ").length > 100) { %>
+        <button id="prev"><i class="fas fa-chevron-left"></i></button>
+
+        <div id="card-container" class="card-stack">
+
+          <!-- inside #card-container (below the cards ideally) -->
+          <div id="gesture-demo" class="">
+            <div class="gesture-hand">👆</div>
+            <p style="margin-top: 8px;">Swipe left or right</p>
+          </div>
+
+          <% section.forEach((secret, i)=> { %>
+            <div class="swipe-card" data-id="<%= secret.id %>" style="z-index:<%= section.length - i %>">
+              <div class="card-content">
+                <small>~~ @amebo<%= secret.user_id %> ~~</small>
+                <p>
+                  <span class="content">
+                    <% if (secret.secret.split(" ").length > 100) { %>
         <%= secret.secret.substring(0, 100) + " ..." %>
-                            <% } else { %>
-                              <%= secret.secret %>
-                                <% } %>
-                        </span>
-                        <% if (secret.secret.split(" ").length > 100) { %>
+                      <% } else { %>
+                        <%= secret.secret %>
+                          <% } %>
+                  </span>
+                  <% if (secret.secret.split(" ").length > 100) { %>
     
             <button
               class=" read" data-full="<%= secret.secret %>"
-                          data-truncated="<%= secret.secret.substring(0, 250) + '...' %>">
-                          Read More
-                          </button>
+                    data-truncated="<%= secret.secret.substring(0, 250) + '...' %>">
+                    Read More
+                    </button>
 
 
-                          <% } %>
-                      </p>
-                    </div>
-
-                    <form action="/comment" method="POST" class="gossipa-comment-form">
-                      <input type="hidden" name="id" value="<%= secret.id %>" />
-                      <input type="hidden" name="secretUserId" value="<%= secret.user_id %>" />
-                      <input type="hidden" name="commentUserId" value="<%= userId %>" />
-                    
-                      <textarea
-                        name="comment"
-                        placeholder="drop your thoughts anonymously..."
-                        maxlength="300"
-                        required
-                      ></textarea>
-                    
-                      <div class="comment-footer">
-                        <span class="hint">🎭 Stay anonymous • no replies</span>
-                        <button type="submit" class="submit-btn">Send</button>
-                      </div>
-                    
-                      <% if (locals.message) { %>
-                        <small class="comment-message"><%= message %></small>
-                      <% } %>
-                    </form>
-                    
-                    <div class="swipe-actions">
-                      <button class="dislike">😬 Not Relatable</button>
-                      <button class="like">🔥 Relatable</button>
-                    </div>
-                  </div>
-                <% }) %>
-
-                <p>Oops no more confessions... Come back some other time to see more</p>
-
+                    <% } %>
+                </p>
               </div>
 
-      
-              
-              
+              <form action="/comment" method="POST" class="gossipa-comment-form">
+                <input type="hidden" name="id" value="<%= secret.id %>" />
+                <input type="hidden" name="secretUserId" value="<%= secret.user_id %>" />
+                <input type="hidden" name="commentUserId" value="<%= userId %>" />
 
-                            <button id="next"><i class="fas fa-chevron-right"></i></button>
-                   </div>
+                <textarea name="comment" placeholder="drop your thoughts anonymously..." maxlength="300"
+                  required></textarea>
+
+                <div class="comment-footer">
+                  <span class="hint">🎭 Stay anonymous • no replies</span>
+                  <button type="submit" class="submit-btn">Send</button>
+                </div>
+
+                <% if (locals.message) { %>
+                  <small class="comment-message">
+                    <%= message %>
+                  </small>
+                  <% } %>
+              </form>
+
+              <div class="swipe-actions">
+                <button class="dislike">😬 Not Relatable</button>
+                <button class="like">🔥 Relatable</button>
+              </div>
             </div>
-           
-      
-        <script>
-          document.querySelector(".back").addEventListener("click", () => {
-            // Check if there's a referrer (i.e., user navigated here from somewhere else)
-            const from = document.referrer;
-        
-            // If previous page is from your own domain and is the Explore page
-            if (from && from.includes("/explore")) {
-              window.history.back(); // ⬅️ Go back to where they came from
-            } else {
-              window.location.href = "/explore"; // ⬅️ Fallback default
-            }
-          });
-        </script>
+            <% }) %>
 
-        <script>
-     document.addEventListener("DOMContentLoaded", () => {
-         localStorage.removeItem("tutorialCompleted")
-     })
+              <p>Oops no more confessions... Come back some other time to see more</p>
+
+        </div>
+
+
+
+
+
+        <button id="next"><i class="fas fa-chevron-right"></i></button>
+      </div>
+    </div>
+</section>
+
+
+<script>
+  document.querySelector(".back").addEventListener("click", () => {
+    // Check if there's a referrer (i.e., user navigated here from somewhere else)
+    const from = document.referrer;
+
+    // If previous page is from your own domain and is the Explore page
+    if (from && from.includes("/explore")) {
+      window.history.back(); // ⬅️ Go back to where they came from
+    } else {
+      window.location.href = "/explore"; // ⬅️ Fallback default
+    }
+  });
 </script>
-  
-    <script>
-        
-let step = 0;
-let currentStep = 1;
-const totalSteps = 2;
-const tutorialOverlay = document.getElementById('tutorial-overlay');
-const nextButton = document.getElementById('next-step');
-const tutorialStep = document.querySelector('.tutorial-step');
-const progressBar = document.getElementById('progress-bar');
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    localStorage.removeItem("tutorialCompleted")
+  })
+</script>
+
+<script>
+
+  let step = 0;
+  let currentStep = 1;
+  const totalSteps = 2;
+  const tutorialOverlay = document.getElementById('tutorial-overlay');
+  const nextButton = document.getElementById('next-step');
+  const tutorialStep = document.querySelector('.tutorial-step');
+  const progressBar = document.getElementById('progress-bar');
 
 
-// Back Button Functionality
+  // Back Button Functionality
 
 
-// Function to update the progress bar
-function updateProgressBar() {
+  // Function to update the progress bar
+  function updateProgressBar() {
     const progress = (currentStep / totalSteps) * 100;
     progressBar.style.width = `${progress}%`;
-}
-
-// Skip Tutorial
-document.querySelectorAll('.skip-btn').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      updateProgressBar()
-        tutorialOverlay.classList.add('hidden'); // Hide overlay on skip
-        localStorage.setItem('tutorialCompleted', true);
-    });
-});
-
-// Show the tutorial step directly
-function showTutorialStep() {
-    tutorialStep.classList.remove('hidden'); // Ensure tutorial step is visible
-}
-
-// Next Button Functionality
-// Next Button Functionality
-nextButton.addEventListener('click', () => {
-  step++;
-
-  if (currentStep < totalSteps) {
-    currentStep++;
-    updateProgressBar();
-    showTutorialStep(); // Ensure tutorial step is shown immediately
   }
 
-  if (step === 1) {
-    // Step 1: Highlight cards and navigation arrows
-    document.querySelectorAll('.swipe-card').forEach(card => {
-      card.classList.add('highlight');
+  // Skip Tutorial
+  document.querySelectorAll('.skip-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      updateProgressBar()
+      tutorialOverlay.classList.add('hidden'); // Hide overlay on skip
+      localStorage.setItem('tutorialCompleted', true);
     });
+  });
 
-    const next = document.getElementById('next');
-    const prev = document.getElementById('prev');
-    if (next && prev && (next.style.display !== "none" || prev.style.display !== "none")) {
-      next.classList.add('highlight');
-      prev.classList.add('highlight');
+  // Show the tutorial step directly
+  function showTutorialStep() {
+    tutorialStep.classList.remove('hidden'); // Ensure tutorial step is visible
+  }
+
+  // Next Button Functionality
+  // Next Button Functionality
+  nextButton.addEventListener('click', () => {
+    step++;
+
+    if (currentStep < totalSteps) {
+      currentStep++;
+      updateProgressBar();
+      showTutorialStep(); // Ensure tutorial step is shown immediately
     }
 
-    // Update tutorial instructions for Step 2
-    tutorialStep.innerHTML = `
+    if (step === 1) {
+      // Step 1: Highlight cards and navigation arrows
+      document.querySelectorAll('.swipe-card').forEach(card => {
+        card.classList.add('highlight');
+      });
+
+      const next = document.getElementById('next');
+      const prev = document.getElementById('prev');
+      if (next && prev && (next.style.display !== "none" || prev.style.display !== "none")) {
+        next.classList.add('highlight');
+        prev.classList.add('highlight');
+      }
+
+      // Update tutorial instructions for Step 2
+      tutorialStep.innerHTML = `
       <h2>Step 2</h2>
       <p>Swipe through to view content<span class="extra"> or use buttons to swipe through content </span></p>
       <div id="progress-bar-container">
@@ -631,94 +649,94 @@ nextButton.addEventListener('click', () => {
       <button class="skip-btn">Got it</button>
     `;
 
-    attachSkipButtonListener(); // Reattach listener for Skip button
-    progressBar = document.getElementById('progress-bar'); // 👈 update this!
-updateProgressBar();
-  } else {
-    // End tutorial
-    tutorialOverlay.classList.add('hidden');
-    localStorage.setItem('tutorialCompleted', true);
+      attachSkipButtonListener(); // Reattach listener for Skip button
+      progressBar = document.getElementById('progress-bar'); // 👈 update this!
+      updateProgressBar();
+    } else {
+      // End tutorial
+      tutorialOverlay.classList.add('hidden');
+      localStorage.setItem('tutorialCompleted', true);
 
-    // 🎯 Show Gesture Demo
-    setTimeout(() => {
-      const gesture = document.getElementById('gesture-demo');
-      if (gesture) gesture.classList.remove('hidden');
-
-      const firstCard = document.querySelector('.swipe-card');
-      if (firstCard) {
-        firstCard.classList.add('highlight');
-
-        // Optional: Swipe demo animation (CSS-only)
-        firstCard.style.transition = 'transform 0.4s ease-in-out';
-        firstCard.style.transform = 'translateX(-30px)';
-        setTimeout(() => {
-          firstCard.style.transform = 'translateX(30px)';
-        }, 400);
-        setTimeout(() => {
-          firstCard.style.transform = 'translateX(0)';
-        }, 800);
-      }
-
-      // Hide gesture and highlight after delay
+      // 🎯 Show Gesture Demo
       setTimeout(() => {
-        if (gesture) gesture.classList.add('hidden');
-        if (firstCard) firstCard.classList.remove('highlight');
-      }, 4000);
-    }, 500);
+        const gesture = document.getElementById('gesture-demo');
+        if (gesture) gesture.classList.remove('hidden');
 
-    // 🧠 Add swipe gesture support
-    let startX = 0;
+        const firstCard = document.querySelector('.swipe-card');
+        if (firstCard) {
+          firstCard.classList.add('highlight');
 
-    document.querySelectorAll('.swipe-card').forEach((card) => {
-      card.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-      });
-
-      card.addEventListener('touchend', (e) => {
-        const endX = e.changedTouches[0].clientX;
-        const diff = endX - startX;
-
-        if (Math.abs(diff) > 50) {
-          card.style.transition = 'transform 0.3s ease-out';
-          card.style.transform = `translateX(${diff > 0 ? '150%' : '-150%'})`;
-
-          // Optionally remove only on demo, not for real users
+          // Optional: Swipe demo animation (CSS-only)
+          firstCard.style.transition = 'transform 0.4s ease-in-out';
+          firstCard.style.transform = 'translateX(-30px)';
           setTimeout(() => {
-            card.style.transform = 'translateX(0)';
-            card.style.transition = '';
-          }, 500);
+            firstCard.style.transform = 'translateX(30px)';
+          }, 400);
+          setTimeout(() => {
+            firstCard.style.transform = 'translateX(0)';
+          }, 800);
         }
-      }, { once: true }); // Attach only once to prevent multiple triggers
+
+        // Hide gesture and highlight after delay
+        setTimeout(() => {
+          if (gesture) gesture.classList.add('hidden');
+          if (firstCard) firstCard.classList.remove('highlight');
+        }, 4000);
+      }, 500);
+
+      // 🧠 Add swipe gesture support
+      let startX = 0;
+
+      document.querySelectorAll('.swipe-card').forEach((card) => {
+        card.addEventListener('touchstart', (e) => {
+          startX = e.touches[0].clientX;
+        });
+
+        card.addEventListener('touchend', (e) => {
+          const endX = e.changedTouches[0].clientX;
+          const diff = endX - startX;
+
+          if (Math.abs(diff) > 50) {
+            card.style.transition = 'transform 0.3s ease-out';
+            card.style.transform = `translateX(${diff > 0 ? '150%' : '-150%'})`;
+
+            // Optionally remove only on demo, not for real users
+            setTimeout(() => {
+              card.style.transform = 'translateX(0)';
+              card.style.transition = '';
+            }, 500);
+          }
+        }, { once: true }); // Attach only once to prevent multiple triggers
+      });
+    }
+  });
+
+
+  // const backButton = document.getElementById('back-step');
+
+  // backButton.addEventListener('click', () => {
+  //     if (currentStep > 1) {
+  //         currentStep--;
+  //         step--;
+  //         updateProgressBar();
+  //         updateTutorialStep(); // Show the previous tutorial step
+  //     }
+  // });
+
+
+  // Function to Attach Skip Button Listeners Dynamically
+  function attachSkipButtonListener() {
+    document.querySelectorAll('.skip-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        tutorialOverlay.classList.add('hidden');
+        localStorage.setItem('tutorialCompleted', true);
+      });
     });
   }
-});
 
 
-// const backButton = document.getElementById('back-step');
-
-// backButton.addEventListener('click', () => {
-//     if (currentStep > 1) {
-//         currentStep--;
-//         step--;
-//         updateProgressBar();
-//         updateTutorialStep(); // Show the previous tutorial step
-//     }
-// });
-
-
-// Function to Attach Skip Button Listeners Dynamically
-function attachSkipButtonListener() {
-    document.querySelectorAll('.skip-btn').forEach((btn) => {
-        btn.addEventListener('click', () => {
-            tutorialOverlay.classList.add('hidden');
-            localStorage.setItem('tutorialCompleted', true);
-        });
-    });
-}
-
-
-// Function to highlight an element and add a tooltip
-function highlightElement(element, tooltipText) {
+  // Function to highlight an element and add a tooltip
+  function highlightElement(element, tooltipText) {
     element.classList.add('highlight'); // Highlight the element
     const tooltip = document.createElement('div');
     tooltip.classList.add('tooltip');
@@ -732,24 +750,24 @@ function highlightElement(element, tooltipText) {
 
     // Show the tooltip
     setTimeout(() => {
-        tooltip.classList.add('show');
+      tooltip.classList.add('show');
     }, 200);
-}
+  }
 
-// Example: Highlighting the 'Next' button with a tooltip
-highlightElement(nextButton, "Click here to move to the next step!");
+  // Example: Highlighting the 'Next' button with a tooltip
+  highlightElement(nextButton, "Click here to move to the next step!");
 
-document.getElementById('start-tutorial-btn').addEventListener('click', () => {
-  // Reset tutorial progress
-  localStorage.removeItem('tutorialCompleted');
+  document.getElementById('start-tutorial-btn').addEventListener('click', () => {
+    // Reset tutorial progress
+    localStorage.removeItem('tutorialCompleted');
 
-  // Reset steps and progress
-  step = 0;
-  currentStep = 1;
-  updateProgressBar();
+    // Reset steps and progress
+    step = 0;
+    currentStep = 1;
+    updateProgressBar();
 
-  // Reset tutorial content to initial step
-  tutorialStep.innerHTML = `
+    // Reset tutorial content to initial step
+    tutorialStep.innerHTML = `
     <div class="tutorial-text">
       <h2>Welcome to Room of Advice and Learning</h2>
       <p>Feel free to share or read content in a judgment-free zone.</p>
@@ -761,34 +779,34 @@ document.getElementById('start-tutorial-btn').addEventListener('click', () => {
     <button class="skip-btn">Skip</button>
   `;
 
-  attachSkipButtonListener();
+    attachSkipButtonListener();
 
-  // Reattach next button logic to newly injected next button
-  const newNextButton = document.getElementById('next-step');
-  newNextButton.addEventListener('click', () => {
-    step++;
+    // Reattach next button logic to newly injected next button
+    const newNextButton = document.getElementById('next-step');
+    newNextButton.addEventListener('click', () => {
+      step++;
 
-    if (currentStep < totalSteps) {
-      currentStep++;
-      updateProgressBar();
-      showTutorialStep();
-    }
-
-    if (step === 1) {
-      // Step 1: Highlight cards and arrows
-      document.querySelectorAll('.card').forEach(card => {
-        card.classList.add('highlight');
-      });
-
-      const next = document.getElementById('next');
-      const prev = document.getElementById('prev');
-      if (next && prev) {
-        next.classList.add('highlight');
-        prev.classList.add('highlight');
+      if (currentStep < totalSteps) {
+        currentStep++;
+        updateProgressBar();
+        showTutorialStep();
       }
 
-      // Update tutorial instructions for Step 2
-      tutorialStep.innerHTML = `
+      if (step === 1) {
+        // Step 1: Highlight cards and arrows
+        document.querySelectorAll('.card').forEach(card => {
+          card.classList.add('highlight');
+        });
+
+        const next = document.getElementById('next');
+        const prev = document.getElementById('prev');
+        if (next && prev) {
+          next.classList.add('highlight');
+          prev.classList.add('highlight');
+        }
+
+        // Update tutorial instructions for Step 2
+        tutorialStep.innerHTML = `
         <h2>Step 2</h2>
         <p>Swipe through to view content<span class="extra"> or use buttons to swipe through content </span></p>
         <div id="progress-bar-container">
@@ -796,131 +814,131 @@ document.getElementById('start-tutorial-btn').addEventListener('click', () => {
         </div>
         <button class="skip-btn">Got it</button>
       `;
-      updateProgressBar();
-      attachSkipButtonListener();
-    } else {
-      // End tutorial
-      tutorialOverlay.classList.add('hidden');
-      localStorage.setItem('tutorialCompleted', true);
+        updateProgressBar();
+        attachSkipButtonListener();
+      } else {
+        // End tutorial
+        tutorialOverlay.classList.add('hidden');
+        localStorage.setItem('tutorialCompleted', true);
 
-      // Trigger gesture demo
-      setTimeout(() => {
-        const gesture = document.getElementById('gesture-demo');
-        if (gesture) gesture.classList.remove('hidden');
-
-        const firstCard = document.querySelector('.swipe-card');
-        if (firstCard) {
-          firstCard.classList.add('highlight');
-          firstCard.style.transition = 'transform 0.4s ease-in-out';
-          firstCard.style.transform = 'translateX(-30px)';
-          setTimeout(() => {
-            firstCard.style.transform = 'translateX(30px)';
-          }, 400);
-          setTimeout(() => {
-            firstCard.style.transform = 'translateX(0)';
-          }, 800);
-        }
-
+        // Trigger gesture demo
         setTimeout(() => {
-          if (gesture) gesture.classList.add('hidden');
-          if (firstCard) firstCard.classList.remove('highlight');
-        }, 4000);
-      }, 500);
+          const gesture = document.getElementById('gesture-demo');
+          if (gesture) gesture.classList.remove('hidden');
 
-      // Enable swipe gestures
-      let startX = 0;
-      document.querySelectorAll('.swipe-card').forEach(card => {
-        card.addEventListener('touchstart', e => {
-          startX = e.touches[0].clientX;
-        });
-
-        card.addEventListener('touchend', e => {
-          const endX = e.changedTouches[0].clientX;
-          const diff = endX - startX;
-          if (Math.abs(diff) > 50) {
-            card.style.transition = 'transform 0.3s ease-out';
-            card.style.transform = `translateX(${diff > 0 ? '150%' : '-150%'})`;
+          const firstCard = document.querySelector('.swipe-card');
+          if (firstCard) {
+            firstCard.classList.add('highlight');
+            firstCard.style.transition = 'transform 0.4s ease-in-out';
+            firstCard.style.transform = 'translateX(-30px)';
             setTimeout(() => {
-              card.style.transform = 'translateX(0)';
-              card.style.transition = '';
-            }, 500);
+              firstCard.style.transform = 'translateX(30px)';
+            }, 400);
+            setTimeout(() => {
+              firstCard.style.transform = 'translateX(0)';
+            }, 800);
           }
-        }, { once: true });
-      });
-    }
+
+          setTimeout(() => {
+            if (gesture) gesture.classList.add('hidden');
+            if (firstCard) firstCard.classList.remove('highlight');
+          }, 4000);
+        }, 500);
+
+        // Enable swipe gestures
+        let startX = 0;
+        document.querySelectorAll('.swipe-card').forEach(card => {
+          card.addEventListener('touchstart', e => {
+            startX = e.touches[0].clientX;
+          });
+
+          card.addEventListener('touchend', e => {
+            const endX = e.changedTouches[0].clientX;
+            const diff = endX - startX;
+            if (Math.abs(diff) > 50) {
+              card.style.transition = 'transform 0.3s ease-out';
+              card.style.transform = `translateX(${diff > 0 ? '150%' : '-150%'})`;
+              setTimeout(() => {
+                card.style.transform = 'translateX(0)';
+                card.style.transition = '';
+              }, 500);
+            }
+          }, { once: true });
+        });
+      }
+    });
+
+    // Show overlay and re-highlight
+    tutorialOverlay.classList.remove('hidden');
+    highlightElement(newNextButton, "Click here to move to the next step!");
   });
 
-  // Show overlay and re-highlight
-  tutorialOverlay.classList.remove('hidden');
-  highlightElement(newNextButton, "Click here to move to the next step!");
-});
-
-    </script>
+</script>
 
 
 <script>
 
-      document.querySelectorAll(".reaction-btn").forEach((button) => {
-        button.addEventListener("click", async (event) => {
-          const btn = event.target.closest(".reaction-btn");
-          const type = btn.getAttribute("data-type");
-          const secretCard = btn.closest(".secret-card");
-          const secretId = secretCard.getAttribute("data-id");
+  document.querySelectorAll(".reaction-btn").forEach((button) => {
+    button.addEventListener("click", async (event) => {
+      const btn = event.target.closest(".reaction-btn");
+      const type = btn.getAttribute("data-type");
+      const secretCard = btn.closest(".secret-card");
+      const secretId = secretCard.getAttribute("data-id");
 
-          try {
-            const response = await fetch(`/secret/${secretId}/react`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ type }),
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-              const countSpan = btn.querySelector(".reaction-count");
-              countSpan.textContent = data.reactions[type].count || 0; // Use updated count from server
-            } else {
-              console.error("Failed to update reactions:", data.error);
-            }
-          } catch (error) {
-            console.error("Error updating reactions:", error);
-          }
+      try {
+        const response = await fetch(`/secret/${secretId}/react`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ type }),
         });
-      });
 
+        const data = await response.json();
 
-    const cards = document.querySelectorAll(".card")
-    cards.forEach((card) => {
-      const secretId = card.querySelector("#secretId")
-      card.querySelector(".report-btn").addEventListener('click', async (e) => {
-        const secretId = e.target.getAttribute('data-id');
-        const reason = prompt('Why are you reporting this content?'); // Ask for the reason
-
-        if (reason) {
-            try {
-                const response = await fetch(`/report/secret/${secretId}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ reason })
-                });
-
-                const data = await response.json();
-                if (data.success) {
-                    alert('Thank you for reporting. We will review it shortly.');
-                } else {
-                    alert('Error reporting content');
-                }
-            } catch (error) {
-                console.error('Error reporting:', error);
-            }
+        if (data.success) {
+          const countSpan = btn.querySelector(".reaction-count");
+          countSpan.textContent = data.reactions[type].count || 0; // Use updated count from server
+        } else {
+          console.error("Failed to update reactions:", data.error);
         }
+      } catch (error) {
+        console.error("Error updating reactions:", error);
+      }
+    });
+  });
+
+
+  const cards = document.querySelectorAll(".card")
+  cards.forEach((card) => {
+    const secretId = card.querySelector("#secretId")
+    card.querySelector(".report-btn").addEventListener('click', async (e) => {
+      const secretId = e.target.getAttribute('data-id');
+      const reason = prompt('Why are you reporting this content?'); // Ask for the reason
+
+      if (reason) {
+        try {
+          const response = await fetch(`/report/secret/${secretId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ reason })
+          });
+
+          const data = await response.json();
+          if (data.success) {
+            alert('Thank you for reporting. We will review it shortly.');
+          } else {
+            alert('Error reporting content');
+          }
+        } catch (error) {
+          console.error('Error reporting:', error);
+        }
+      }
     });
 
 
 
-    })
+  })
 
-    document.querySelectorAll(".read").forEach((button) => {
+  document.querySelectorAll(".read").forEach((button) => {
     button.addEventListener("click", (e) => {
       const contentSpan = e.target.previousElementSibling;
       const isTruncated = e.target.textContent === "Read More";
@@ -937,17 +955,17 @@ document.getElementById('start-tutorial-btn').addEventListener('click', () => {
     });
   });
 
-  </script>
+</script>
 
-  <script>
-    document.querySelectorAll('.gossipa-comment-form textarea').forEach((textarea) => {
-  textarea.addEventListener('input', () => {
-    textarea.style.height = 'auto';
-    textarea.style.height = `${textarea.scrollHeight}px`;
+<script>
+  document.querySelectorAll('.gossipa-comment-form textarea').forEach((textarea) => {
+    textarea.addEventListener('input', () => {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    });
   });
-});
 
-  </script>
+</script>
 
 
 <script>
@@ -996,7 +1014,7 @@ document.getElementById('start-tutorial-btn').addEventListener('click', () => {
 
 <script>
   document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
+    btn.addEventListener('click', function (e) {
       e.preventDefault();
       showBrandLogo();
 
@@ -1010,6 +1028,3 @@ document.getElementById('start-tutorial-btn').addEventListener('click', () => {
 
 <script src="/js/defaultTheme.js"></script>
 <script src="/js/app.js"></script>
-  
-</body>
-</html>

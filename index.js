@@ -956,6 +956,7 @@ app.get("/section/:section", async (req, res) => {
       const usersSecret = result.rows;
       // console.log(usersSecret)
       res.render("section", {
+        title: "Welcome to a safe space",
         section: usersSecret,
         userId: req.user.id,
         activeStatus: req.user.active_status,
@@ -1579,10 +1580,9 @@ app.get("/notifications", async (req, res) => {
 
       const topNotifications = sortedNotifications.slice(0, 5);
 
-      console.log(topNotifications);
-      console.log(notifyReactions);
       // Render the notifications page
       res.render("notifications", {
+        title: "Notifications",
         heading: `New notifications`,
         comments: notifyComment,
         secrets: notifySecret,
@@ -1670,6 +1670,7 @@ app.post("/search", async (req, res) => {
     );
 
     res.render("searchResults", {
+      title: "Search results",
       userId: req.user.id,
       activeStatus: req.user.active_status,
       verification: req.user.verified,

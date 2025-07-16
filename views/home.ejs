@@ -1,850 +1,910 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Meta Tags for SEO -->
-    <meta
-      name="description"
-      content="Share gists secretly with end-to-end encryption. GistTown guarantees your privacy with 100% anonymity."
-    />
-    <meta
-      name="keywords"
-      content="anonymity, secret sharing, encrypted messaging, privacy, end-to-end encryption, anonymous communication"
-    />
-    <meta name="robots" content="index, follow" />
-    <meta name="author" content="Anonym" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="GistTown - Share Gists Secretly" />
-    <meta
-      property="og:description"
-      content="Share your gists secretly with GistTown. Your privacy is our priority with full end-to-end encryption."
-    />
-    <meta property="og:image" content="/img/og-image.png" />
-    <meta property="og:url" content="https://yourwebsite.com" />
+  <!-- Meta Tags for SEO -->
+  <meta name="description"
+    content="Share gists secretly with end-to-end encryption. GistTown guarantees your privacy with 100% anonymity." />
+  <meta name="keywords"
+    content="anonymity, secret sharing, encrypted messaging, privacy, end-to-end encryption, anonymous communication" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Anonym" />
 
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="GistTown - Share Gists Secretly" />
-    <meta
-      name="twitter:description"
-      content="Share your gists secretly  with GistTown. Your privacy is our priority with full end-to-end encryption."
-    />
-    <meta name="twitter:image" content="/img/twitter-image.png" />
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="GistTown - Share Gists Secretly" />
+  <meta property="og:description"
+    content="Share your gists secretly with GistTown. Your privacy is our priority with full end-to-end encryption." />
+  <meta property="og:image" content="/img/og-image.png" />
+  <meta property="og:url" content="https://yourwebsite.com" />
 
-    <script
-      src="https://kit.fontawesome.com/ceb8cfc409.js"
-      crossorigin="anonymous"
-    ></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
-      rel="stylesheet"
-    />
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="GistTown - Share Gists Secretly" />
+  <meta name="twitter:description"
+    content="Share your gists secretly  with GistTown. Your privacy is our priority with full end-to-end encryption." />
+  <meta name="twitter:image" content="/img/twitter-image.png" />
 
-    <link rel="stylesheet" href="/styles/style.css" />
-    <link rel="stylesheet" href="/styles/new.css" />
-    <link rel="stylesheet" href="/styles/media.css" />
+  <script src="https://kit.fontawesome.com/ceb8cfc409.js" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+    rel="stylesheet" />
 
-    <title>GistTown - Share Gists Anonymously</title>
+  <link rel="stylesheet" href="/styles/style.css" />
+  <link rel="stylesheet" href="/styles/new.css" />
+  <link rel="stylesheet" href="/styles/media.css" />
 
-    <style>
-      :root {
-  --primary-color: #7f5af0;
-  --secondary-color: #2cb67d;
-  --text-color: #ffffff;
-  --body-bg: linear-gradient(135deg, #6a7bff, #a0aaff );
-  --container-bg: #1a1a2e;
-  --button-text: #ffffff;
-}
+  <title>GistTown - Share Gists Anonymously</title>
 
-[data-theme="light"] {
-  --primary-color: #6246ea;
-  --secondary-color: #2cb67d;
-  --text-color: #16161a;
-  --body-bg: linear-gradient(135deg, #a0aaff, #6a7bff);
-  --container-bg: #ffffff;
-  --button-text: #16161a;
-}
+  <style>
+    :root {
+      --primary-color: #7f5af0;
+      --secondary-color: #2cb67d;
+      --text-color: #ffffff;
+      --body-bg: linear-gradient(135deg, #6a7bff, #a0aaff);
+      --container-bg: #1a1a2e;
+      --button-text: #ffffff;
+    }
 
-body {
-  background: var(--container-bg);
-  font-family: 'Quicksand', sans-serif;
-}
+    [data-theme="light"] {
+      --primary-color: #6246ea;
+      --secondary-color: #2cb67d;
+      --text-color: #16161a;
+      --body-bg: linear-gradient(135deg, #a0aaff, #6a7bff);
+      --container-bg: #ffffff;
+      --button-text: #16161a;
+    }
 
-.scrolled{
-  background: var(--container-bg);
-}
-      #logo {
-        opacity: 0;
-        transition: opacity 0.2s ease-in-out;
+    body {
+      background: var(--container-bg);
+      font-family: 'Quicksand', sans-serif;
+    }
+
+    .scrolled {
+      background: var(--container-bg);
+    }
+
+    #logo {
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    #brand-logo-container {
+      background: var(--body-bg);
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #carousel {
+      margin: 1rem auto;
+    }
+
+    /* Carousel base */
+    .carousel-track {
+      display: flex;
+      gap: 20px;
+      width: auto;
+      transform: translateX(0%);
+      transition: transform 0.7s ease-in-out;
+    }
+
+    /* Each slide */
+    .carousel-track>div {
+      flex: 0 0 100%;
+      box-sizing: border-box;
+      padding: 2rem 1.5rem;
+      background: var(--body-bg);
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      margin: 0 auto;
+      max-width: 100%;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    /* Blockquote */
+    blockquote {
+      font-size: 1.25rem;
+      font-style: italic;
+      color: #374151;
+      /* Tailwind gray-700 */
+      line-height: 1.6;
+    }
+
+    /* Name */
+    .carousel-track p {
+      margin-top: 1rem;
+      font-weight: 600;
+      color: #1f2937;
+      /* Tailwind gray-800 */
+    }
+
+
+
+    /* Heading enhancements */
+    #testimonials h2 {
+      font-family: 'Segoe UI', sans-serif;
+      /* font-weight: 800; */
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: #1e3a8a;
+      /* Tailwind blue-900 */
+    }
+
+
+    /* Animated dot styles */
+    .dot {
+      width: 12px;
+      height: 12px;
+      background-color: #93c5fd;
+      border: none;
+      border-radius: 50%;
+      opacity: 0.7;
+      transition: all 0.4s ease;
+      box-shadow: 0 0 0 rgba(59, 130, 246, 0.5);
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    .dot.active {
+      background-color: #3b82f6;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+      opacity: 1;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5);
       }
 
-      #brand-logo-container{
-        background: var(--body-bg);
+      70% {
+        box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
       }
-    
-  .fade-in {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-  .fade-in.show {
-    opacity: 1;
-    transform: translateY(0);
-  }
 
-  #carousel {
-    margin: 1rem auto;
-  }
+      100% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+      }
+    }
 
-  /* Carousel base */
-.carousel-track {
-  display: flex;
-  gap: 20px;
-  width: auto;
-  transform: translateX(0%);
-  transition: transform 0.7s ease-in-out;
-}
+    /* Animate on load */
+    .animate-ping-once {
+      animation: ping-once 1s ease-out;
+    }
 
-/* Each slide */
-.carousel-track > div {
-  flex: 0 0 100%;
-  box-sizing: border-box;
-  padding: 2rem 1.5rem;
-  background: var(--body-bg);
-  border-radius: 1rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-  margin: 0 auto;
-  max-width: 100%;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
+    @keyframes ping-once {
+      0% {
+        transform: scale(1);
+        opacity: 0.5;
+      }
 
-/* Blockquote */
-blockquote {
-  font-size: 1.25rem;
-  font-style: italic;
-  color: #374151; /* Tailwind gray-700 */
-  line-height: 1.6;
-}
+      50% {
+        transform: scale(1.5);
+        opacity: 1;
+      }
 
-/* Name */
-.carousel-track p {
-  margin-top: 1rem;
-  font-weight: 600;
-  color: #1f2937; /* Tailwind gray-800 */
-}
+      100% {
+        transform: scale(1);
+        opacity: 0.7;
+      }
+    }
+
+    /* Fade-in utility (reuse for any section) */
+    .fade-in,
+    .slide {
+      opacity: 0;
+      transform: translateY(30px) scale(0.9);
+      transition: opacity 1s ease, transform 0.8s ease;
+
+    }
+
+    .show {
+      opacity: 1 !important;
+      transform: translateY(0) scale(1) !important;
+    }
 
 
+    /* Value Proposition Grid */
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+      align-items: start;
+      margin-top: 2rem;
+    }
 
-/* Heading enhancements */
-#testimonials h2 {
-  font-family: 'Segoe UI', sans-serif;
-  /* font-weight: 800; */
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  color: #1e3a8a; /* Tailwind blue-900 */
-}
+    /* Individual Value Item */
+    .value-item {
+      background-color: var(--container-bg);
+      border-radius: 1rem;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
+    /* Hover effect */
+    .value-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
 
-/* Animated dot styles */
-.dot {
-  width: 12px;
-  height: 12px;
-  background-color: #93c5fd;
-  border: none;
-  border-radius: 50%;
-  opacity: 0.7;
-  transition: all 0.4s ease;
-  box-shadow: 0 0 0 rgba(59, 130, 246, 0.5);
-  animation: pulse 2s infinite ease-in-out;
-}
+    /* Icon styling */
+    .value-item i {
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
 
-.dot.active {
-  background-color: #3b82f6;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
-  opacity: 1;
-}
+    /* Heading inside value-item */
+    .value-item h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-color);
+    }
 
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5); }
-  70% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
-}
+    /* Paragraph inside value-item */
+    .value-item p {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--secondary-color);
+    }
 
-/* Animate on load */
-.animate-ping-once {
-  animation: ping-once 1s ease-out;
-}
+    /* Responsive tweaks */
+    @media (max-width: 640px) {
+      .value-item {
+        padding: 1.5rem 1rem;
+      }
 
-@keyframes ping-once {
-  0% {
-    transform: scale(1);
-    opacity: 0.5;
-  }
-  50% {
-    transform: scale(1.5);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 0.7;
-  }
-}
+      .value-item h3 {
+        font-size: 1.25rem;
+      }
 
-/* Fade-in utility (reuse for any section) */
-.fade-in, .slide {
-  opacity: 0;
-  transform: translateY(30px) scale(0.9);
-transition: opacity 1s ease, transform 0.8s ease;
-
-}
-.show {
-  opacity: 1 !important;
-  transform: translateY(0) scale(1)!important;
-}
+      .value-item p {
+        font-size: 0.95rem;
+      }
+    }
 
 
-/* Value Proposition Grid */
-.value-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 2rem;
-  align-items: start;
-  margin-top: 2rem;
-}
-
-/* Individual Value Item */
-.value-item {
-  background-color: var(--container-bg);
-  border-radius: 1rem;
-  padding: 2rem 1.5rem;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Hover effect */
-.value-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-/* Icon styling */
-.value-item i {
-  color: var(--primary-color);
-  margin-bottom: 1rem;
-}
-
-/* Heading inside value-item */
-.value-item h3 {
-  font-size: 1.5rem;
-  margin-bottom: 0.75rem;
-  color: var(--text-color);
-}
-
-/* Paragraph inside value-item */
-.value-item p {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--secondary-color);
-}
-
-/* Responsive tweaks */
-@media (max-width: 640px) {
-  .value-item {
-    padding: 1.5rem 1rem;
-  }
-  .value-item h3 {
-    font-size: 1.25rem;
-  }
-  .value-item p {
-    font-size: 0.95rem;
-  }
-}
-
-
-/* -----------------------------------
+    /* -----------------------------------
    FADE-IN / SLIDE DOWN UTILITY
 ------------------------------------ */
-.fade-in {
-  opacity: 0;
-  transform: translateY(-20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.fade-in.show {
-  opacity: 1;
-  transform: translateY(0);
-}
+    .fade-in {
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
 
-/* -----------------------------------
+    .fade-in.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* -----------------------------------
    ABOUT-INFO SECTION
 ------------------------------------ */
-#about-info .about-info {
-  text-align: center;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 4rem 1rem;
-}
-#about-info .about-info .m-head {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  color: var(--primary-color);
-}
-#about-info .about-info .lead {
-  font-size: 1.125rem;
-  color: var(--secondary-color);
-  margin-bottom: 2rem;
-}
+    #about-info .about-info {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 4rem 1rem;
+    }
 
-#about-info .about-card {
-  background: var(--container-bg);
-  border-radius: 16px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-  padding: 2rem;
-  flex: 1 1 220px;
-  max-width: 400px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-#about-info .about-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.15);
-}
-#about-info .about-card .number {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--primary-color);
-  margin-bottom: 1rem;
-}
-#about-info .about-card .icon {
-  color: var(--primary-color);
-  margin-bottom: 1rem;
-}
-#about-info .about-card h4 {
-  margin-bottom: 0.5rem;
-  color: var(--text-color);
-}
-#about-info .about-card .text {
-  color: var(--secondary-color);
-  line-height: 1.6;
-}
+    #about-info .about-info .m-head {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+    }
 
-/* -----------------------------------
+    #about-info .about-info .lead {
+      font-size: 1.125rem;
+      color: var(--secondary-color);
+      margin-bottom: 2rem;
+    }
+
+    #about-info .about-card {
+      background: var(--container-bg);
+      border-radius: 16px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      flex: 1 1 220px;
+      max-width: 400px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    #about-info .about-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    #about-info .about-card .number {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
+
+    #about-info .about-card .icon {
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
+
+    #about-info .about-card h4 {
+      margin-bottom: 0.5rem;
+      color: var(--text-color);
+    }
+
+    #about-info .about-card .text {
+      color: var(--secondary-color);
+      line-height: 1.6;
+    }
+
+    /* -----------------------------------
    SECURITY-INFO SECTION
 ------------------------------------ */
-#security-info {
-  background: var(--container-bg);
-  padding: 4rem 1rem;
-}
-#security-info .security-info .text {
-  max-width: 700px;
-  margin: 0 auto;
-  text-align: center;
-}
-#security-info .security-info .m-head {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  color: var(--primary-color);
-}
-#security-info .security-info .lead {
-  color: var(--secondary-color);
-  margin-bottom: 1.5rem;
-}
-#security-info .security-info .home-link {
-  display: inline-block;
-  color: var(--primary-color);
-  font-weight: bold;
-  text-decoration: none;
-  border-bottom: 2px solid transparent;
-  transition: border-color 0.3s;
-}
-#security-info .security-info .home-link:hover {
-  border-color: var(--primary-color);
-}
+    #security-info {
+      background: var(--container-bg);
+      padding: 4rem 1rem;
+    }
 
-/* -----------------------------------
+    #security-info .security-info .text {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    #security-info .security-info .m-head {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+    }
+
+    #security-info .security-info .lead {
+      color: var(--secondary-color);
+      margin-bottom: 1.5rem;
+    }
+
+    #security-info .security-info .home-link {
+      display: inline-block;
+      color: var(--primary-color);
+      font-weight: bold;
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      transition: border-color 0.3s;
+    }
+
+    #security-info .security-info .home-link:hover {
+      border-color: var(--primary-color);
+    }
+
+    /* -----------------------------------
    SLIDESHOW SECTION (iOS-style cards)
 ------------------------------------ */
-.slideshow-container {
-  position: relative;
-  overflow: hidden;
-  padding: 2rem 0;
-}
-.slideshow-wrapper {
-  display: flex;
-  gap: 1.5rem;
-  scroll-snap-type: x mandatory;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.slide {
-  flex: 0 0 80%;
-  max-width: 80%;
-  height: 400px;
-  background-size: cover;
-  background-position: center;
-  border-radius: 16px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-  scroll-snap-align: center;
-  opacity: 0;
-  transform: translateY(-20px) scale(0.95);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.slide.visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
+    .slideshow-container {
+      position: relative;
+      overflow: hidden;
+      padding: 2rem 0;
+    }
 
-/* Prev/Next buttons */
-.prev-device, .next-device {
-  position: absolute;
-  top: 50% ;
-  /* transform: translate(-50%); */
-  background: var(--body-bg);
-  border: none;
-  font-size: 2rem;
-  border-radius: 50%;
-  width: 3.5rem;
-  height: 3.5rem;
-  /* padding: 1rem 1.2rem !important; */
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-.prev-device { left: 1rem; }
-.next-device { right: 1rem; }
-.prev-device:hover, .next-device:hover { background: rgba(255,255,255,1); }
+    .slideshow-wrapper {
+      display: flex;
+      gap: 1.5rem;
+      scroll-snap-type: x mandatory;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
 
-/* -----------------------------------
+    .slide {
+      flex: 0 0 80%;
+      max-width: 80%;
+      height: 400px;
+      background-size: cover;
+      background-position: center;
+      border-radius: 16px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      scroll-snap-align: center;
+      opacity: 0;
+      transform: translateY(-20px) scale(0.95);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .slide.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Prev/Next buttons */
+    .prev-device,
+    .next-device {
+      position: absolute;
+      top: 50%;
+      /* transform: translate(-50%); */
+      background: var(--body-bg);
+      border: none;
+      font-size: 2rem;
+      border-radius: 50%;
+      width: 3.5rem;
+      height: 3.5rem;
+      /* padding: 1rem 1.2rem !important; */
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .prev-device {
+      left: 1rem;
+    }
+
+    .next-device {
+      right: 1rem;
+    }
+
+    .prev-device:hover,
+    .next-device:hover {
+      background: rgba(255, 255, 255, 1);
+    }
+
+    /* -----------------------------------
    RESPONSIVE
 ------------------------------------ */
-@media (max-width: 768px) {
-  .slide { height: 300px; }
-  #about-info .about-card, .value-item {
-    flex: 1 1 100%;
-    max-width: 100%;
-  }
-}
+    @media (max-width: 768px) {
+      .slide {
+        height: 300px;
+      }
 
-#testimonials { background-color: var(--container-bg); }
-.dot { background-color: var(--secondary-color); }
-.dot.active { background-color: var(--primary-color); }
+      #about-info .about-card,
+      .value-item {
+        flex: 1 1 100%;
+        max-width: 100%;
+      }
+    }
 
-/* Container & positioning */
-#slideshow-gallery {
-  position: relative;
-  overflow: hidden;
-  padding: 4rem 0;
-}
+    #testimonials {
+      background-color: var(--container-bg);
+    }
 
-.device-carousel {
-  display: flex;
-  gap: 1rem;
-  transition: transform 0.8s ease;
-}
+    .dot {
+      background-color: var(--secondary-color);
+    }
 
-/* Each slide fades in/out */
-.device-slide {
-  flex: 0 0 100%;
-  max-width: 100%;
-  opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-  text-align: center;
-}
-.device-slide.active {
-  opacity: 1;
-  transform: scale(1);
-}
+    .dot.active {
+      background-color: var(--primary-color);
+    }
 
-/* Device mockup frames */
-.device-mockup {
-  position: relative;
-  margin: 0 auto;
-}
-.device-mockup.phone {
-  width: 200px; height: 450px;
-  background: url('/img/mockup-phone.png') no-repeat center/contain;
-}
-.device-mockup.tablet {
-  width: 300px; height: 380px;
-  background: url('/img/mockup-tablet.png') no-repeat center/contain;
-}
-.device-mockup.laptop {
-  width: 400px; height: 280px;
-  background: url('/img/mockup-laptop.png') no-repeat center/contain;
-}
-.device-mockup img {
-  width: 90%; height: auto;
-  position: absolute;
-  top: 5%; left: 5%;
-  border-radius: 8px;
-}
+    /* Container & positioning */
+    #slideshow-gallery {
+      position: relative;
+      overflow: hidden;
+      padding: 4rem 0;
+    }
 
-/* Caption */
-.caption {
-  margin-top: 1rem;
-  color: var(--secondary-color);
-  font-size: 1rem;
-}
+    .device-carousel {
+      display: flex;
+      gap: 1rem;
+      transition: transform 0.8s ease;
+    }
 
-/* Controls */
-.prev-device, .next-device {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.4);
-  border: none;
-  color: white;
-  font-size: 2rem;
-  padding: 0.5rem;
-  border-radius: 50%;
-  cursor: pointer;
-}
-.prev-device { left: 1rem; }
-.next-device { right: 1rem; }
+    /* Each slide fades in/out */
+    .device-slide {
+      flex: 0 0 100%;
+      max-width: 100%;
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      text-align: center;
+    }
 
-/* Responsive: show all 3 side-by-side on wide screens */
-@media(min-width: 1024px) {
-  .device-slide { flex: 0 0 33.333%; } 
-}
+    .device-slide.active {
+      opacity: 1;
+      transform: scale(1);
+    }
 
+    /* Device mockup frames */
+    .device-mockup {
+      position: relative;
+      margin: 0 auto;
+    }
 
+    .device-mockup.phone {
+      width: 200px;
+      height: 450px;
+      background: url('/img/mockup-phone.png') no-repeat center/contain;
+    }
 
+    .device-mockup.tablet {
+      width: 300px;
+      height: 380px;
+      background: url('/img/mockup-tablet.png') no-repeat center/contain;
+    }
 
-  .lead {
-    font-size: 1.5rem;
-    margin: 2rem 0;
-  }
+    .device-mockup.laptop {
+      width: 400px;
+      height: 280px;
+      background: url('/img/mockup-laptop.png') no-repeat center/contain;
+    }
 
-  .about-info ul {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-  }
+    .device-mockup img {
+      width: 90%;
+      height: auto;
+      position: absolute;
+      top: 5%;
+      left: 5%;
+      border-radius: 8px;
+    }
 
-  .about-info li {
-    background: var(--container-bg);
-    padding: 2rem;
-    width: 100%;
-    height: 100%;
-  }
+    /* Caption */
+    .caption {
+      margin-top: 1rem;
+      color: var(--secondary-color);
+      font-size: 1rem;
+    }
 
-  .about-info .about-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+    /* Controls */
+    .prev-device,
+    .next-device {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.4);
+      border: none;
+      color: white;
+      font-size: 2rem;
+      padding: 0.5rem;
+      border-radius: 50%;
+      cursor: pointer;
+    }
 
-  .about-card h4 {
-    margin-bottom: 2rem ;
-    font-size: 2rem;
-    color: var(--text-color);
-    font-weight: bold;
-  }
+    .prev-device {
+      left: 1rem;
+    }
 
-  .about-card .text {
-    font-size: 1.1rem;
-    color: #999;
-    text-align: center;
-  }
+    .next-device {
+      right: 1rem;
+    }
 
-  .about-card .number {
-    background: var(--body-bg);
-    padding: .5rem .75rem;
-    color: var(--text-color);
-    border-radius: 50%;
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
-    font-weight: bold;
-  }
-
-  .about-card .icon {
-    margin-bottom: 1rem;
-    color: var(--primary-color);
-  }
-
-  .home-link {
-    color: var(--primary-color);
-    text-transform: uppercase;
-    font-size: 1.2rem;
-  }
-
-  .home-link:hover {
-    color: var(--secondary-color);
-  }
-
-
-  .faq #question{
-    margin-bottom: 2rem;
-  }
-
-  .faq #question li {
-    background: var(--body-bg) !important;
-    padding: 1.5rem;
-    font-size: 1.3rem;
-    font-weight: bold;
-    margin-bottom: .5em !important;
-  }
-
-  .faq #question div {
-    /* background: var(--body--bg); */
-     display: flex;
-     justify-content: space-between;
-     align-items: center;
-  }
+    /* Responsive: show all 3 side-by-side on wide screens */
+    @media(min-width: 1024px) {
+      .device-slide {
+        flex: 0 0 33.333%;
+      }
+    }
 
 
 
-footer {
-  background: var(--body-bg);
-}
-</style>
-  </head>
-  <body>
-    <div id="brand-logo-container">
-      <h1 id="brand-logo">GistTown</h1>
+
+    .lead {
+      font-size: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .about-info ul {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .about-info li {
+      background: var(--container-bg);
+      padding: 2rem;
+      width: 100%;
+      height: 100%;
+    }
+
+    .about-info .about-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .about-card h4 {
+      margin-bottom: 2rem;
+      font-size: 2rem;
+      color: var(--text-color);
+      font-weight: bold;
+    }
+
+    .about-card .text {
+      font-size: 1.1rem;
+      color: #999;
+      text-align: center;
+    }
+
+    .about-card .number {
+      background: var(--body-bg);
+      padding: .5rem .75rem;
+      color: var(--text-color);
+      border-radius: 50%;
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      font-weight: bold;
+    }
+
+    .about-card .icon {
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+    }
+
+    .home-link {
+      color: var(--primary-color);
+      text-transform: uppercase;
+      font-size: 1.2rem;
+    }
+
+    .home-link:hover {
+      color: var(--secondary-color);
+    }
+
+
+    .faq #question {
+      margin-bottom: 2rem;
+    }
+
+    .faq #question li {
+      background: var(--body-bg) !important;
+      padding: 1.5rem;
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: .5em !important;
+    }
+
+    .faq #question div {
+      /* background: var(--body--bg); */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+
+
+    footer {
+      background: var(--body-bg);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="brand-logo-container">
+    <h1 id="brand-logo">GistTown</h1>
+  </div>
+
+  <script>
+    window.addEventListener("load", function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      hideBrandLogo();
+    });
+
+    window.addEventListener("beforeunload", function () {
+      showBrandLogo();
+    });
+
+    function showBrandLogo() {
+      // const brandLogo = document.getElementById("brand-logo-container");
+      document.getElementById("brand-logo-container").style.display = "flex";
+    }
+
+    function hideBrandLogo() {
+      document.getElementById("brand-logo-container").style.display = "none";
+    }
+  </script>
+
+  <header>
+    <div class="container">
+      <div class="header">
+        <a href="/" id="logo"><i class="fas fa-mask fa-2x"></i></a>
+        <ul id="navbar">
+          <li class="navbar">
+            <a href="/login">Sign In <i class="fas fa-right-to-bracket"></i></a>
+          </li>
+          <li class="navbar dropdown">
+            <div class="hamburger" id="hamburger">
+              <div class="bar" id="bar1"></div>
+              <div class="bar" id="bar3"></div>
+            </div>
+            <div id="menu" class="menu-hidden">
+              <div class="container">
+                <div class="menu">
+                  <div class="menu-nav">
+                    <div class="menu-logo">
+                      <i class="fas fa-mask fa-2x"></i>
+                      <h4>GistTown</h4>
+                    </div>
+                    <ul class="pages">
+                      <h4>Compose a gist</h4>
+                      <li><a href="#">View Gists</a></li>
+                      <li><a href="#">Share a Gist</a></li>
+                    </ul>
+                    <ul class="account">
+                      <h4><i class="fas fa-user"></i> &nbsp;Account</h4>
+                      <li><a href="/login">Login</a></li>
+                      <li><a href="/register">Register</a></li>
+                    </ul>
+                  </div>
+                  <div class="theme-switch">
+                    <input type="checkbox" id="themeToggle" class="theme-toggle" />
+                    <label for="themeToggle" class="theme-toggle-label">
+                      <span class="sun-icon">☀️</span>
+                      <span class="moon-icon">🌙</span>
+                    </label>
+                  </div>
+                  <hr />
+                  <div class="menu-nav-alt">
+                    <ul class="info">
+                      <h4>Information</h4>
+                      <li><a href="#">About</a></li>
+                      <li><a href="#">Security</a></li>
+                      <li><a href="#">Privacy</a></li>
+                      <li><a href="#">Blog</a></li>
+                    </ul>
+                    <ul class="support">
+                      <h4>Support</h4>
+                      <li><a href="#">FAQ</a></li>
+                      <li><a href="#">Contact</a></li>
+                    </ul>
+                  </div>
+                  <p class="menu-lang">
+                    <i class="fas fa-globe"></i> English
+                  </p>
+                  <button id="close">Close</button>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
+  </header>
+
+  <main>
+
+    <section id="hero">
+      <div class="container fade-in">
+        <div class="hero">
+          <i class="fas fa-key fa-7x"></i>
+          <h1 class="display-3 gradient-text">Unleash Your Gists</h1>
+          <p class="lead sub-lead">Speak freely. Share secretly. Connect fearlessly.</p>
+          <a href="#about-info" class="btn btn-highlight">Explore How It Works</a>
+          <a href="/register" class="btn btn-dark">Join Now</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="value-prop" class="fade-in">
+      <div class="container">
+        <div class="value-grid">
+          <div class="value-item">
+            <i class="fas fa-lock fa-3x"></i>
+            <h3>Private & Secure</h3>
+            <p>End-to-end encryption ensures no one but you can read your secrets.</p>
+          </div>
+          <div class="value-item">
+            <i class="fas fa-eye-slash fa-3x"></i>
+            <h3>100% Anonymous</h3>
+            <p>Not even we can trace it back to you. No names. No trails.</p>
+          </div>
+          <div class="value-item">
+            <i class="fas fa-fire fa-3x"></i>
+            <h3>One-Time View</h3>
+            <p>Secrets disappear after one view—keeping everything ephemeral.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
 
     <script>
-      window.addEventListener("load", function () {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        hideBrandLogo();
+      document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            const el = entry.target;
+            if (entry.isIntersecting) {
+              // fade-in sections
+              if (el.classList.contains('fade-in')) el.classList.add('show');
+              // slideshow cards
+              if (el.classList.contains('slide')) el.classList.add('visible');
+            } else {
+              if (el.classList.contains('fade-in')) el.classList.remove('show');
+              if (el.classList.contains('slide')) el.classList.remove('visible');
+            }
+          });
+        }, { threshold: 0.1 });
+
+        // Observe every section and every slide
+        document.querySelectorAll('section, .fade-in, .slide').forEach(el => {
+          // Make sure fade-in sections start hidden
+          if (el.tagName === 'SECTION' && !el.classList.contains('fade-in')) {
+            el.classList.add('fade-in');
+          }
+          observer.observe(el);
+        });
       });
-
-      window.addEventListener("beforeunload", function () {
-        showBrandLogo();
-      });
-
-      function showBrandLogo() {
-        // const brandLogo = document.getElementById("brand-logo-container");
-        document.getElementById("brand-logo-container").style.display = "flex";
-      }
-
-      function hideBrandLogo() {
-        document.getElementById("brand-logo-container").style.display = "none";
-      }
     </script>
 
-    <header>
+
+
+
+    <section id="about-info" class="fade-in">
       <div class="container">
-        <div class="header">
-          <a href="/" id="logo"><i class="fas fa-mask fa-2x"></i></a>
-          <ul id="navbar">
-            <li class="navbar">
-              <a href="/login"
-                >Sign In <i class="fas fa-right-to-bracket"></i
-              ></a>
-            </li>
-            <li class="navbar dropdown">
-              <div class="hamburger" id="hamburger">
-                <div class="bar" id="bar1"></div>
-                <div class="bar" id="bar3"></div>
+        <div class="about-info">
+          <h2 class="m-head">How Anonym Works</h2>
+          <p class="lead">
+            Write something you've never dared to say aloud. Send it into the anonymous void. And read what others share
+            too.
+          </p>
+          <!-- steps remain unchanged -->
+        </div>
+      </div>
+    </section>
+
+    <section id="about-info">
+      <div class="container">
+        <div class="about-info">
+          <h2 class="m-head">Share Gists anonymously</h2>
+          <h2 class="m-head">Read gist anonymously</h2>
+          <p class="lead">
+            Write something you've never dared to say aloud. Send it into the anonymous void.
+            And read what others share too.
+          </p>
+          <ul>
+            <li>
+              <div class="about-card">
+                <p class="number">1</p>
+                <i class="fas fa-file-pen fa-6x icon"></i>
+                <h4>Write</h4>
+                <p class="text">Compose your gists to share secretly.</p>
               </div>
-              <div id="menu" class="menu-hidden">
-                <div class="container">
-                  <div class="menu">
-                    <div class="menu-nav">
-                      <div class="menu-logo">
-                        <i class="fas fa-mask fa-2x"></i>
-                        <h4>GistTown</h4>
-                      </div>
-                      <ul class="pages">
-                        <h4>Compose a gist</h4>
-                        <li><a href="#">View Gists</a></li>
-                        <li><a href="#">Share a Gist</a></li>
-                      </ul>
-                      <ul class="account">
-                        <h4><i class="fas fa-user"></i> &nbsp;Account</h4>
-                        <li><a href="/login">Login</a></li>
-                        <li><a href="/register">Register</a></li>
-                      </ul>
-                    </div>
-                    <div class="theme-switch">
-                      <input
-                        type="checkbox"
-                        id="themeToggle"
-                        class="theme-toggle"
-                      />
-                      <label for="themeToggle" class="theme-toggle-label">
-                        <span class="sun-icon">☀️</span>
-                        <span class="moon-icon">🌙</span>
-                      </label>
-                    </div>
-                    <hr />
-                    <div class="menu-nav-alt">
-                      <ul class="info">
-                        <h4>Information</h4>
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Security</a></li>
-                        <li><a href="#">Privacy</a></li>
-                        <li><a href="#">Blog</a></li>
-                      </ul>
-                      <ul class="support">
-                        <h4>Support</h4>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Contact</a></li>
-                      </ul>
-                    </div>
-                    <p class="menu-lang">
-                      <i class="fas fa-globe"></i> English
-                    </p>
-                    <button id="close">Close</button>
-                  </div>
-                </div>
+            </li>
+            <li>
+              <div class="about-card">
+                <p class="number">2</p>
+                <i class="fas fa-share-from-square fa-6x icon"></i>
+                <h4>Share</h4>
+                <p class="text">Share gists in the anonymous world.</p>
+              </div>
+            </li>
+            <li>
+              <div class="about-card">
+                <p class="number">3</p>
+                <i class="fas fa-user-secret fa-6x icon"></i>
+                <h4>Anonymous</h4>
+                <p class="text">
+                  Once a gist is shared, the user becomes anonymous.
+                </p>
               </div>
             </li>
           </ul>
         </div>
       </div>
-    </header>
+    </section>
 
-    <main>
-
-      <section id="hero">
-        <div class="container fade-in">
-          <div class="hero">
-            <i class="fas fa-key fa-7x"></i>
-            <h1 class="display-3 gradient-text">Unleash Your Gists</h1>
-            <p class="lead sub-lead">Speak freely. Share secretly. Connect fearlessly.</p>
-            <a href="#about-info" class="btn btn-highlight">Explore How It Works</a>
-            <a href="/register" class="btn btn-dark">Join Now</a>
-          </div>
-        </div>
-      </section>
-
-      <section id="value-prop" class="fade-in">
-        <div class="container">
-          <div class="value-grid">
-            <div class="value-item">
-              <i class="fas fa-lock fa-3x"></i>
-              <h3>Private & Secure</h3>
-              <p>End-to-end encryption ensures no one but you can read your secrets.</p>
-            </div>
-            <div class="value-item">
-              <i class="fas fa-eye-slash fa-3x"></i>
-              <h3>100% Anonymous</h3>
-              <p>Not even we can trace it back to you. No names. No trails.</p>
-            </div>
-            <div class="value-item">
-              <i class="fas fa-fire fa-3x"></i>
-              <h3>One-Time View</h3>
-              <p>Secrets disappear after one view—keeping everything ephemeral.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      
-
-      <script>
-        document.addEventListener('DOMContentLoaded', () => {
-          const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-              const el = entry.target;
-              if (entry.isIntersecting) {
-                // fade-in sections
-                if (el.classList.contains('fade-in')) el.classList.add('show');
-                // slideshow cards
-                if (el.classList.contains('slide')) el.classList.add('visible');
-              } else {
-                if (el.classList.contains('fade-in')) el.classList.remove('show');
-                if (el.classList.contains('slide')) el.classList.remove('visible');
-              }
-            });
-          }, { threshold: 0.1 });
-        
-          // Observe every section and every slide
-          document.querySelectorAll('section, .fade-in, .slide').forEach(el => {
-            // Make sure fade-in sections start hidden
-            if (el.tagName === 'SECTION' && !el.classList.contains('fade-in')) {
-              el.classList.add('fade-in');
-            }
-            observer.observe(el);
-          });
-        });
-        </script>
-        
-        
-
-
-<section id="about-info" class="fade-in">
-  <div class="container">
-    <div class="about-info">
-      <h2 class="m-head">How Anonym Works</h2>
-      <p class="lead">
-        Write something you've never dared to say aloud. Send it into the anonymous void. And read what others share too.
-      </p>
-      <!-- steps remain unchanged -->
-    </div>
-  </div>
-</section>
-
-      <section id="about-info">
-        <div class="container">
-          <div class="about-info">
-            <h2 class="m-head">Share Gists anonymously</h2>
-            <h2 class="m-head">Read gist anonymously</h2>
+    <section id="security-info">
+      <div class="container">
+        <div class="security-info">
+          <div class="text">
+            <h2 class="m-head">End-to-End Encryption</h2>
             <p class="lead">
-              Write something you've never dared to say aloud. Send it into the anonymous void. 
-              And read what others share too.
+              We encrypt your information on your device. The encryption key
+              is never stored where anyone can find it, not even our team of
+              developers. Without the key, nobody, including us, will ever be
+              able to decrypt your information.
             </p>
-            <ul>
-              <li>
-                <div class="about-card">
-                  <p class="number">1</p>
-                  <i class="fas fa-file-pen fa-6x icon"></i>
-                  <h4>Write</h4>
-                  <p class="text">Compose your gists to share secretly.</p>
-                </div>
-              </li>
-              <li>
-                <div class="about-card">
-                  <p class="number">2</p>
-                  <i class="fas fa-share-from-square fa-6x icon"></i>
-                  <h4>Share</h4>
-                  <p class="text">Share gists in the anonymous world.</p>
-                </div>
-              </li>
-              <li>
-                <div class="about-card">
-                  <p class="number">3</p>
-                  <i class="fas fa-user-secret fa-6x icon"></i>
-                  <h4>Anonymous</h4>
-                  <p class="text">
-                    Once a gist is shared, the user becomes anonymous.
-                  </p>
-                </div>
-              </li>
-            </ul>
+            <a href="#" class="home-link"><i class="fas fa-arrow-right"></i> LEARN MORE ABOUT SECURITY</a>
           </div>
         </div>
-      </section>
-
-      <section id="security-info">
-        <div class="container">
-          <div class="security-info">
-            <div class="text">
-              <h2 class="m-head">End-to-End Encryption</h2>
-              <p class="lead">
-                We encrypt your information on your device. The encryption key
-                is never stored where anyone can find it, not even our team of
-                developers. Without the key, nobody, including us, will ever be
-                able to decrypt your information.
-              </p>
-              <a href="#" class="home-link"
-                ><i class="fas fa-arrow-right"></i> LEARN MORE ABOUT SECURITY</a
-              >
-            </div>
-          </div>
-        </div>
-      </section>
-      <section id="slideshow-gallery" class="fade-in">
-        <div class="container">
+      </div>
+    </section>
+    <section id="slideshow-gallery" class="fade-in">
+      <div class="container">
         <h2 class="m-head">Compatible with all Devices</h2>
         <p class="lead">Feel relaxed engaging the community at your comfort.</p>
         <div class="device-carousel">
@@ -855,7 +915,7 @@ footer {
             </div>
             <p class="caption">Mobile View</p>
           </div>
-      
+
           <!-- Slide 2: Tablet -->
           <div class="device-slide" data-index="1">
             <div class="device-mockup tablet">
@@ -863,7 +923,7 @@ footer {
             </div>
             <p class="caption">Tablet View</p>
           </div>
-      
+
           <!-- Slide 3: Laptop -->
           <div class="device-slide" data-index="2">
             <div class="device-mockup laptop">
@@ -872,316 +932,317 @@ footer {
             <p class="caption">Laptop View</p>
           </div>
         </div>
-      
+
         <!-- Controls -->
         <button class="prev-device">&#10094;</button>
         <button class="next-device">&#10095;</button>
       </div>
-      </section>
-      
-      
-  
+    </section>
 
-      <section id="faq">
-        <div class="container">
-          <div class="faq">
-            <h2 class="m-head">FAQ</h2>
-            <p class="lead">Frequently asked questions.</p>
-            <ul id="question">
-              <li>
-                <div>
-                  <p>Why should i use this service?</p>
-                  <i class="fas fa-chevron-down"></i>
-                </div>
-              </li>
-              <li>
-                <div>
-                  <p>How secure is this service?</p>
-                  <i class="fas fa-chevron-down"></i>
-                </div>
-              </li>
-              <li>
-                <div>
-                  <p>Who is it for?</p>
-                  <i class="fas fa-chevron-down"></i>
-                </div>
-              </li>
-              <li>
-                <div>
-                  <p>Can i get notified when a new secret is shared?</p>
-                  <i class="fas fa-chevron-down"></i>
-                </div>
-              </li>
-              <li>
-                <div>
-                  <p>Can other anonym users save my secret?</p>
-                  <i class="fas fa-chevron-down"></i>
-                </div>
-              </li>
-            </ul>
 
-            <a href="" class="home-link"
-              ><i class="fas fa-arrow-right"></i> READ MORE ON FAQ PAGE</a
-            >
-          </div>
-        </div>
-      </section>
-    </main>
 
-    <!-- TESTIMONIAL CAROUSEL -->
-<section id="testimonials" class="bg-blue-50 py-20">
-  <div class="container mx-auto px-6 text-center">
-    <h2 class="text-3xl font-bold text-gray-800 mb-12">  💬What the Gist Community Says <span class="text-blue-600"></span></h2>
 
-    <div class="relative max-w-2xl mx-auto">
-      <div id="carousel" class="overflow-hidden relative">
-        <!-- Slides -->
-        <div class="carousel-track transition-all duration-700 flex">
-          <!-- Slide 1 -->
-          <div class="min-w-full px-4">
-            <blockquote class="text-xl italic text-gray-700">
-              “Game-changer for fast trading. Alerts are dead-on and save me hours daily.”
-            </blockquote>
-            <p class="mt-4 font-semibold text-gray-800">– Alex M., Pro Trader</p>
-          </div>
-          <!-- Slide 2 -->
-          <div class="min-w-full px-4">
-            <blockquote class="text-xl italic text-gray-700">
-              “Crypto Gist gives me the edge—news, signals, and sentiment in one place.”
-            </blockquote>
-            <p class="mt-4 font-semibold text-gray-800">– Sara K., Swing Trader</p>
-          </div>
-          <!-- Slide 3 -->
-          <div class="min-w-full px-4">
-            <blockquote class="text-xl italic text-gray-700">
-              “Finally something that filters noise. It’s like having a crypto assistant.”
-            </blockquote>
-            <p class="mt-4 font-semibold text-gray-800">– Jamal R., Day Trader</p>
-          </div>
+    <section id="faq">
+      <div class="container">
+        <div class="faq">
+          <h2 class="m-head">FAQ</h2>
+          <p class="lead">Frequently asked questions.</p>
+          <ul id="question">
+            <li>
+              <div>
+                <p>Why should i use this service?</p>
+                <i class="fas fa-chevron-down"></i>
+              </div>
+            </li>
+            <li>
+              <div>
+                <p>How secure is this service?</p>
+                <i class="fas fa-chevron-down"></i>
+              </div>
+            </li>
+            <li>
+              <div>
+                <p>Who is it for?</p>
+                <i class="fas fa-chevron-down"></i>
+              </div>
+            </li>
+            <li>
+              <div>
+                <p>Can i get notified when a new secret is shared?</p>
+                <i class="fas fa-chevron-down"></i>
+              </div>
+            </li>
+            <li>
+              <div>
+                <p>Can other anonym users save my secret?</p>
+                <i class="fas fa-chevron-down"></i>
+              </div>
+            </li>
+          </ul>
+
+          <a href="" class="home-link"><i class="fas fa-arrow-right"></i> READ MORE ON FAQ PAGE</a>
         </div>
       </div>
+    </section>
+  </main>
 
-      <!-- Dots -->
-      <div class="flex justify-center mt-10 space-x-3">
-        <button class="dot active animate-ping-once" data-slide="0"></button>
-        <button class="dot" data-slide="1"></button>
-        <button class="dot" data-slide="2"></button>
+  <!-- TESTIMONIAL CAROUSEL -->
+  <section id="testimonials" class="bg-blue-50 py-20">
+    <div class="container mx-auto px-6 text-center">
+      <h2 class="text-3xl font-bold text-gray-800 mb-12"> 💬What the Gist Community Says <span
+          class="text-blue-600"></span></h2>
+
+      <div class="relative max-w-2xl mx-auto">
+        <div id="carousel" class="overflow-hidden relative">
+          <!-- Slides -->
+          <div class="carousel-track transition-all duration-700 flex">
+            <!-- Slide 1 -->
+            <div class="min-w-full px-4">
+              <blockquote class="text-xl italic text-gray-700">
+                “Game-changer for fast trading. Alerts are dead-on and save me hours daily.”
+              </blockquote>
+              <p class="mt-4 font-semibold text-gray-800">– Alex M., Pro Trader</p>
+            </div>
+            <!-- Slide 2 -->
+            <div class="min-w-full px-4">
+              <blockquote class="text-xl italic text-gray-700">
+                “Crypto Gist gives me the edge—news, signals, and sentiment in one place.”
+              </blockquote>
+              <p class="mt-4 font-semibold text-gray-800">– Sara K., Swing Trader</p>
+            </div>
+            <!-- Slide 3 -->
+            <div class="min-w-full px-4">
+              <blockquote class="text-xl italic text-gray-700">
+                “Finally something that filters noise. It’s like having a crypto assistant.”
+              </blockquote>
+              <p class="mt-4 font-semibold text-gray-800">– Jamal R., Day Trader</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dots -->
+        <div class="flex justify-center mt-10 space-x-3">
+          <button class="dot active animate-ping-once" data-slide="0"></button>
+          <button class="dot" data-slide="1"></button>
+          <button class="dot" data-slide="2"></button>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
 
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const track = document.querySelector(".carousel-track");
-        const dots = document.querySelectorAll(".dot");
-        let currentSlide = 0;
-        const totalSlides = dots.length;
-        let interval;
-      
-        function showSlide(index) {
-          track.style.transform = `translateX(-${index * 100}%)`;
-          dots.forEach(dot => dot.classList.remove("bg-blue-600", "active"));
-          dots[index].classList.add("bg-blue-600", "active");
-          currentSlide = index;
-        }
-      
-        function nextSlide() {
-          const next = (currentSlide + 1) % totalSlides;
-          showSlide(next);
-        }
-      
-        dots.forEach(dot => {
-          dot.addEventListener("click", () => {
-            showSlide(Number(dot.dataset.slide));
-          });
-        });
-      
-        interval = setInterval(nextSlide, 5000);
-      });
-      </script>
-      
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const track = document.querySelector(".carousel-track");
+      const dots = document.querySelectorAll(".dot");
+      let currentSlide = 0;
+      const totalSlides = dots.length;
+      let interval;
 
-    <footer>
-      <div class="container">
-        <div class="footer">
-          <div class="footer-flex">
-            <div class="footer-logo">
-              <i class="fas fa-mask fa-2x"></i>
-              <h4>Anonym</h4>
-            </div>
-            <ul class="footer-child">
-              <h4>Secrets</h4>
-              <li><a href="">Create secrets</a></li>
-              <li><a href="">Share secrete</a></li>
-              <li><a href="">View secrets</a></li>
-              <li><a href=""></a></li>
-            </ul>
+      function showSlide(index) {
+        track.style.transform = `translateX(-${index * 100}%)`;
+        dots.forEach(dot => dot.classList.remove("bg-blue-600", "active"));
+        dots[index].classList.add("bg-blue-600", "active");
+        currentSlide = index;
+      }
 
-            <ul class="footer-child">
-              <h4>Information</h4>
-              <li><a href="">About</a></li>
-              <li><a href="">Security</a></li>
-              <li><a href="">Privacy</a></li>
-              <li><a href="">Blog</a></li>
-            </ul>
+      function nextSlide() {
+        const next = (currentSlide + 1) % totalSlides;
+        showSlide(next);
+      }
 
-            <ul class="footer-child">
-              <h4>Help</h4>
-              <li><a href="">FAQ</a></li>
-              <li><a href="">Contact</a></li>
-            </ul>
-          </div>
-
-          <center>
-            <p class="viewed">
-              Secrets <span style="color: #999">created | veiwed: 0</span>
-            </p>
-          </center>
-          <ul class="socials">
-            <li>
-              <a target="_blank" href="https://t.me/@iamamebo"><i class="fab fa-telegram fa-2x"></i></a>
-            </li>
-            <li>
-              <a target="_blank" href=""><i class="fab fa-instagram fa-2x"></i></a>
-            </li>
-            <li>
-              <a target="_blank" href=""><i class="fab fa-linkedin fa-2x"></i></a>
-            </li>
-            <li>
-              <a target="_blank" href=""><i class="fab fa-github fa-2x"></i></a>
-            </li>
-          </ul>
-          <p class="footer-text">
-            <a href="">GistTown</a> lets you share secrets anonymously online,
-            End-to-End encrypted. One time. Keep anonymous secrets out of email,
-            Whatsapp, Telegram or any other communication channel. Here you are
-            100% hidden to users as your privacy is our priority.
-          </p>
-          <ul class="footer-links">
-            <li>&copy; <%= new Date().getFullYear() %></li>
-            <li><a href="">Privacy Policy</a></li>
-            <li><a href="">Cookie Policy</a></li>
-            <li>Status</li>
-          </ul>
-          <p class="lang">English</p>
-        </div>
-      </div>
-    </footer>
-
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('show');
-            } else {
-              entry.target.classList.remove('show');
-            }
-          });
-        }, {
-          threshold: 0.1
-        });
-      
-        // Observe all sections (or any selector you choose)
-        document.querySelectorAll('section, .fade-in, .slide').forEach(el => {
-          // Ensure the initial hidden state in CSS:
-          // el.classList.add('fade-in');
-          observer.observe(el);
+      dots.forEach(dot => {
+        dot.addEventListener("click", () => {
+          showSlide(Number(dot.dataset.slide));
         });
       });
-      </script>
-      
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const header = document.querySelector("header");
-        const nextSection = document
-          .querySelector("body")
-          .querySelector("section:not(.active)");
-        const logo = document.getElementById("logo");
-
-        window.addEventListener("scroll", function () {
-          const scrolled = window.scrollY > 0;
-          if (scrolled) {
-            let body = document.querySelector("body");
-            body.style.overflowY = "scroll";
-            header.classList.add("scrolled");
-            logo.style.opacity = 1;
-          } else {
-            header.classList.remove("scrolled");
-            logo.style.opacity = 0;
-          }
-        });
-
-        const aboutInfoSection = document.querySelector("#about-info");
-        const headers = document.querySelectorAll(".m-head");
-
-        function typeWriter(text, element, delay = 100) {
-          let i = 0;
-          function type() {
-            if (i < text.length) {
-              element.innerHTML += text.charAt(i);
-              i++;
-              setTimeout(type, delay);
-            }
-          }
-          type();
-        }
-
-        function handleIntersect(entries) {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              let delay = 0;
-              headers.forEach((header, index) => {
-                const text = header.textContent;
-                header.textContent = "";
-                setTimeout(() => {
-                  typeWriter(text, header, 100);
-                }, delay);
-                delay += text.length * 100 + 500;
-              });
-              observer.disconnect();
-            }
-          });
-        }
-
-        const observer = new IntersectionObserver(handleIntersect, {
-          threshold: 0.5,
-        });
-
-        observer.observe(aboutInfoSection);
-      });
-    </script>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const slides = [...document.querySelectorAll('.device-slide')];
-    const prev  = document.querySelector('.prev-device');
-    const next  = document.querySelector('.next-device');
-    let idx = 0, timer;
-  
-    function go(i) {
-      slides.forEach(s => s.classList.remove('active'));
-      slides[i].classList.add('active');
-      idx = i;
-    }
-  
-    prev.onclick = () => go((idx - 1 + slides.length) % slides.length);
-    next.onclick = () => go((idx + 1) % slides.length);
-  
-    timer = setInterval(() => go((idx + 1) % slides.length), 5000);
-  
-    // Pause on hover
-    document.getElementById('slideshow-gallery')
-      .addEventListener('mouseenter', () => clearInterval(timer));
-    document.getElementById('slideshow-gallery')
-      .addEventListener('mouseleave', () => timer = setInterval(() => go((idx + 1) % slides.length), 5000));
-  });
+      interval = setInterval(nextSlide, 5000);
+    });
   </script>
-  
-    <script src="/js/defaultTheme.js"></script>
-    <script src="/js/app.js"></script>
-  </body>
+
+
+  <footer>
+    <div class="container">
+      <div class="footer">
+        <div class="footer-flex">
+          <div class="footer-logo">
+            <i class="fas fa-mask fa-2x"></i>
+            <h4>Anonym</h4>
+          </div>
+          <ul class="footer-child">
+            <h4>Secrets</h4>
+            <li><a href="">Create secrets</a></li>
+            <li><a href="">Share secrete</a></li>
+            <li><a href="">View secrets</a></li>
+            <li><a href=""></a></li>
+          </ul>
+
+          <ul class="footer-child">
+            <h4>Information</h4>
+            <li><a href="">About</a></li>
+            <li><a href="">Security</a></li>
+            <li><a href="">Privacy</a></li>
+            <li><a href="">Blog</a></li>
+          </ul>
+
+          <ul class="footer-child">
+            <h4>Help</h4>
+            <li><a href="">FAQ</a></li>
+            <li><a href="">Contact</a></li>
+          </ul>
+        </div>
+
+        <center>
+          <p class="viewed">
+            Secrets <span style="color: #999">created | veiwed: 0</span>
+          </p>
+        </center>
+        <ul class="socials">
+          <li>
+            <a target="_blank" href="https://t.me/@iamamebo"><i class="fab fa-telegram fa-2x"></i></a>
+          </li>
+          <li>
+            <a target="_blank" href=""><i class="fab fa-instagram fa-2x"></i></a>
+          </li>
+          <li>
+            <a target="_blank" href=""><i class="fab fa-linkedin fa-2x"></i></a>
+          </li>
+          <li>
+            <a target="_blank" href=""><i class="fab fa-github fa-2x"></i></a>
+          </li>
+        </ul>
+        <p class="footer-text">
+          <a href="">GistTown</a> lets you share secrets anonymously online,
+          End-to-End encrypted. One time. Keep anonymous secrets out of email,
+          Whatsapp, Telegram or any other communication channel. Here you are
+          100% hidden to users as your privacy is our priority.
+        </p>
+        <ul class="footer-links">
+          <li>&copy; <%= new Date().getFullYear() %>
+          </li>
+          <li><a href="">Privacy Policy</a></li>
+          <li><a href="">Cookie Policy</a></li>
+          <li>Status</li>
+        </ul>
+        <p class="lang">English</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('show');
+          } else {
+            entry.target.classList.remove('show');
+          }
+        });
+      }, {
+        threshold: 0.1
+      });
+
+      // Observe all sections (or any selector you choose)
+      document.querySelectorAll('section, .fade-in, .slide').forEach(el => {
+        // Ensure the initial hidden state in CSS:
+        // el.classList.add('fade-in');
+        observer.observe(el);
+      });
+    });
+  </script>
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const header = document.querySelector("header");
+      const nextSection = document
+        .querySelector("body")
+        .querySelector("section:not(.active)");
+      const logo = document.getElementById("logo");
+
+      window.addEventListener("scroll", function () {
+        const scrolled = window.scrollY > 0;
+        if (scrolled) {
+          let body = document.querySelector("body");
+          body.style.overflowY = "scroll";
+          header.classList.add("scrolled");
+          logo.style.opacity = 1;
+        } else {
+          header.classList.remove("scrolled");
+          logo.style.opacity = 0;
+        }
+      });
+
+      const aboutInfoSection = document.querySelector("#about-info");
+      const headers = document.querySelectorAll(".m-head");
+
+      function typeWriter(text, element, delay = 100) {
+        let i = 0;
+        function type() {
+          if (i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(type, delay);
+          }
+        }
+        type();
+      }
+
+      function handleIntersect(entries) {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            let delay = 0;
+            headers.forEach((header, index) => {
+              const text = header.textContent;
+              header.textContent = "";
+              setTimeout(() => {
+                typeWriter(text, header, 100);
+              }, delay);
+              delay += text.length * 100 + 500;
+            });
+            observer.disconnect();
+          }
+        });
+      }
+
+      const observer = new IntersectionObserver(handleIntersect, {
+        threshold: 0.5,
+      });
+
+      observer.observe(aboutInfoSection);
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const slides = [...document.querySelectorAll('.device-slide')];
+      const prev = document.querySelector('.prev-device');
+      const next = document.querySelector('.next-device');
+      let idx = 0, timer;
+
+      function go(i) {
+        slides.forEach(s => s.classList.remove('active'));
+        slides[i].classList.add('active');
+        idx = i;
+      }
+
+      prev.onclick = () => go((idx - 1 + slides.length) % slides.length);
+      next.onclick = () => go((idx + 1) % slides.length);
+
+      timer = setInterval(() => go((idx + 1) % slides.length), 5000);
+
+      // Pause on hover
+      document.getElementById('slideshow-gallery')
+        .addEventListener('mouseenter', () => clearInterval(timer));
+      document.getElementById('slideshow-gallery')
+        .addEventListener('mouseleave', () => timer = setInterval(() => go((idx + 1) % slides.length), 5000));
+    });
+  </script>
+
+  <script src="/js/defaultTheme.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+
 </html>
