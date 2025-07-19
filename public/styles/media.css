@@ -62,11 +62,9 @@ font-family: 'Quicksand', sans-serif;
 
   #selectCategory {
     position: fixed;
-    top: 0rem !important;
-    z-index: 50 !important;
+    top: 4rem;
     gap: .2rem;
-    right: 0;
-    left: 190px;
+    right: 0 !important;
   }
 
   .right-sidebar{
