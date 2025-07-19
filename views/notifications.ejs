@@ -84,35 +84,7 @@
   }
 </style>
 
-<body>
   <div id="main">
-
-
-    <!-- <div id="brand-logo-container">
-        <h1 id="brand-logo">Anonym</h1>
-    </div>
-
-    <script>
-        window.addEventListener("load", function(){
-        window.scrollTo({top: 0, behavior: 'smooth'});
-        hideBrandLogo();
-    });
-
-    window.addEventListener("beforeunload", function(){
-        showBrandLogo();
-    })
-
-    function showBrandLogo(){
-        // const brandLogo = document.getElementById("brand-logo-container");
-        document.getElementById("brand-logo-container").style.display = "flex";
-  }
-
-
-    function hideBrandLogo(){
-        document.getElementById("brand-logo-container").style.display = "none";
-    }
-    </script> -->
-
 
     <section class="main">
 
@@ -164,11 +136,15 @@
                           href="<%= notification.notificationType === 'secret' ? 'secret/' + notification.id : '' %>">
                           <div class="card">
                             <h4>
-                              <% if (notification.notificationType==='secret' ) { %>
-                                New secret Posted by ~~ @anonym<%= notification.user_id %> ~~
+                              <% if (notification.notificationType ==='secret' ) { %>
+                                <% if (notification.user_id == userId) { %>
+                                  
+                                  <% } else { %>
+                                    New Gossip shared by ~~ @gossipa<%= notification.user_id %> ~~
+                                    <% } %>
                                   <% } %>
                                     <% if (notification.notificationType==='comment' ) { %>
-                                      New comment on your secret from ~~ @anonym<%= notification.user_id %> ~~
+                                      New comment on your secret from ~~ @gossipa<%= notification.user_id %> ~~
                                         <% } %>
                                           <% if (notification.notificationType==='reaction' ) { %>
                                             <% if (notification.type==="like" ) { %>
@@ -181,16 +157,23 @@
                                                         <% } else if(notification.type==="cry" ) { %>
                                                           Your secret got a new 😢 reaction!. Total: <%=
                                                             notification.count %>.
+                                                            <% } else if(notification.type==="hot" ) { %>
+                                                          Your secret got a new <img oncontextmenu="return false;" src="../../img/premium-reaction.png" alt="🔥"
+                                                          class="premium-reaction"> reaction!. Total: <%= notification.count %>.
                                                             <% }%>
                                                               <% } %>
                             </h4>
                             <p>
                               <span class="content">
-                                <% if (notification.notificationType==='secret' ) { %>
+                                <% if (notification.notificationType === 'secret' ) { %>
+                                  <% if (notification.user_id == userId) { %>
+                                        
+                                    <% } else { %>
                                   <%if (notification.secret.split(" ").length > 100) { %> 
-                            <%=notification.secret.substring(0, 100) + " ..." %>
+                                <%=notification.secret.substring(0, 100) + " ..." %>
                                     <% } else { %>
                                       <%= notification.secret %>
+                                        <% } %>
                                         <% } %>
                                           <% } %>
                                             <% if(notification.notificationType==='comment' ) { %>
@@ -210,12 +193,16 @@
                               </span>
 
                               <% if (notification.notificationType==='secret' ) { %>
+                                <% if (notification.user_id == userId) { %>
+
+                                  <% } else { %>
                                 <a style="
                       background: none;
                       font-size: 1rem;
                       padding: 0;
                       font-weight: bold;
                     " href="secret/<%= notification.id %>">Read More</a>
+                    <% } %>
                                 <% } %>
                                   <% if (notification.notificationType==='comment' ) { %>
                                     <a style="
@@ -398,7 +385,8 @@
     // const socket = io();
 
     // Listen for new notifications
-    socket.on("new-notification", (data) => {
+    if(window.socket){
+    window.socket.on("new-notification", (data) => {
       const { type, data: notificationData } = data;
 
       // Create a new notification element
@@ -479,6 +467,7 @@
       const currentCount = parseInt(counter.textContent) || 0;
       counter.textContent = currentCount + 1;
     });
+  }
   </script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -486,8 +475,6 @@
       setTimeout(() => {
         // Hide shimmer placeholder
         document.getElementById("shimmer-container").style.display = "none";
-        // Show real secrets
-        document.getElementById("real-secrets").style.display = "block";
       }, 1000); // 1s delay – tweak as needed
     });
   </script>

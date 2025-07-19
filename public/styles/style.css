@@ -331,7 +331,7 @@ body {
     .form-wrapper {
       position: relative;
       max-width: 900px !important;
-      height: 60vh !important;
+      height: auto !important;
       border: 2px solid var(--card-bg);
       background: var(--container-bg);
       overflow: hidden !important;
@@ -408,7 +408,7 @@ body {
 
   /* Remove the transition on tutorial step */
   .tutorial-step {
-    font-family: 'Quicksand', sans-serif;
+    font-family: 'Quicksand', sans-serif !important;
     opacity: 1;
     /* Make sure it's visible immediately */
     color: #fff;
@@ -1288,7 +1288,7 @@ body {
     width: 100vw;
     height: 100vh;
     background: var(--container-bg);
-    border: 5px solid var(--primary-color);
+    border: 5px solid var(--secondary-color);
     z-index: 400 !important;
   }
 
@@ -1326,6 +1326,10 @@ body {
     font-size: 1.2rem;
   }
 
+  .menu .socials li a {
+    color: var(--secondary-color) !important;
+  }
+
   .menu-logo {
     display: flex;
     align-items: baseline;
@@ -1333,6 +1337,7 @@ body {
 
   .menu-logo i {
     color: var(--primary-color);
+
     margin: 0 .5rem;
   }
 
@@ -1392,14 +1397,14 @@ body {
     margin-bottom: 1.2rem;
     font-size: 1.5rem;
     font-weight: 100;
-    color: var(--primary-color);
+    color: var(--secondary-color) ;
   }
 
   .menu-nav-alt  h4{
     margin-bottom: 1.5rem;
     font-size: 1.5rem;
     font-weight: 100;
-    color: var(--primary-color);
+    color: var(--secondary-color) ;
   }
 
 

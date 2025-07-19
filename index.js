@@ -1492,7 +1492,7 @@ app.get("/notifications", async (req, res) => {
                 SELECT profile_picture, reactions, secrets.id, username, user_id, secret, timestamp
                 FROM secrets 
                 JOIN users ON users.id = user_id 
-                WHERE user_id != $1 
+                WHERE secrets.user_id != $1 
                 ORDER BY secrets.id DESC LIMIT 5
             `,
         [req.user.id]
@@ -1503,7 +1503,7 @@ app.get("/notifications", async (req, res) => {
                 SELECT profile_picture, reactions, secrets.id, username, user_id, secret, timestamp
                 FROM secrets 
                 JOIN users ON users.id = user_id 
-                WHERE user_id = $1 
+                WHERE user_id = $1 AND reactions IS NOT NULL
                 ORDER BY secrets.id DESC LIMIT 5
             `,
         [req.user.id]
@@ -1527,14 +1527,17 @@ app.get("/notifications", async (req, res) => {
         const reactions = row.reactions || {}; // Default to empty object if reactions are null
 
         // Create notifyReaction array for each secret
-        const notifyReaction = Object.keys(reactions).map((reactionType) => ({
-          id: row.id,
-          secret: row.secret,
-          type: reactionType,
-          notificationType: "reaction",
-          count: reactions[reactionType]?.count || 0, // Safely access count
-          timestamp: reactions[reactionType]?.timestamp || row.timestamp, // Use reaction's timestamp or secret's timestamp
-        }));
+        const notifyReaction = reactionResult.rows.flatMap(row => {
+          const reactions = row.reactions || {};
+          return Object.keys(reactions).map(type => ({
+            id: row.id,
+            secret: row.secret,
+            type,
+            count: reactions[type]?.count || 0,
+            timestamp: reactions[type]?.timestamp || row.timestamp,
+            notificationType: 'reaction'
+          }));
+        });
 
         return {
           ...row,
@@ -1545,13 +1548,7 @@ app.get("/notifications", async (req, res) => {
         };
       });
 
-      const notifyReactions = reactionResult.rows.map((reaction) => ({
-        ...reaction,
-        type: reaction.type,
-        notificationType: "reaction",
-        count: reaction[type]?.count || 0, // Safely access count
-        timestamp: reaction[type]?.timestamp || reaction.timestamp,
-      }));
+      
 
       // Map through comments and prepare notifyComment
       const notifyComment = commentsResult.rows.map((comment) => ({
@@ -1567,8 +1564,7 @@ app.get("/notifications", async (req, res) => {
 
       // Combine all notifications
       const combinedNotifications = [
-        // ...notifySecret,
-        ...notifyReactions,
+        ...notifySecret,
         ...notifyComment,
         ...notifyReaction,
       ];
@@ -1578,7 +1574,7 @@ app.get("/notifications", async (req, res) => {
         (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
       );
 
-      const topNotifications = sortedNotifications.slice(0, 5);
+      // const topNotifications = sortedNotifications.slice(0, 5);
 
       // Render the notifications page
       res.render("notifications", {
@@ -1806,8 +1802,9 @@ app.post("/share", upload.single("audio"), async (req, res) => {
         });
       }
 
-      console.log(response);
-      res.json({ success: true, data: response });
+      const userData = user.rows[0]; // ✅ extract first row
+
+      res.json({ success: true, data: response, user: userData, userId: req.user.id });
     } catch (error) {
       console.error("Error sharing content:", error);
       res.status(500).json({ error: "Failed to share content." });
@@ -2132,6 +2129,10 @@ app.post("/login", (req, res, next) => {
         if (user.needsVerification) {
           // Store user in session temporarily
           req.session.tempUserId = user.id;
+
+          req.session.save(() => {
+            res.json({ needsVerification: true });
+          });
   
           return res.json({ needsVerification: true });
         }

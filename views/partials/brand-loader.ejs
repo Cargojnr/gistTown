@@ -1,0 +1,62 @@
+<div id="brand-logo-container" style="display:flex;">
+  <div id="brand-animation" style="width: 150px; height: 150px;"></div>
+</div>
+
+<script>
+  window.brandLogo = {
+    lottiePlayer: null,
+    hideTimeout: null,
+
+    show() {
+      const container = document.getElementById("brand-logo-container");
+      const animContainer = document.getElementById("brand-animation");
+
+      if (!container) return;
+      clearTimeout(this.hideTimeout);
+
+      container.style.display = "flex";
+      container.style.background = "var(--container-bg)";
+
+      if (!this.lottiePlayer) {
+        this.lottiePlayer = lottie.loadAnimation({
+          container: animContainer,
+          renderer: "svg",
+          loop: true,
+          autoplay: true,
+          path: "img/lottie/brandlogo.json",
+        });
+      } else {
+        this.lottiePlayer.goToAndPlay(0);
+      }
+    },
+
+    hide(delay = 1800) {
+      const container = document.getElementById("brand-logo-container");
+      if (!container) return;
+
+      clearTimeout(this.hideTimeout);
+      this.hideTimeout = setTimeout(() => {
+        container.style.display = "none";
+      }, delay);
+    }
+  };
+
+  // Show brand logo immediately on page load, then hide after delay
+  window.addEventListener("DOMContentLoaded", () => {
+    window.brandLogo.show();
+    window.brandLogo.hide(2000);  // ✅ customize delay here (2000ms = 2 seconds)
+  });
+
+  // When navigating away
+  window.addEventListener("beforeunload", () => window.brandLogo.show());
+
+  // Handle browser tab visibility changes
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      window.brandLogo.show();
+    } else {
+      window.brandLogo.show();
+      window.brandLogo.hide(2000);
+    }
+  });
+</script>

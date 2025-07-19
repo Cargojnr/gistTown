@@ -851,3 +851,283 @@ display: block !important;
 
                   </script>
 
+                  <script>
+                              document.addEventListener('DOMContentLoaded', function () {
+
+                                document.querySelectorAll('.reaction-btn').forEach(button => {
+                                  const type = button.getAttribute('data-type');
+
+                                  button.addEventListener('click', () => {
+                                    const emojiChar = button.textContent.trim().split('\n')[0];
+                                    const card = button.closest('.secret-card');
+                                    const floatingContainer = card.querySelector('.floating-lottie');
+
+                                    // === 1. EMOJI BURST AROUND BUTTON ===
+                                    triggerEmojiBurst(button, emojiChar);
+
+                                    // === 2. 3D EXTRAS AROUND BUTTON ===
+                                    if (type === 'cry') {
+                                      const tear = document.createElement('span');
+                                      tear.className = 'emoji-particle';
+                                      tear.innerText = '💧';
+                                      tear.style.setProperty('--x', '0px');
+                                      tear.style.setProperty('--y', '50px');
+                                      button.appendChild(tear);
+                                      setTimeout(() => tear.remove(), 800);
+                                    }
+
+                                    if (type === 'gasp') {
+                                      const puff = document.createElement('span');
+                                      puff.className = 'emoji-particle';
+                                      puff.innerText = '💨';
+                                      puff.style.setProperty('--x', '-10px');
+                                      puff.style.setProperty('--y', '0px');
+                                      button.appendChild(puff);
+                                      setTimeout(() => puff.remove(), 800);
+                                    }
+
+
+                                    // === 5. REMOVE LOTTIE ANIMATION AFTER IT FINISHES ===
+                                    setTimeout(() => {
+                                      floatingContainer.classList.remove('active'); // Remove the active class
+                                      floatingContainer.innerHTML = ''; // Clear the Lottie animation
+                                    }, 2000); // Adjust the timeout to match the animation duration
+                                  });
+                                });
+
+                                function triggerEmojiBurst(container, emojiChar) {
+                                  const burstCount = 10;
+
+                                  for (let i = 0; i < burstCount; i++) {
+                                    const particle = document.createElement('span');
+                                    particle.classList.add('emoji-particle');
+                                    particle.innerText = emojiChar;
+
+                                    const angle = Math.random() * 2 * Math.PI;
+                                    const distance = Math.random() * 40 + 20;
+                                    const x = Math.cos(angle) * distance + 'px';
+                                    const y = Math.sin(angle) * distance + 'px';
+
+                                    particle.style.setProperty('--x', x);
+                                    particle.style.setProperty('--y', y);
+
+                                    container.appendChild(particle);
+                                    setTimeout(() => particle.remove(), 800);
+                                  }
+
+                                  container.classList.add('pop-animate');
+                                  setTimeout(() => container.classList.remove('pop-animate'), 300);
+                                }
+                              });
+                            </script>
+
+
+
+                            
+<script>
+$(document).ready(function () {
+  $(".comment-section").each(function () {
+    const commentSection = $(this);
+
+    // Submit comment form
+    commentSection.find("#comment-form").on("submit", function (e) {
+      e.preventDefault();
+
+      const postType = commentSection.data("type");
+      const postId = commentSection.data("post-id");
+
+      const secretUserId = commentSection.find('[name="secretUserId"]').val();
+      const commentUserId = commentSection.find('[name="commentUserId"]').val();
+      const comment = commentSection.find("#commentInput").val();
+      const commentDisplay = commentSection.find("#commentDisplay");
+      const commentCount = commentSection.find(".comment-count");
+
+
+      const url = `/comment/${postType}`;
+
+      $.ajax({
+        url: url,
+        type: "POST",
+        data: {
+          id: postId,
+          secretUserId,
+          commentUserId,
+          comment,
+        },
+        success: async function (response) {
+          if (response.success) {
+            try {
+              // const fetchUrl = postType === "audio" ? `/audio/${postId}/more` : `/more/${postId}`;
+              const fetchUrl = `/comment/${postType}/${postId}`;
+              const fetchResponse = await fetch(fetchUrl);
+              if (!fetchResponse.ok) throw new Error("Failed to fetch comments");
+
+              const data = await fetchResponse.json();
+              const comments = data.comments;
+
+              if (comments) {
+                let commentDisp = comments.map((comment) => `
+<li class="comment-item">
+<div>
+<small class="user"><strong>@anonym${comment.user_id}</strong></small>
+<p class="comment">${comment.comment}</p>
+<button class="translate-btn" data-id="${comment.id}" data-text="${comment.comment}">Translate to english</button>
+<p class="translated-text" id="translated-${comment.id}"></p>
+</div>
+</li>
+`).join("");
+
+                commentDisplay.html(`
+<ul id="comments">
+<p class="total">All comments: ${data.totalComments}</p>
+${commentDisp}
+</ul>
+`);
+
+                commentCount.html(`${data.totalComments}`);
+              } else {
+                commentDisplay.html(`
+<ul id="comments">
+<p class="total">${data.noComment}</p>
+</ul>
+`);
+              }
+            } catch (err) {
+              console.log(err);
+            }
+
+            commentSection.find("#commentInput").val(""); // clear input
+          } else {
+            console.log("Failed to post comment:", response.message);
+          }
+        },
+        error: function (err) {
+          console.log("Error submitting comment:", err);
+        },
+      });
+    });
+
+    // Translation handler (delegated for dynamic buttons)
+    commentSection.on("click", ".translate-btn", function (e) {
+      e.preventDefault();
+      const btn = $(this);
+      const commentText = btn.data("text");
+      const commentId = btn.data("id");
+      const postId = commentSection.data("post-id");
+      const translatedBox = commentSection.find(`#translated-${postId}-${commentId}`);
+
+      $.ajax({
+        url: "/translate",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ text: commentText, targetLang: "en" }),
+        success: function (res) {
+          if (res.translated) {
+            translatedBox.text(res.translated);
+          } else {
+            translatedBox.text("Translation failed.");
+          }
+        },
+        error: function (err) {
+          translatedBox.text("Error translating comment.");
+        },
+      });
+    });
+  });
+});
+</script>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+  const commentSections = document.querySelectorAll(".comment-section");
+
+  commentSections.forEach(async (section) => {
+    const commentList = section.querySelector(".comments-list");
+
+
+    // Toggle dropdown
+    section.querySelector("#commentButton").addEventListener("click", () => {
+      const dropdown = section.querySelector(".comment-dropdown");
+      dropdown.classList.toggle("active");
+
+      const icon = section.querySelector("#commentButton i");
+      icon.className = dropdown.classList.contains("active")
+        ? "fas fa-comment-slash"
+        : "fas fa-comment";
+    });
+
+    const postType = section.closest(".secret").dataset.type;
+    const postId = section.querySelector("#audioId")?.value || section.querySelector("#secretId")?.value;
+    const fetchUrl = `/comment/${postType}/${postId}`;
+
+    // Fetch and display comments
+    try {
+      const response = await fetch(fetchUrl);
+      const data = await response.json();
+      const comments = data.comments;
+
+      if (comments && comments.length > 0) {
+        section.querySelector(".comment-display").insertAdjacentHTML(
+          "afterbegin",
+          `<p class="total">All comments: ${data.totalComments}</p>`
+        );
+
+
+
+        comments.forEach((comment) => {
+          const li = document.createElement("li");
+          li.className = "comment-item";
+          li.innerHTML = `
+<div>
+<small class="user"><strong>@anonym${comment.user_id}</strong></small>
+<p class="comment">${comment.comment}</p>
+</div>
+<button type="button" class="translate-btn" data-id="${comment.id}" data-text="${comment.comment}">Translate to english</button>
+<p class="translated-text" id="translated-${postId}-${comment.id}"></p>
+`;
+          commentList.appendChild(li);
+        });
+      } else {
+        commentList.innerHTML = `<p class="total">${data.noComment}</p>`;
+      }
+    } catch (err) {
+      console.error("Error loading comments:", err);
+    }
+
+    // Delegate click for Translate buttons inside this section
+    commentList.addEventListener("click", async (e) => {
+      if (e.target.classList.contains("translate-btn")) {
+        const btn = e.target;
+        const text = btn.dataset.text;
+        const id = btn.dataset.id;
+        const output = section.querySelector(`#translated-${postId}-${id}`);
+
+        output.innerText = "Translating...";
+
+        try {
+          const res = await fetch("/translate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text, targetLang: "en" }),
+          });
+
+          const result = await res.json();
+          if (result.translated) {
+            output.innerText = result.translated;
+          } else {
+            output.innerText = "Translation failed.";
+          }
+        } catch (err) {
+          output.innerText = "Error translating comment.";
+          console.error(err);
+        }
+      }
+    });
+  });
+});
+</script>
+
+
+

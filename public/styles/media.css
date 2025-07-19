@@ -721,8 +721,8 @@ top:  4.5rem;
   .suggestion-box {
     font-size: 0.85rem;
     max-height: 180px;
-    left: 0 !important;
-    width: 70%;
+    left: 2% !important;
+    width: 83%;
   }
 
 

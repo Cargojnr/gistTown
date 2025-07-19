@@ -1,6 +1,9 @@
 <style>
-  .form-container {
-    margin-top: 2rem !important;
+
+  .post-action {
+    position: absolute;
+    right: 0%;
+    bottom: 5% !important;
   }
 
   .avatar-and-type {
@@ -188,17 +191,11 @@
   <section class="main">
 
     <% if (locals.secret) { %>
-      <div class="form-container">
+      <div class="form-wrapper">
 
 
-        <form action="/update" method="POST" id="share">
+        <form action="/update" method="POST" id="share" class="form-wrap">
           <input type="hidden" name="id" value="<%= secret.id %>" class="form-control">
-          <div class="form-group">
-            <textarea class="form-control" name="secret"><%= secret.secret %></textarea>
-          </div>
-
-
-
           <div class="form-group category-section">
             <label for="category" class="category-label">Choose a category</label>
             <select id="category" style="background : var(--secondary-color); border : 1px solid var(--primary-color);"
@@ -215,16 +212,24 @@
             </select>
           </div>
 
-          <button type="submit" class="btn btn-dark secret-btn">
-            <%= submit %>
-          </button>
+          <div class="form-group">
+            <textarea id="postedInput" class="form-control input-text" name="secret"><%= secret.secret %></textarea>
+          </div>
+
+          <div class="post-action">
+            <span id="wordCount">0</span>
+            <button type="submit" class="btn btn-dark secret-btn">
+              <%= submit %>
+            </button>
+          </div>
+      
 
         </form>
       </div>
       <% } else { %>
 
-        <div class="form-container">
-          <form method="POST" action="/share" id="share">
+        <div class="form-wrapper">
+          <form method="POST" action="/share" id="share" class="form-wrap">
 
             <div class="form-top">
               <div class="avatar-and-type">
@@ -274,13 +279,17 @@
             </div>
 
             <div class="form-group">
-              <textarea class="form-control" id="input" name="secret"
+              <textarea class="form-control input-text" id="postInput" name="secret"
                 placeholder="Hey <%= username %>, what's popping?"></textarea>
             </div>
 
-            <button type="submit" id="submit" class="btn btn-dark secret-btn">
-              <%= submit %>
-            </button>
+            <div class="post-action">
+              <span id="wordCount">0</span>
+              <button type="submit" id="submit" class="btn btn-dark secret-btn">
+                <%= submit %>
+              </button>
+            </div>
+           
           </form>
 
           <div class="or">
@@ -321,7 +330,7 @@
             document.getElementById('share').addEventListener('submit', async (event) => {
               event.preventDefault(); // Prevent form's default redirect behavior
 
-              const secretInput = document.getElementById('input');
+              const secretInput = document.getElementById('postInput');
               const categoryDropdown = document.getElementById('category');
               const secret = secretInput.value;
               const category = categoryDropdown.value;
@@ -400,6 +409,26 @@
   </aside>
 
 </div>
+
+<script>
+
+const postInput = document.getElementById("postInput") ? document.getElementById("postInput") : document.getElementById("postedInput")
+const wordCountText = document.querySelector("#wordCount");
+
+document.addEventListener("DOMContentLoaded", (e) => {
+  const count = postInput.value.length;
+  wordCountText.firstChild.textContent = `${count}`;
+})
+
+postInput.addEventListener("keyup", (e)=> {
+  updateWordCount();
+})
+
+   function updateWordCount() {
+                                const count = postInput.value.length;
+                                wordCountText.firstChild.textContent = `${count}`;
+                              }
+</script>
 
 <script>
   const connectedUsersMap = new Map();
