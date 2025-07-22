@@ -185,10 +185,17 @@ body {
       background: none;
       border: none;
       font-size: .9rem;
-      color: var(--secondary-color);
+      color: var(--text-color);
       font-weight: bold;
-      padding: .5rem 1.2rem;
+      padding: .5rem .75rem;
+      margin-right: 1.2rem;
       border-radius: 30px;
+      background: var(--secondary-color);
+
+    }
+
+    .listening {
+      color: var(--secondary-color);
     }
 
     .verified-badge {
@@ -243,7 +250,7 @@ body {
       gap: 10px;
       position: absolute;
       bottom: 5%;
-      left: 5%;
+      left: 4%;
     }
 
     .actions button {
@@ -253,6 +260,27 @@ body {
       font-size: 1.2rem;
 
     }
+
+      
+  .first-action,
+  .second-action {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+
+  .first-action button,
+  .second-action button{
+     background: transparent;
+     border: none;
+     color: var(--text-color);
+  }
+
+
+    .bookmark-btn.bookmarked i {
+      color: var(--secondary-color);
+    }
+    
 
     .post-action {
           display: flex;
@@ -2061,13 +2089,16 @@ audio {
   .card-menu {
     position: absolute;
     right: 1rem;
-    top: 1.2rem;
+    top: 1rem;
   }
+
+
 
   .card-toggle-btn {
     color: var(--text-color);
     background: none;
     font-weight: bold;
+    font-size: 1.2rem;
     padding: .8rem;
     border: none;
   }
@@ -2163,16 +2194,7 @@ audio {
   }
 
   
-  
 
-  .first-action,
-  .second-action {
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-  }
-
-  
   
   .emoji-particle {
     position: absolute;

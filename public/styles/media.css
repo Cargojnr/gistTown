@@ -39,6 +39,7 @@ font-family: 'Quicksand', sans-serif;
   transform: translateX(30px);
 }
 }
+
 @media (max-width:936px) {
   p {
     font-size: .9rem !important;
@@ -89,6 +90,9 @@ font-family: 'Quicksand', sans-serif;
     height: 18px !important;
   }
 
+  #notification {
+    bottom: 4rem !important;
+  }
   
  
   #liveSearchForm {
@@ -173,6 +177,10 @@ font-family: 'Quicksand', sans-serif;
     position: fixed;
     right: 1rem ;
     bottom: 7rem !important;
+}
+
+#scroll-indicator {
+  display: none !important;
 }
 
 
@@ -300,10 +308,10 @@ header .profiled {
 
   #selectCategory {
     position: fixed;
-    top: 0rem !important;
+    top: 4rem !important;
     z-index: 50 !important;
     gap: .2rem;
-    right: 0;
+    right: 0 !important;
     left: 0;
   }
 
@@ -313,6 +321,11 @@ header .profiled {
 /* Utilities classes */
   .mobile-nav {
     display: flex;
+  }
+
+  .listen {
+    padding: .25rem .5rem;
+    font-size: .8rem;
   }
 
   #main-logo{
@@ -604,6 +617,15 @@ top:  4.5rem;
   background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
 }
 
+.card-menu {
+  top: .5rem !important;
+  right: .5rem !important;
+}
+
+.card-toggle-btn {
+  font-size: 1rem;
+}
+
 .floating-lottie-animated.to-center {
   left: 50%;
   top: 50%;
@@ -673,6 +695,7 @@ top:  4.5rem;
   .comment-item .user {
     font-size: 13px !important;
   }
+
 
   #postContainer textarea {
     padding: .5rem;

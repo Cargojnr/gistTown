@@ -29,6 +29,7 @@ import rateLimit from "express-rate-limit";
 import requestIp from "request-ip";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime.js";
+import { title } from "process";
 dayjs.extend(relativeTime);
 
 const options = {
@@ -438,11 +439,48 @@ app.get("/profile", async (req, res) => {
         [req.user.id]
       );
 
+      const secrets = result.rows;
+
       const audioFiles = await Audio.findAll({
         where: { userId },
       });
 
-      const userDetails = result.rows;
+      const textBookmarkCounts = await db.query(`
+        SELECT secret_id, COUNT(*) AS count
+        FROM bookmarks
+        WHERE secret_id = ANY($1::int[])
+        GROUP BY secret_id
+      `, [secrets.map(p => p.id)]);
+
+      const textBookmarkMap = {};
+      textBookmarkCounts.rows.forEach(row => {
+        textBookmarkMap[row.secret_id] = parseInt(row.count);
+      });
+  
+      // Attach bookmark count to each post
+      const enrichedTextSecrets = secrets.map(post => ({
+        ...post,
+        bookmark_count: textBookmarkMap[post.id] || 0
+      }));
+
+      const audioBookmarkCounts = await db.query(`
+        SELECT audio_id, COUNT(*) AS count
+        FROM bookmarks
+        WHERE audio_id = ANY($1::int[])
+        GROUP BY audio_id
+      `, [audioFiles.map(p => p.id)]);
+
+      const audioBookmarkMap = {};
+      audioBookmarkCounts.rows.forEach(row => {
+        audioBookmarkMap[row.audio_id] = parseInt(row.count);
+      });
+  
+      // Attach bookmark count to each post
+      const enrichedAudioSecrets = audioFiles.map(post => ({
+        ...post,
+        bookmark_count: audioBookmarkMap[post.id] || 0
+      }));
+
 
       res.render("profile", {
         userId: req.user.id,
@@ -451,8 +489,8 @@ app.get("/profile", async (req, res) => {
         profilePicture: req.user.profile_picture,
         verification: req.user.verified,
         username: req.user.username,
-        profile: userDetails,
-        userAudio: audioFiles,
+        profile: enrichedTextSecrets,
+        userAudio: enrichedAudioSecrets,
         title: "My Profile"
       });
     } catch (err) {
@@ -470,6 +508,8 @@ app.get("/profile/amebo/:user", async (req, res) => {
         [userId]
       );
 
+      const secrets = result.rows;
+
       const userProfile = result.rows;
       const userid = userProfile[0].user_id;
       const activeStatus = userProfile.active_status;
@@ -483,15 +523,54 @@ app.get("/profile/amebo/:user", async (req, res) => {
       const totalReactions = result.reactions;
       const totalComments = result.comment;
 
+      const textBookmarkCounts = await db.query(`
+        SELECT secret_id, COUNT(*) AS count
+        FROM bookmarks
+        WHERE secret_id = ANY($1::int[])
+        GROUP BY secret_id
+      `, [secrets.map(p => p.id)]);
+
+      const textBookmarkMap = {};
+      textBookmarkCounts.rows.forEach(row => {
+        textBookmarkMap[row.secret_id] = parseInt(row.count);
+      });
+  
+      // Attach bookmark count to each post
+      const enrichedTextSecrets = secrets.map(post => ({
+        ...post,
+        bookmark_count: textBookmarkMap[post.id] || 0
+      }));
+
+      const audioBookmarkCounts = await db.query(`
+        SELECT audio_id, COUNT(*) AS count
+        FROM bookmarks
+        WHERE audio_id = ANY($1::int[])
+        GROUP BY audio_id
+      `, [audioFiles.map(p => p.id)]);
+
+      const audioBookmarkMap = {};
+      audioBookmarkCounts.rows.forEach(row => {
+        audioBookmarkMap[row.audio_id] = parseInt(row.count);
+      });
+  
+      // Attach bookmark count to each post
+      const enrichedAudioSecrets = audioFiles.map(post => ({
+        ...post,
+        bookmark_count: audioBookmarkMap[post.id] || 0
+      }));
+
+
+
       res.render("profile", {
+         title: `gossipa${userid} Profile`,
         userId: req.user.id,
         profileId: userid,
         verification: verification,
         userPicture,
         activeStatus: activeStatus,
         profilePicture: req.user.profile_picture,
-        userProfile,
-        userAudio: audioFiles,
+        userProfile: enrichedTextSecrets,
+        userAudio: enrichedAudioSecrets,
         totalComments,
         totalReactions,
       });
@@ -671,6 +750,146 @@ const formattedAudio = audioPosts.map((audio) => {
   }
 });
 
+app.get("/bookmarked", async(req, res) => {
+  if (!req.isAuthenticated()) return res.redirect("/login");
+
+  const userId = req.user.id;
+
+  try {
+    // Step 1: Fetch bookmarks for the user
+    const bookmarks = await db.query(
+      "SELECT * FROM bookmarks WHERE user_id = $1",
+      [userId]
+    );
+
+    const secretIds = bookmarks.rows
+      .filter(b => b.post_type === "text")
+      .map(b => b.secret_id);
+
+    const audioIds = bookmarks.rows
+      .filter(b => b.post_type === "audio")
+      .map(b => b.audio_id);
+
+    // Step 2: Fetch text secrets
+    let savedSecrets = [];
+    if (secretIds.length > 0) {
+      const secretsResult = await db.query(`
+        SELECT secrets.id, timestamp, reported, verified, reactions,
+               profile_picture, username, user_id, color, category, secret
+        FROM secrets
+        JOIN users ON users.id = user_id
+        WHERE secrets.id = ANY($1)
+      `, [secretIds]);
+
+      savedSecrets = secretsResult.rows.map(secret => ({
+        ...secret,
+        type: "text",
+        timestamp: new Date(secret.timestamp),
+      }));
+    }
+
+    // Step 3: Fetch audio posts
+    let savedAudios = [];
+    if (audioIds.length > 0) {
+      const audioPosts = await Audio.findAll({
+        where: { id: audioIds },
+        order: [["uploadDate", "DESC"]],
+      });
+
+      // Get audio post user details
+      const audioUserIds = [...new Set(audioPosts.map(a => a.userId))];
+      const usersResult = await db.query(
+        `SELECT id, username, verified, profile_picture FROM users WHERE id = ANY($1)`,
+        [audioUserIds]
+      );
+      const userMap = {};
+      usersResult.rows.forEach(user => userMap[user.id] = user);
+
+      savedAudios = audioPosts.map(audio => {
+        const user = userMap[audio.userId] || {};
+        return {
+          id: audio.id,
+          user_id: audio.userId,
+          username: user.username || "unknown",
+          verification: user.verified || false,
+          profile_picture: user.profile_picture || "/img/default-avatar.png",
+          url: audio.url,
+          type: "audio",
+          timestamp: new Date(audio.uploadDate),
+          reactions: audio.reactions || {}
+        };
+      });
+    }
+
+    const savedFeeds = [...savedSecrets, ...savedAudios].sort((a, b) => b.timestamp - a.timestamp);
+
+    // Final response
+    res.render("bookmark", {
+      savedFeeds,
+      savedAudios,
+      userId,
+      profilePicture: req.user.profile_picture,
+      username: req.user.username,
+      verification: req.user.verified,
+      title: "Saved Gists"
+    });
+
+  } catch (error) {
+    console.error("Failed to fetch saved gists:", error);
+    res.status(500).send("Something went wrong loading your saved gists.");
+  }
+})
+
+
+app.post("/bookmark", async (req, res) => {
+  const userId = req.user?.id;
+  const { postId, postType } = req.body;
+
+  if (!userId) return res.status(401).json({ success: false, message: "Not logged in" });
+
+  try {
+    // Check for duplicates
+    if(postType === "text"){
+      const existing = await db.query(
+        "SELECT * FROM bookmarks WHERE user_id = $1 AND secret_id = $2",
+        [userId, postId]
+      );
+  
+      if (existing.rows.length > 0) {
+        return res.json({ success: false, message: "Already bookmarked" });
+      }
+  
+      await db.query(
+        "INSERT INTO bookmarks (user_id, secret_id, post_type) VALUES ($1, $2, $3)",
+        [userId, postId, postType]
+      );
+  
+      return res.json({ success: true, message: "Gist bookmarked successfully ✅" });
+    } else {
+      const existing = await db.query(
+        "SELECT * FROM bookmarks WHERE user_id = $1 AND audio_id = $2",
+        [userId, postId]
+      );
+  
+      if (existing.rows.length > 0) {
+        return res.json({ success: false, message: "Already bookmarked" });
+      }
+  
+      await db.query(
+        "INSERT INTO bookmarks (user_id, audio_id, post_type) VALUES ($1, $2, $3)",
+        [userId, postId, postType]
+      );
+  
+      return res.json({ success: true, message: "Gist bookmarked successfully ✅" });
+    }
+    
+  } catch (error) {
+    console.error("Bookmark error:", error);
+    return res.status(500).json({ success: false, message: "Failed to bookmark post" });
+  }
+});
+
+
 app.get("/fetch-posts/:user", async (req, res) => {
   const { type } = req.query;
   const userId = req.params.user;
@@ -689,7 +908,28 @@ app.get("/fetch-posts/:user", async (req, res) => {
           [userId]
         );
 
-        return res.json({ posts: result.rows });
+        
+      const secrets = result.rows;
+
+      const bookmarkCounts = await db.query(`
+        SELECT secret_id, COUNT(*) AS count
+        FROM bookmarks
+        WHERE secret_id = ANY($1::int[])
+        GROUP BY secret_id
+      `, [secrets.map(p => p.id)]);
+
+      const bookmarkMap = {};
+      bookmarkCounts.rows.forEach(row => {
+        bookmarkMap[row.secret_id] = parseInt(row.count);
+      });
+
+      const enrichedPosts = secrets.map(post => ({
+        ...post,
+        bookmark_count: bookmarkMap[post.id] || 0,
+        userId,
+      }));
+
+        return res.json({ posts: enrichedPosts });
       } else if (type === "audio") {
         const audioPosts = await Audio.findAll({
           where: { userId },
@@ -702,13 +942,28 @@ app.get("/fetch-posts/:user", async (req, res) => {
         );
         const user = userInfo.rows[0];
 
+        const bookmarkCounts = await db.query(`
+          SELECT audio_id, COUNT(*) AS count
+          FROM bookmarks
+          WHERE audio_id = ANY($1::int[])
+          GROUP BY audio_id
+        `, [audioPosts.map(p => p.id)]);
+  
+        const bookmarkMap = {};
+        bookmarkCounts.rows.forEach(row => {
+          bookmarkMap[row.audio_id] = parseInt(row.count);
+        });
+  
+
         const formatted = audioPosts.map((audio) => ({
           id: audio.id,
           url: audio.url,
           user_id: audio.userId,
+          userId: userId,
           username: user.username,
           profile_pic: user.profile_picture,
           timestamp: dayjs(audio.uploadDate).fromNow(),
+          bookmark_count: bookmarkMap[audio.id] || 0
         }));
 
         return res.json({ posts: formatted });
@@ -1059,6 +1314,7 @@ app.get("/submit", async (req, res) => {
     console.log(req.user);
 
     const formData = {
+      title: "Share your Gossip",
       submit: "Submit",
       theme: userTheme,
       mode: mode,
@@ -1441,7 +1697,6 @@ app.post("/report/secret/:id", async (req, res) => {
         userId: userId,
       },
     });
-    console.log(reportResult);
 
     res.json({ success: true, reportId: result.rows[0].id });
   } catch (error) {
@@ -1827,7 +2082,7 @@ app.post("/edit", async (req, res) => {
 
       const data = result.rows[0];
       res.render("submit", {
-        title: "Edit your Secret",
+        title: "Edit your Gossip",
         submit: "Update",
         secret: data,
         theme: userTheme,
@@ -2130,9 +2385,9 @@ app.post("/login", (req, res, next) => {
           // Store user in session temporarily
           req.session.tempUserId = user.id;
 
-          req.session.save(() => {
-            res.json({ needsVerification: true });
-          });
+          // req.session.save(() => {
+          //   res.json({ needsVerification: true });
+          // });
   
           return res.json({ needsVerification: true });
         }

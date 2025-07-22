@@ -1,0 +1,886 @@
+<style>
+    shimmer-container {
+        max-width: 900px !important;
+        margin-top: 1rem;
+    }
+
+    .shimmer-wrapper {
+        max-width: 900px !important;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        /* padding: 1rem; */
+    }
+
+    .shimmer-card {
+        width: 100%;
+        display: flex;
+        background: var(--container-bg);
+        border-radius: 10px;
+        overflow: hidden;
+        animation: pulse 1.5s infinite;
+    }
+
+    .shimmer-avatar {
+        width: 50px;
+        height: 50px;
+        background: var(--body-bg);
+        border-radius: 50%;
+        margin: 1rem;
+    }
+
+
+
+    .shimmer-lines {
+        flex: 1;
+        padding: 1rem 0;
+    }
+
+    .shimmer-line {
+        height: 10px;
+        background: var(--body-bg);
+        margin: 8px 0;
+        border-radius: 5px;
+    }
+
+    .shimmer-line.short {
+        width: 50%;
+    }
+
+    .shimmer-footer {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .shimmer-btn {
+        width: 40px;
+        height: 20px;
+        background: var(--body-bg);
+        border-radius: 5px;
+    }
+
+    @keyframes pulse {
+        0% {
+            background-color: var(--container-bg);
+        }
+
+        50% {
+            background-color: var(--body-bg);
+        }
+
+        100% {
+            background-color: var(--container-bg);
+        }
+    }
+
+    .shimmer {
+        background: linear-gradient(90deg, var(--container-bg) 25%, var(--body-bg) 50%, var(--container-bg) 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position: -200% 0;
+        }
+
+        100% {
+            background-position: 200% 0;
+        }
+    }
+</style>
+
+<div id="main">
+    <section class="main">
+        <div class="jumbotron text-center">
+            <div class="container">
+                <div id="feeds">
+
+                    <div id="topOverlay"></div>
+                    <div id="bottomOverlay"></div>
+
+                    <div id="shimmer-container" class="shimmer-container full-width">
+                        <ul>
+                            <% for (let i=0; i < savedFeeds.length; i++) { %>
+                                <li class="secret shimmer-placeholder">
+                                    <div class="card">
+                                        <div class="shimmer-wrapper">
+                                            <div class="shimmer-card">
+                                                <div class="shimmer-avatar"></div>
+                                                <div class="shimmer-lines">
+                                                    <div class="shimmer-line short"></div>
+                                                    <div class="shimmer-line"></div>
+                                                    <div class="shimmer-line"></div>
+                                                    <div class="shimmer-footer">
+                                                        <div class="shimmer-btn"></div>
+                                                        <div class="shimmer-btn"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <% } %>
+                        </ul>
+                    </div>
+
+                    <div id="real-secrets" style="display: none;">
+                        <ul id="secrets">
+                            <% savedFeeds.forEach((post)=> { %>
+                                <% if (post.type==='text' ) { %>
+
+                                    <div id="pinned" class="pinned-secret">
+                                        <div id="countdown"
+                                            style="margin-top: 20px; font-weight: bold; text-align: center;"></div>
+                                    </div>
+
+
+                                    <li class=" secret text full-width" data-type="text" id="secret<%= post.id %>">
+
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <div class="user-details header<%= post.user_id %>">
+                                                    <a href=<%=post.user_id===userId ? '/profile' : '/profile/amebo/' +
+                                                        post.user_id %>
+                                                        class="avatar-profile"><img oncontextmenu="return false;"
+                                                            src="<%= post.profile_picture %>" alt="Profile Picture"
+                                                            class="profile-pic"></a>
+                                                    <div class="user-info">
+                                                        <a href=<%=post.user_id===userId ? '/profile'
+                                                            : '/profile/amebo/' + post.user_id %>>
+                                                            <p class="username user<%= post.user_id %>">
+                                                                <span class="user">@gossipa<%= post.user_id %></span>
+                                                                <% if(post.verified===true) {%>
+                                                                    <abbr title="Exclusive Membership"> <img
+                                                                            oncontextmenu="return false;"
+                                                                            src="../../img/gossipa3.png" alt=""
+                                                                            class="verified-badge"></abbr>
+                                                                    <% } else {%>
+
+                                                                        <% } %>
+                                                            </p>
+
+                                                        </a>
+                                                        <span class="timestamp" data-raw="<%= post.timestamp %>"></span>
+                                                    </div>
+                                                    <span class="you-live-badge hidden">🎙️Live</span>
+                                                    <span id="streamEndedNotice" class="badge ended hidden">Stream Ended
+                                                        ✓</span>
+                                                </div>
+                                                <button class="listen"><i
+                                                        class="fas fa-ear-listen"></i>&nbsp;Eavedrop</button>
+                                            </div>
+
+                                            <div class="card-content">
+                                                <p>
+                                                    <span class="content">
+                                                        <% if (post.secret.split(" ").length > 150) { %>
+                <%= post.secret.substring(0, 250) + " ..." %>
+                                                            <% } else { %>
+                                                                <%= post.secret %>
+                                                                    <% } %>
+                                                    </span>
+                                                    <% if (post.secret.split(" ").length > 150) { %>
+            
+                    <button
+                      class=" read" data-full="<%= post.secret %>"
+                                                        data-truncated="<%= post.secret.substring(0, 250) + '...' %>">
+                                                        Read More
+                                                        </button>
+
+
+                                                        <% } %>
+                                                </p>
+                                            </div>
+
+
+                                            <div class="comment-section" data-post-id="<%= post.id %>"
+                                                data-type="<%= post.type %>">
+
+                                                <div class="reactions sleek">
+                                                    <div class="first-action">
+                                                        <div class="secret-card" data-id="<%= post.id %>">
+                                                            <div class="reaction">
+                                                                <button class="reaction-btn " data-type="hot">
+                                                                    <!-- <div id="gasp-animation" class="lottie-animation"></div> -->
+                                                                    <img oncontextmenu="return false;"
+                                                                        src="../../img/premium-reaction.png" alt="🔥"
+                                                                        class="premium-reaction">
+
+                                                                    <div class="reaction-class-wrapper">
+                                                                        <span class="reaction-count none">
+                                                                            <%= post.reactions.hot ?
+                                                                                post.reactions.hot.count : 0 %>
+                                                                        </span>
+                                                                    </div>
+                                                                </button>
+
+                                                                <button class="reaction-btn " data-type="like">
+                                                                    <!-- <div id="like-animation" class="lottie-animation"></div> -->
+                                                                    👍
+                                                                    <div class="reaction-class-wrapper">
+
+
+                                                                        <span class="reaction-count none">
+                                                                            <%= post.reactions.like ?
+                                                                                post.reactions.like.count : 0 %>
+                                                                        </span>
+                                                                    </div>
+                                                                </button>
+
+                                                                <button class="reaction-btn " data-type="laugh">
+                                                                    <!-- <div id="laugh-animation" class="lottie-animation"></div> -->
+
+                                                                    😂
+                                                                    <div class="reaction-class-wrapper">
+
+                                                                        <span class="reaction-count none">
+                                                                            <%= post.reactions.laugh ?
+                                                                                post.reactions.laugh.count : 0 %>
+                                                                        </span>
+                                                                    </div>
+
+                                                                </button>
+
+                                                                <!-- <button class="reaction-btn " data-type="cry">
+
+                                                    😢
+                                                    <div class="reaction-class-wrapper">
+
+                                                    <span class="reaction-count none">
+                                                      <%= post.reactions.cry ? post.reactions.cry.count : 0 %>
+                                                    </span>
+                                                    </div>
+                                                    
+                                                  </button> -->
+
+                                                                <button class="reaction-btn " data-type="gasp">
+                                                                    <!-- <div id="gasp-animation" class="lottie-animation"></div> -->
+                                                                    😱
+                                                                    <div class="reaction-class-wrapper">
+
+                                                                        <span class="reaction-count none">
+                                                                            <%= post.reactions.gasp ?
+                                                                                post.reactions.gasp.count : 0 %>
+                                                                        </span>
+                                                                    </div>
+
+                                                                </button>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                        <button id="commentButton"><i class="fas fa-comment"></i><span
+                                                                class="comment-count"></span>
+                                                        </button>
+                                                    </div>
+
+                                                    <ul class="second-action">
+                                                        <li>
+                                                            <abbr title="Bookmark">
+                                                                <button class="bookmark-btn" data-id="<%= post.id %>"
+                                                                    data-type="<%= post.type %>">
+                                                                    <i class="fas fa-bookmark"></i>
+                                                                </button>
+                                                            </abbr>
+                                                        </li>
+
+                                                        <li class=" md-none">
+                                                            <button class="copy-btn  md-none">
+                                                                <abbr title="Copy"><i class="fas fa-copy"></i></abbr>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+
+                                                </div>
+
+                                                <div class="comment-dropdown" id="commentDropdown">
+                                                    <form class="comment-display" method="POST" id="commentDisplay">
+                                                        <ul id="comments" class="comments-list"></ul>
+                                                    </form>
+
+                                                    <form action="/comment" method="POST" id="comment-form">
+                                                        <input type="hidden" name="id" id="secretId"
+                                                            value="<%= post.id %>" />
+                                                        <input type="hidden" name="secretUserId"
+                                                            value="<%= post.user_id %>" />
+                                                        <input type="hidden" name="commentUserId"
+                                                            value="<%= userId %>" />
+                                                        <textarea id="commentInput" placeholder="Write a comment..."
+                                                            name="comment"></textarea>
+                                                        <!-- <input type="text" id="commentInput" placeholder="Write a comment" name="comment"> -->
+                                                        <button id="postCommentButton">
+                                                            <!-- Post -->
+                                                            <i class="fas fa-paper-plane"></i>
+                                                        </button>
+                                                        <% if (locals.message) { %>
+                                                            <small>
+                                                                <%= message %>
+                                                            </small>
+                                                            <% } %>
+                                                    </form>
+
+                                                </div>
+                                            </div>
+
+
+                                            <ul class="card-menu">
+                                                <li>
+                                                    <button class="card-toggle-btn"><i
+                                                            class="fas fa-ellipsis-vertical"></i></button>
+                                                    <ul class="card-menu-content" style="display: none;">
+                                                        <li>
+                                                            <button class="report-btn" data-id="<%= post.id %>">
+                                                                <i class="fa-regular fa-flag"></i>Report
+                                                            </button>
+                                                        </li>
+                                                        <li>
+                                                            <button class="copy-btn">
+                                                                <i class="fas fa-copy">Copy</i>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+
+                                        </div>
+                                    </li>
+
+                                    <% } else if (post.type==='audio' ) { %>
+                                        <!-- Audio post UI -->
+                                        <li class="secret audio full-width" data-type="audio">
+                                            <div class="card ">
+                                                <div class="card-header">
+                                                    <div class="user-details header<%= post.user_id %>">
+                                                        <a href="/profile/amebo/<%= post.user_id %>"
+                                                            class="avatar-profile"><img oncontextmenu="return false;"
+                                                                src="<%= post.profile_picture %>" alt="Profile Picture"
+                                                                class="profile-pic"></a>
+                                                        <div class="user-info">
+                                                            <a href="/profile/amebo/<%= post.user_id %>">
+                                                                <p class="username user<%= post.user_id %>">
+                                                                    <span class="user">@gossipa<%= post.user_id %>
+                                                                            </span>
+                                                                    <% if(post.verified===true) {%>
+                                                                        <abbr title="Exclusive Membership"> <img
+                                                                                oncontextmenu="return false;"
+                                                                                src="../../img/gossipa3.png" alt=""
+                                                                                class="verified-badge"></abbr>
+                                                                        <% } else {%>
+
+                                                                            <% } %>
+                                                                </p>
+
+                                                            </a>
+                                                            <span class="timestamp"
+                                                                data-raw="<%= post.timestamp %>"></span>
+                                                        </div>
+                                                        <span class="you-live-badge hidden">🎙️Live</span>
+                                                        <span id="streamEndedNotice" class="badge ended hidden">Stream
+                                                            Ended ✓</span>
+                                                    </div>
+                                                    <button class="listen"><i
+                                                            class="fas fa-ear-listen"></i>&nbsp;Eavedrop</button>
+                                                </div>
+
+                                                <div class="waveform-wrapper">
+                                                    <div id="waveform-<%= post.id %>"></div>
+                                                    <canvas id="visualizer-<%= post.id %>" class="wave-canvas"></canvas>
+                                                    <button class="wave-play-btn" data-id="<%= post.id %>">▶️</button>
+                                                </div>
+
+                                                <div class="comment-section" data-post-id="<%= post.id %>"
+                                                    data-type="audio">
+
+                                                    <div class="reactions sleek">
+                                                        <div class="first-action">
+                                                            <div class="secret-card" data-id="<%= post.id %>">
+                                                                <div class="reaction">
+                                                                    <button class="reaction-btn " data-type="hot">
+                                                                        <!-- <div id="gasp-animation" class="lottie-animation"></div> -->
+                                                                        <img oncontextmenu="return false;"
+                                                                            src="../../img/premium-reaction.png"
+                                                                            alt="Premium exclusive fire, hot reaction"
+                                                                            class="premium-reaction">
+
+                                                                        <div class="reaction-class-wrapper">
+                                                                            <span class="reaction-count none">
+                                                                                <%= post.reactions.hot ?
+                                                                                    post.reactions.hot.count : 0 %>
+                                                                            </span>
+                                                                        </div>
+                                                                    </button>
+
+                                                                    <button class="reaction-btn " data-type="like">
+                                                                        <!-- <div id="like-animation" class="lottie-animation"></div> -->
+                                                                        👍
+                                                                        <div class="reaction-class-wrapper">
+
+
+                                                                            <span class="reaction-count none">
+                                                                                <%= post.reactions.like ?
+                                                                                    post.reactions.like.count : 0 %>
+                                                                            </span>
+                                                                        </div>
+                                                                    </button>
+
+                                                                    <button class="reaction-btn " data-type="laugh">
+                                                                        <!-- <div id="laugh-animation" class="lottie-animation"></div> -->
+
+                                                                        😂
+                                                                        <div class="reaction-class-wrapper">
+
+                                                                            <span class="reaction-count none">
+                                                                                <%= post.reactions.laugh ?
+                                                                                    post.reactions.laugh.count : 0 %>
+                                                                            </span>
+                                                                        </div>
+
+                                                                    </button>
+
+                                                                    <!-- <button class="reaction-btn " data-type="cry">
+
+                                                      😢
+                                                      <div class="reaction-class-wrapper">
+
+                                                      <span class="reaction-count none">
+                                                        <%= post.reactions.cry ? post.reactions.cry.count : 0 %>
+                                                      </span>
+                                                      </div>
+                                                      
+                                                    </button> -->
+
+                                                                    <button class="reaction-btn " data-type="gasp">
+                                                                        <!-- <div id="gasp-animation" class="lottie-animation"></div> -->
+                                                                        😱
+                                                                        <div class="reaction-class-wrapper">
+
+                                                                            <span class="reaction-count none">
+                                                                                <%= post.reactions.gasp ?
+                                                                                    post.reactions.gasp.count : 0 %>
+                                                                            </span>
+                                                                        </div>
+
+                                                                    </button>
+
+                                                                </div>
+
+                                                            </div>
+
+                                                            <button id="commentButton"><i
+                                                                    class="fas fa-comment"></i><span
+                                                                    class="comment-count"></span>
+                                                            </button>
+                                                        </div>
+
+                                                        <ul class="second-action">
+                                                            <li>
+                                                                <abbr title="Bookmark">
+                                                                    <button class="bookmark-btn"
+                                                                        data-id="<%= post.id %>"
+                                                                        data-type="<%= post.type %>">
+                                                                        <i class="fas fa-bookmark"></i>
+                                                                    </button>
+                                                                </abbr>
+                                                            </li>
+
+                                                        </ul>
+
+                                                    </div>
+
+                                                    <div class="comment-dropdown" id="commentDropdown">
+                                                        <form class="comment-display" method="POST" id="commentDisplay">
+                                                            <ul id="comments" class="comments-list"></ul>
+                                                        </form>
+
+                                                        <form action="/comment" method="POST" id="comment-form">
+                                                            <input type="hidden" name="audioId" id="audioId"
+                                                                value="<%= post.id %>" />
+                                                            <input type="hidden" name="secretUserId"
+                                                                value="<%= post.user_id %>" />
+                                                            <input type="hidden" name="commentUserId"
+                                                                value="<%= userId %>" />
+                                                            <textarea id="commentInput" placeholder="Write a comment..."
+                                                                name="comment"></textarea>
+                                                            <!-- <input type="text" id="commentInput" placeholder="Write a comment" name="comment"> -->
+                                                            <button id="postCommentButton">
+                                                                <!-- Post -->
+                                                                <i class="fas fa-paper-plane"></i>
+                                                            </button>
+                                                            <% if (locals.message) { %>
+                                                                <small>
+                                                                    <%= message %>
+                                                                </small>
+                                                                <% } %>
+                                                        </form>
+
+                                                    </div>
+                                                </div>
+
+
+
+                                                <ul class="card-menu">
+                                                    <li>
+                                                        <button class="card-toggle-btn"><i
+                                                                class="fas fa-ellipsis-vertical"></i></button>
+                                                        <ul class="card-menu-content" style="display: none;">
+                                                            <li>
+                                                                <button class="report-btn" data-id="<%= post.id %>">
+                                                                    <i class="fa-regular fa-flag"></i>Report
+                                                                </button>
+                                                            </li>
+                                                            <li>
+                                                                <button class="copy-btn">
+                                                                    <i class="fas fa-copy">Copy</i>
+                                                                </button>
+                                                            </li>
+
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+
+                                            </div>
+                                        </li>
+                                        <% } %>
+                                            <% }) %>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://unpkg.com/wavesurfer.js"></script>
+        <script src="https://unpkg.com/lottie-web@5.10.0/build/player/lottie.min.js"></script>
+<!-- Load Day.js and the plugin via CDN -->
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+
+        <script>
+            const audioPosts = <%- JSON.stringify(savedAudios) %>; // This is now an array on the client
+        </script>
+
+        <script>
+            document.querySelectorAll(".waveform-wrapper").forEach(wrapper => {
+                const postId = wrapper.querySelector(".wave-play-btn").dataset.id;
+                const waveformElement = document.querySelector(`#waveform-${postId}`);
+                const canvas = document.getElementById(`visualizer-${postId}`);
+                const audioPost = audioPosts.find(f => f.id == postId);
+                const audioUrl = audioPost?.url;
+
+                if (waveformElement && canvas && audioUrl) {
+                    const wave = WaveSurfer.create({
+                        container: waveformElement,
+                        waveColor: "#ddd",
+                        progressColor: "#555",
+                        height: 40,
+                        responsive: true,
+                        barWidth: 2,
+                        barGap: 2
+                    });
+
+                    wave.load(audioUrl);
+
+                    const playBtn = document.querySelector(`.wave-play-btn[data-id='${postId}']`);
+                    if (playBtn) {
+                        playBtn.addEventListener("click", () => wave.playPause());
+
+                        wave.on("play", () => () => {
+                            if (activeWave && activeWave !== wave) {
+                                activeWave.pause();
+                            }
+                            activeWave = wave;
+                            playBtn.innerText = "⏸️"
+                        });
+
+                        wave.on("pause", () => playBtn.innerText = "▶️");
+                        wave.on("finish", () => playBtn.innerText = "▶️");
+                    }
+
+                    wave.on("ready", () => {
+                        const audio = wave.media;
+                        setupVisualizer(audio, canvas, wave);
+                        waveformElement.classList.add("ready");
+                        canvas.classList.add("ready");
+                    });
+                }
+
+                function setupVisualizer(audioElement, canvas, waveInstance) {
+                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    const analyser = audioCtx.createAnalyser();
+                    const source = audioCtx.createMediaElementSource(audioElement);
+                    const ctx = canvas.getContext("2d");
+
+                    source.connect(analyser);
+                    analyser.connect(audioCtx.destination);
+                    analyser.fftSize = 256;
+
+                    const bufferLength = analyser.frequencyBinCount;
+                    const dataArray = new Uint8Array(bufferLength);
+                    canvas.width = canvas.offsetWidth;
+                    canvas.height = canvas.offsetHeight;
+
+                    const width = canvas.width;
+                    const height = canvas.height;
+                    const barWidth = width / bufferLength;
+
+                    function draw() {
+                        requestAnimationFrame(draw);
+                        analyser.getByteFrequencyData(dataArray);
+                        ctx.clearRect(0, 0, width, height);
+                        dataArray.forEach((value, i) => {
+                            const barHeight = (value / 255) * height;
+                            const hue = (i / bufferLength) * 360;
+                            ctx.fillStyle = `hsl(${hue}, 70%, 50%)`;
+                            ctx.fillRect(i * barWidth, height - barHeight, barWidth - 1, barHeight);
+                        });
+                    }
+
+                    const startDrawing = () => {
+                        audioCtx.resume();
+                        draw();
+                    };
+
+                    // Sync drawing to play events
+                    if (waveInstance) {
+                        waveInstance.on("play", startDrawing);
+                    } else {
+                        audioElement.onplay = startDrawing;
+                    }
+                }
+
+            });
+
+        </script>
+
+
+        <center class="bottom-message" id="scrollEndMessage">
+            <p>Reached the bottom. Scroll back to top </p>
+        </center>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const scrollEndMessage = document.getElementById('scrollEndMessage');
+
+                window.addEventListener('scroll', () => {
+                    const scrollPosition = window.scrollY + window.innerHeight;
+                    const pageHeight = document.body.offsetHeight;
+
+                    if (scrollPosition >= pageHeight - 50) {
+                        // User reached near bottom
+                        scrollEndMessage.style.opacity = '1';
+                        scrollEndMessage.style.zIndex = '100'
+                    } else {
+                        scrollEndMessage.style.opacity = '0';
+                    }
+                });
+            });
+        </script>
+        <script>
+            // ✅ Restore bookmarks on page load
+            window.addEventListener("DOMContentLoaded", () => {
+                const saved = JSON.parse(localStorage.getItem("bookmarkedPosts") || "[]");
+
+                document.querySelectorAll(".bookmark-btn").forEach((btn) => {
+                    const postId = btn.getAttribute("data-id");
+                    if (saved.includes(postId)) {
+                        btn.classList.add("bookmarked");
+                    }
+                });
+            });
+        </script>
+
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const cards = document.querySelectorAll('#secrets .card');
+
+                const observer = new IntersectionObserver((entries, obs) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            obs.unobserve(entry.target); // STOP observing after it becomes visible
+                        }
+                    });
+                }, {
+                    threshold: 0.5,
+                    rootMargin: '-50px 0px -60px 0px'
+                });
+
+                cards.forEach(card => observer.observe(card));
+            });
+
+        </script>
+
+
+
+
+
+        <audio id="post-sound" src="/sounds/system-notification-199277.mp3" preload="auto"></audio>
+        <script>
+            const postSound = document.getElementById("post-sound");
+            postSound.play();
+        </script>
+        <button id="scrollToTopBtn" class="scroll-btn"><i class="fas fa-chevron-up"></i></button>
+
+    </section>
+    <aside class="right-sidebar">
+
+
+        <div class="premium-aside">
+            <div class="premium-card">
+                <div class="crown-icon sparkle">👑</div>
+
+                <h3 class="premium-title">Become a Chief Gossipa</h3>
+                <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain Unknown.</p>
+
+                <div class="trending-stats">
+                    <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
+                </div>
+
+                <div class="avatar-hint">
+                    <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
+                    <p>You’re 1 step from <strong>trending</strong>…</p>
+                </div>
+
+                <a href="/subscribe" class="premium-btn">Unlock Exclusive</a>
+            </div>
+        </div>
+
+        <div class="aside-2">
+            <center>
+                <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Meet
+                    The
+                    Chiefs
+                    :<span id="activeCount">0</span></h4>
+            </center>
+            <ul class="nav user-list">
+            </ul>
+
+        </div>
+
+        <!-- <button id="message-popup" class="aside-2 none">
+                <p class="message-pgrph"> <i class="nav-icon fas fa-comments fa-2x"></i>Messages
+                  <span class="message-count"></span>
+                </p>
+      
+                <ul class="message-users">
+                  <li><img src="../.<%= profilePicture %>" alt="Avatar Profiles" class="profile-pic thumb"></li>
+                  <li><img src="../.<%= profilePicture %>" alt="Avatar Profiles" class="profile-pic thumb"></li>
+                  <li><img src="../.<%= profilePicture %>" alt="Avatar Profiles" class="profile-pic thumb"></li>
+                  <span class="counter">127+</span>
+                </ul>
+              </button> -->
+
+        <div class="inpage-footer">
+            <span>Privacy Policy</span>&nbsp;.
+            &nbsp;<span>Terms of use</span> &nbsp;.
+            &nbsp;<span>Community guidelines</span> &nbsp;.
+            <br><br>
+            &nbsp;<span>&copy; <%= new Date().getFullYear() %>, &commat; Gossipa Co. All rights reserved</span>
+        </div>
+
+    </aside>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const connectedUsersMap = new Map();
+            const userList = document.querySelector(".user-list");
+            const userCountDisplay = document.getElementById("activeCount");
+
+            function updateUserCount() {
+                if (userCountDisplay) userCountDisplay.textContent = connectedUsersMap.size;
+            }
+
+            function userConnected(user) {
+                if (connectedUsersMap.has(user.id)) return;
+
+                const userBox = document.createElement("li");
+                userBox.className = "connected-user nav-item enter";
+                userBox.id = `user-${user.id}`;
+
+                const verifiedBadge = user.verified
+                    ? `<img oncontextmenu="return false;" src="/img/gossipa3.png" alt="Verified Badge" class="verified-badge">`
+                    : "";
+
+                userBox.innerHTML = `
+                  <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
+                    <img oncontextmenu="return false;" src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
+                    <p class="username">
+                      <span class="user">@gossipa${user.id}</span>
+                      ${verifiedBadge}
+                    </p>
+                  </div>
+                `;
+
+                userList?.appendChild(userBox);
+                connectedUsersMap.set(user.id, userBox);
+                updateUserCount();
+
+                requestAnimationFrame(() => userBox.classList.add("enter"));
+            }
+
+            function userDisconnected(userId) {
+                const userBox = connectedUsersMap.get(userId);
+                if (userBox) {
+                    userBox.classList.add("exit");
+                    userBox.classList.remove("enter");
+                    setTimeout(() => {
+                        userBox.remove();
+                        connectedUsersMap.delete(userId);
+                        updateUserCount();
+                    }, 400);
+                }
+            }
+
+            if (window.socket) {
+                window.socket.on("userJoined", async (userId) => {
+                    try {
+                        const res = await fetch(`/user/${userId}`);
+                        const user = await res.json();
+                        userConnected(user);
+                    } catch (err) {
+                        console.error("Failed to fetch user data:", err);
+                    }
+                });
+
+                window.socket.on("userLeft", (userId) => {
+                    userDisconnected(userId);
+                });
+            } else {
+                console.warn("Socket.io not initialized on this page.");
+            }
+
+            // Load currently active users
+            fetch("/active-users")
+                .then(res => res.json())
+                .then(users => users.forEach(userConnected))
+                .catch(console.error);
+        });
+    </script>
+
+<script>
+    dayjs.extend(window.dayjs_plugin_relativeTime);
+  
+    document.querySelectorAll('.timestamp').forEach((timeElem) => {
+      const rawTimestamp = timeElem.getAttribute('data-raw');
+      if (rawTimestamp) {
+        const formatted = dayjs(rawTimestamp).fromNow();
+        timeElem.textContent = formatted;
+      }
+    });
+  </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Simulate a short loading delay (optional)
+            setTimeout(() => {
+                // Hide shimmer placeholder
+                document.querySelectorAll(".shimmer-container").forEach(shimmer => {
+                    shimmer.style.display = "none";
+                })
+                // Show real secrets
+                document.getElementById("real-secrets").style.display = "block";
+            }, 1000); // 1s delay – tweak as needed
+        });
+    </script>
+
+</div>

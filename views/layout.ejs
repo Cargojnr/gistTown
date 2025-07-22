@@ -91,7 +91,7 @@
 
 <body class="main-background">
 
-  <%- include('partials/brand-loader') %>
+  
   
   <script>
     window.addEventListener("load", function () {
@@ -253,13 +253,13 @@
     <aside class="left-sidebar">
       <div class="aside">
         <ul class="nav">
-          <li class="nav-item current">
+          <li class="nav-item <%= locals.title === 'Gossip feeds' ? 'current' : null %>">
             <a href="/feeds">
               <i class="nav-icon fas fa-home"></i> &nbsp;
               <span class="nav-text">Home</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item <%= locals.title === 'Explore Your Space' ? 'current' : null %>">
             <a href="/explore">
               <i class="nav-icon fab fa-modx"></i> &nbsp;
               <span class="nav-text">Explore</span>
@@ -267,8 +267,8 @@
               <span class="nav-tag">New</span>
             </a>
           </li>
-          <li class="nav-item chief">
-            <a href="">
+          <li class="nav-item chief <%= locals.title === 'Saved Gists' ? 'current' : null %>">
+            <a href="/bookmarked">
               <i class="nav-icon fas fa-bookmark"></i>
               &nbsp;<span class="nav-text">Bookmarks</span>&nbsp;
             </a>
@@ -281,14 +281,15 @@
                   class="nav-icon verified-badge"></span>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item <%= locals.title === 'My Profile' ? 'current' : null %>">
             <a href="/profile">
               <i class="nav-icon fas fa-circle-user"></i> &nbsp;
               <span class="nav-text">My Profile</span>
             </a>
           </li>
           <li class="nav-item blur">
-            <a href="/chat">
+            <a aria-disabled="true">
+             
               <i class="nav-icon fas fa-comments"></i> &nbsp;
               <span class="nav-text">GossipaCity</span>
 
@@ -296,7 +297,7 @@
             </a>
           </li>
 
-          <li class="nav-item">
+          <li class="nav-item <%= locals.title === 'Share your Gossip' || 'Edit your Gossip' ? 'current' : null %>">
             <a href="/submit">
               <i class="fas fa-circle-plus nav-icon"></i>
               &nbsp;<span class="nav-text"> Compose Gist</span>&nbsp;
