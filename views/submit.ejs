@@ -334,9 +334,12 @@
               const categoryDropdown = document.getElementById('category');
               const secret = secretInput.value;
               const category = categoryDropdown.value;
+              const notice = document.getElementById("notification")
 
               if (!category) {
-                alert('Please select a category before sharing!');
+                 notice.innerHTML = "<div class='toast'>Please select a category before sharing!</div>"
+      setTimeout(()=> {notice.innerHTML = ""}, 3000);
+                
                 return;
               }
 
@@ -354,14 +357,17 @@
                 const data = await response.json();
 
                 if (data.success) {
-                  alert('Secret shared successfully!');
+                  notice.innerHTML = "<div class='toast'>Secret shared successfully!</div>"
+      setTimeout(()=> {notice.innerHTML = ""}, 3000);
                   secretInput.value = ''; // Clear the input field
                 } else {
-                  alert('Failed to share the secret. Please try again.');
+                  notice.innerHTML = "<div class='toast'>Failed to share the secret. Please try again.</div>"
+      setTimeout(()=> {notice.innerHTML = ""}, 3000);
                 }
               } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred. Please try again later.');
+                console.error('Error:', error)
+                notice.innerHTML = "<div class='toast'>An error occurred. Please try again later.</div>"
+      setTimeout(()=> {notice.innerHTML = ""}, 3000);
               }
             });
           </script>
@@ -666,9 +672,11 @@ postInput.addEventListener("keyup", (e)=> {
   submitButton.addEventListener('click', async () => {
     const categoryDropdown = document.getElementById('category');
     const category = categoryDropdown.value;
+    const notice = document.getElementById("notification")
 
     if (!category) {
-      alert('Please select a category before sharing!');
+      notice.innerHTML = "<div class='toast'>Please select a category before sharing!</div>"
+      setTimeout(()=> {notice.innerHTML = ""}, 3000);
       return;
     }
 
@@ -688,18 +696,21 @@ postInput.addEventListener("keyup", (e)=> {
       const data = await response.json();
 
       if (data.success) {
-        alert('Recording shared successfully!');
+        notice.innerHTML = "<div class='toast'>Recording shared successfully!</div>"
+      setTimeout(()=> {notice.innerHTML = ""}, 3000);
         // Reset the UI
         audioPlayer.src = '';
         actionButtons.style.display = 'none';
         audioPlayer.style.display = 'none';
         audioChunks = [];
       } else {
-        alert('Failed to share the recording. Please try again.');
+           notice.innerHTML = "<div class='toast'>Failed to share the recording. Please try again.</div>"
+      setTimeout(()=> {notice.innerHTML = ""}, 3000);
       }
     } catch (error) {
       console.error('Error sharing recording:', error);
-      alert('An error occurred. Please try again later.');
+      notice.innerHTML = "<div class='toast'>An error occurred. Please try again later.</div>"
+      setTimeout(()=> {notice.innerHTML = ""}, 3000);
     }
   });
 </script>

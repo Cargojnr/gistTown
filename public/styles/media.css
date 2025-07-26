@@ -92,6 +92,7 @@ font-family: 'Quicksand', sans-serif;
 
   #notification {
     bottom: 4rem !important;
+    font-size: .9rem !important;
   }
   
  
@@ -315,6 +316,51 @@ header .profiled {
     left: 0;
   }
 
+  #menu {
+    padding: 2rem 1.2rem;
+  }
+
+  .menu {
+    gap: 2rem;
+  }
+
+  .menu-nav {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .menu-nav h4,
+  .menu-nav-alt h4 {
+    font-size: 1.2rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .menu-nav li a,
+  .menu-nav-alt li a {
+    font-size: 1rem;
+  }
+
+  .menu .socials {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  #close {
+         top: 1rem;
+    right: 0;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .install-prompt {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .menu-lang {
+    font-size: 0.85rem;
+  }
+
 }
 
 @media (max-width: 738px) {
@@ -428,35 +474,6 @@ header .profiled {
     display: none;
   }
 
-  #menu {
-    padding: 1rem;
-    overflow-y: auto;
-  }
-
-  .menu {
-    margin: 2rem auto;
-  }
-
-  .menu-nav,
-  .menu-nav-alt {
-    gap: 1rem;
-    height: auto;
-  }
-
-  .menu-nav h4,
-  .menu-nav-alt h4 {
-    font-size: 1.2rem;
-  }
-
-  .menu-nav li a,
-  .menu-nav-alt li a {
-    font-size: 1.1rem;
-  }
-
-
-  .profile-header {
-    margin: 0 auto 1rem;
-  }
 
   .profile-avatar {
     width: 45px;
@@ -711,14 +728,15 @@ top:  4.5rem;
     padding: .5rem 0 !important;
   }
 
-  header .fas,
-  header .fab {
-    font-size: 1.5rem;
-  }
 
-  
   .topbar-icons {
     gap: .5rem;
+  }
+
+
+
+  .topbar-icons .fab, .topbar-icons .fas, #liveSearchForm .fas{
+      font-size: 1.5rem;
   }
 
   #liveSearchForm {
@@ -970,13 +988,13 @@ button#next-step {
   } */
 
 
-  .menu {
+  /* .menu {
     position: relative;
     display: flex;
     justify-content: center;
     flex-direction: column;
     margin: .5rem auto;
-  }
+  } */
 
   .theme-toggle-label {
     width: 50px;
@@ -1002,72 +1020,8 @@ button#next-step {
   }
 
 
-
   .menu-logo {
     display: none;
-  }
-
-  .menu-nav {
-    display: block;
-    height: auto;
-  }
-
-  .menu-nav-alt {
-    display: flex;
-    align-items: first baseline;
-    justify-content: center;
-    gap: 50px;
-  }
-
-  .menu-nav ul {
-     margin: .75rem auto;
-     margin-bottom: 1rem;
-  }
-
-  .menu-nav li{
-    margin-bottom: .5rem;
-    line-height: 1.2;
-    font-size: 1rem;
-  }
-
-  .menu-nav-alt li {
-    margin: .75rem 0;
-    line-height: 1.2;
-    font-size: .9rem;
-  }
-
-
-  .menu-nav  h4{
-    margin-bottom: 0;
-    font-size: 1.2rem;
-    font-weight: 100;
-  }
-
-  .menu-nav-alt  h4{
-    margin-bottom: .75rem;
-    font-size: 1rem;
-    font-weight: 100;
-  }
-
-
-  .menu-nav li a {
-    font-size: 1rem;
-    font-weight: 300;
-  }
-
-  .menu-nav-alt li a {
-    font-weight: 300;
-    font-size: .9rem;
-  }
-
-  .menu-lang {
-    bottom: 5rem;
-    text-align: center;
-    font-weight: 100;
-  }
-
-  #close {
-    bottom: 3rem;
   }
 
   .trending #secrets

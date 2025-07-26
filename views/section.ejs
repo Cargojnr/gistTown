@@ -913,6 +913,7 @@
     card.querySelector(".report-btn").addEventListener('click', async (e) => {
       const secretId = e.target.getAttribute('data-id');
       const reason = prompt('Why are you reporting this content?'); // Ask for the reason
+      const notice = document.getElementById("notification")
 
       if (reason) {
         try {
@@ -924,9 +925,15 @@
 
           const data = await response.json();
           if (data.success) {
-            alert('Thank you for reporting. We will review it shortly.');
+            if(notice){
+              notice.innerHTML = "<div class='toast'>Thank you for reporting. We will review it shortly.</div>"
+              setTimeout(()=> {notice.innerHTML = ""}, 3000)
+            }
           } else {
-            alert('Error reporting content');
+            if(notice){
+              notice.innerHTML = "<div class='toast'>Error reporting content.</div>"
+              setTimeout(()=> {notice.innerHTML = ""}, 3000)
+            }
           }
         } catch (error) {
           console.error('Error reporting:', error);

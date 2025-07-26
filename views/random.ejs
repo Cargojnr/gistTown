@@ -27,26 +27,7 @@
     font-weight: bold;
   }
 
-  .button-spinner {
-    border: 3px solid rgba(255, 255, 255, 0.2);
-    border-top: 3px solid #fff;
-    border-radius: 50%;
-    width: 14px;
-    height: 14px;
-    display: inline-block;
-    vertical-align: middle;
-    animation: spinning 1s linear infinite;
-  }
-
-  @keyframes spinning {
-    0% {
-      transform: rotate(0deg);
-    }
-
-    100% {
-      transform: rotate(360deg);
-    }
-  }
+  
 
 
   .overlay {
@@ -209,43 +190,7 @@
     background: linear-gradient(135deg, #9a7eff, #ff6ea0);
   }
 
-  .toast {
-    background: var(--primary-faded);
-    color: var(--text-color);
-    padding: 12px 20px;
-    border-radius: 8px;
-    margin: auto;
-    max-width: 300px;
-    text-align: center;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
-    animation: fadein 0.3s ease, fadeout 0.3s ease 2.5s;
-  }
-
-  @keyframes fadein {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes fadeout {
-    from {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    to {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-  }
-
-
+  
   .lottie-wrapper {
     position: absolute;
     top: 12%;
@@ -307,8 +252,6 @@
 
     </div>
 
-
-    <div id="notification" style="position: fixed; bottom: 2rem; left: 1rem; right: 0; z-index: 9999;"></div>
 
 </section>
 

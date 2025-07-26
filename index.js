@@ -309,6 +309,7 @@ app.get("/user/:id", async (req, res) => {
   }
 });
 
+
 // List active users
 app.get("/active-users", async (req, res) => {
   try {
@@ -428,6 +429,28 @@ app.get("/api/stories", async (req, res) => {
 });
 
 
+app.get("/eavedrop-status/:targetId", async (req, res) => {
+  if (!req.isAuthenticated()) return res.status(401).json({ status: "unauthenticated" });
+
+  const audienceId = req.user.id;
+  const targetId = req.params.targetId;
+
+  try {
+    const check = await db.query(
+      "SELECT 1 FROM eavedrops WHERE audience_id = $1 AND target_id = $2",
+      [audienceId, targetId]
+    );
+
+    if (check.rows.length > 0) {
+      return res.json({ status: "eavedropping" });
+    } else {
+      return res.json({ status: "not_eavedropping" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ status: "error" });
+  }
+});
 
 
 app.get("/profile", async (req, res) => {
@@ -481,6 +504,12 @@ app.get("/profile", async (req, res) => {
         bookmark_count: audioBookmarkMap[post.id] || 0
       }));
 
+      const audienceResult = await db.query(
+    "SELECT COUNT(*) FROM eavedrops WHERE target_id = $1",
+  [req.user.id]
+   );
+
+   const audienceCount = audienceResult.rows[0].count
 
       res.render("profile", {
         userId: req.user.id,
@@ -491,6 +520,7 @@ app.get("/profile", async (req, res) => {
         username: req.user.username,
         profile: enrichedTextSecrets,
         userAudio: enrichedAudioSecrets,
+        audienceCount: audienceCount,
         title: "My Profile"
       });
     } catch (err) {
@@ -559,6 +589,13 @@ app.get("/profile/amebo/:user", async (req, res) => {
         bookmark_count: audioBookmarkMap[post.id] || 0
       }));
 
+        const audienceResult = await db.query(
+    "SELECT COUNT(*) FROM eavedrops WHERE target_id = $1",
+  [req.user.id]
+   );
+
+   const audienceCount = audienceResult.rows[0].count
+
 
 
       res.render("profile", {
@@ -571,6 +608,7 @@ app.get("/profile/amebo/:user", async (req, res) => {
         profilePicture: req.user.profile_picture,
         userProfile: enrichedTextSecrets,
         userAudio: enrichedAudioSecrets,
+        audienceCount: audienceCount,
         totalComments,
         totalReactions,
       });
@@ -1013,6 +1051,18 @@ app.get("/api/comment-counts", async (req, res) => {
     res.status(500).json({ error: "Error fetching comment counts" });
   }
 });
+
+app.get("/my-eavedrops", async (req, res) => {
+  const result = await db.query(
+    "SELECT target_id FROM eavedrops WHERE audience_id = $1",
+    [req.user.id]
+  );
+  res.json(result.rows.map(r => r.target_id));
+});
+
+
+
+
 
 
 app.get("/chat", async (req, res) => {
@@ -1570,6 +1620,40 @@ app.get("/comment/:type/:id", async (req, res) => {
   } catch (error) {
     console.error("Error fetching comment data:", error);
     res.status(500).json({ error: "Failed to load comment data" });
+  }
+});
+
+
+app.post("/eavedrop", async (req, res) => {
+  if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+
+  const audienceId = req.user.id;
+  const { targetId } = req.body;
+
+  try {
+    const check = await db.query(
+      "SELECT * FROM eavedrops WHERE audience_id = $1 AND target_id = $2",
+      [audienceId, targetId]
+    );
+
+    if (check.rows.length > 0) {
+      // Already eavedropping — remove
+      await db.query(
+        "DELETE FROM eavedrops WHERE audience_id = $1 AND target_id = $2",
+        [audienceId, targetId]
+      );
+      return res.json({ status: "removed" });
+    } else {
+      // Not yet eavedropping — add
+      await db.query(
+        "INSERT INTO eavedrops (audience_id, target_id) VALUES ($1, $2)",
+        [audienceId, targetId]
+      );
+      return res.json({ status: "added" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 

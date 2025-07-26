@@ -42,8 +42,8 @@ nextButton.addEventListener('click', () => {
 
     if (step === 1) {
         // Step 1: Highlight the dice images
-        document.getElementById('create').classList.add('highlight')
-        document.getElementById('create').style.zIndex = document.getElementById('create').classList.contains('highlight') ? "100" : "2";
+        document.querySelector('#quickShareBtn i').classList.add('highlight')
+        document.querySelector('#quickShareBtn i').style.zIndex = document.querySelector('#quickShareBtn i').classList.contains('highlight') ? "100" : "2";
 
         // Update tutorial instructions for Step 2
         tutorialStep.innerHTML = `
