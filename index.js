@@ -1645,10 +1645,22 @@ app.post("/eavedrop", async (req, res) => {
       return res.json({ status: "removed" });
     } else {
       // Not yet eavedropping — add
-      await db.query(
-        "INSERT INTO eavedrops (audience_id, target_id) VALUES ($1, $2)",
+      const result = await db.query(
+        "INSERT INTO eavedrops (audience_id, target_id) VALUES ($1, $2) RETURNING *",
         [audienceId, targetId]
       );
+
+      const eavedropResult = result.rows[0];
+
+       io.emit("new-notification", {
+          type: "eavedrop",
+          data: {
+            id: eavedropResult.id,
+            target: eavedropResult.target_id,
+            audience: eavedropResult.audience_id,
+          },
+        });
+
       return res.json({ status: "added" });
     }
   } catch (err) {
@@ -1837,6 +1849,17 @@ app.get("/notifications", async (req, res) => {
         [req.user.id]
       );
 
+      const eavedropResult = await db.query(
+        `
+                SELECT profile_picture, audience_id, eavedrops.id, username, audience_id
+                FROM eavedrops 
+                JOIN users ON users.id = target_id 
+                WHERE eavedrops.target_id != $1 
+                ORDER BY eavedrops.id DESC LIMIT 5
+            `,
+        [req.user.id]
+      );
+
       const reactionResult = await db.query(
         `
                 SELECT profile_picture, reactions, secrets.id, username, user_id, secret, timestamp
@@ -1896,6 +1919,13 @@ app.get("/notifications", async (req, res) => {
         timestamp: comment.timestamp, // Use comment's timestamp
       }));
 
+
+      const notifyEavedrop = eavedropResult.rows.map((eavedrop) => ({
+        ...eavedrop,
+         notificationType: "eavedrop",
+      }))
+
+
       // Extract reactions from notifySecret
       const notifyReaction = notifySecret
         .flatMap((secret) => secret.notifyReaction) // Flatten all reactions into one array
@@ -1906,6 +1936,7 @@ app.get("/notifications", async (req, res) => {
         ...notifySecret,
         ...notifyComment,
         ...notifyReaction,
+        ...notifyEavedrop
       ];
 
       // Sort notifications by timestamp in descending order
@@ -1922,6 +1953,7 @@ app.get("/notifications", async (req, res) => {
         comments: notifyComment,
         secrets: notifySecret,
         reactions: notifyReaction,
+        eavdrops: notifyEavedrop,
         notifications: sortedNotifications, // Pass sorted notifications to the client
         userId: req.user.id,
         activeStatus: req.user.active_status,

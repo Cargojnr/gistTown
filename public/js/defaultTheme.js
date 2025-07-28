@@ -1,26 +1,36 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  applyTheme(savedTheme);
+});
 
-  // Load the saved theme from localStorage or set it to light mode by default
-  document.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    
-    // Set the theme on page load
-    if (savedTheme === 'dark') {
-      document.body.setAttribute('data-theme', 'dark');
-      document.getElementById('themeToggle').checked = true;
-    } else {
-      document.body.setAttribute('data-theme', 'light');
-      document.getElementById('themeToggle').checked = false;
-    }
-  });
+const toggleThemeBtn = document.getElementById('themeToggleBtn');
 
-  // Handle theme toggle
-  document.getElementById('themeToggle').addEventListener('change', (e) => {
-    const theme = e.target.checked ? 'dark' : 'light';
-    
-    // Set the theme in localStorage
-    localStorage.setItem('theme', theme);
+toggleThemeBtn.addEventListener('click', (e) => {
+  // RIPPLE EFFECT
+  const ripple = document.createElement('span');
+  ripple.classList.add('ripple');
 
-    // Apply the theme to the body
-    document.body.setAttribute('data-theme', theme);
-  });
+  const rect = toggleThemeBtn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  ripple.style.width = ripple.style.height = `${size}px`;
+  ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
+  ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
 
+  toggleThemeBtn.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 600);
+
+  // THEME TOGGLE
+  const currentTheme = document.body.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  applyTheme(newTheme);
+});
+
+function applyTheme(theme) {
+  document.body.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+
+  toggleThemeBtn.innerHTML = theme === 'dark' ? '☀️' : '🌙';
+
+  document.body.classList.add('theme-transition');
+  setTimeout(() => document.body.classList.remove('theme-transition'), 500);
+}

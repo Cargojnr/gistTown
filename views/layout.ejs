@@ -6,26 +6,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <meta name="description"
-  content="Share gists secretly with end-to-end encryption. Gossipa guarantees your privacy with 100% anonymity." />
-<meta name="keywords"
-  content="anonymity, secret sharing, encrypted messaging, privacy, end-to-end encryption, anonymous communication" />
-<meta name="robots" content="index, follow" />
-<meta name="author" content="Anonym" />
+    content="Share gists secretly with end-to-end encryption. Gossipa guarantees your privacy with 100% anonymity." />
+  <meta name="keywords"
+    content="anonymity, secret sharing, encrypted messaging, privacy, end-to-end encryption, anonymous communication" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Anonym" />
 
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
-<meta property="og:title" content="Gossipa - Share Gists Secretly" />
-<meta property="og:description"
-  content="Share your gists secretly with Gossipa. Your privacy is our priority with full end-to-end encryption." />
-<meta property="og:image" content="/img/og-image.png" />
-<meta property="og:url" content="https://yourwebsite.com" />
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Gossipa - Share Gists Secretly" />
+  <meta property="og:description"
+    content="Share your gists secretly with Gossipa. Your privacy is our priority with full end-to-end encryption." />
+  <meta property="og:image" content="/img/og-image.png" />
+  <meta property="og:url" content="https://yourwebsite.com" />
 
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Gossipa - Share Gists Secretly" />
-<meta name="twitter:description"
-  content="Share your gists secretly  with Gossipa. Your privacy is our priority with full end-to-end encryption." />
-<meta name="twitter:image" content="/img/twitter-image.png" />
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Gossipa - Share Gists Secretly" />
+  <meta name="twitter:description"
+    content="Share your gists secretly  with Gossipa. Your privacy is our priority with full end-to-end encryption." />
+  <meta name="twitter:image" content="/img/twitter-image.png" />
 
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2&family=Quicksand&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/ceb8cfc409.js" crossorigin="anonymous"></script>
@@ -42,57 +42,59 @@
   </title>
 
   <style>
-     .install-prompt {
-    /* position: fixed;
+    .install-prompt {
+      /* position: fixed;
     bottom: 20px;
     right: 20px; */
-    background: var(--secondary-color, #d13d87);
-    color: white;
-    font-weight: bold;
-    border: none;
-    border-radius: 50px;
-    padding: 12px 20px;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    z-index: 1000;
-    overflow: hidden;
-  }
+      background: var(--secondary-color, #d13d87);
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 50px;
+      padding: 12px 20px;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      overflow: hidden;
+    }
 
-  .pulse-ring {
-    width: 12px;
-    height: 12px;
-    background-color: #ffffff;
-    border-radius: 50%;
-    position: absolute;
-    left: 16px;
-    animation: pulse 1.5s infinite;
-  }
+    .pulse-ring {
+      width: 12px;
+      height: 12px;
+      background-color: #ffffff;
+      border-radius: 50%;
+      position: absolute;
+      left: 16px;
+      animation: pulse 1.5s infinite;
+    }
 
-  @keyframes pulse {
-    0% {
-      transform: scale(1);
-      opacity: 0.9;
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 0.9;
+      }
+
+      70% {
+        transform: scale(2.5);
+        opacity: 0;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 0;
+      }
     }
-    70% {
-      transform: scale(2.5);
-      opacity: 0;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 0;
-    }
-  }
   </style>
 </head>
 
 <body class="main-background">
 
-  
-  
+
+
   <script>
     window.addEventListener("load", function () {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -145,12 +147,12 @@
         </div>
         <div id="menu" class="menu-hidden">
           <div class="container">
-            <div class="profile-header">
+            <div class="profile-head">
               <img oncontextmenu="return false;"
                 src="<%= profilePicture ? profilePicture : '../../' + profilePicture %>" alt="Profile Avatar"
                 class="profile-avatar" />
 
-              <h3 class="username">Hello, <span class="username">
+              <h3 class="username">Hello,&nbsp;<span class="username">
                   @amebo<%= userId %>
                     <% if(verification===true) {%>
                       <img oncontextmenu="return false;" src="../../img/gossipa3.png" alt="Verifiied Badge"
@@ -160,13 +162,6 @@
                 </span></h3>
             </div>
 
-            <div class="theme-switch ">
-              <input type="checkbox" id="themeToggle" class="theme-toggle" onchange="toggleMode()" />
-              <label for="themeToggle" class="theme-toggle-label">
-                <span class="sun-icon">☀️</span>
-                <span class="moon-icon">🌙</span>
-              </label>
-            </div>
 
             <div class="menu">
               <div class="menu-nav">
@@ -223,11 +218,11 @@
                   <li><a href="">FAQ</a></li>
                   <li><a href="">Contact</a></li>
                   <li><a href="/feedback">Reviews</a></li>
-                  <li>  <button id="installBtn" style="display:none;" class="install-prompt">
-                    <span class="pulse-ring"></span>
-                    <i class="fas fa-download"></i> Install Gossipa App
-                  </button></li>
-                
+                  <li> <button id="installBtn" style="display:none;" class="install-prompt">
+                      <span class="pulse-ring"></span>
+                      <i class="fas fa-download"></i> Install Gossipa App
+                    </button></li>
+
                 </ul>
               </div>
               <p class="menu-lang">
@@ -289,7 +284,7 @@
           </li>
           <li class="nav-item blur">
             <a aria-disabled="true">
-             
+
               <i class="nav-icon fas fa-comments"></i> &nbsp;
               <span class="nav-text">GossipaCity</span>
 
@@ -330,19 +325,15 @@
       <button id="close-announcement" class="btn btn-dark btn-lg">Close</button>
     </div>
 
+     <div class="theme-switch">
+              <button id="themeToggleBtn" class="theme-toggle-btn">🌙<span class="nav-text">Dark Mode</span></button>
+      </div>
 
-    <div class="theme-switch nav-text">
-      <input type="checkbox" id="themeToggle" class="theme-toggle" onchange="toggleMode()" />
-      <label for="themeToggle" class="theme-toggle-label">
-        <span class="sun-icon">☀️</span>
-        <span class="moon-icon">🌙</span>
-      </label>
-    </div>
 
     <!-- Content of each page will be injected here -->
 
     <!-- Notifications Container -->
-    <div id="notification" style="position: fixed; bottom: 10px; left: 10px; z-index: 1000"></div>
+    <div id="notification"></div>
   </div>
 
 
@@ -687,14 +678,14 @@
   <script>
     let deferredPrompt;
     const installBtn = document.getElementById('installBtn');
-    
+
     // Listen for install prompt event
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
       installBtn.style.display = 'flex';
     });
-    
+
     // Handle click to show install prompt
     installBtn.addEventListener('click', async () => {
       if (deferredPrompt) {
@@ -709,19 +700,19 @@
         deferredPrompt = null;
       }
     });
-    </script>
+  </script>
 
-<script>
-  document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.addEventListener('click', function (e) {
-      e.preventDefault();
-      window.brandLogo?.show();
-      setTimeout(() => {
-        window.location.href = this.formAction;
-      }, 2400);
+  <script>
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        window.brandLogo?.show();
+        setTimeout(() => {
+          window.location.href = this.formAction;
+        }, 2400);
+      });
     });
-  });
-</script>
+  </script>
 
 
   <script src="/js/defaultTheme.js"></script>

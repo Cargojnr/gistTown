@@ -168,8 +168,12 @@
                                                     <span id="streamEndedNotice" class="badge ended hidden">Stream Ended
                                                         ✓</span>
                                                 </div>
-                                                <button class="listen"><i
-                                                        class="fas fa-ear-listen"></i>&nbsp;Eavedrop</button>
+                                                <% if(userId !==post.user_id) {%>
+                                                    <button data-targetid="<%= post.user_id %>" class="listen"><i
+                                                            class="fas fa-ear-deaf"></i>&nbsp;<span>Eavedrop</span></button>
+                                                    <% } else { %>
+                                                        <a class="listen listening" href="/profile">Go to Profile</a>
+                                                        <% } %>
                                             </div>
 
                                             <div class="card-content">
@@ -362,7 +366,7 @@
                                                             <a href="/profile/amebo/<%= post.user_id %>">
                                                                 <p class="username user<%= post.user_id %>">
                                                                     <span class="user">@gossipa<%= post.user_id %>
-                                                                            </span>
+                                                                    </span>
                                                                     <% if(post.verified===true) {%>
                                                                         <abbr title="Exclusive Membership"> <img
                                                                                 oncontextmenu="return false;"
@@ -381,8 +385,12 @@
                                                         <span id="streamEndedNotice" class="badge ended hidden">Stream
                                                             Ended ✓</span>
                                                     </div>
-                                                    <button class="listen"><i
-                                                            class="fas fa-ear-listen"></i>&nbsp;Eavedrop</button>
+                                                    <% if(userId !==post.user_id) {%>
+                                                        <butto data-targetid="<%= post.user_id %>n class=" listen"><i
+                                                                class="fas fa-ear-deaf"></i>&nbsp;<span>Eavedrop</span></button>
+                                                            <% } else { %>
+                                                                <a class="listen listening" href="/profile">Go to Profile</a>
+                                                                <% } %>
                                                 </div>
 
                                                 <div class="waveform-wrapper">
@@ -552,8 +560,8 @@
         </div>
         <script src="https://unpkg.com/wavesurfer.js"></script>
         <script src="https://unpkg.com/lottie-web@5.10.0/build/player/lottie.min.js"></script>
-<!-- Load Day.js and the plugin via CDN -->
-<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+        <!-- Load Day.js and the plugin via CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
 
         <script>
             const audioPosts = <%- JSON.stringify(savedAudios) %>; // This is now an array on the client
@@ -758,19 +766,6 @@
 
         </div>
 
-        <!-- <button id="message-popup" class="aside-2 none">
-                <p class="message-pgrph"> <i class="nav-icon fas fa-comments fa-2x"></i>Messages
-                  <span class="message-count"></span>
-                </p>
-      
-                <ul class="message-users">
-                  <li><img src="../.<%= profilePicture %>" alt="Avatar Profiles" class="profile-pic thumb"></li>
-                  <li><img src="../.<%= profilePicture %>" alt="Avatar Profiles" class="profile-pic thumb"></li>
-                  <li><img src="../.<%= profilePicture %>" alt="Avatar Profiles" class="profile-pic thumb"></li>
-                  <span class="counter">127+</span>
-                </ul>
-              </button> -->
-
         <div class="inpage-footer">
             <span>Privacy Policy</span>&nbsp;.
             &nbsp;<span>Terms of use</span> &nbsp;.
@@ -858,17 +853,86 @@
         });
     </script>
 
-<script>
-    dayjs.extend(window.dayjs_plugin_relativeTime);
-  
-    document.querySelectorAll('.timestamp').forEach((timeElem) => {
-      const rawTimestamp = timeElem.getAttribute('data-raw');
-      if (rawTimestamp) {
-        const formatted = dayjs(rawTimestamp).fromNow();
-        timeElem.textContent = formatted;
-      }
-    });
-  </script>
+    <script>
+        async function initEavedropStatus() {
+            try {
+                const eavedroppingIds = await fetch("/my-eavedrops").then(res => res.json());
+                eavedroppingIds.forEach(id => {
+                    const eavedropBtn = document.querySelectorAll(`.listen[data-targetid="${id}"]`);
+                    eavedropBtn.forEach(btn => {
+                        btn.classList.add("listening");
+                        btn.querySelector("span").textContent = "Eavedropping";
+                        btn.querySelector("i").className = "fas fa-ear-listen";
+                    });
+                });
+            } catch (err) {
+                console.error("Error loading eavedrop state", err);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", initEavedropStatus);
+
+    </script>
+
+    <script>
+        document.addEventListener("click", async (e) => {
+            const eavedropBtn = e.target.closest(".listen");
+            if (!eavedropBtn) return;
+
+            const span = eavedropBtn.querySelector("span");
+            const icon = eavedropBtn.querySelector("i");
+            const targetId = eavedropBtn.dataset.targetid;
+
+            eavedropBtn.disabled = true;
+            eavedropBtn.querySelector("i").innerHTML = `<div class="button-spinner"></div>`;
+            eavedropBtn.querySelector("i").className = ''
+
+            try {
+                const res = await fetch("/eavedrop", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ targetId }),
+                });
+
+
+                const data = await res.json();
+
+                const eavedropBtn = document.querySelector(`.listen[data-targetid="${targetId}"]`);
+                const sp = eavedropBtn.querySelector("span");
+                const ic = eavedropBtn.querySelector("i");
+
+                eavedropBtn.disabled = false;
+                eavedropBtn.querySelector("i").innerHTML = ``;
+
+
+                if (data.status === "added") {
+                    eavedropBtn.classList.add("listening");
+                    sp.textContent = "Eavedropping";
+                    ic.className = "fas fa-ear-listen";
+                } else if (data.status === "removed") {
+                    eavedropBtn.classList.remove("listening");
+                    sp.textContent = "Eavedrop";
+                    ic.className = "fas fa-ear-deaf";
+                }
+            } catch (err) {
+                console.error("Eavedrop failed", err);
+            }
+        });
+    </script>
+
+
+
+    <script>
+        dayjs.extend(window.dayjs_plugin_relativeTime);
+
+        document.querySelectorAll('.timestamp').forEach((timeElem) => {
+            const rawTimestamp = timeElem.getAttribute('data-raw');
+            if (rawTimestamp) {
+                const formatted = dayjs(rawTimestamp).fromNow();
+                timeElem.textContent = formatted;
+            }
+        });
+    </script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Simulate a short loading delay (optional)

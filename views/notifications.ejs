@@ -84,228 +84,270 @@
   }
 </style>
 
-  <div id="main">
+<div id="main">
 
-    <section class="main">
+  <section class="main">
 
-      <div id="notifications">
-        <div class="container">
-          <center>
-            <h2 class="display-3">Notifications</h2>
-          </center>
-          <div class="notifications">
-            <ul id="secrets">
-              <% if (locals.loginMessage) { %>
-                <li class="secret">
-                  <div class="card">
-                    <h4>Login Message</h4>
-                    <p>
-                      <%= loginMessage %>
-                    </p>
-                  </div>
-                </li>
-                <% } %>
-                  <% if (locals.notifications && locals.notifications.length>0) { %>
-                    <div id="shimmer-container" class="shimmer-container full-width">
-                      <ul>
-                        <% for (let i=0; i < notifications.length; i++) { %>
-                          <li class="secret shimmer-placeholder">
-                            <div class="card">
-                              <div class="shimmer-wrapper">
-                                <div class="shimmer-card">
-                                  <div class="shimmer-avatar"></div>
-                                  <div class="shimmer-lines">
-                                    <div class="shimmer-line short"></div>
-                                    <div class="shimmer-line"></div>
-                                    <div class="shimmer-line"></div>
-                                    <div class="shimmer-footer">
-                                      <div class="shimmer-btn"></div>
-                                      <div class="shimmer-btn"></div>
-                                    </div>
+    <div id="notifications">
+      <div class="container">
+        <center>
+          <h2 class="display-3">Notifications</h2>
+        </center>
+        <div class="notifications">
+          <ul id="secrets">
+            <% if (locals.loginMessage) { %>
+              <li class="secret">
+                <div class="card">
+                  <h4>Login Message</h4>
+                  <p>
+                    <%= loginMessage %>
+                  </p>
+                </div>
+              </li>
+              <% } %>
+                <% if (locals.notifications && locals.notifications.length>0) { %>
+                  <div id="shimmer-container" class="shimmer-container full-width">
+                    <ul>
+                      <% for (let i=0; i < notifications.length; i++) { %>
+                        <li class="secret shimmer-placeholder">
+                          <div class="card">
+                            <div class="shimmer-wrapper">
+                              <div class="shimmer-card">
+                                <div class="shimmer-avatar"></div>
+                                <div class="shimmer-lines">
+                                  <div class="shimmer-line short"></div>
+                                  <div class="shimmer-line"></div>
+                                  <div class="shimmer-line"></div>
+                                  <div class="shimmer-footer">
+                                    <div class="shimmer-btn"></div>
+                                    <div class="shimmer-btn"></div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </li>
-                          <% } %>
-                      </ul>
-                    </div>
-                    <% notifications.forEach((notification)=> { %>
-                      <li class="secret">
-                        <a class="message"
-                          href="<%= notification.notificationType === 'secret' ? 'secret/' + notification.id : '' %>">
-                          <div class="card">
-                            <h4>
-                              <% if (notification.notificationType ==='secret' ) { %>
-                                <% if (notification.user_id == userId) { %>
-                                  
-                                  <% } else { %>
-                                    New Gossip shared by ~~ @gossipa<%= notification.user_id %> ~~
+                          </div>
+                        </li>
+                        <% } %>
+                    </ul>
+                  </div>
+                  <% notifications.forEach((notification)=> { %>
+                    <li class="secret">
+                      <a class="message"
+                        href="<%= notification.notificationType === 'secret' ? 'secret/' + notification.id : '' %>">
+                        <div class="card">
+                          <h4>
+                            <% if (notification.notificationType==='secret' ) { %>
+                              <% if (notification.user_id==userId) { %>
+
+                                <% } else { %>
+                                  New Gossip shared by ~~ @gossipa<%= notification.user_id %> ~~
                                     <% } %>
-                                  <% } %>
-                                    <% if (notification.notificationType==='comment' ) { %>
-                                      New comment on your secret from ~~ @gossipa<%= notification.user_id %> ~~
-                                        <% } %>
-                                          <% if (notification.notificationType==='reaction' ) { %>
-                                            <% if (notification.type==="like" ) { %>
-                                              Your secret got a new 👍 reaction!. Total: <%= notification.count %>.
-                                                <% } else if (notification.type==="laugh" ) { %>
-                                                  Your secret got a new 😂 reaction!. Total: <%= notification.count %>.
-                                                    <% } else if (notification.type==="gasp" ) { %>
-                                                      Your secret got a new 😱 reaction!. Total: <%= notification.count
-                                                        %>.
-                                                        <% } else if(notification.type==="cry" ) { %>
-                                                          Your secret got a new 😢 reaction!. Total: <%=
-                                                            notification.count %>.
-                                                            <% } else if(notification.type==="hot" ) { %>
-                                                          Your secret got a new <img oncontextmenu="return false;" src="../../img/premium-reaction.png" alt="🔥"
-                                                          class="premium-reaction"> reaction!. Total: <%= notification.count %>.
-                                                            <% }%>
-                                                              <% } %>
-                            </h4>
-                            <p>
-                              <span class="content">
-                                <% if (notification.notificationType === 'secret' ) { %>
-                                  <% if (notification.user_id == userId) { %>
-                                        
-                                    <% } else { %>
-                                  <%if (notification.secret.split(" ").length > 100) { %> 
-                                <%=notification.secret.substring(0, 100) + " ..." %>
-                                    <% } else { %>
-                                      <%= notification.secret %>
-                                        <% } %>
-                                        <% } %>
-                                          <% } %>
-                                            <% if(notification.notificationType==='comment' ) { %>
-                                              <% if (notification.comment.split(" ").length > 100) { %> 
-                           <%=notification.comment.substring(0, 100) + " ..." %>
-                                                <% } else{ %>
-                                                  <%= notification.comment%>
-                                                    <% } %>
-                                                      <% } %>
-                                                        <% if(notification.notificationType==='reaction' ) { %>
-                                                          <% if (notification.secret.split(" ").length > 100) { %> 
-                           " <%=notification.secret.substring(0, 100) + "..." %>"
-                                                            <% } else{ %>
-                                                              "<%= notification.secret%>"
-                                                                <% } %>
-                                                                  <% } %>
-                              </span>
+                                      <% } %>
 
+                                        <% if(notification.notificationType==='eavedrop' ){ %>
+                                          <% if (notification.user_id==userId) { %>
+
+                                            <% } else { %>
+                                              You are being eavedropped
+                                              <% } %>
+                                                <%} %>
+
+                                                  <% if (notification.notificationType==='comment' ) { %>
+                                                    New comment on your secret from ~~ @gossipa<%= notification.user_id
+                                                      %> ~~
+                                                      <% } %>
+                                                        <% if (notification.notificationType==='reaction' ) { %>
+                                                          <% if (notification.type==="like" ) { %>
+                                                            Your secret got a new 👍 reaction!. Total: <%=
+                                                              notification.count %>.
+                                                              <% } else if (notification.type==="laugh" ) { %>
+                                                                Your secret got a new 😂 reaction!. Total: <%=
+                                                                  notification.count %>.
+                                                                  <% } else if (notification.type==="gasp" ) { %>
+                                                                    Your secret got a new 😱 reaction!. Total: <%=
+                                                                      notification.count %>.
+                                                                      <% } else if(notification.type==="cry" ) { %>
+                                                                        Your secret got a new 😢 reaction!. Total: <%=
+                                                                          notification.count %>.
+                                                                          <% } else if(notification.type==="hot" ) { %>
+                                                                            Your secret got a new <img
+                                                                              oncontextmenu="return false;"
+                                                                              src="../../img/premium-reaction.png"
+                                                                              alt="🔥" class="premium-reaction">
+                                                                            reaction!. Total: <%= notification.count %>.
+                                                                              <% }%>
+                                                                                <% } %>
+                          </h4>
+                          <p>
+                            <span class="content">
                               <% if (notification.notificationType==='secret' ) { %>
-                                <% if (notification.user_id == userId) { %>
+                                <% if (notification.user_id==userId) { %>
 
                                   <% } else { %>
-                                <a style="
+                                    <%if (notification.secret.split(" ").length > 100) { %> 
+                                <%=notification.secret.substring(0, 100) + " ..." %>
+                                      <% } else { %>
+                                        <%= notification.secret %>
+                                          <% } %>
+                                            <% } %>
+                                              <% } %>
+
+
+                                                <% if(notification.notificationType==='eavedrop' ){ %>
+                                                  <% if (notification.user_id==userId) { %>
+
+                                                    <% } else { %>
+                                                      ~~ @gossipa<%= notification.audience_id %> ~~ started eavdropping on your
+                                                        profile
+                                                        <% } %>
+                                                          <%} %>
+
+                                                            <% if(notification.notificationType==='comment' ) { %>
+                                                              <% if (notification.comment.split(" ").length > 100) { %> 
+                           <%=notification.comment.substring(0, 100) + " ..." %>
+                                                                <% } else{ %>
+                                                                  <%= notification.comment%>
+                                                                    <% } %>
+                                                                      <% } %>
+                                                                        <% if(notification.notificationType==='reaction'
+                                                                          ) { %>
+                                                                          <% if (notification.secret.split(" ").length > 100) { %> 
+                           " <%=notification.secret.substring(0, 100) + "..." %>"
+                                                                            <% } else{ %>
+                                                                              "<%= notification.secret%>"
+                                                                                <% } %>
+                                                                                  <% } %>
+                            </span>
+
+                            <% if (notification.notificationType==='secret' ) { %>
+                              <% if (notification.user_id==userId) { %>
+
+                                <% } else { %>
+                                  <a style="
                       background: none;
                       font-size: 1rem;
                       padding: 0;
                       font-weight: bold;
                     " href="secret/<%= notification.id %>">Read More</a>
-                    <% } %>
-                                <% } %>
-                                  <% if (notification.notificationType==='comment' ) { %>
-                                    <a style="
+                                  <% } %>
+                                    <% } %>
+
+
+                                      <% if(notification.notificationType==='eavedrop' ){ %>
+                                        <% if (notification.audience_id == userId) { %>
+
+                                          <% } else { %>
+                                            <a style="
+                      background: none;
+                      font-size: 1rem;
+                      padding: 0;
+                      font-weight: bold;
+                    " href="profile/amebo/<%= notification.target_id %>">View profile</a>
+                                            <% } %>
+                                              <% } %>
+
+                                                  <% if (notification.notificationType==='comment' ) { %>
+                                                    <a style="
                       background: none;
                       font-size: 1rem;
                       padding: 0;
                       font-weight: bold;
                     " href="secret/<%= notification.id %>">View Comment</a>
-                                    <% } %>
-                                      <% if (notification.notificationType==='reaction' ) { %>
-                                        <a style="
+                                                    <% } %>
+                                                      <% if (notification.notificationType==='reaction' ) { %>
+                                                        <a style="
                       background: none;
                       font-size: 1rem;
                       padding: 0;
                       font-weight: bold;
                     " href="secret/<%= notification.id %>">View</a>
-                                        <% } %>
-                            </p>
-                          </div>
-                        </a>
-                      </li>
-                      <% }); %>
-                        <% } else { %>
-                          <p>No new notifications</p>
-                          <% } %>
-                            <li class="secret">
-                              <div class="card">
-                                <h4>Welcome Message</h4>
-                                <p>
-                                  Welcome <%= username %> to the anonymous community. Your
-                                    anonymous tag is ~@anonymous<%= userId %>~. Have fun.
-                                </p>
-                              </div>
-                            </li>
-            </ul>
-            <hr />
-            <br />
-          </div>
+                                                        <% } %>
+                          </p>
+                        </div>
+                      </a>
+                    </li>
+                    <% }); %>
+                      <% } else { %>
+                        <p>No new notifications</p>
+                        <% } %>
+                          <li class="secret">
+                            <div class="card">
+                              <h4>Welcome Message</h4>
+                              <p>
+                                Welcome <%= username %> to the anonymous community. Your
+                                  anonymous tag is ~@anonymous<%= userId %>~. Have fun.
+                              </p>
+                            </div>
+                          </li>
+          </ul>
+          <hr />
+          <br />
         </div>
       </div>
+    </div>
 
-    </section>
+  </section>
 
-    <aside class="right-sidebar">
-      <div class="aside premium-aside">
-        <div class="premium-card">
-          <div class="crown-icon sparkle">👑</div>
+  <aside class="right-sidebar">
+    <div class="aside premium-aside">
+      <div class="premium-card">
+        <div class="crown-icon sparkle">👑</div>
 
-          <h3 class="premium-title">Become a Chief Gossipa</h3>
-          <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain unknown.</p>
+        <h3 class="premium-title">Become a Chief Gossipa</h3>
+        <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain unknown.</p>
 
-          <div class="trending-stats">
-            <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
-          </div>
-
-          <div class="avatar-hint">
-            <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
-            <p>You’re 1 step from <strong>trending</strong>…</p>
-          </div>
-
-          <a href="/subscribe" class="premium-btn">Unlock Premium</a>
+        <div class="trending-stats">
+          <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
         </div>
+
+        <div class="avatar-hint">
+          <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
+          <p>You’re 1 step from <strong>trending</strong>…</p>
+        </div>
+
+        <a href="/subscribe" class="premium-btn">Unlock Premium</a>
       </div>
+    </div>
 
-      <div class="aside aside-2">
-        <center>
-          <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Active
-            Gossipas: <span id="activeCount">0</span></h4>
-        </center>
-        <ul class="nav user-list">
-        </ul>
+    <div class="aside aside-2">
+      <center>
+        <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Active
+          Gossipas: <span id="activeCount">0</span></h4>
+      </center>
+      <ul class="nav user-list">
+      </ul>
 
-      </div>
+    </div>
 
-    </aside>
+  </aside>
 
-  </div>
+</div>
 
-  <script src="https://unpkg.com/lottie-web@5.10.0/build/player/lottie.min.js"></script>
+<script src="https://unpkg.com/lottie-web@5.10.0/build/player/lottie.min.js"></script>
 <!-- Load Day.js and the plugin via CDN -->
 <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const connectedUsersMap = new Map();
-      const userList = document.querySelector(".user-list");
-      const userCountDisplay = document.getElementById("activeCount");
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const connectedUsersMap = new Map();
+    const userList = document.querySelector(".user-list");
+    const userCountDisplay = document.getElementById("activeCount");
 
-      function updateUserCount() {
-        if (userCountDisplay) userCountDisplay.textContent = connectedUsersMap.size;
-      }
+    function updateUserCount() {
+      if (userCountDisplay) userCountDisplay.textContent = connectedUsersMap.size;
+    }
 
-      function userConnected(user) {
-        if (connectedUsersMap.has(user.id)) return;
+    function userConnected(user) {
+      if (connectedUsersMap.has(user.id)) return;
 
-        const userBox = document.createElement("li");
-        userBox.className = "connected-user nav-item enter";
-        userBox.id = `user-${user.id}`;
+      const userBox = document.createElement("li");
+      userBox.className = "connected-user nav-item enter";
+      userBox.id = `user-${user.id}`;
 
-        const verifiedBadge = user.verified
-          ? `<img oncontextmenu="return false;" src="/img/gossipa3.png" alt="Verified Badge" class="verified-badge">`
-          : "";
+      const verifiedBadge = user.verified
+        ? `<img oncontextmenu="return false;" src="/img/gossipa3.png" alt="Verified Badge" class="verified-badge">`
+        : "";
 
-        userBox.innerHTML = `
+      userBox.innerHTML = `
             <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
               <img oncontextmenu="return false;" src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
               <p class="username">
@@ -315,80 +357,80 @@
             </div>
           `;
 
-        userList?.appendChild(userBox);
-        connectedUsersMap.set(user.id, userBox);
-        updateUserCount();
+      userList?.appendChild(userBox);
+      connectedUsersMap.set(user.id, userBox);
+      updateUserCount();
 
-        requestAnimationFrame(() => userBox.classList.add("enter"));
+      requestAnimationFrame(() => userBox.classList.add("enter"));
+    }
+
+    function userDisconnected(userId) {
+      const userBox = connectedUsersMap.get(userId);
+      if (userBox) {
+        userBox.classList.add("exit");
+        userBox.classList.remove("enter");
+        setTimeout(() => {
+          userBox.remove();
+          connectedUsersMap.delete(userId);
+          updateUserCount();
+        }, 400);
       }
+    }
 
-      function userDisconnected(userId) {
-        const userBox = connectedUsersMap.get(userId);
-        if (userBox) {
-          userBox.classList.add("exit");
-          userBox.classList.remove("enter");
-          setTimeout(() => {
-            userBox.remove();
-            connectedUsersMap.delete(userId);
-            updateUserCount();
-          }, 400);
-        }
-      }
-
-      if (window.socket) {
-        window.socket.on("userJoined", async (userId) => {
-          try {
-            const res = await fetch(`/user/${userId}`);
-            const user = await res.json();
-            userConnected(user);
-          } catch (err) {
-            console.error("Failed to fetch user data:", err);
-          }
-        });
-
-        window.socket.on("userLeft", (userId) => {
-          userDisconnected(userId);
-        });
-      } else {
-        console.warn("Socket.io not initialized on this page.");
-      }
-
-      // Load currently active users
-      fetch("/active-users")
-        .then(res => res.json())
-        .then(users => users.forEach(userConnected))
-        .catch(console.error);
-    });
-  </script>
-
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const header = document.querySelector("header");
-      const nextSection = document
-        .querySelector("body")
-        .querySelector("section:not(.active)");
-      const logo = document.getElementById("logo");
-
-      window.addEventListener("scroll", function () {
-        const scrolled = window.scrollY > 0;
-        if (scrolled) {
-          let body = document.querySelector("body");
-          body.style.overflowY = "scroll";
-          header.classList.add("scrolled");
-        } else {
-          header.classList.remove("scrolled");
+    if (window.socket) {
+      window.socket.on("userJoined", async (userId) => {
+        try {
+          const res = await fetch(`/user/${userId}`);
+          const user = await res.json();
+          userConnected(user);
+        } catch (err) {
+          console.error("Failed to fetch user data:", err);
         }
       });
+
+      window.socket.on("userLeft", (userId) => {
+        userDisconnected(userId);
+      });
+    } else {
+      console.warn("Socket.io not initialized on this page.");
+    }
+
+    // Load currently active users
+    fetch("/active-users")
+      .then(res => res.json())
+      .then(users => users.forEach(userConnected))
+      .catch(console.error);
+  });
+</script>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const header = document.querySelector("header");
+    const nextSection = document
+      .querySelector("body")
+      .querySelector("section:not(.active)");
+    const logo = document.getElementById("logo");
+
+    window.addEventListener("scroll", function () {
+      const scrolled = window.scrollY > 0;
+      if (scrolled) {
+        let body = document.querySelector("body");
+        body.style.overflowY = "scroll";
+        header.classList.add("scrolled");
+      } else {
+        header.classList.remove("scrolled");
+      }
     });
-    document.querySelector(".counter").textContent = "0";
+  });
+  document.querySelector(".counter").textContent = "0";
 
-    const notificationList = document.querySelector("#secrets");
+  const notificationList = document.querySelector("#secrets");
 
-    // const socket = io();
+  // const socket = io();
 
-    // Listen for new notifications
-    if(window.socket){
+  // Listen for new notifications
+  if (window.socket) {
     window.socket.on("new-notification", (data) => {
       const { type, data: notificationData } = data;
 
@@ -471,17 +513,17 @@
       counter.textContent = currentCount + 1;
     });
   }
-  </script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      // Simulate a short loading delay (optional)
-      setTimeout(() => {
-        // Hide shimmer placeholder
-        document.getElementById("shimmer-container").style.display = "none";
-      }, 1000); // 1s delay – tweak as needed
-    });
-  </script>
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Simulate a short loading delay (optional)
+    setTimeout(() => {
+      // Hide shimmer placeholder
+      document.getElementById("shimmer-container").style.display = "none";
+    }, 1000); // 1s delay – tweak as needed
+  });
+</script>
 
 
-  <script src="/js/app.js"></script>
-  <script src="/js/defaultTheme.js"></script>
+<script src="/js/app.js"></script>
+<script src="/js/defaultTheme.js"></script>
