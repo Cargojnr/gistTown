@@ -295,6 +295,7 @@ app.get("/check-username", async (req, res) => {
 //Get route fetch post per user
 app.get("/fetch-posts/:user", ensureAuthenticated, async (req, res) => {
   const user = getCurrentUser(req)
+  const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
   const { type } = req.query;
   const userId = req.params.user;
 
@@ -364,7 +365,7 @@ app.get("/fetch-posts/:user", ensureAuthenticated, async (req, res) => {
           user_id: audio.userId,
           userId: userId,
           username: user.username,
-          profile_pic: user.profile_picture,
+          profile_pic: avatarUrl,
           timestamp: dayjs(audio.uploadDate).fromNow(),
           bookmark_count: bookmarkMap[audio.id] || 0
         }));
@@ -420,6 +421,7 @@ app.get("/api/comment-counts", async (req, res) => {
 //Get route fetch comment regarding post type and id
 app.get("/comment/:type/:id", ensureAuthenticated, async (req, res) => {
   const user = getCurrentUser(req)
+  const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
   const { type, id } = req.params;
   const requestedId = parseInt(id);
 
@@ -429,9 +431,7 @@ app.get("/comment/:type/:id", ensureAuthenticated, async (req, res) => {
 
   try {
     if (type === "audio") {
-      if (!req.isAuthenticated()) {
-        return res.render("login");
-      }
+    
 
       const audio = await Audio.findByPk(requestedId);
       if (!audio) return res.status(404).json({ message: "Audio not found" });
@@ -454,9 +454,7 @@ app.get("/comment/:type/:id", ensureAuthenticated, async (req, res) => {
     }
 
     if (type === "text") {
-      if (!req.isAuthenticated()) {
-        return res.render("login");
-      }
+      
 
       const secretQuery = `
         SELECT secret, secrets.id, secrets.user_id, reactions 
@@ -482,7 +480,6 @@ app.get("/comment/:type/:id", ensureAuthenticated, async (req, res) => {
       `;
       const commentResult = await db.query(commentQuery, [requestedId]);
 
-      const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
 
       return res.json({
         secret: data,
@@ -573,6 +570,8 @@ app.get("/my-eavedrops", ensureAuthenticated, async (req, res) => {
 
 // Render Chat
 app.get("/chat",  ensureAuthenticated, async (req, res) => {
+  const user = getCurrentUser(req);
+  const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
     const userTheme = user.color || "default";
     const mode = user.mode || "light";
     res.render("chat", {
@@ -591,8 +590,11 @@ app.get("/chat",  ensureAuthenticated, async (req, res) => {
 
 // Render Feedback
 app.get("/feedback", ensureAuthenticated, async (req, res) => {
+  const user = getCurrentUser(req);
+  const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
     const userTheme = user.color || "default";
     const mode = user.mode || "light";
+    
     res.render("feedback", {
       title: "Enter Your Feedback",
       theme: userTheme,
@@ -610,7 +612,8 @@ app.get("/feedback", ensureAuthenticated, async (req, res) => {
 
 // Render Explore
 app.get("/explore", ensureAuthenticated, async(req, res) => {
-  const user = getCurrentUser(req)
+  const user = getCurrentUser(req);
+  const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
   const userId = user.id
   try{
     const userResult = await db.query("SELECT * FROM users WHERE id = $1", [userId])
@@ -623,7 +626,8 @@ app.get("/explore", ensureAuthenticated, async(req, res) => {
   verification: user.verified,
   stealthMode : userProfile.stealth_mode,
   username: userProfile.username,
-  profilePicture: user.profile_picture})
+  profilePicture: avatarUrl
+})
   }catch(err){
     console.log(err)
   }
@@ -632,6 +636,7 @@ app.get("/explore", ensureAuthenticated, async(req, res) => {
 
 app.get("/section/:section", ensureAuthenticated, async (req, res) => {
   const user = getCurrentUser(req)
+  const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
   const { section } = req.params;
   const userTheme = user.color || "default";
   const mode = user.mode || "light";
@@ -642,6 +647,8 @@ app.get("/section/:section", ensureAuthenticated, async (req, res) => {
         [section]
       );
       const usersSecret = result.rows;
+
+      
       // console.log(usersSecret)
       res.render("section", {
         title: "Welcome to a safe space",
@@ -667,6 +674,7 @@ app.get("/section/:section", ensureAuthenticated, async (req, res) => {
 
 app.get("/emotional-support", ensureAuthenticated, async (req, res) => {
   const user = getCurrentUser(req)
+  const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
   const userTheme = user.color || "default";
   const mode = user.mode || "light";
     try {
@@ -711,7 +719,8 @@ const result = await db.query(query, values);
 
 // Render Random
 app.get("/random", ensureAuthenticated, async (req, res) => {
-const user = getCurrentUser(req)
+const user = getCurrentUser(req);
+const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
   try {
     const mode = user.mode || "light";
     const result = await db.query(
@@ -737,7 +746,8 @@ const user = getCurrentUser(req)
 });
 
 app.get("/random-secret", ensureAuthenticated, async (req, res) => {
-  const user = getCurrentUser(req)
+  const user = getCurrentUser(req);
+  const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
     try {
       const userTheme = user.color || "default";
       const mode = user.mode || "light";
@@ -771,6 +781,7 @@ app.get("/random-secret", ensureAuthenticated, async (req, res) => {
 // Render Subscription
 app.get("/subscription", ensureAuthenticated, async(req, res) => {
   const user = getCurrentUser(req)
+  const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
   try{
     const result = await db.query("SELECT * FROM users WHERE verified = true")
   
@@ -796,6 +807,7 @@ app.get("/subscription", ensureAuthenticated, async(req, res) => {
 // Partial submit form
 app.get("/partial-submit", ensureAuthenticated, async (req, res) => {
   const user = getCurrentUser(req)
+  const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
     const userTheme = user.color || "default";
     const mode = user.mode || "light";
     console.log(user);
@@ -820,9 +832,9 @@ app.get("/partial-submit", ensureAuthenticated, async (req, res) => {
 // Render Submit
 app.get("/submit", ensureAuthenticated, async (req, res) => {
   const user = getCurrentUser(req)
+  const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
     const userTheme = user.color || "default";
     const mode = user.mode || "light";
-    console.log(user);
 
     const formData = {
       title: "Share your Gossip",
@@ -847,6 +859,7 @@ app.get("/submit", ensureAuthenticated, async (req, res) => {
 app.get("/secret/:id", ensureAuthenticated, async (req, res) => {
   const requestedId = parseInt(req.params.id);
   const user = getCurrentUser(req)
+  const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
 
   try {
     const userId = user.id
@@ -926,6 +939,7 @@ app.get("/secret/:id", ensureAuthenticated, async (req, res) => {
 //Render Profile
 app.get("/profile", ensureAuthenticated, async (req, res) => {
     const user = getCurrentUser(req);
+    const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
     const userId = user.id;
     try {
       const result = await db.query(
@@ -993,8 +1007,6 @@ app.get("/profile", ensureAuthenticated, async (req, res) => {
 
    const audienceCount = audienceResult.rows[0].count
 
-   const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
-
       res.render("profile", {
         userId: user.id,
         username: user.username,
@@ -1018,8 +1030,10 @@ app.get("/profile", ensureAuthenticated, async (req, res) => {
 
 app.get("/profile/amebo/:user", ensureAuthenticated, async (req, res) => {
     const userId = req.params.user;
-    const user = getCurrentUser(req)
+    const user = getCurrentUser(req);
+    const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
     try {
+      
       const result = await db.query(
         "SELECT active_status, verified, timestamp, reported, secrets.id, type, reactions,profile_picture, username,stealth_mode,bio, user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id WHERE user_id = $1 ORDER by secrets.id DESC",
         [userId]
@@ -1095,7 +1109,6 @@ app.get("/profile/amebo/:user", ensureAuthenticated, async (req, res) => {
 
    const audienceCount = audienceResult.rows[0].count
 
-   const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
    const userAvatarUrl = resolveAvatarUrl(userPicture, req);
 
       res.render("profile", {
@@ -1153,6 +1166,7 @@ app.get("/feeds/:category", ensureAuthenticated, async (req, res) => {
 
 app.get("/feeds", ensureAuthenticated, async (req, res) => {
     const user = getCurrentUser(req);
+    const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
     const userId = user.id;
 
     try {
@@ -1227,8 +1241,6 @@ const formattedAudio = audioPosts.map((audio) => {
       (a, b) => b.timestamp - a.timestamp
     );
 
-    const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
-
     res.render("secrets", {
       allUsers: allUsers.rows,
       feeds,
@@ -1254,6 +1266,7 @@ const formattedAudio = audioPosts.map((audio) => {
 //Render saved post
 app.get("/bookmarked", ensureAuthenticated, async(req, res) => {
   const user = getCurrentUser(req)
+  const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
   const userId = user.id;
 
   try {
@@ -1348,7 +1361,9 @@ app.get("/bookmarked", ensureAuthenticated, async(req, res) => {
 //Render Notifications
 app.get("/notifications", ensureAuthenticated, async (req, res) => {
   const user = getCurrentUser(req)
+  const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
     try {
+     
       const userTheme = user.color || "default";
       const mode = user.mode || "light";
 
@@ -1469,6 +1484,7 @@ app.get("/notifications", ensureAuthenticated, async (req, res) => {
 
 app.get("/admin/reports", ensureAuthenticated, async (req, res) => {
   try {
+    const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
     const reportsQuery = `
             SELECT reports.id, reports.reported_by, reports.secret_id, reports.comment_id, reports.reason, reports.status, secret AS secret, users.username AS reported_by_username
             FROM reports
@@ -1494,6 +1510,7 @@ app.get("/admin/reports", ensureAuthenticated, async (req, res) => {
 });
 
 app.get("/admin/reviews", ensureAuthenticated, async (req, res) => {
+  const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
   const userTheme = user.color || "default";
   const mode = user.mode || "light";
   try {
@@ -1524,6 +1541,7 @@ app.get("/admin/reviews", ensureAuthenticated, async (req, res) => {
 });
 
 app.get("/admin-dashboard", ensureAuthenticated, async (req, res) => {
+  const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
     try {
       const reviewsQuery = `
             SELECT *, username
