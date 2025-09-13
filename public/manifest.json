@@ -8,12 +8,12 @@
     "theme_color": "#7f5af0",
     "icons": [
       {
-        "src": "/img/logo/mobile-logo.png",
+        "src": "/img/logo/chatGpt.png",
         "sizes": "192x192",
         "type": "image/png"
       },
       {
-        "src": "/img/logo/main-logo.png",
+        "src": "/img/logo/chatGpt.png",
         "sizes": "512x512",
         "type": "image/png"
       }

@@ -27,8 +27,17 @@ reactions: {
   type: DataTypes.JSONB,
   defaultValue: {},
 },
-
-}, 
+category: {
+  type: DataTypes.STRING, // e.g. "public", "exclusive", etc.
+  allowNull: false,
+  defaultValue: "public",
+},
+type: {
+  type: DataTypes.STRING, // e.g. "audio"
+  allowNull: false,
+  defaultValue: "audio",
+}
+},
 {
   tableName: "audios" // This must match your actual DB table name
 });

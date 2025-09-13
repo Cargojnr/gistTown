@@ -41,54 +41,6 @@
   <title>Gossipa || <%= locals.title ? title : null%>
   </title>
 
-  <style>
-    .install-prompt {
-      /* position: fixed;
-    bottom: 20px;
-    right: 20px; */
-      background: var(--secondary-color, #d13d87);
-      color: white;
-      font-weight: bold;
-      border: none;
-      border-radius: 50px;
-      padding: 12px 20px;
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-      z-index: 1000;
-      overflow: hidden;
-    }
-
-    .pulse-ring {
-      width: 12px;
-      height: 12px;
-      background-color: #ffffff;
-      border-radius: 50%;
-      position: absolute;
-      left: 16px;
-      animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-      0% {
-        transform: scale(1);
-        opacity: 0.9;
-      }
-
-      70% {
-        transform: scale(2.5);
-        opacity: 0;
-      }
-
-      100% {
-        transform: scale(1);
-        opacity: 0;
-      }
-    }
-  </style>
 </head>
 
 <body class="main-background">
@@ -135,7 +87,7 @@
             </li>
             <li class="navbar profiled">
               <button class="profile-btn"><img oncontextmenu="return false;"
-                  src="<%= profilePicture ?'../.' + profilePicture: profilePicture %>" alt="" class="profile-pic thumb">
+                  src="<%= profilePicture ? profilePicture: '../../' + profilePicture  %>" alt="" class="profile-pic thumb">
                 <i class="fas fa-chevron-down"></i></button>
             </li>
             <li class="navbar dropdown">
@@ -148,12 +100,20 @@
         <div id="menu" class="menu-hidden">
           <div class="container">
             <div class="profile-head">
-              <img oncontextmenu="return false;"
+              <div class="avatar-profile">
+                <img oncontextmenu="return false;"
                 src="<%= profilePicture ? profilePicture : '../../' + profilePicture %>" alt="Profile Avatar"
-                class="profile-avatar" />
-
-              <h3 class="username">Hello,&nbsp;<span class="username">
-                  @amebo<%= userId %>
+                class="profile-pic" />
+              </div>
+             
+                <h3 class="username"><span class="username"><span>Hello,&nbsp;</span>
+                  <span class="user<%= userId %>">
+                   <% if(stealthMode){  %>
+                    <span class="user">@gossipa<%= userId %></span>
+                     <% } else { %>
+                      <span class="user"> @<%= username %></span>
+                       <% } %>
+                 </span>
                     <% if(verification===true) {%>
                       <img oncontextmenu="return false;" src="../../img/gossipa3.png" alt="Verifiied Badge"
                         class="verified-badge">
@@ -205,6 +165,10 @@
                 </li>
               </ul>
               <hr />
+              <div class="theme-switch">
+                <button id="themeToggleBtn" class="theme-toggle-btn">🌙&nbsp;<span class="text-gradient">Early Bird</span></button>
+        </div>
+        
               <div class="menu-nav-alt">
                 <ul class="info">
                   <h4>Information</h4>
@@ -225,7 +189,7 @@
 
                 </ul>
               </div>
-              <p class="menu-lang">
+              <p class="lang">
                 <i class="fas fa-globe"></i> English
               </p>
               <button id="close"><i class="fas fa-xmark"></i></button>
@@ -246,7 +210,6 @@
   <div class="layout-container container">
 
     <aside class="left-sidebar">
-      <div class="aside">
         <ul class="nav">
           <li class="nav-item <%= locals.title === 'Gossip feeds' ? 'current' : null %>">
             <a href="/feeds">
@@ -269,11 +232,12 @@
             </a>
           </li>
           <li class="nav-item chief">
-            <a href="/subscribe">
+            <a href="/subscription">
               <i class="nav-icon fas fa-award"></i>
               &nbsp;<span class="nav-text">Become a Chief</span>&nbsp;
               <span class="nav-text"><img oncontextmenu="return false;" src="../../img/gossipa3.png" alt=""
                   class="nav-icon verified-badge"></span>
+                  <span class="nav-tag">Beta</span>
             </a>
           </li>
           <li class="nav-item <%= locals.title === 'My Profile' ? 'current' : null %>">
@@ -301,7 +265,6 @@
 
           </li>
         </ul>
-      </div>
 
     </aside>
 
@@ -325,9 +288,6 @@
       <button id="close-announcement" class="btn btn-dark btn-lg">Close</button>
     </div>
 
-     <div class="theme-switch">
-              <button id="themeToggleBtn" class="theme-toggle-btn">🌙<span class="nav-text">Dark Mode</span></button>
-      </div>
 
 
     <!-- Content of each page will be injected here -->
@@ -336,6 +296,44 @@
     <div id="notification"></div>
   </div>
 
+  
+  <audio id="post-sound" src="/sounds/system-notification-199277.mp3" preload="auto"></audio>
+
+  
+<button id="scrollToTopBtn" class="scroll-btn"><i class="fas fa-chevron-up"></i></button>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const scrollBtn = document.getElementById("scrollToTopBtn");
+
+    window.addEventListener("scroll", () => {
+      scrollBtn.style.display = window.scrollY > 200 ? "block" : "none";
+    });
+
+    scrollBtn.addEventListener("click", () => {
+      // Animate launch
+      scrollBtn.classList.add("shrink");
+      scrollBtn.classList.add("launching");
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      // Reset animation classes after a short delay
+      setTimeout(() => {
+        scrollBtn.classList.remove("shrink");
+        scrollBtn.classList.remove("launching");
+      }, 800);
+    });
+  });
+</script>
+
+<script>
+  function formatCount(num) {
+  if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, "") + "b";
+  if (num >= 1_000_000) return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "m";
+  if (num >= 1_000) return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "k";
+  return num.toString();
+}
+</script>
 
   <script>
     const header = document.querySelector("header");
@@ -632,6 +630,30 @@
       }, 5000); // 5 seconds
     }
   </script>
+
+  <script>
+    
+function showNotification(message) {
+  const audio = new Audio("/sounds/system-notification-199277.mp3")
+  audio.play();
+
+if(Notification.permission === 'granted'){
+  new Notification('Anonymcret', {
+    body: message,
+    icon: '/img/logo/mobile-logo.png'
+  });
+ } else if(Notification.permission === 'default'){
+  Notification.requestPermission().then(permission => {
+    if(permission === 'granted'){
+      new Notification('Anonymcret', {
+        body: message,
+        icon: '/img/logo/mobile-logo.png'
+      });
+    }
+  });
+ }
+}
+  </script>
   <script>
     window.currentUserId = "<%= userId %>";
     window.socket = io({ query: { userId: window.currentUserId } });
@@ -643,23 +665,48 @@
       const currentCount = parseInt(counter.textContent) || 0;
       counter.textContent = currentCount + 1;
 
+      if (currentCount.textContent > 99) {
+    counter.textContent = "99+";
+  } else {
+    counter.textContent = currentCount;
+  }
+
       const notificationsDiv = document.getElementById("notification");
       const notification = document.createElement("div");
-      notification.className = "notification";
+      notification.className = "toast";
+
+      const sound = document.getElementById("post-sound");
+      if (sound) sound.play();
 
       // Display a notification if it's a "secret" type
-      if (data.type === "secret") {
-        notification.innerText = `New secret shared by ~~@gossipa${data.data.userId}~~: "${data.data.secret}"`;
-      } else if (data.type === "selected") {
-        notification.innerText = `~~@gossipa${data.data.userId}~~ Your secret is the top most discussed for the Day...... Keep it up!"`;
+      if (data.type === "post") {
+        notification.innerHTML = `<img src="${data.data.avatar}" class="profile-pic thumb"/> ${data.data.message}`;
+      } else if(data.type === "comment") {
+        notification.innerText = `${data.data.message}`;
+      }  else if (data.type === "selected") {
+        notification.innerText = `~~@gossipa${data.data.userId}~~ Your gist is the top most discussed for the Day...... Keep it up!"`;
         notificationsDiv.style.textAlign = "center"
-      } else if (data.type === "reaction") {
+
+      }else if (data.type === "eavedrop"){
+notification.innerText = `You are being eavedropped by ~~@gossipa${data.data.audience}~~:`;
+      }
+       else if (data.type === "reaction") {
         const { reaction, count, milestone } = data.data;
         notification.innerText =
-          `Your Gossip received a new "${reaction}" reaction! Total: ${count}.`
-      } else if (data.type === "top-secret") {
-        notification.innerText = `Most discussed secret goes to ~~@gossipa${data.data.userId}~~"`;
+          `Your Gist received a new "${reaction}" reaction! Total: ${count}.`
+      } else if (data.type === "stealth"){
+         notification.innerText = `You ${data.data.status} stealth mode.`
+      }else if (data.type === "top-secret") {
+        notification.innerText = `Most discussed gist goes to ~~@gossipa${data.data.userId}~~"`;
       }
+
+      function recieveNotification(data){
+  showNotification(data.message);
+ }
+
+ setTimeout(() => {
+  recieveNotification({message: notification.innerText})
+ }, 5000)
 
       notificationsDiv.appendChild(notification);
 
@@ -670,6 +717,7 @@
 
     });
   </script>
+
   <script>
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("../../js/service-worker.js");
@@ -691,13 +739,26 @@
       if (deferredPrompt) {
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
+        const notificationsDiv = document.getElementById("notification");
+      const notification = document.createElement("div");
+      notification.className = "toast";
         if (outcome === 'accepted') {
           console.log('User accepted the install prompt');
+          
+      notification.innerText = "Installation successful"
         } else {
           console.log('User dismissed the install prompt');
+           notification.innerText = "Installation failed"
         }
         installBtn.style.display = 'none';
         deferredPrompt = null;
+
+         notificationsDiv.appendChild(notification);
+
+      // Automatically remove the notification after 5 seconds
+      setTimeout(() => {
+        notification.remove();
+      }, 5000);
       }
     });
   </script>

@@ -1,9 +1,13 @@
 <style>
 
+  .form-wrap{
+    margin-bottom: 5rem;
+  }
+
   .post-action {
     position: absolute;
     right: 0%;
-    bottom: 5% !important;
+    bottom: 0% !important;
   }
 
   .avatar-and-type {
@@ -228,160 +232,135 @@
       </div>
       <% } else { %>
 
-        <div class="form-wrapper">
-          <form method="POST" action="/share" id="share" class="form-wrap">
-
-            <div class="form-top">
-              <div class="avatar-and-type">
-                <div class="avatar-profile">
-                  <img src="<%= profilePicture %>" class="profile-pic" alt="Avatar Profile">
-                </div>
-
-                <!-- Gossip Type Selector (desktop) -->
-                <div class="gossip-type-selector desktop-only">
-                  <select name="gossipType" class="gossip-select fancy-select">
-                    <option disabled selected>🌟 Choose Gossip Type</option>
-                    <option value="disappearing">⏳ Disappearing Gossip</option>
-                    <option value="scheduled">📅 Scheduled Gossip</option>
-                    <option value="private">🔒 Private Gossip</option>
-                  </select>
-                </div>
-
-                <!-- Mobile toggle chevron -->
-                <div class="mobile-only gossip-type-toggle" onclick="toggleGossipMenu()">
-                  <i class="fa-solid fa-chevron-down"></i>
-                </div>
-              </div>
-
-              <!-- Slide-down Dropdown on Mobile -->
-              <div id="gossipDropdown" class="mobile-only gossip-dropdown hidden">
-                <select name="gossipType" class="gossip-select full fancy-select">
-                  <option disabled selected>🌟 Choose Gossip Type</option>
-                  <option value="disappearing">⏳ Disappearing Gossip</option>
-                  <option value="scheduled">📅 Scheduled Gossip</option>
-                  <option value="private">🔒 Private Gossip</option>
-                </select>
-              </div>
-            </div>
-
-            <!-- Category + textarea (unchanged) -->
-            <div class="form-group category-section">
-              <label for="category" class="category-label">Choose a category</label>
-              <select id="category" onchange="changeBg(event)" name="category" class="form-control category-dropdown">
-                <option value="" disabled selected>Select a category</option>
-                <option value="confession">Confession</option>
-                <option value="advice">Advice</option>
-                <option value="funny">Funny</option>
-                <option value="random">Random</option>
-                <option value="vent">Vent</option>
-                <option value="love">Love</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <textarea class="form-control input-text" id="postInput" name="secret"
-                placeholder="Hey <%= username %>, what's popping?"></textarea>
-            </div>
-
-            <div class="post-action">
-              <span id="wordCount">0</span>
-              <button type="submit" id="submit" class="btn btn-dark secret-btn">
-                <%= submit %>
-              </button>
-            </div>
-           
-          </form>
-
-          <div class="or">
-            <hr>
-            <h4>OR</h4>
-            <hr>
-          </div>
-
-          <div id="recordContainer">
-            <h1>Record a Voice Note</h1>
-            <button id="micButton" class="mic-button" tabindex="0">
-              <div class="lottie-wrapper"></div>
-              <i class="fas fa-microphone"></i>
-            </button>
-
-            <!-- Canvas for waveform visualization -->
-            <!-- <canvas id="waveform"></canvas> -->
-
-            <!-- Action buttons (discard/share) -->
-            <div id="actionButtons">
-              <button id="discardRecording">Discard</button>
-              <button id="submitRecording">Share</button>
-            </div>
-
-            <!-- Audio player for playback after recording -->
-            <audio id="audioPlayer" controls style="display:none;"></audio>
-          </div>
-
-
-
-          <div id="notification"
-            style="position: absolute !important; top: 10px !important; left: 0 !important; right: 0 !important; z-index: 1000;">
-          </div>
-
-          <script>
-
-            // Handle form submission via Fetch API
-            document.getElementById('share').addEventListener('submit', async (event) => {
-              event.preventDefault(); // Prevent form's default redirect behavior
-
-              const secretInput = document.getElementById('postInput');
-              const categoryDropdown = document.getElementById('category');
-              const secret = secretInput.value;
-              const category = categoryDropdown.value;
-              const notice = document.getElementById("notification")
-
-              if (!category) {
-                 notice.innerHTML = "<div class='toast'>Please select a category before sharing!</div>"
-      setTimeout(()=> {notice.innerHTML = ""}, 3000);
+        <div class="container">
+          <div class="jumbotron text-center form-wrapper">
+            <div class="form-wrap">
+              <div class="form-transition-container">
                 
-                return;
-              }
+                <!-- TEXT FORM -->
+                <div id="textForm" class="toggle-form">
+                  <form id="textSubmitForm" method="POST" action="/share">
+                    <div class="form-top user-details">
+                      <div class="avatar-profile">
+                        <img src="<%= profilePicture %>" class="profile-pic" alt="Avatar Profile">
+                      </div>
+        
+                      <!-- Gossip Type Selector (desktop) -->
+                      <div class="gossip-type-selector desktop-only">
+                        <select name="gossipType" class="gossip-select fancy-select">
+                          <option disabled selected>🌟 Choose Gossip Type</option>
+                          <option value="disappearing">⏳ Disappearing Gossip</option>
+                          <option value="scheduled">📅 Scheduled Gossip</option>
+                          <option value="private">🔒 Private Gossip</option>
+                        </select>
+                      </div>
+        
+                      <!-- Mobile toggle chevron -->
+                      <div class="mobile-only gossip-type-toggle" onclick="toggleGossipMenu()">
+                        <i class="fa-solid fa-chevron-down"></i>
+                      </div>
+                    </div>
+        
+                    <!-- Slide-down Dropdown on Mobile -->
+                    <div id="gossipDropdown" class="mobile-only gossip-dropdown hidden">
+                      <select name="gossipType" class="gossip-select full fancy-select">
+                        <option disabled selected>🌟 Choose Gossip Type</option>
+                        <option value="disappearing">⏳ Disappearing Gossip</option>
+                        <option value="scheduled">📅 Scheduled Gossip</option>
+                        <option value="private">🔒 Private Gossip</option>
+                      </select>
+                    </div>
+        
+                    <!-- Category + textarea -->
+                    <div class="form-group category-section">
+                      <label for="category" class="category-label">Choose a category</label>
+                      <select id="category" onchange="changeBg(event)" name="category" class="form-control category-dropdown">
+                        <option value="" disabled selected>Select a category</option>
+                        <option value="confession">Confession</option>
+                        <option value="advice">Advice</option>
+                        <option value="funny">Funny</option>
+                        <option value="random">Random</option>
+                        <option value="vent">Vent</option>
+                        <option value="love">Love</option>
+                      </select>
+                    </div>
+        
+                    <div class="form-group">
+                      <textarea class="form-control input-text" id="postInput" name="secret"
+                        placeholder="Hey <%= username %>, what's popping?"></textarea>
+                    </div>
+        
+                    <div class="post-action">
+                      <span id="wordCount">0</span>
+                      <button type="submit" class="btn btn-dark secret-btn">
+                        <%= submit %>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+        
+                <!-- AUDIO FORM -->
+                <div id="audioForm" class="toggle-form hidden">
+                  <div class="form-top user-details">
+                    <div class="avatar-profile">
+                      <img src="<%= profilePicture %>" class="profile-pic" alt="Avatar Profile">
+                    </div>
+        
+                    <div class="gossip-type-selector desktop-only">
+                      <select name="gossipType" class="gossip-select fancy-select">
+                        <option disabled selected>🌟 Choose Gossip Type</option>
+                        <option value="disappearing">⏳ Disappearing Gossip</option>
+                        <option value="scheduled">📅 Scheduled Gossip</option>
+                        <option value="private">🔒 Private Gossip</option>
+                      </select>
+                    </div>
+                  </div>
 
-              try {
-                const response = await fetch('/share', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    secret,
-                    category,
-                    contentType: 'text' // Indicate that this is a text submission
-                  }),
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                  notice.innerHTML = "<div class='toast'>Secret shared successfully!</div>"
-      setTimeout(()=> {notice.innerHTML = ""}, 3000);
-                  secretInput.value = ''; // Clear the input field
-                } else {
-                  notice.innerHTML = "<div class='toast'>Failed to share the secret. Please try again.</div>"
-      setTimeout(()=> {notice.innerHTML = ""}, 3000);
-                }
-              } catch (error) {
-                console.error('Error:', error)
-                notice.innerHTML = "<div class='toast'>An error occurred. Please try again later.</div>"
-      setTimeout(()=> {notice.innerHTML = ""}, 3000);
-              }
-            });
-          </script>
+                  <!-- Category + textarea -->
+                  <div class="form-group category-section">
+                    <label for="category" class="category-label">Choose a category</label>
+                    <select id="category" onchange="changeBg(event)" name="category" class="form-control category-dropdown">
+                      <option value="" disabled selected>Select a category</option>
+                      <option value="confession">Confession</option>
+                      <option value="advice">Advice</option>
+                      <option value="funny">Funny</option>
+                      <option value="random">Random</option>
+                      <option value="vent">Vent</option>
+                      <option value="love">Love</option>
+                    </select>
+                  </div>
+        
+                  <div id="recordContainer">
+                    <h1>Record a Voice Note</h1>
+                    <button id="micButton" class="mic-button"><i class="fas fa-microphone"></i></button>
+        
+                    <div id="actionButtons">
+                      <button id="discardRecording">Discard</button>
+                      <button id="submitRecording">Share</button>
+                    </div>
+        
+                    <audio id="audioPlayer" controls style="display:none;"></audio>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- TOGGLE BUTTONS -->
+            <div class="actions">
+              <button type="button" onclick="showTextForm()"><i class="fas fa-pen-to-square"></i></button>
+              <button type="button" onclick="showAudioForm()" class="create"><i class="fas fa-microphone"></i></button>
+            </div>
+          </div>
         </div>
+      
         <audio id="post-sound" src="/sounds/whoosh-6316.mp3" preload="auto"></audio>
         <% } %>
 
-
-          <hr>
           <br>
 
   </section>
 
   <aside class="right-sidebar">
+    <div id="aside">
     <div class="aside premium-aside">
       <div class="premium-card">
         <div class="crown-icon sparkle">👑</div>
@@ -402,7 +381,7 @@
       </div>
     </div>
 
-    <div class="aside aside-2">
+    <div class="aside">
       <center>
         <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Active
           Gossipas: <span id="activeCount">0</span></h4>
@@ -411,12 +390,81 @@
       </ul>
 
     </div>
-
+  </div>
   </aside>
 
 </div>
 
+
 <script>
+  // Reference both forms
+  const textForm = document.getElementById("textSubmitForm");
+  const audioForm = document.getElementById("audioForm");
+  const notice = document.getElementById("notification");
+
+  // ✅ Handle text post
+  textForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const secretInput = document.getElementById("postInput");
+    const categoryDropdown = document.getElementById("category");
+    const secret = secretInput.value;
+    const category = categoryDropdown.value || "public";
+
+    if (!secret) {
+      showToast("You can't share empty gist");
+      return;
+    }
+
+    try {
+      const response = await fetch("/share", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          secret,
+          category,
+          contentType: "text", // 👈 text mode
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        showToast("Gist shared successfully!");
+        secretInput.value = "";
+        categoryDropdown.value = "";
+      } else {
+        showToast("Failed to share the gist. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      showToast("An error occurred. Please try again later.");
+    }
+  });
+
+
+
+  // 🔔 Small helper to show toast notifications
+  function showToast(message) {
+    if(notice){
+      notice.innerHTML = `<div class="toast">${message}</div>`;
+    setTimeout(() => (notice.innerHTML = ""), 3000);
+    }
+  }
+</script>
+
+<script>
+
+function showTextForm() {
+  document.getElementById("textForm").classList.remove("hidden");
+  document.getElementById("audioForm").classList.add("hidden");
+}
+
+function showAudioForm() {
+  document.getElementById("audioForm").classList.remove("hidden");
+  document.getElementById("textForm").classList.add("hidden");
+}
+
 
 const postInput = document.getElementById("postInput") ? document.getElementById("postInput") : document.getElementById("postedInput")
 const wordCountText = document.querySelector("#wordCount");
@@ -437,96 +485,6 @@ postInput.addEventListener("keyup", (e)=> {
 </script>
 
 <script>
-  const connectedUsersMap = new Map();
-  const userList = document.querySelector(".user-list");
-  const userCountDisplay = document.getElementById("activeCount");
-
-  function updateUserCount() {
-    userCountDisplay.textContent = connectedUsersMap.size;
-  }
-
-  function userConnected(user) {
-    if (connectedUsersMap.has(user.id)) return;
-
-    const userBox = document.createElement("li");
-    userBox.className = "connected-user nav-item enter";
-    userBox.id = `user-${user.id}`;
-    const verifiedBadge = `${user.verified}`
-      ? `<img src="/img/badge.png" alt="Verified Badge" class="verified-badge" style="width: 16px; height: 16px;">`
-      : "";
-
-    userBox.innerHTML = `
-          <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
-            <img src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
-            <p>
-              @amebo${user.id}
-             ${verifiedBadge}
-              </p>
-          </div>
-        `;
-
-    userList.appendChild(userBox);
-    connectedUsersMap.set(user.id, userBox);
-    updateUserCount();
-
-    // Trigger reflow for entry animation
-    requestAnimationFrame(() => {
-      userBox.classList.add("enter");
-    });
-  }
-
-  function userDisconnected(userId) {
-    const userBox = connectedUsersMap.get(userId);
-    if (userBox) {
-      userBox.classList.add("exit");
-      userBox.classList.remove("enter");
-      setTimeout(() => {
-        userBox.remove();
-        connectedUsersMap.delete(userId);
-        updateUserCount();
-      }, 400); // CSS transition match
-    }
-  }
-
-  socket.on("userJoined", async (userId) => {
-    try {
-      const res = await fetch(`/user/${userId}`);
-      const user = await res.json();
-      userConnected(user);
-    } catch (err) {
-      console.error("Failed to fetch user data:", err);
-    }
-  });
-
-  socket.on("userLeft", (userId) => {
-    userDisconnected(userId);
-  });
-
-  // Load current active users on first load
-  fetch("/active-users")
-    .then(res => res.json())
-    .then(users => {
-      users.forEach(user => userConnected(user));
-    })
-    .catch(console.error);
-</script>
-
-<script>
-  const header = document.querySelector('header');
-  const nextSection = document.querySelector('body').querySelector('section:not(.active)');
-  const logo = document.getElementById('logo')
-
-  window.addEventListener('scroll', function () {
-    const scrolled = window.scrollY > 0;
-    if (scrolled) {
-      let body = document.querySelector('body');
-      body.style.overflowY = 'scroll';
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
-    }
-  });
-
   window.onload = function () {
     const textArea = document.querySelector('textarea')
     textArea.blur();
@@ -667,18 +625,18 @@ postInput.addEventListener("keyup", (e)=> {
     audioChunks = []; // Clear the audio chunks
   });
 
-  // Submit the recording (share it)
+
   // Submit the recording (share it)
   submitButton.addEventListener('click', async () => {
     const categoryDropdown = document.getElementById('category');
     const category = categoryDropdown.value;
     const notice = document.getElementById("notification")
 
-    if (!category) {
-      notice.innerHTML = "<div class='toast'>Please select a category before sharing!</div>"
-      setTimeout(()=> {notice.innerHTML = ""}, 3000);
-      return;
-    }
+    // if (!category) {
+    //   notice.innerHTML = "<div class='toast'>Please select a category before sharing!</div>"
+    //   setTimeout(()=> {notice.innerHTML = ""}, 3000);
+    //   return;
+    // }
 
     try {
       // Create a FormData object to send the audio file and category
@@ -715,14 +673,98 @@ postInput.addEventListener("keyup", (e)=> {
   });
 </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
-
 <script>
   function toggleGossipMenu() {
     const dropdown = document.getElementById("gossipDropdown");
     dropdown.classList.toggle("show");
   }
 </script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+
+<script>
+  const connectedUsersMap = new Map();
+  const userList = document.querySelector(".user-list");
+  const userCountDisplay = document.getElementById("activeCount");
+
+  function updateUserCount() {
+    userCountDisplay.textContent = connectedUsersMap.size;
+  }
+
+  function userConnected(user) {
+    if (connectedUsersMap.has(user.id)) return;
+
+    const userBox = document.createElement("li");
+    userBox.className = "connected-user nav-item enter";
+    userBox.id = `user-${user.id}`;
+    const verifiedBadge = `${user.verified}`
+      ? `<img src="/img/badge.png" alt="Verified Badge" class="verified-badge" style="width: 16px; height: 16px;">`
+      : "";
+
+      const stealthMode = user.stealth_mode ? `@gossipa${user.id}` : `@${user.username}`
+
+
+    userBox.innerHTML = `
+          <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
+            <img src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
+           <p class="username-row">
+                 <span class="user${user.id}">${stealthMode}</span>
+                ${verifiedBadge}
+              </p>
+          </div>
+        `;
+
+    userList.appendChild(userBox);
+    connectedUsersMap.set(user.id, userBox);
+    updateUserCount();
+
+    // Trigger reflow for entry animation
+    requestAnimationFrame(() => {
+      userBox.classList.add("enter");
+    });
+  }
+
+  function userDisconnected(userId) {
+    const userBox = connectedUsersMap.get(userId);
+    if (userBox) {
+      userBox.classList.add("exit");
+      userBox.classList.remove("enter");
+      setTimeout(() => {
+        userBox.remove();
+        connectedUsersMap.delete(userId);
+        updateUserCount();
+      }, 400); // CSS transition match
+    }
+  }
+
+  if (window.socket) {
+      window.socket.on("userJoined", async (userId) => {
+        try {
+          const res = await fetch(`/user/${userId}`);
+          const user = await res.json();
+          userConnected(user);
+        } catch (err) {
+          console.error("Failed to fetch user data:", err);
+        }
+      });
+
+      window.socket.on("userLeft", (userId) => {
+        userDisconnected(userId);
+      });
+    } else {
+      console.warn("Socket.io not initialized on this page.");
+    }
+
+  // Load current active users on first load
+  fetch("/active-users")
+    .then(res => res.json())
+    .then(users => {
+      users.forEach(user => userConnected(user));
+    })
+    .catch(console.error);
+</script>
+
 
 
 <script>

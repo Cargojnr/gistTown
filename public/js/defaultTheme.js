@@ -29,7 +29,7 @@ function applyTheme(theme) {
   document.body.setAttribute('data-theme', theme);
   localStorage.setItem('theme', theme);
 
-  toggleThemeBtn.innerHTML = theme === 'dark' ? '☀️' : '🌙';
+  toggleThemeBtn.innerHTML = theme === 'dark' ?'🌙&nbsp;<span class="text-gradient">Night Owl</span>': '☀️&nbsp;<span class="text-gradient">Early Bird</span>';
 
   document.body.classList.add('theme-transition');
   setTimeout(() => document.body.classList.remove('theme-transition'), 500);

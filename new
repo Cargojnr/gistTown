@@ -1131,3 +1131,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+<section id="slideshow-gallery" class="fade-in">
+      <div class="container">
+        <h2 class="m-head">Compatible with all Devices</h2>
+        <p class="lead">Feel relaxed engaging the community at your comfort.</p>
+        <div class="device-carousel">
+          <!-- Slide 1: Mobile -->
+          <div class="device-slide active" data-index="0">
+            <div class="device-mockup phone">
+              <img src="img/screens/mobile-preview.png" alt="Mobile preview" />
+            </div>
+            <p class="caption">Mobile View</p>
+          </div>
+
+          <!-- Slide 2: Tablet -->
+          <div class="device-slide" data-index="1">
+            <div class="device-mockup tablet">
+              <img src="img/screens/tablet-preview.png" alt="Tablet preview" />
+            </div>
+            <p class="caption">Tablet View</p>
+          </div>
+
+          <!-- Slide 3: Laptop -->
+          <div class="device-slide" data-index="2">
+            <div class="device-mockup laptop">
+              <img src="img/screens/tablet-preview.png" alt="Laptop preview" />
+            </div>
+            <p class="caption">Laptop View</p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <button class="prev-device">&#10094;</button>
+        <button class="next-device">&#10095;</button>
+      </div>
+    </section>
+
+

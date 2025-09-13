@@ -96,16 +96,8 @@
     <div id="sections" class="sections-container">
       <h2 class="sections-title">Explore Your Space</h2>
       <form class="sections-cards">
-        <!-- Whisper Walls -->
-        <!-- <button class="section-card whisper-wall" formaction="/section/love" data-action="/whisper-walls">
-                    <div class="icon-circle">
-                      <i class="fas fa-feather-alt fa-2x"></i>
-                    </div>
-                    <h3>Whisper Walls</h3>
-                    <p>Swipe and support whispers anonymously.</p>
-                  </button> -->
 
-        <button class="section-card whisper-wall" formaction="/section/love" data-action="/whisper-walls">
+        <button class="section-card whisper-wall" formaction="/emotional-support" data-action="/whisper-walls">
           <span class="counter nav-tag">BETA</span>
           <div class="icon-circle">
             <i class="fas fa-feather-alt fa-2x"></i>
@@ -167,7 +159,7 @@
   </section>
 
   <aside class="right-sidebar">
-    <div class="aside"></div>
+    <div id="aside">
 
     <div class="premium-aside">
       <div class="premium-card">
@@ -189,7 +181,7 @@
       </div>
     </div>
 
-    <div class="aside-2">
+    <div class="aside">
       <center>
         <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Meet The
           Chiefs
@@ -207,7 +199,7 @@
       <br><br>
       &nbsp;<span>&copy; <%= new Date().getFullYear() %>, &commat; Gossipa Co. All rights reserved</span>
     </div>
-
+  </div>
   </aside>
 
 </div>
@@ -235,13 +227,15 @@
         ? `<img oncontextmenu="return false;" src="/img/gossipa3.png" alt="Verified Badge" class="verified-badge">`
         : "";
 
+        const stealthMode = user.stealth_mode ? `@gossipa${user.id}` : `@${user.username}`
+
       userBox.innerHTML = `
                 <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
                   <img oncontextmenu="return false;" src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
-                  <p class="username">
-                    <span class="user">@amebo${user.id}</span>
-                    ${verifiedBadge}
-                  </p>
+                  <p class="username-row">
+                 <span class="user${user.id}">${stealthMode}</span>
+                ${verifiedBadge}
+              </p>
                 </div>
               `;
 
@@ -292,6 +286,5 @@
 </script>
 
 <script src="/js/app.js"></script>
-<script src="/js/tutorial.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>

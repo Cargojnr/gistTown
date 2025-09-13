@@ -7,31 +7,31 @@
     <!-- Meta Tags for SEO -->
     <meta
       name="description"
-      content="Share gists secretly with end-to-end encryption. GistTown guarantees your privacy with 100% anonymity."
+      content="Share gists secretly with end-to-end encryption. Gossipa guarantees your privacy with 100% anonymity."
     />
     <meta
       name="keywords"
       content="anonymity, secret sharing, encrypted messaging, privacy, end-to-end encryption, anonymous communication"
     />
     <meta name="robots" content="index, follow" />
-    <meta name="author" content="GistTown" />
+    <meta name="author" content="Gossipa" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="GistTown - Share Gists Secretly" />
+    <meta property="og:title" content="Gossipa - Share Gists Secretly" />
     <meta
       property="og:description"
-      content="Share your gist secretly with GistTown. Your privacy is our priority with full end-to-end encryption."
+      content="Share your gist secretly with Gossipa. Your privacy is our priority with full end-to-end encryption."
     />
     <meta property="og:image" content="/img/og-image.png" />
     <meta property="og:url" content="https://yourwebsite.com" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="GistTown - Share Gists secretly" />
+    <meta name="twitter:title" content="Gossipa - Share Gists secretly" />
     <meta
       name="twitter:description"
-      content="Share your gists secretly with GistTown. Your privacy is our priority with full end-to-end encryption."
+      content="Share your gists secretly with Gossipa. Your privacy is our priority with full end-to-end encryption."
     />
     <meta name="twitter:image" content="/img/twitter-image.png" />
 
@@ -39,6 +39,7 @@
       src="https://kit.fontawesome.com/ceb8cfc409.js"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -50,27 +51,16 @@
     <link rel="stylesheet" href="/styles/new.css" />
     <link rel="stylesheet" href="/styles/media.css" />
 
-    <title>GistTown - Share gists secretly || Signup An Account.</title>
+    <title>Gossipa - Share gists secretly || Signup An Account.</title>
 
     <style>
 
-:root {
-  --primary-color: #7f5af0;
-  --secondary-color: #2cb67d;
-  --text-color: #ffffff;
-  --body-bg: linear-gradient(135deg,#6a7bff, #a0aaff );
-  --container-bg: #1a1a2e;
-  --button-text: #ffffff;
-}
-
-[data-theme="light"] {
-  --primary-color: #6246ea;
-  --secondary-color: #2cb67d;
-  --text-color: #16161a;
-  --body-bg: linear-gradient(135deg, #a0aaff, #6a7bff);
-  --container-bg: #ffffff;
-  --button-text: #16161a;
-}
+.layout-container{
+      display: flex;
+      flex-direction: column !important;
+      justify-content: center !important;
+      align-items: center !important;
+    }
 
 .scrolled {
   background: var(--container-bg);
@@ -89,10 +79,22 @@
           background: var(--body-bg);
 
         }
+
+        .profile-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+    background: var(--glass-bg);
+    padding: 1rem;
+    border-radius: 30px;
+    height: 10vh;
+  }
   
         .form-container {
           /* background: rgba(0, 0, 0, 0.5); */
           background: var(--container-bg);
+          max-width: 900px;
           width: 100%;
           padding: 1.5rem !important;
         }
@@ -150,6 +152,7 @@
   margin: 2rem auto;
   max-width: 90%;
   text-align: center;
+  cursor: pointer;
 }
 
 .carousel-container {
@@ -157,13 +160,15 @@
   overflow: hidden;
 }
 
+
+
 .center-highlight {
   position: absolute;
-  top: 0;
+  top: 5%;
   bottom: 0;
   left: 50%;
-  width: 120px;
-  height: 120px;
+  width: 100px !important;
+  height: 100px !important;
   transform: translateX(-50%);
   border-radius: 50%;
   z-index: 10;
@@ -176,7 +181,7 @@
   overflow-x: auto;
   gap: 1.5rem;
   scroll-behavior: smooth;
-  padding: 1rem 0;
+  padding: .75rem 0;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
 }
@@ -185,7 +190,7 @@
 }
 
 .avatar-item.spacer {
-  width: calc(19.2vw - 45px); /* 45px is half the avatar width (90px) */
+  width: calc(15vw - 45px); /* 45px is half the avatar width (90px) */
   height: 95px;
   pointer-events: none;
   opacity: 0;
@@ -213,7 +218,7 @@
 }
 
 .avatar-item.active {
-  transform: scale(1.2);
+  transform: scale(1.1);
   opacity: 1;
   z-index: 5;
 }
@@ -222,38 +227,81 @@
 
       </style>
   </head>
-  <body>
-    <div id="brand-logo-container">
-      <h1 id="brand-logo">GistTown</h1>
+  <body class="main-background">
+    <div id="brand-logo-container" style="display:flex;">
+      <div id="brand-animation" style="width: 150px; height: 150px;"></div>
     </div>
-
+    
     <script>
-      window.addEventListener("load", function () {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        hideBrandLogo();
+      window.brandLogo = {
+        lottiePlayer: null,
+        hideTimeout: null,
+    
+        show() {
+          const container = document.getElementById("brand-logo-container");
+          const animContainer = document.getElementById("brand-animation");
+    
+          if (!container) return;
+          clearTimeout(this.hideTimeout);
+    
+          container.style.display = "flex";
+          container.style.background = "var(--container-bg)";
+    
+          if (!this.lottiePlayer) {
+            this.lottiePlayer = lottie.loadAnimation({
+              container: animContainer,
+              renderer: "svg",
+              loop: true,
+              autoplay: true,
+              path: "img/lottie/brandlogo.json",
+            });
+          } else {
+            this.lottiePlayer.goToAndPlay(0);
+          }
+        },
+    
+        hide(delay = 1800) {
+          const container = document.getElementById("brand-logo-container");
+          if (!container) return;
+    
+          clearTimeout(this.hideTimeout);
+          this.hideTimeout = setTimeout(() => {
+            container.style.display = "none";
+          }, delay);
+        }
+      };
+    
+      // Show brand logo immediately on page load, then hide after delay
+      window.addEventListener("DOMContentLoaded", () => {
+        window.brandLogo.show();
+        window.brandLogo.hide(2000);  // ✅ customize delay here (2000ms = 2 seconds)
       });
-
-      window.addEventListener("beforeunload", function () {
-        showBrandLogo();
+    
+      // When navigating away
+      window.addEventListener("beforeunload", () => window.brandLogo.show());
+    
+      // Handle browser tab visibility changes
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") {
+          window.brandLogo.show();
+        } else {
+          window.brandLogo.show();
+          window.brandLogo.hide(2000);
+        }
       });
-
-      function showBrandLogo() {
-        // const brandLogo = document.getElementById("brand-logo-container");
-        document.getElementById("brand-logo-container").style.display = "flex";
-      }
-
-      function hideBrandLogo() {
-        document.getElementById("brand-logo-container").style.display = "none";
-      }
     </script>
-
+    
+  
     <header>
       <div class="container">
         <div class="header">
-          <a href="/" id="logo"><i class="fas fa-mask fa-2x"></i></a>
+          <a href="/" id="logo">
+            <img oncontextmenu="return false;" src="../../img/logo/main-logo.png" alt="" id="main-logo" class="logo">
+            <img oncontextmenu="return false;" src="../../img/logo/mobile-logo.png" alt="" id="mobile-logo" class="logo">
+          </a>
           <ul id="navbar">
             <li class="navbar">
-              <a href="/login"
+              <a href="/login" class="text-gradient"
                 >Sign In <i class="fas fa-right-to-bracket"></i
               ></a>
             </li>
@@ -265,11 +313,17 @@
               </div>
               <div id="menu" class="menu-hidden">
                 <div class="container">
+                  <div class="profile-header">
+                    <h3 class="username">Hello,&nbsp;<span class="username">
+                        Guest
+                      </span></h3>
+                  </div>
                   <div class="menu">
                     <div class="menu-nav">
                       <div class="menu-logo">
-                        <i class="fas fa-mask fa-2x"></i>
-                        <h4>GistTown</h4>
+                        <img oncontextmenu="return false;" src="../../img/logo/main-logo.png" alt="" id="main-logo" class="logo">
+                        <img oncontextmenu="return false;" src="../../img/logo/mobile-logo.png" alt="" id="mobile-logo" class="logo">
+                
                       </div>
                       <ul class="pages">
                         <h4>Create a secret</h4>
@@ -283,16 +337,24 @@
                       </ul>
                     </div>
                     <div class="theme-switch">
-                      <input
-                        type="checkbox"
-                        id="themeToggle"
-                        class="theme-toggle"
-                      />
-                      <label for="themeToggle" class="theme-toggle-label">
-                        <span class="sun-icon">☀️</span>
-                        <span class="moon-icon">🌙</span>
-                      </label>
-                    </div>
+                      <button id="themeToggleBtn" class="theme-toggle-btn">🌙&nbsp;<span class="text-gradient">Early Bird</span></button>
+              </div>
+
+                    <ul class="socials">
+                      <li>
+                        <a class="nav-link" target="_blank" href="https://t.me/anonymcret"><i
+                            class="fab fa-telegram fa-2x"></i></a>
+                      </li>
+                      <li>
+                        <a class="nav-link" target="_blank" href=""><i class="fab fa-instagram fa-2x"></i></a>
+                      </li>
+                      <li>
+                        <a class="nav-link" target="_blank" href=""><i class="fab fa-linkedin fa-2x"></i></a>
+                      </li>
+                      <li>
+                        <a class="nav-link" target="_blank" href=""><i class="fab fa-github fa-2x"></i></a>
+                      </li>
+                    </ul>
                     <hr />
                     <div class="menu-nav-alt">
                       <ul class="info">
@@ -308,10 +370,10 @@
                         <li><a href="">Contact</a></li>
                       </ul>
                     </div>
-                    <p class="menu-lang">
+                    <p class="lang">
                       <i class="fas fa-globe"></i> English
                     </p>
-                    <button id="close">Close</button>
+                    <button id="close"><i class="fas fa-xmark"></i></button>
                   </div>
                 </div>
               </div>
@@ -321,9 +383,9 @@
       </div>
     </header>
 
-<div class="container">
+<div class="layout-container container">
     <div class="hero">
-        <i style="color: var(--text-color)" class="fas fa-lock fa-5x"></i>
+        <!-- <i style="color: var(--text-color)" class="fas fa-lock fa-5x"></i> -->
         <h1>Become A Gossipa</h1>
         <p>Your privacy is our priority. Get heard, Remain Unknown</p>
   
@@ -339,22 +401,36 @@
                     
 
                     <div class="avatar-item"><img src="./img/avatars/thumbs/dog.jpg" alt="Dog" /></div>
-                    <div class="avatar-item"><img src="./img/avatars/thumbs/carmel.jpg" alt="Fox" /></div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/cat.jpg" alt="Cat" /></div>
                     <div class="avatar-item"><img src="./img/avatars/thumbs/monkey.jpg" alt="Monkey" /></div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/king.jpg" alt="king" /></div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/lion.jpg" alt="lion" /></div>
                     <div class="avatar-item"><img src="./img/avatars/thumbs/elephant.jpg" alt="Elephant" /></div>
                     <div class="avatar-item"><img src="./img/avatars/thumbs/bird.jpg" alt="Bird" /></div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/wolf.jpg" alt="Wolf" /></div>
                     <div class="avatar-item"><img src="./img/avatars/thumbs/carmel.jpg" alt="Carmel" /></div>
                     <div class="avatar-item"><img src="./img/avatars/thumbs/lioness.jpg" alt="Lioness" /></div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/cow.jpg" alt="Cow" /></div>
                     <div class="avatar-item"><img src="./img/avatars/thumbs/cute dog.jpg" alt="Dog" /></div>
                     <div class="avatar-item active"><img src="./img/avatars/thumbs/girrafe.jpg" alt="Girrafe" /></div>
                     <div class="avatar-item"><img src="./img/avatars/thumbs/sheep.jpg" alt="Sheep" /></div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/muscular.jpg" alt="Muscular" /></div>
+                    <div class="avatar-item"><img src="./img/avatars/thumbs/eagle2.jpg" alt="Eagle" /></div>
+                    
                     <!-- Add more avatars -->
+
                 
                     <div class="avatar-item spacer"></div> <!-- after -->
                   </div>
                 </div>
                 
               </div>
+            </div>
+            <div class="form-group">
+              <input type="hidden" id="selectedAvatarInput" name="selectedAvatarInput"
+                      />
+              <input type="hidden" id="selectedAvatarAlt" name="selectedAvatarAlt"
+                      />
             </div>
             <div class="form-group">
               <label for="username">Username</label>
@@ -371,7 +447,7 @@
               <label for="password">Password</label>
               <input type="password" name="password" class="form-control" placeholder="Create a password" required />
             </div>
-            <button type="submit" class="btn">Sign Up</button>
+            <button type="submit" class="btn-gradient">Sign Up</button>
           </form>
           <div class="login-footer">
             <p>Forgot Password? <a href="/reset" style="color: #6a7bff;">Reset Password</a></p>
@@ -379,6 +455,33 @@
         </div>
       </div>
 </div>
+
+<button id="scrollToTopBtn" class="scroll-btn"><i class="fas fa-chevron-up"></i></button>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const scrollBtn = document.getElementById("scrollToTopBtn");
+
+      window.addEventListener("scroll", () => {
+        scrollBtn.style.display = window.scrollY > 200 ? "block" : "none";
+      });
+
+      scrollBtn.addEventListener("click", () => {
+        // Animate launch
+        scrollBtn.classList.add("shrink");
+        scrollBtn.classList.add("launching");
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        // Reset animation classes after a short delay
+        setTimeout(() => {
+          scrollBtn.classList.remove("shrink");
+          scrollBtn.classList.remove("launching");
+        }, 800);
+      });
+    });
+  </script>
     
 
     <footer>
@@ -386,8 +489,8 @@
         <div class="footer">
           <div class="footer-flex">
             <div class="footer-logo">
-              <i class="fas fa-mask fa-2x"></i>&nbsp;
-              <h4>GistTown</h4>
+              <img oncontextmenu="return false;" src="../../img/logo/main-logo.png" alt="" id="main-logo" class="logo">
+              <img oncontextmenu="return false;" src="../../img/logo/mobile-logo.png" alt="" id="mobile-logo" class="logo">
             </div>
            <div class="footer-children">
           <center>
@@ -412,20 +515,21 @@
           </ul>
 
           <hr class="footer-part"/>
-          <p class="lang">English</p>
-                     
+          <p class="lang"><i class="fas fa-globe"></i>&nbsp;English</p>
         </div>
         </div>
       </div>
         <div class="footer-text">
-            <i class="fas fa-mask"></i>
-            <p>&copy; <%= new Date().getFullYear() %> GistTown. All Rights Reserved.</p>
+            <p>&copy; <%= new Date().getFullYear() %> <span class="text-gradient">Gossipa</span>. All Rights Reserved.</p>
+            <p class="motto">Motto: <span class="motto-content">"Your privacy is our priority."</span></p> 
           </div>
     </footer>
 
     <script>
       const carousel = document.getElementById('avatarCarousel');
       const avatarItems = document.querySelectorAll('.avatar-item');
+      const selectedAvatarInput = document.getElementById("selectedAvatarInput")
+      const selectedAvatarAlt = document.getElementById("selectedAvatarAlt")
     
       function updateCenterSelection() {
 let closest = null;
@@ -446,7 +550,15 @@ document.querySelectorAll('.avatar-item:not(.spacer)').forEach(item => {
 document.querySelectorAll('.avatar-item').forEach(item =>
   item.classList.remove('active')
 );
-if (closest) closest.classList.add('active');
+if (closest){
+ closest.classList.add('active');
+ const img = closest.querySelector('img');
+                if (img) {
+                  const relativePath = img.getAttribute("src").replace(/^.*\/img/, "/img");
+                  selectedAvatarInput.value = relativePath;
+                  selectedAvatarAlt.value = img.alt.toLowerCase();
+                }
+}
 }
 
     
@@ -460,6 +572,12 @@ if (closest) closest.classList.add('active');
       avatarItems.forEach(item => {
         item.addEventListener('click', () => {
           scrollToCenter(item);
+          const img = item.querySelector('img');
+                if (img) {
+                  const relativePath = img.getAttribute("src").replace(/^.*\/img/, "/img");
+                  selectedAvatarInput.value = relativePath;
+                  selectedAvatarAlt.value = img.alt.toLowerCase();
+                }
         });
       });
     
@@ -471,26 +589,6 @@ if (closest) closest.classList.add('active');
       updateCenterSelection();
     </script>
     
-    
-
-    <script>
-      const avatarInput = document.getElementById('avatar-upload');
-      const avatarImg = document.querySelector('.profile-pic');
-    
-      avatarInput.addEventListener('change', function () {
-        const file = this.files[0];
-        if (file) {
-          const reader = new FileReader();
-    
-          reader.onload = function (e) {
-            avatarImg.src = e.target.result;
-          }
-    
-          reader.readAsDataURL(file);
-        }
-      });
-    </script>
-
 
     <script>
       const header = document.querySelector("header");

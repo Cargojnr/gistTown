@@ -27,9 +27,6 @@
     font-weight: bold;
   }
 
-  
-
-
   .overlay {
     position: fixed;
     top: 0;
@@ -190,7 +187,43 @@
     background: linear-gradient(135deg, #9a7eff, #ff6ea0);
   }
 
-  
+  .toast {
+    background: var(--primary-faded);
+    color: var(--text-color);
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin: auto;
+    max-width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    animation: fadein 0.3s ease, fadeout 0.3s ease 2.5s;
+  }
+
+  @keyframes fadein {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeout {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    to {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+
+
   .lottie-wrapper {
     position: absolute;
     top: 12%;
@@ -226,7 +259,7 @@
 
           <% if (locals.randomSecret) { %>
             <% randomSecret.forEach((secret)=> { %>
-              <div class="segment" style="transform: rotate(<%= secret.id %>deg); margin: <%= secret.id %>px;">
+              <div class="segment" style="transform: rotate('<%= secret.id %>deg'); margin: '<%= secret.id %>px;'">
                 <%= secret.id %>
               </div>
               <% }) %>
@@ -251,7 +284,6 @@
 
 
     </div>
-
 
 </section>
 
@@ -347,9 +379,6 @@
   // Fetch randomSecrets data passed from the backend
   const randomSecrets = <%- JSON.stringify(randomSecret) %>; // ✅ Unescaped EJS output
 
-
-
-
   // Select wheel container and pointer elements
   const wheel = document.getElementById('wheel');
   const pointer = document.getElementById('pointer');
@@ -361,9 +390,24 @@
     rat: "./img/lottie/rat-search.json"
   };
 
+  let searchLottieInstance;
+  
+  searchLottieInstance = lottie.loadAnimation({
+  container: wrapper,
+  renderer: 'svg',
+  loop: true,
+  autoplay: false, // start paused
+  path: animations.rat,
+});
+
+// On load, pause it at first frame (so it's "visible but frozen")
+searchLottieInstance.goToAndStop(0, true);
+searchLottieInstance.setSpeed(0.2);
+
+
+
   // Convert randomSecrets to an array if it's an object
   const secretsArray = Array.isArray(randomSecrets) ? randomSecrets : Object.values(randomSecrets);
-
 
 
   // Check if secretsArray has content
@@ -384,7 +428,6 @@
 
     // Insert segments into the wheel
     wheel.innerHTML = segments;
-    let searchLottieInstance;
     // Function to spin the wheel
     function spinWheel() {
       spinBtn.disabled = true;
@@ -392,13 +435,8 @@
       // Show spinner
       // spinner.style.display = 'block';
 
-      searchLottieInstance = lottie.loadAnimation({
-        container: wrapper,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        path: animations.rat
-      });
+      searchLottieInstance.setSpeed(1);
+      searchLottieInstance.play();
 
       // Randomly determine a rotation angle (in degrees)
       const randomRotation = Math.floor(Math.random() * 360) + 3600; // 3600 ensures multiple rotations
@@ -409,21 +447,23 @@
 
       // Simulate waiting for the wheel to stop
       setTimeout(() => {
-        // Hide spinner
-        // spinner.style.display = 'none';
 
-        if (searchLottieInstance) {
-          searchLottieInstance.destroy(); // Clean up Lottie
-        }
+        // get current frame where animation stopped
+const lastFrame = searchLottieInstance.currentFrame;
 
-        if (wrapper) wrapper.innerHTML = '';
+// freeze at that frame
+searchLottieInstance.goToAndStop(lastFrame, true);
+
+        searchLottieInstance.setSpeed(0.2);
 
         spinBtn.disabled = false;
         spinBtn.innerHTML = `Spin`;
 
 
         // Calculate which segment is selected based on the rotation
-        const selectedIndex = Math.floor((randomRotation % 360) / angle);
+        const normalizedRotation = (360 - (randomRotation % 360)) % 360;
+const selectedIndex = Math.floor(normalizedRotation / angle);
+
 
         // Display the selected secret in the overlay
         const selectedSecret = secretsArray[selectedIndex];
@@ -700,7 +740,7 @@
       const commentUserId = commentSection.querySelector('[name="commentUserId"]').value;
       const comment = commentSection.querySelector("#commentInput").value;
 
-      fetch("/comment", {
+      fetch("/comment/text", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: secretId, secretUserId, commentUserId, comment }),

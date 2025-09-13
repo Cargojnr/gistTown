@@ -260,3 +260,19 @@ app.get("/notifications", async (req, res) => {
         res.redirect("login")
     }
 })
+
+
+<button class="reaction-btn " data-type="hot">
+                                    <!-- <div id="gasp-animation" class="lottie-animation"></div> -->
+                                    <img src="../../img/premium-reaction.png" alt="Premium exclusive fire, hot reaction"
+                                      class="premium-reaction">
+                                    <span class="reaction-count">
+                                      <%= secret.reactions.hot ? secret.reactions.hot.count : 0 %>
+                                    </span>
+                                  </button>
+
+
+                                  <button class="reaction-btn" data-type="hot">
+                      <img src="../../img/premium-reaction.png" class="premium-reaction">
+                      <span class="reaction-count">${hotCount}</span>
+                    </button>

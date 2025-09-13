@@ -1,0 +1,35 @@
+// run once (node scripts/fix-avatar-paths.js)
+import pg from "pg";
+import { URL } from "url";
+import env from "dotenv";
+env.config();
+
+const db = new pg.Client({
+  user: process.env.DB_USERNAME,
+  host: process.env.DB_HOST,
+  database: process.env.DB_DATABASE,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
+  // connectionString: process.env.DATABASE_URL,
+  //   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+});
+
+await db.connect();
+
+const res = await db.query("SELECT id, profile_picture FROM users WHERE profile_picture IS NOT NULL");
+for (const row of res.rows) {
+  const p = row.profile_picture;
+  if (/^https?:\/\//.test(p)) {
+    try {
+      const u = new URL(p);
+      const pathname = u.pathname; // e.g. "/img/avatars/thumbs/dog.jpg"
+      // optional: validate startsWith allowed prefix
+      await db.query("UPDATE users SET profile_picture = $1 WHERE id = $2", [pathname, row.id]);
+      console.log("Updated user", row.id, "->", pathname);
+    } catch (err) {
+      console.error("skip", row.id, err);
+    }
+  }
+}
+
+await db.end();

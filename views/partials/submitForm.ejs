@@ -4,15 +4,15 @@
   }
 
   #recordContainer {
+    position: relative;
     background: linear-gradient(135deg, #1e3c72, #2a5298);
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    /* background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); */
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: 35vh;
+    height: 45vh;
     text-align: center;
-    /* background: rgba(255, 255, 255, 0.1); */
     padding: 30px;
     margin: 1rem;
     border-radius: 15px;
@@ -69,8 +69,6 @@
   }
 
   #actionButtons button {
-    background: var(--primary-color);
-    color: var(--text-color);
     padding: .5rem .75rem;
     border-radius: 5px;
     border: none;
@@ -194,9 +192,10 @@
 
               <div class="custom-dropdown">
                 <button id="visibilityToggle" type="button">
-                  <abbr title="Views"><i class="fas fa-earth-africa"></i></abbr>
+                  <abbr title="Views"><i class="fas fa-earth-africa"></i>
                   <span class="nav-text">For All Gossipas</span>
                   <span><i class="fas fa-chevron-down nav-icon"></i></span>
+                </abbr>
                 </button>
                 <ul id="visibilityOptions" class="dropdown-options" hidden>
                   <li data-value="public" class="selected"><i class="fas fa-check"></i> For All</li>
@@ -206,13 +205,13 @@
               </div>
             </div>
 
-            <textarea id="input" name="secret" class="input-text"
+            <textarea id="postInput" name="secret" class="input-text"
               placeholder="Hey <%= username %> What's on your mind today!"></textarea>
 
             <div class="post-action">
               <p class="word-count"><span id="wordCount">0</span></p>
-              <button type="submit" id="share" formaction="/share" class="create submit">
-                <%= submit %>
+              <button type="submit" id="share" class="create submit">
+                <i class="fas fa-paper-plane"></i>
               </button>
             </div>
           </form>
@@ -243,11 +242,6 @@
             <h1>Record a Voice Note</h1>
             <button id="micButton" class="mic-button"><i class="fas fa-microphone"></i></button>
 
-            <div id="actionButtons">
-              <button id="discardRecording">Discard</button>
-              <button id="submitRecording">Share</button>
-            </div>
-
             <audio id="audioPlayer" controls style="display:none;"></audio>
 
             <div class="voicewave">
@@ -255,7 +249,12 @@
             </div>
           </div>
 
+          <div id="actionButtons" class="post-action">
+            <button id="discardRecording">Discard</button>
+            <button id="submitRecording" class="create submit"><i class="fas fa-paper-plane"></i></button>
+          </div>
         </div>
+
       </div>
 
       <div class="actions">
@@ -264,10 +263,6 @@
       </div>
 
     </div>
-  </div>
-
-  <div id="notification"
-    style="position: absolute !important; top: 10px !important; left: 0 !important; right: 0 !important; z-index: 1000;">
   </div>
 
 </div>
@@ -317,8 +312,9 @@
   // Handle form submission via Fetch API
   document.getElementById('textSubmitForm').addEventListener('submit', async (event) => {
     event.preventDefault(); // Prevent form's default redirect behavior
-
-    const secretInput = document.getElementById('input');
+    
+    const notice = document.getElementById("notification")
+    const secretInput = document.querySelector('[name="secret"]');
     const categoryDropdown = document.getElementById('category');
     const secret = secretInput.value;
     const category = document.querySelector('#visibilityOptions .selected')?.dataset.value || "public";
@@ -327,6 +323,14 @@
       alert('Please select a category before sharing!');
       return;
     }
+
+    if (!secret) {
+            if (notice) {
+              notice.innerHTML = `<div class="toast">You can't submit an empty gist!</div>`;
+              setTimeout(() => (notice.innerHTML = ""), 3000);
+            }
+            return;
+          }
 
     try {
       const response = await fetch('/share', {
@@ -352,157 +356,6 @@
       alert('An error occurred. Please try again later.');
     }
   });
-</script>
-
-<script>
-  // Prevent scrolling while holding the microphone button
-  document.body.addEventListener('touchmove', (e) => {
-    if (isRecording) {
-      e.preventDefault();
-    }
-  }, { passive: false });
-
-  let mediaRecorder;
-  let audioChunks = [];
-  let audioBlob;
-  let audioUrl;
-  // let analyser, canvas, canvasCtx, bufferLength, dataArray;
-  let isRecording = false;
-
-  const micButton = document.getElementById('micButton');
-  const discardButton = document.getElementById('discardRecording');
-  const submitButton = document.getElementById('submitRecording');
-  const audioPlayer = document.getElementById('audioPlayer');
-  // const waveformCanvas = document.getElementById('waveform');
-  const actionButtons = document.getElementById('actionButtons');
-
-
-
-  // Start recording on mousedown or touchstart
-  micButton.addEventListener('mousedown', startRecording);
-  micButton.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    console.log('Touch Start');
-    startRecording();
-  });
-
-  // Stop recording on mouseup or touchend
-  micButton.addEventListener('mouseup', stopRecording);
-  micButton.addEventListener('touchend', (e) => {
-    e.preventDefault();
-    console.log('Touch End');
-    stopRecording();
-  });
-
-  // Prevent default behavior for touch events
-  micButton.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-  });
-
-  // Prevent context menu on long press
-  micButton.addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-  });
-
-
-
-  // Start recording function
-  function startRecording() {
-    if (isRecording) return;
-    // Request permission to access the user's microphone
-    navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(stream => {
-        // Create MediaRecorder instance
-        mediaRecorder = new MediaRecorder(stream);
-
-        // Start recording
-        mediaRecorder.start();
-
-        // Capture audio data during recording
-        mediaRecorder.ondataavailable = event => {
-          audioChunks.push(event.data); // Collect audio chunks
-        };
-
-        // When recording stops, create the audio blob and URL
-        mediaRecorder.onstop = () => {
-          audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-          audioUrl = URL.createObjectURL(audioBlob);
-          audioPlayer.src = audioUrl;
-
-          // Show the action buttons after recording is stopped
-          actionButtons.style.display = 'block';
-          audioPlayer.style.display = 'block'; // Show the audio player for playback
-        };
-
-      })
-      .catch(error => {
-        console.error('Error accessing microphone:', error);
-      });
-
-    isRecording = true;
-    micButton.classList.add('recording');
-  }
-
-  // Stop recording function
-  function stopRecording() {
-    if (mediaRecorder && isRecording) {
-      mediaRecorder.stop(); // Stop recording
-      isRecording = false;
-      micButton.classList.remove('recording');
-    }
-  }
-
-  // Discard the recording
-  discardButton.addEventListener('click', () => {
-    audioPlayer.src = ''; // Reset the audio player
-    actionButtons.style.display = 'none'; // Hide the action buttons
-    audioPlayer.style.display = 'none'; // Hide the audio player
-    audioChunks = []; // Clear the audio chunks
-  });
-
-  // Submit the recording (share it)
-  submitButton.addEventListener('click', async () => {
-    const categoryDropdown = document.getElementById('category');
-    const category = categoryDropdown.value;
-
-    if (!category) {
-      alert('Please select a category before sharing!');
-      return;
-    }
-
-    try {
-      // Create a FormData object to send the audio file and category
-      const formData = new FormData();
-      formData.append('audio', audioBlob, 'voice-note.wav');
-      formData.append('category', category);
-      formData.append('contentType', 'audio'); // Indicate that this is an audio submission
-
-      // Send the audio file to the server
-      const response = await fetch('/share', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        alert('Audio secret shared successfully!');
-        audioPlayer.src = '';
-        actionButtons.style.display = 'none';
-        audioPlayer.style.display = 'none';
-        audioChunks = [];
-        audioBlob = null;
-        audioUrl = null;
-      }
-      else {
-        alert('Failed to share audio. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error sharing audio:', error);
-      alert('An error occurred while sharing audio. Please try again later.');
-    }
-  });
-
 </script>
 
 

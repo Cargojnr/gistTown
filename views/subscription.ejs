@@ -1,0 +1,189 @@
+<style>
+    .subscribers {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 1rem;
+      padding: 1rem;
+    }
+  
+    .user-info {
+       align-items: center !important;
+       text-align: center !important;
+    }
+  
+    .user {
+      margin-bottom: 0 !important;
+    }
+  
+  
+    .verified-badge {
+      display: inline-block !important;
+    }
+  </style>
+
+  
+  <div id="main">
+      <section class="main">
+          <div class="container">
+          <div class="premium-aside">
+              <div class="premium-card">
+                <div class="crown-icon sparkle">👑</div>
+        
+                <h3 class="premium-title">Become a Chief Gossipa</h3>
+                <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain Unknown.</p>
+        
+                <div class="trending-stats">
+                  <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
+                </div>
+        
+                <div class="avatar-hint">
+                  <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
+                  <p>You’re 1 step from <strong>trending</strong>…</p>
+                </div>
+        
+                <button id="subscribe-btn"class="premium-btn">Unlock Exclusive</button>
+              </div>
+            </div>
+  
+            <div id="subscribers">
+              
+            <% if(locals.subscribers){ %>
+             <center><h2 class="m-head">Introducing The Chiefs </h2></center> 
+            <div class="subscribers">
+              <% subscribers.forEach( sub=> { %>
+                  <div class="user-info">
+                      <div class="avatar-profile">
+                          <img src="<%= sub.profile_picture %>" alt="" class="profile-pic">
+                      </div>
+                      <p class="username-row">
+                          <%if(sub.stealth_mode){ %>
+                              <span class="user">@gossipa<%=sub.id%></span>
+                          <%} else {%>
+                              <span class="user">@<%=sub.username%></span>
+                             <%} %>
+  
+                             <% if(sub.verified){ %>
+                              <abbr title="Exclusive Membership"> <img oncontextmenu="return false;"
+                                  src="../../img/gossipa3.png" alt="" class="verified-badge"></abbr>
+                          <%} else {%>
+                             <%} %>
+                      </p>
+                  </div>
+              <%}) %>
+  
+              <% } %>
+            </div>
+          </div>
+          
+      </div>
+          </section>
+     
+  
+        <aside class="right-sidebar">
+          <div class="aside-2">
+              <center>
+                <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;
+                  Meet The Chiefs :<span id="activeCount">0</span>
+              </h4>
+              </center>
+              <ul class="nav user-list">
+              </ul>
+        
+            </div>
+            <div class="inpage-footer">
+              <span>Privacy Policy</span>&nbsp;.
+              &nbsp;<span>Terms of use</span> &nbsp;.
+              &nbsp;<span>Community guidelines</span> &nbsp;.
+              <br><br>
+              &nbsp;<span>&copy; <%= new Date().getFullYear() %>, &commat;<span class="text-gradient">Gossipa</span> Co. All
+              rights reserved</span>
+              <span class="motto">Motto: <span class="motto-content">"Your privacy is our priority."</span></span> 
+            </div>
+        </aside>
+  
+        <!-- Load Day.js and the plugin via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+  
+  <script src="https://unpkg.com/wavesurfer.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const connectedUsersMap = new Map();
+      const userList = document.querySelector(".user-list");
+      const userCountDisplay = document.getElementById("activeCount");
+  
+      function updateUserCount() {
+        if (userCountDisplay) userCountDisplay.textContent = connectedUsersMap.size;
+      }
+  
+      function userConnected(user) {
+        if (connectedUsersMap.has(user.id)) return;
+  
+        const userBox = document.createElement("li");
+        userBox.className = "connected-user nav-item enter";
+        userBox.id = `user-${user.id}`;
+  
+        const verifiedBadge = user.verified
+          ? `<img oncontextmenu="return false;" src="/img/gossipa3.png" alt="Verified Badge" class="verified-badge">`
+          : "";
+  
+        const stealthMode = user.stealth_mode ? `@gossipa${user.id}` : `@${user.username}`
+  
+        userBox.innerHTML = `
+              <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
+                <img oncontextmenu="return false;" src="../.${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
+                <p class="username-row">
+                  <span class="user${user.id}">${stealthMode}</span>
+                  ${verifiedBadge}
+                </p>
+              </div>
+            `;
+  
+        userList?.appendChild(userBox);
+        connectedUsersMap.set(user.id, userBox);
+        updateUserCount();
+  
+        requestAnimationFrame(() => userBox.classList.add("enter"));
+      }
+  
+      function userDisconnected(userId) {
+        const userBox = connectedUsersMap.get(userId);
+        if (userBox) {
+          userBox.classList.add("exit");
+          userBox.classList.remove("enter");
+          setTimeout(() => {
+            userBox.remove();
+            connectedUsersMap.delete(userId);
+            updateUserCount();
+          }, 400);
+        }
+      }
+  
+      if (window.socket) {
+        window.socket.on("userJoined", async (userId) => {
+          try {
+            const res = await fetch(`/user/${userId}`);
+            const user = await res.json();
+            userConnected(user);
+          } catch (err) {
+            console.error("Failed to fetch user data:", err);
+          }
+        });
+  
+        window.socket.on("userLeft", (userId) => {
+          userDisconnected(userId);
+        });
+      } else {
+        console.warn("Socket.io not initialized on this page.");
+      }
+  
+      // Load currently active users
+      fetch("/active-users")
+        .then(res => res.json())
+        .then(users => users.forEach(userConnected))
+        .catch(console.error);
+    });
+  </script>
+  
+  </div>
+
+  <script src="/js/app.js"></script>
