@@ -197,6 +197,7 @@ app.get("/register", (req, res) => {
   res.render("registration",  { layout: false });
 });
 
+
 //Reusable Routes
 
 // Get user profile
