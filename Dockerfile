@@ -22,7 +22,8 @@ RUN npm install -g grunt-cli bower
 
 # Install node modules
 COPY package-lock.json package.json ./
-RUN npm ci --legacy-peer-deps
+RUN npm ci --ignore-scripts --legacy-peer-deps
+
 
 # Copy application code
 COPY . .
