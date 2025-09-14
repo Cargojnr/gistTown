@@ -2590,7 +2590,7 @@ app.post("/login", (req, res, next) => {
       //   // return res.json({ redirect: "/feeds" });
       // });
 
-      req.login({id: user.id}, (err) => {
+      req.login(user, (err) => {
         if (err) return next(err);
         req.session.isVerified = true;
         delete req.session.tempUserId; // Clean up session
