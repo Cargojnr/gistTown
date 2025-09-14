@@ -469,7 +469,8 @@ function hideBrandLogo() {
   try {
     const res = await fetch('/login', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { "Content-Type": "application/json" },
+  credentials: "include",   // save session cookie
       body: JSON.stringify(data),
     });
 
