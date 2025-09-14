@@ -3,6 +3,7 @@ import expressLayouts from 'express-ejs-layouts';
 import {body, validationResult } from "express-validator";
 import bodyParser from "body-parser";
 import pg from "pg";
+import cors from "cors";
 import bcrypt from "bcryptjs";
 import session from "express-session";
 import pgSession from "connect-pg-simple";
@@ -65,7 +66,7 @@ const port = process.env.port || 4000;
 const pgSessionStore = pgSession(session);
 const io = new Server(server, {
   cors: {
-    origin: "*", // Allow frontend connections
+    origin: "https://gisttown.onrender.com", // Allow frontend connections
     methods: ["GET", "POST"],
   },
 });
@@ -106,6 +107,11 @@ db.connect()
     console.error("Database connection error:", err.stack);
   });
 
+  app.use(cors({
+    origin: "https://gisttown.onrender.com", 
+    credentials: true, // <-- very important for cookies
+  }));
+
 app.use(express.static("public"));
 app.use(express.json());
 app.use(expressLayouts);
@@ -128,7 +134,7 @@ app.use(
     cookie: {
       maxAge: 1000 * 60 * 60 * 24,
       secure: process.env.NODE_ENV === "production", // Ensure cookies are only sent over HTTPS in production
-      sameSite: "lax",
+      sameSite: "none",
     },
   })
 );
