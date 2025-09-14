@@ -467,7 +467,7 @@ function hideBrandLogo() {
   e.target.querySelector("#submit").innerHTML = `<div class="button-spinner"></div>`;
 
   try {
-    const res = await fetch('https://gossipa.onrender.com/login', {
+    const res = await fetch('/login', {
       method: 'POST',
       headers: { "Content-Type": "application/json" },
   credentials: "include",   // save session cookie
@@ -526,22 +526,6 @@ document.querySelector('#verifyForm').addEventListener('submit', async (e) => {
   }
 });
 
-    </script>
-
-        <script>
-      // document.querySelectorAll('.nav-btn').forEach(btn => {
-      //   btn.addEventListener('click', function(e) {
-      //     e.preventDefault();
-         
-      //     showBrandLogo();
-      //     const form = this.form; 
-
-      //     setTimeout(() => {
-      //       form.submit();
-      //     }, 2400); // give animation time to play
-      //   });
-      // });
-    
     </script>
     
 
