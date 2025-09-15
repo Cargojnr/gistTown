@@ -29,7 +29,7 @@ RUN npm ci --ignore-scripts --legacy-peer-deps
 COPY . .
 
 # Final stage
-FROM base
+ FROM base
 
 COPY --from=build /app /app
 

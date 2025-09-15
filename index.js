@@ -66,7 +66,7 @@ const port = process.env.port || 4000;
 const pgSessionStore = pgSession(session);
 const io = new Server(server, {
   cors: {
-    origin: "https://gisttown.onrender.com", // Allow frontend connections
+    origin: "*", // Allow frontend connections
     methods: ["GET", "POST"],
   },
 });
@@ -107,10 +107,10 @@ db.connect()
     console.error("Database connection error:", err.stack);
   });
 
-  app.use(cors({
-    origin: "https://gisttown.onrender.com", 
-    credentials: true, // <-- very important for cookies
-  }));
+  // app.use(cors({
+  //   origin: "https://gisttown.onrender.com", 
+  //   credentials: true, // <-- very important for cookies
+  // }));
 
 app.use(express.static("public"));
 app.use(express.json());
@@ -134,7 +134,7 @@ app.use(
     cookie: {
       maxAge: 1000 * 60 * 60 * 24,
       secure: process.env.NODE_ENV === "production", // Ensure cookies are only sent over HTTPS in production
-      sameSite: "none",
+      sameSite: "lax",
     },
   })
 );
@@ -2590,7 +2590,7 @@ app.post("/login", (req, res, next) => {
       //   // return res.json({ redirect: "/feeds" });
       // });
 
-      req.login(user, (err) => {
+      req.login({id: user.id}, (err) => {
         if (err) return next(err);
         req.session.isVerified = true;
         delete req.session.tempUserId; // Clean up session
