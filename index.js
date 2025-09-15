@@ -107,10 +107,10 @@ db.connect()
     console.error("Database connection error:", err.stack);
   });
 
-  app.use(cors({
-    origin: "https://gisttown.onrender.com", 
-    credentials: true, // <-- very important for cookies
-  }));
+  // app.use(cors({
+  //   origin: "https://gisttown.onrender.com", 
+  //   credentials: true, // <-- very important for cookies
+  // }));
 
 app.use(express.static("public"));
 app.use(express.json());
