@@ -130,7 +130,7 @@ app.use(
     }),
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24,
       secure: process.env.NODE_ENV === "production", // Ensure cookies are only sent over HTTPS in production
