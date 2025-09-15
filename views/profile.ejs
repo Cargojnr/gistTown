@@ -1729,22 +1729,25 @@ const avatarPath = rawAvatar.replace(/^https?:\/\/[^/]+/, "");
                 });
 
                 const data = await res.json();
+                const userId = data.user.userId
 
                 if (data.success) {
 
-                  const avatarImg = document.querySelector(".avatar-profile img") && document.querySelector(".profile-avatar") && document.querySelectorAll(".profile-pic");
-                  if (avatarImg && data.user.avatar) {
+                  const avatarImg = document.querySelector(".avatar-profile img, .profile-avatar, .profile-pic");
+                  if (avatarImg.length && data.user.avatar) {
                     avatarImg.forEach(img => {
                       img.src = data.user.avatar.startsWith("http")
                         ? data.user.avatar
                         : window.location.origin + data.user.avatar;
-                        img.alt = data.user.avatarAlt.toLowerCase();
+                        if(data.user.avatarAlt){
+                          img.alt = data.user.avatarAlt.toLowerCase();
+                        }
+                       
                     })
-
                   }
 
                   // ✅ Update username (inside the .user span, not generic <small>)
-                  const usernameSpan = document.querySelectorAll(".user");
+                  const usernameSpan = document.querySelectorAll(`.user${userId} .user`);
                   if (usernameSpan) {
                     usernameSpan.forEach(user => {
                       user.textContent = "@" + data.user.username;
