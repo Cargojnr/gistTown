@@ -2600,7 +2600,7 @@ app.post("/login", (req, res, next) => {
       //   // return res.json({ redirect: "/feeds" });
       // });
 
-      req.login(user, (err) => {
+      req.login({id: user}, (err) => {
         if (err) return next(err);
         req.session.isVerified = true;
         delete req.session.tempUserId; // Clean up session
@@ -2710,7 +2710,7 @@ passport.use(
         console.log("Code sent successfully");
 
         // ✅ Forward user to verification step
-        return cb(null, user, { needsVerification: !req.session.isVerified });
+        return cb(null,{ id: user, needsVerification: !req.session.isVerified });
       });
     } catch (error) {
       console.error("Login 2FA error:", error);
