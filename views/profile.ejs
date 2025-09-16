@@ -1733,7 +1733,7 @@ const avatarPath = rawAvatar.replace(/^https?:\/\/[^/]+/, "");
 
                 if (data.success) {
 
-                  const avatarImg = document.querySelector(".avatar-profile img, .profile-avatar, .profile-pic");
+                  const avatarImg = document.querySelectorAll(".profile-pic");
                   if (avatarImg.length && data.user.avatar) {
                     avatarImg.forEach(img => {
                       img.src = data.user.avatar.startsWith("http")

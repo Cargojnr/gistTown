@@ -2570,6 +2570,15 @@ app.post("/register", async (req, res) => {
   }
 });
 
+app.get("/debug-session", (req, res) => {
+  res.json({
+    isAuth: req.isAuthenticated(),
+    session: req.session,
+    user: req.user
+  });
+});
+
+
 //Post route to login to account
 app.post("/login", (req, res, next) => {
     passport.authenticate("local", (err, user, info) => {
