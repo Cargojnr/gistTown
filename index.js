@@ -1177,10 +1177,17 @@ app.use((req, res, next) => {
   console.log("User:", req.user);
   next();
 });
+
 app.get("/feeds", ensureAuthenticated, async (req, res) => {
     const user = getCurrentUser(req);
     const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
     const userId = user.id;
+
+    console.log("Feeds route user:", user);
+
+    if (!user) {
+      return res.status(401).send("No user in session");
+    }
 
     try {
       const userTheme = user.color || "default";
