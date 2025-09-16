@@ -2604,7 +2604,7 @@ app.post("/login", (req, res, next) => {
         if (err) return next(err);
         req.session.isVerified = true;
         delete req.session.tempUserId; // Clean up session
-        return res.json({ redirect: "/debug-session" });
+        return res.json({ redirect: "/feeds" });
 
       });
     })(req, res, next);
