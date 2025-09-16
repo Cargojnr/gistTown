@@ -1172,6 +1172,11 @@ app.get("/feeds/:category", ensureAuthenticated, async (req, res) => {
 });
 
 
+app.use((req, res, next) => {
+  console.log("Session:", req.session);
+  console.log("User:", req.user);
+  next();
+});
 app.get("/feeds", ensureAuthenticated, async (req, res) => {
     const user = getCurrentUser(req);
     const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
