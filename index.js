@@ -2599,11 +2599,11 @@ app.post("/login", (req, res, next) => {
       //   // return res.json({ redirect: "/feeds" });
       // });
 
-      req.login({id: user.id}, (err) => {
+      req.login(user, (err) => {
         if (err) return next(err);
         req.session.isVerified = true;
         delete req.session.tempUserId; // Clean up session
-        return res.json({ redirect: "/feeds" });
+        return res.json({ redirect: "/debug-session" });
 
       });
     })(req, res, next);
@@ -2709,7 +2709,7 @@ passport.use(
         console.log("Code sent successfully");
 
         // ✅ Forward user to verification step
-        return cb(null, { id: user.id, needsVerification: !req.session.isVerified });
+        return cb(null, user, { needsVerification: !req.session.isVerified });
       });
     } catch (error) {
       console.error("Login 2FA error:", error);
