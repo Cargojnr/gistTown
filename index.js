@@ -121,6 +121,7 @@ app.set("layout", "layout");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.set("trust proxy", 1); // trust first proxy (important on Render/Heroku)
 
 app.use(
   session({
