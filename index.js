@@ -1495,7 +1495,8 @@ app.get("/notifications", ensureAuthenticated, async (req, res) => {
 
 app.get("/admin/reports", ensureAuthenticated, async (req, res) => {
   try {
-    const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
+    const user = getCurrentUser(req) 
+  const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
     const reportsQuery = `
             SELECT reports.id, reports.reported_by, reports.secret_id, reports.comment_id, reports.reason, reports.status, secret AS secret, users.username AS reported_by_username
             FROM reports
@@ -1513,6 +1514,7 @@ app.get("/admin/reports", ensureAuthenticated, async (req, res) => {
       activeStatus: user.active_status,
       verification: user.verified,
       profilePicture: avatarUrl,
+      layout: false
     });
   } catch (error) {
     console.error("Error fetching reports:", error);
@@ -1521,6 +1523,7 @@ app.get("/admin/reports", ensureAuthenticated, async (req, res) => {
 });
 
 app.get("/admin/reviews", ensureAuthenticated, async (req, res) => {
+  const user = getCurrentUser(req) 
   const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
   const userTheme = user.color || "default";
   const mode = user.mode || "light";
@@ -1544,6 +1547,7 @@ app.get("/admin/reviews", ensureAuthenticated, async (req, res) => {
       verification: user.verified,
       profilePicture: avatarUrl,
       count: count,
+      layout: false
     });
   } catch (error) {
     console.error("Error fetching reports:", error);
@@ -1552,6 +1556,7 @@ app.get("/admin/reviews", ensureAuthenticated, async (req, res) => {
 });
 
 app.get("/admin-dashboard", ensureAuthenticated, async (req, res) => {
+  const user = getCurrentUser(req) 
   const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
     try {
       const reviewsQuery = `
@@ -1606,6 +1611,7 @@ app.get("/admin-dashboard", ensureAuthenticated, async (req, res) => {
         verification: user.verified,
         profilePicture: avatarUrl,
         count: count,
+        layout: false
       });
     } catch (error) {
       console.error("Error fetching reports:", error);
