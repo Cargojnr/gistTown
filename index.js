@@ -2180,7 +2180,8 @@ for (const [id, socket] of io.sockets.sockets) {
 //Post route to edit a post type text
 app.post("/edit",  ensureAuthenticated, async (req, res) => {
   const user = getCurrentUser(req)
-  const secretId = req.body.id;
+  const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
+  const secretId = req.body.secId;
     try {
       const userTheme = user.color || "default";
       const mode = user.mode || "light";
@@ -2205,6 +2206,7 @@ app.post("/edit",  ensureAuthenticated, async (req, res) => {
       });
     } catch (error) {
       console.log(error);
+      res.status(500).json({ error: "Server error", details: error.message }); // prevent infinite loading
     }
 });
 
