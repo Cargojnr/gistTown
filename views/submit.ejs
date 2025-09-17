@@ -397,10 +397,19 @@
 
 
 <script>
+  // 🔔 Small helper to show toast notifications
+  function showToast(message) {
+    const notice = document.getElementById("notification");
+    if(notice){
+      notice.innerHTML = `<div class="toast">${message}</div>`;
+    setTimeout(() => (notice.innerHTML = ""), 3000);
+    }
+  }
+</script>
+<script>
   // Reference both forms
   const textForm = document.getElementById("textSubmitForm");
   const audioForm = document.getElementById("audioForm");
-  const notice = document.getElementById("notification");
 
   // ✅ Handle text post
   textForm.addEventListener("submit", async (event) => {
@@ -410,6 +419,7 @@
     const categoryDropdown = document.getElementById("category");
     const secret = secretInput.value;
     const category = categoryDropdown.value || "public";
+
 
     if (!secret) {
       showToast("You can't share empty gist");
@@ -430,6 +440,8 @@
       const data = await response.json();
 
       if (data.success) {
+        const sound = document.getElementById("post-sound");
+        if (sound) sound.play();
         showToast("Gist shared successfully!");
         secretInput.value = "";
         categoryDropdown.value = "";
@@ -442,15 +454,6 @@
     }
   });
 
-
-
-  // 🔔 Small helper to show toast notifications
-  function showToast(message) {
-    if(notice){
-      notice.innerHTML = `<div class="toast">${message}</div>`;
-    setTimeout(() => (notice.innerHTML = ""), 3000);
-    }
-  }
 </script>
 
 <script>
@@ -654,21 +657,20 @@ postInput.addEventListener("keyup", (e)=> {
       const data = await response.json();
 
       if (data.success) {
-        notice.innerHTML = "<div class='toast'>Recording shared successfully!</div>"
-      setTimeout(()=> {notice.innerHTML = ""}, 3000);
+        const sound = document.getElementById("post-sound");
+        if (sound) sound.play();
+      showToast("Recording shared successfully!")
         // Reset the UI
         audioPlayer.src = '';
         actionButtons.style.display = 'none';
         audioPlayer.style.display = 'none';
         audioChunks = [];
       } else {
-           notice.innerHTML = "<div class='toast'>Failed to share the recording. Please try again.</div>"
-      setTimeout(()=> {notice.innerHTML = ""}, 3000);
+      showToast("Failed to share the recording. Please try again.")
       }
     } catch (error) {
       console.error('Error sharing recording:', error);
-      notice.innerHTML = "<div class='toast'>An error occurred. Please try again later.</div>"
-      setTimeout(()=> {notice.innerHTML = ""}, 3000);
+      showToast("An error occurred. Please try again later.")
     }
   });
 </script>

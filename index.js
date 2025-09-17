@@ -107,6 +107,19 @@ db.connect()
     console.error("Database connection error:", err.stack);
   });
 
+  (async () => {
+    try {
+      await sequelize.authenticate();
+      console.log("✅ Database connected");
+  
+      // Sync ALL models (Audio + others registered with sequelize)
+      await sequelize.sync({ alter: true });
+      console.log("✅ All models synced");
+    } catch (err) {
+      console.error("❌ Database sync error:", err);
+    }
+  })();
+
   // app.use(cors({
   //   origin: "https://gisttown.onrender.com", 
   //   credentials: true, // <-- very important for cookies
@@ -803,7 +816,7 @@ app.get("/subscription", ensureAuthenticated, async(req, res) => {
       stealthMode : user.stealth_mode,
       profilePicture: avatarUrl,
       username: user.username,
-      title: 'Gossip feeds',
+      title: 'Unlock Premium/Exclusive offers',
     });
   
   }catch{
@@ -1036,14 +1049,14 @@ app.get("/profile", ensureAuthenticated, async (req, res) => {
     }
 });
 
-app.get("/profile/amebo/:user", ensureAuthenticated, async (req, res) => {
-    const userId = req.params.user;
+app.get("/profile/user/:userid", ensureAuthenticated, async (req, res) => {
+    const userId = req.params.userid;
     const user = getCurrentUser(req);
     const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
     try {
       
       const result = await db.query(
-        "SELECT active_status, verified, timestamp, reported, secrets.id, type, reactions,profile_picture, username,stealth_mode,bio, user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id WHERE user_id = $1 ORDER by secrets.id DESC",
+        "SELECT active_status, verified, timestamp, reported, secrets.id, type, reactions,profile_picture, avatar_alt, username,stealth_mode,bio, user_id, color, category, secret FROM secrets JOIN users ON users.id = user_id WHERE user_id = $1 ORDER by secrets.id DESC",
         [userId]
       );
 
@@ -1125,6 +1138,7 @@ app.get("/profile/amebo/:user", ensureAuthenticated, async (req, res) => {
         username: user.username,
         verification: user.verified,
         profilePicture: avatarUrl,
+        avatarAlt: user.avatar_alt ,
         profileId: userid,
         userName: username,
         userBio: userBio,
@@ -1172,22 +1186,11 @@ app.get("/feeds/:category", ensureAuthenticated, async (req, res) => {
 });
 
 
-app.use((req, res, next) => {
-  console.log("Session:", req.session);
-  console.log("User:", req.user);
-  next();
-});
-
 app.get("/feeds", ensureAuthenticated, async (req, res) => {
     const user = getCurrentUser(req);
     const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
     const userId = user.id;
 
-    console.log("Feeds route user:", user);
-
-    if (!user) {
-      return res.status(401).send("No user in session");
-    }
 
     try {
       const userTheme = user.color || "default";
