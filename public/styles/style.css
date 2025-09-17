@@ -1107,19 +1107,12 @@ a {
   display: flex;
   justify-self: flex-end;
   align-self: flex-end;
-  background: var(--secondary-color) !important;
   color: var(--text-color) !important;
   transition: background 0.5s ease-in-out;
 }
 
-#register .btn:hover,
-#login .btn:hover {
-  background: var(--primary-color) !important;
-}
-
 #login .btn {
   font-weight: bold;
-  background: var(--secondary-color) !important;
   color: var(--text-color) !important;
 }
 
