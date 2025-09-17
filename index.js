@@ -1268,8 +1268,8 @@ const formattedAudio = audioPosts.map((audio) => {
       title: 'Gossip feeds',
     });
     } catch (err) {
-      console.log(err);
-      res.status(500).send("Server error", err); // prevent infinite loading
+      console.log("Failed to fetch saved gists:", err.message, err.stack);
+      res.status(500).json({ error: "Server error", details: err.message }); // prevent infinite loading
     }
 });
 
