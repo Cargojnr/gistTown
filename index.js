@@ -107,18 +107,6 @@ db.connect()
     console.error("Database connection error:", err.stack);
   });
 
-  (async () => {
-    try {
-      await sequelize.authenticate();
-      console.log("✅ Database connected");
-  
-      // Sync ALL models (Audio + others registered with sequelize)
-      await sequelize.sync({ alter: true });
-      console.log("✅ All models synced");
-    } catch (err) {
-      console.error("❌ Database sync error:", err);
-    }
-  })();
 
   // app.use(cors({
   //   origin: "https://gisttown.onrender.com", 
@@ -1281,7 +1269,7 @@ const formattedAudio = audioPosts.map((audio) => {
     });
     } catch (err) {
       console.log(err);
-      res.status(500).send("Server error"); // prevent infinite loading
+      res.status(500).send("Server error", err); // prevent infinite loading
     }
 });
 
