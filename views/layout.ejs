@@ -302,6 +302,47 @@
 
   
 <button id="scrollToTopBtn" class="scroll-btn"><i class="fas fa-chevron-up"></i></button>
+
+
+<script>
+  function formatCount(num) {
+  if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, "") + "b";
+  if (num >= 1_000_000) return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "m";
+  if (num >= 1_000) return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "k";
+  return num.toString();
+}
+</script>
+
+<script>
+  // 🔔 Small helper to show toast notifications
+  function showToast(message) {
+    const notice = document.getElementById("notification");
+    if(notice){
+      notice.innerHTML = `<div class="toast">${message}</div>`;
+    setTimeout(() => (notice.innerHTML = ""), 3000);
+    }
+  }
+</script>
+
+  <script>
+    const header = document.querySelector("header");
+    const nextSection = document
+      .querySelector("body")
+      .querySelector("section:not(.active)");
+    const logo = document.getElementById("logo");
+
+    window.addEventListener("scroll", function () {
+      const scrolled = window.scrollY > 0;
+      if (scrolled) {
+        let body = document.querySelector("body");
+        body.style.overflowY = "scroll";
+        header.classList.add("scrolled");
+      } else {
+        header.classList.remove("scrolled");
+      }
+    });
+  </script>
+
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const scrollBtn = document.getElementById("scrollToTopBtn");
@@ -326,34 +367,6 @@
     });
   });
 </script>
-
-<script>
-  function formatCount(num) {
-  if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, "") + "b";
-  if (num >= 1_000_000) return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "m";
-  if (num >= 1_000) return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "k";
-  return num.toString();
-}
-</script>
-
-  <script>
-    const header = document.querySelector("header");
-    const nextSection = document
-      .querySelector("body")
-      .querySelector("section:not(.active)");
-    const logo = document.getElementById("logo");
-
-    window.addEventListener("scroll", function () {
-      const scrolled = window.scrollY > 0;
-      if (scrolled) {
-        let body = document.querySelector("body");
-        body.style.overflowY = "scroll";
-        header.classList.add("scrolled");
-      } else {
-        header.classList.remove("scrolled");
-      }
-    });
-  </script>
 
   <script>
     const searchWrapper = document.getElementById("mobileSearch");

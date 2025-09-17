@@ -397,16 +397,6 @@
 
 
 <script>
-  // 🔔 Small helper to show toast notifications
-  function showToast(message) {
-    const notice = document.getElementById("notification");
-    if(notice){
-      notice.innerHTML = `<div class="toast">${message}</div>`;
-    setTimeout(() => (notice.innerHTML = ""), 3000);
-    }
-  }
-</script>
-<script>
   // Reference both forms
   const textForm = document.getElementById("textSubmitForm");
   const audioForm = document.getElementById("audioForm");

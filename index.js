@@ -1947,7 +1947,6 @@ app.post("/report/secret/:id",  ensureAuthenticated, async (req, res) => {
 });
 
 app.post("/admin/report/:id/resolve",  ensureAuthenticated, async (req, res) => {
-  const user = getCurrentUser(req)
   const { id } = req.params;
 
   try {
@@ -1963,7 +1962,6 @@ app.post("/admin/report/:id/resolve",  ensureAuthenticated, async (req, res) => 
 });
 
 app.post("/admin/report/:id/flag",  ensureAuthenticated, async (req, res) => {
-  const user = getCurrentUser(req)
   const { id } = req.params;
 
   try {

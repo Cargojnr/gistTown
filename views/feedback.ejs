@@ -3,7 +3,7 @@
 
     body {
     height: 100vh;
-    width: 95vw;
+    width: 100vw;
     overflow-x: hidden;
     overflow-y: hidden;
     font-family: 'Inter', 'Roboto', 'Helvetica Neue', 'Segoe UI', sans-serif !important;
@@ -122,7 +122,7 @@
                 <input type="text" name="idea" placeholder="Enter your ideas" class="form-control idea">
             </div>
 
-            <button class="btn" id="generate">Submit Review</button>
+            <button class="btn btn-secondary" id="generate">Submit Review</button>
         </form>
     </div>
 </section>
@@ -137,8 +137,9 @@
         const idea = document.querySelector('input[name="idea"]').value;
         const rating = document.querySelector('input[name="rating"]:checked')?.value;
 
+
         if (!rating) {
-            alert("Please select a rating before submitting.");
+            showToast("Please select a rating before submitting.")
             return;
         }
 
@@ -154,10 +155,13 @@
             });
 
             const data = await result.json();
-            alert("Feedback submitted successfully!");
+            showToast("Feedback submitted successfully!")
+            review = ""
+            idea = ""
+            rating = ""
         } catch (error) {
             console.error("Submission failed:", error);
-            alert("There was an error submitting your feedback.");
+            showToast("There was an error submitting your feedback.")
         }
     });
 </script>
