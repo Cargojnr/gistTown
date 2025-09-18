@@ -840,11 +840,15 @@ font-size: 12px;
     font-size: .9rem !important;
   }
   
-  /* aside {
-    height: auto !important;
-    padding: .5rem 0;
-    box-shadow: .2rem .2rem .5rem rgba(0,0,0,0.4);
-  } */
+
+  aside {
+    position: fixed !important;
+    top: 89% !important;
+      left: 0 !important;
+      right: 0 !important;
+      z-index: 20 !important;
+      padding: .75rem 0rem;
+  }
 
   .header {
     padding: .5rem 0 !important;
