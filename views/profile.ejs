@@ -16,7 +16,7 @@
     align-items: center;
     flex-wrap: wrap;
     background: var(--glass-bg) !important;
-    padding: 2rem ;
+    padding: 2rem;
     border-radius: 30px;
   }
 
@@ -28,12 +28,12 @@
     max-width: 600px;
     width: 100%;
   }
-  
+
   .banner-image {
     position: relative;
     width: 100%;
     height: 20vh;
-    z-index: -1;
+    z-index: 0;
     border-radius: 30px;
   }
 
@@ -55,17 +55,51 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 50% 40%;   /* horizontally center, vertically top */
+    object-position: 50% 40%;
+    /* horizontally center, vertically top */
     border-radius: 30px;
   }
 
+  
+  .profile-header {
+    padding: 1rem;
+    border-radius: 1rem;
+    background: var(--bg-elevated);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+  }
 
+  .avatar-status-wrap {
+    margin-top: -4rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    z-index: 5;
+  }
 
-  .avatar-wrapper {
-    position: relative;
+  .avatar {
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    overflow: hidden;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    background-color: var(--body-bg);
+    flex-shrink: 0;
+  }
+
+    /* Profile Header */
+    .avatar-profile {
+    width: 95px;
+    height: 95px;
+  }
+
+
+  .avatar-profile img.profile-pic {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary-color);
+    cursor: pointer;
+    transition: transform 0.3s;
   }
 
   .profile-pic {
@@ -74,7 +108,15 @@
     object-fit: cover;
     display: block;
     z-index: 0;
+    border-radius: 50%;
+    border: 3px solid var(--primary-color);
   }
+
+
+  .profile-header .user {
+    color: #fff !important;
+  }
+
 
   .edit-icon {
     position: absolute;
@@ -94,43 +136,6 @@
     background: var(--secondary-color);
   }
 
-  .avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: var(--body-bg);
-    flex-shrink: 0;
-  }
-
-  .profile-pic {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-    z-index: 0;
-  }
-
-  .profile-header .user  {
-    color: #fff !important;
-  }
-
-
-  /* Profile Header */
-  .avatar-profile {
-    width: 95px;
-    height: 95px;
-  }
-
-  .avatar-profile img.profile-pic {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid var(--primary-color);
-    cursor: pointer;
-    transition: transform 0.3s;
-  }
-
 
   .profile-info h2 {
     margin: 0;
@@ -142,12 +147,14 @@
     font-style: italic;
     margin-bottom: 1rem;
   }
-
+  
   .quick-stats {
     display: flex;
+    justify-content: space-around;
     align-items: center;
     gap: 1.5rem;
     margin: 1rem 0;
+    text-align: center;
   }
 
   .stat {
@@ -155,54 +162,10 @@
     cursor: pointer;
   }
 
+
   .stat strong {
+    display: block;
     font-size: 1.2rem;
-    color: var(--primary);
-  }
-
-  /* Buttons */
-  .edit-profile-btn,
-  .read-more,
-  .edit-comment,
-  .delete-comment {
-    background: var(--primary-color);
-    color: var(--text);
-    border: none;
-    border-radius: 8px;
-    padding: 0.5rem 1rem;
-    margin-top: 0.5rem;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-
-  .edit-profile-btn:hover,
-  .read-more:hover,
-  .edit-comment:hover,
-  .delete-comment:hover {
-    background: var(--secondary);
-  }
-
-  .profile-header {
-    padding: 1rem;
-    border-radius: 1rem;
-    background: var(--bg-elevated);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
-  }
-
-  .avatar-status-wrap {
-    margin-top: -4rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .profile-pic {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 3px solid var(--primary-color);
   }
 
   .username-bundle {
@@ -231,19 +194,31 @@
     color: var(--text-muted);
   }
 
-  .quick-stats {
-    display: flex;
-    justify-content: space-around;
-    margin: 1rem 0;
-    text-align: center;
+
+  /* Buttons */
+  .edit-profile-btn,
+  .read-more,
+  .edit-comment,
+  .delete-comment {
+    background: var(--primary-color);
+    color: var(--text);
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    margin-top: 0.5rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
   }
 
-  .stat strong {
-    display: block;
-    font-size: 1.2rem;
-  }
-
+  
   .edit-profile-btn {
+    position: absolute;
+    top: .5rem;
+    left: 1rem;
+    z-index: 5;
+    margin: 0;
+    filter: brightness(150%);
+    filter: contrast(150%);
     font-weight: bold;
     border: none;
     border-radius: 999px;
@@ -251,12 +226,30 @@
     transition: background 0.3s;
   }
 
+  .eavedrop-btn {
+    position: relative;
+    margin: 0 !important;
+    margin-left: -2.5rem !important;
+  }
+
+  .edit-profile-btn:hover,
+  .read-more:hover,
+  .edit-comment:hover,
+  .delete-comment:hover {
+    background: var(--secondary);
+  }
+
+
   /* Stealth Toggle */
   .stealth-switch {
+    position: absolute;
+    top: .5rem;
+    right: 1rem;
     display: flex;
     align-items: center;
-    position: relative;
-    margin: .5rem;
+    z-index: 5;
+    filter: brightness(150%);
+    filter: contrast(150%);
   }
 
   .stealth-toggle {
@@ -305,15 +298,238 @@
   .stealth-toggle:checked+.stealth-toggle-label::before {
     transform: translateX(15px);
   }
+  
+  /*Shimmer Effect */
 
-
-/*Profile Feeds */
-
-  #userPostsContainer{
-   padding: 0 .5rem ;
+  .shimmer-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    /* padding: 1rem; */
   }
 
-  
+  .shimmer-card {
+    display: flex;
+    background: var(--container-bg);
+    border-radius: 10px;
+    overflow: hidden;
+    animation: pulse 1.5s infinite;
+  }
+
+  .shimmer-avatar {
+    width: 50px;
+    height: 50px;
+    background: var(--body-bg);
+    border-radius: 50%;
+    margin: 1rem;
+  }
+
+
+
+  .shimmer-lines {
+    flex: 1;
+    padding: 1rem 0;
+  }
+
+  .shimmer-line {
+    height: 10px;
+    background: var(--body-bg);
+    margin: 8px 0;
+    border-radius: 5px;
+  }
+
+  .shimmer-line.short {
+    width: 50%;
+  }
+
+  .shimmer-line.tiny {
+    width: 30%;
+  }
+
+  .shimmer-footer {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .shimmer-btn {
+    width: 40px;
+    height: 20px;
+    background: var(--body-bg);
+    border-radius: 5px;
+  }
+
+  @keyframes pulse {
+    0% {
+      background-color: var(--container-bg);
+    }
+
+    50% {
+      background-color: var(--body-bg);
+    }
+
+    100% {
+      background-color: var(--container-bg);
+    }
+  }
+
+  .shimmer {
+    background: linear-gradient(90deg, var(--container-bg) 25%, var(--body-bg) 50%, var(--container-bg) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  /* shimmer bubbles */
+  .shimmer-comments {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .comment-item.shimmer-bubble {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .shimmer-circle,
+  .shimmer-rect {
+    background: linear-gradient(90deg,
+        var(--shimmer-base) 25%,
+        var(--shimmer-highlight) 50%,
+        var(--shimmer-base) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.2s infinite;
+  }
+
+  .shimmer-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+  }
+
+  .shimmer-rect {
+    flex: 1;
+    height: 40px;
+    border-radius: 12px;
+  }
+
+  /* smooth fade-in for real comments */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(5px);
+    animation: fadeIn 0.4s forwards;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+
+
+
+  /*Profile Feeds */
+  #userPostsContainer {
+    padding: 0 .5rem;
+  }
+
+    /* .secret .card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem !important;
+    background: var(--container-bg);
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: relative !important;
+  } */
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+
+  .user-info {
+    display: flex;
+    align-items: flex-start !important;
+    flex-direction: column;
+  }
+
+  .user-info .username {
+    font-weight: bold;
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .user-info .timestamp {
+    font-size: 0.75rem;
+    color: var(--text-color);
+  }
+
+  .card-content p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0 !important;
+  }
+
+
+  .reaction-btn {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: .75rem;
+    background: var(--body-bg) !important;
+    margin-right: .5rem;
+  }
+
+  .reaction-btn .reactions span {
+    margin-left: -1rem;
+  }
+
+
+
+  /* Edit profile Modal */
+  #editModal {
+    display: none;
+    position: fixed;
+    top: 5%;
+    left: 0%;
+    right: 0%;
+    z-index: 999;
+  }
+
+  .avatar-wrapper {
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+
   .avatar-wrapper:hover::after {
     content: "";
     position: absolute;
@@ -443,7 +659,6 @@
   .bio {
     font-size: 0.95rem;
     color: var(--muted-text);
-    margin-bottom: 1.5rem;
     text-align: center;
   }
 
@@ -489,216 +704,8 @@
     background: var(--primary-hover);
   }
 
-  /* .secret .card {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 2rem !important;
-    background: var(--container-bg);
-    border-radius: 1.5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    position: relative !important;
-  } */
 
-  .card-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  
-  .user-info {
-    display: flex;
-    align-items: flex-start !important;
-    flex-direction: column;
-  }
-
-  .user-info .username {
-    font-weight: bold;
-    font-size: 1rem;
-    margin: 0;
-  }
-
-  .user-info .timestamp {
-    font-size: 0.75rem;
-    color: var(--text-color);
-  }
-
-  .card-content p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin: 0 !important;
-  }
-
-  .reaction-btn {
-    display: flex !important;
-    align-items: center !important;
-    gap: .1rem;
-    background: var(--body-bg) !important;
-  }
-
-
-  
-
-  #editModal {
-    display: none;
-    position: fixed;
-    top: 5%;
-    left: 0%;
-    right: 0%;
-    z-index: 999;
-  }
-
-  .shimmer-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    /* padding: 1rem; */
-  }
-
-  .shimmer-card {
-    display: flex;
-    background: var(--container-bg);
-    border-radius: 10px;
-    overflow: hidden;
-    animation: pulse 1.5s infinite;
-  }
-
-  .shimmer-avatar {
-    width: 50px;
-    height: 50px;
-    background: var(--body-bg);
-    border-radius: 50%;
-    margin: 1rem;
-  }
-
-
-
-  .shimmer-lines {
-    flex: 1;
-    padding: 1rem 0;
-  }
-
-  .shimmer-line {
-    height: 10px;
-    background: var(--body-bg);
-    margin: 8px 0;
-    border-radius: 5px;
-  }
-
-  .shimmer-line.short {
-    width: 50%;
-  }
-
-  .shimmer-line.tiny {
-    width: 30%;
-  }
-
-  .shimmer-footer {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-  }
-
-  .shimmer-btn {
-    width: 40px;
-    height: 20px;
-    background: var(--body-bg);
-    border-radius: 5px;
-  }
-
-  @keyframes pulse {
-    0% {
-      background-color: var(--container-bg);
-    }
-
-    50% {
-      background-color: var(--body-bg);
-    }
-
-    100% {
-      background-color: var(--container-bg);
-    }
-  }
-
-  .shimmer {
-    background: linear-gradient(90deg, var(--container-bg) 25%, var(--body-bg) 50%, var(--container-bg) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-  }
-
-  @keyframes shimmer {
-    0% {
-      background-position: -200% 0;
-    }
-
-    100% {
-      background-position: 200% 0;
-    }
-  }
-
-  /* shimmer bubbles */
-  .shimmer-comments {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .comment-item.shimmer-bubble {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .shimmer-circle,
-.shimmer-rect {
-  background: linear-gradient(
-    90deg,
-    var(--shimmer-base) 25%,
-    var(--shimmer-highlight) 50%,
-    var(--shimmer-base) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.2s infinite;
-}
-
-.shimmer-circle {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-}
-
-.shimmer-rect {
-  flex: 1;
-  height: 40px;
-  border-radius: 12px;
-}
-
-  /* smooth fade-in for real comments */
-  .fade-in {
-    opacity: 0;
-    transform: translateY(5px);
-    animation: fadeIn 0.4s forwards;
-  }
-
-  @keyframes shimmer {
-    0% {
-      background-position: -200% 0;
-    }
-
-    100% {
-      background-position: 200% 0;
-    }
-  }
-
-  @keyframes fadeIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-
+/* Share Modal */
   .share-modal {
     display: none;
     position: fixed;
@@ -769,11 +776,13 @@
       <% if(locals.userProfile){ %>
         <div id="profile">
           <div class="profile-header">
-            <div class="banner-image">
+            <div class="banner-image"> 
+
               <input type="hidden" id="avatarAlt" value="<%= userAvatarAlt %>" />
               <div class="banner-overlay"></div>
               <img id="bannerImage" src="/img/avatars/banners/<%= userAvatarAlt %>.jpg" alt="<%= userAvatarAlt %>">
             </div>
+
             <div class="avatar-status-wrap">
               <div class="avatar-profile editable-avatar">
                 <img src="<%= userPicture %>" alt="Avatar" class="profile-pic" onclick="editAvatar()">
@@ -807,6 +816,12 @@
                       <span>No bio yet.</span>
                       <% } %>
                 </p>
+
+                <button class="edit-profile-btn eavedrop-btn btn-gradient" data-targetid="<%= profileId %>">
+                  <i class="fas fa-ear-deaf"></i>
+                  <span>Eavedrop</span>
+                </button>
+
               </div>
             </div>
 
@@ -831,11 +846,7 @@
               </div>
             </div>
 
-            <button class="edit-profile-btn eavedrop-btn" data-targetid="<%= profileId %>"
-              style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color))!important">
-              <i class="fas fa-ear-deaf"></i>
-              <span>Eavedrop</span>
-            </button>
+           
           </div>
 
           <hr style="margin-top: 2rem;">
@@ -930,57 +941,30 @@ class=" read" style="
                             <div class="first-action">
                               <div class="secret-card" data-id="<%= secret.id %>">
                                 <div class="reaction">
-                                  <button class="reaction-btn " data-type="hot">
-                                    <!-- <div id="gasp-animation" class="lottie-animation"></div> -->
-                                    <img src="../../img/premium-reaction.png" alt="Premium exclusive fire, hot reaction"
-                                      class="premium-reaction">
-                                      <div class="reaction-class-wrapper">
-                                    <span class="reaction-count">
-                                      <%= formatCount(secret.reactions.hot ? secret.reactions.hot.count : 0) %>
-                                    </span>
+                                  <div class="reaction-btn">
+                                    <div class="reactions">
+                                      <span>
+                                        👍
+                                      </span>
+                                      <span>
+                                        😂
+                                      </span>
+                                      <span>
+                                        😢
+                                      </span>
+                                      <span>
+                                        😱
+                                      </span>
                                     </div>
-                                  </button>
-
-                                  <button class="reaction-btn " data-type="like">
-                                    <!-- <div id="like-animation" class="lottie-animation"></div> -->
-                                    👍
                                     <div class="reaction-class-wrapper">
-                                    <span class="reaction-count">
-                                      <%= formatCount(secret.reactions.like ? secret.reactions.like.count : 0) %>
-                                    </span>
+                                      <span class="reaction-count">
+                                        <%= formatCount(secret.reactions.like ? secret.reactions.like.count : 0 +
+                                          secret.reactions.laugh ? secret.reactions.laugh.count : 0 +
+                                          secret.reactions.cry ? secret.reactions.cry.count : 0 + secret.reactions.gasp
+                                          ? secret.reactions.gasp.count : 0) %>
+                                      </span>
                                     </div>
-                                  </button>
-
-                                  <button class="reaction-btn " data-type="laugh">
-                                    <!-- <div id="laugh-animation" class="lottie-animation"></div> -->
-
-                                    😂
-                                    <div class="reaction-class-wrapper">
-                                    <span class="reaction-count">
-                                      <%= formatCount(secret.reactions.laugh ? secret.reactions.laugh.count : 0) %>
-                                    </span>
-                                    </div>
-                                  </button>
-
-                                  <!-- <button class="reaction-btn " data-type="cry">
-
-                                                      😢
-                                                      <div class="reaction-class-wrapper">
-                                                      <span class="reaction-count">
-                                                        <%= formatCount(secret.reactions.cry ? secret.reactions.cry.count : 0) %>
-                                                      </span>
-                                                      </div>
-                                                    </button> -->
-
-                                  <button class="reaction-btn " data-type="gasp">
-                                    <!-- <div id="gasp-animation" class="lottie-animation"></div> -->
-                                    😱
-                                    <div class="reaction-class-wrapper">
-                                    <span class="reaction-count">
-                                      <%= formatCount(secret.reactions.gasp ? secret.reactions.gasp.count : 0) %>
-                                    </span>
-                                    </div>
-                                  </button>
+                                  </div>
 
                                 </div>
 
@@ -1083,7 +1067,21 @@ class=" read" style="
         <% } else if(locals.profile){ %>
           <div id="profile">
             <div class="profile-header">
-               <div class="banner-image">
+              <div class="banner-image">
+                
+              <div class="card-footer">
+                <button id="editProfileBtn" class="edit-profile-btn"><i class="fas fa-pen"></i>&nbsp;Edit
+                  Profile</button>
+              </div>
+
+                <span class="stealth-switch">
+                  <input type="checkbox" id="stealthToggle" class="stealth-toggle" <% if (stealthMode) { %> checked
+                  <% } %>
+                    />
+                    <label for="stealthToggle" class="stealth-toggle-label">
+                    </label>
+                </span>
+
                 <input type="hidden" id="avatarAlt" value="<%= avatarAlt %>" />
                 <div class="banner-overlay"></div>
                 <img id="bannerImage" src="/img/avatars/banners/<%= avatarAlt %>.jpg" alt="<%= avatarAlt %>">
@@ -1094,15 +1092,13 @@ class=" read" style="
                 </div>
                 <div class="username-bundle">
                   <p class="username-row">
-                    
-
                     <small class="username">
                       <span class="user<%= userId %>">
                         <% if(stealthMode){ %>
                           <span class="user">@gossipa<%= userId %></span>
-                            <% } else { %>
-                              <span class="user"> @<%= username %></span>
-                              <% } %>
+                          <% } else { %>
+                            <span class="user"> @<%= username %></span>
+                            <% } %>
                       </span>
 
                       <% if(verification===true) {%>
@@ -1110,14 +1106,6 @@ class=" read" style="
                         <% } %>
                     </small>
 
-
-                    <span class="stealth-switch">
-                      <input type="checkbox" id="stealthToggle" class="stealth-toggle" <% if (stealthMode) { %> checked
-                      <% } %>
-                        />
-                        <label for="stealthToggle" class="stealth-toggle-label">
-                        </label>
-                    </span>
                   </p>
 
                   <p class="user-bio empty">
@@ -1149,11 +1137,6 @@ class=" read" style="
                   </strong>
                   <span>Reactions</span>
                 </div>
-              </div>
-
-              <div class="card-footer">
-                <button id="editProfileBtn" class="edit-profile-btn"><i class="fas fa-pen"></i>&nbsp;Edit
-                  Profile</button>
               </div>
 
             </div>
@@ -1278,41 +1261,31 @@ class=" read" style="
                               <div class="secret-card" data-id="<%= secret.id %>">
                                 <div class="reaction">
 
-                                  <button class="reaction-btn " data-type="like">
-                                    👍
+                                  <div class="reaction-btn">
+                                    <div class="reactions">
+                                      <span>
+                                        👍
+                                      </span>
+                                      <span>
+                                        😂
+                                      </span>
+                                      <span>
+                                        😢
+                                      </span>
+                                      <span>
+                                        😱
+                                      </span>
+                                    </div>
                                     <div class="reaction-class-wrapper">
-                                    <span class="reaction-count">
-                                      <%= formatCount(secret.reactions.like ? secret.reactions.like.count : 0) %>
-                                    </span>
-                                     </div>
-                                  </button>
+                                      <span class="reaction-count">
+                                        <%= formatCount(secret.reactions.like ? secret.reactions.like.count : 0 +
+                                          secret.reactions.laugh ? secret.reactions.laugh.count : 0 +
+                                          secret.reactions.cry ? secret.reactions.cry.count : 0 + secret.reactions.gasp
+                                          ? secret.reactions.gasp.count : 0) %>
+                                      </span>
+                                    </div>
+                                  </div>
 
-                                  <button class="reaction-btn " data-type="laugh">
-                                    😂
-                                    <div class="reaction-class-wrapper">
-                                    <span class="reaction-count">
-                                      <%= formatCount(secret.reactions.laugh ? secret.reactions.laugh.count : 0) %>
-                                    </span>
-                                     </div>
-                                  </button>
-
-                                  <button class="reaction-btn " data-type="cry">
-                                    😢
-                                    <div class="reaction-class-wrapper">
-                                    <span class="reaction-count">
-                                      <%= formatCount(secret.reactions.cry ? secret.reactions.cry.count : 0) %>
-                                    </span>
-                                     </div>
-                                  </button>
-
-                                  <button class="reaction-btn " data-type="gasp">
-                                    😱
-                                    <div class="reaction-class-wrapper">
-                                    <span class="reaction-count">
-                                      <%= formatCount(secret.reactions.gasp ? secret.reactions.gasp.count : 0) %>
-                                    </span>
-                                     </div>
-                                  </button>
                                 </div>
 
                               </div>
@@ -1468,7 +1441,7 @@ class=" read" style="
             <div id="tutorial-overlay">
               <div class="profile-card">
                 <span class="edit-close-btn">&times;</span>
-                
+
                 <div class="info-section">
                   <div class="avatar-wrapper avatar-profile">
                     <img src="../.<%= profilePicture %>" alt="User Avatar" class="profile-pic" id="profilePicPreview" />
@@ -1476,7 +1449,7 @@ class=" read" style="
                     <input type="hidden" id="selectedAvatarInput" name="selectedAvatarInput"
                       value="../.<%= profilePicture %>" />
                     <input type="hidden" id="selectedAvatarAlt" name="selectedAvatarAlt"
-                      value='../.<%= profilePicture %>'/>
+                      value='../.<%= profilePicture %>' />
 
                   </div>
                   <small id="displayUser">@<%= username %></small>
@@ -1497,7 +1470,7 @@ class=" read" style="
                       <div class="avatar-item"><img src="./img/avatars/thumbs/dog.jpg" alt="Dog" /></div>
                       <div class="avatar-item"><img src="./img/avatars/thumbs/monkey.jpg" alt="Monkey" /></div>
                       <div class="avatar-item"><img src="./img/avatars/thumbs/king.jpg" alt="king" /></div>
-                    <div class="avatar-item"><img src="./img/avatars/thumbs/lion.jpg" alt="lion" /></div>
+                      <div class="avatar-item"><img src="./img/avatars/thumbs/lion.jpg" alt="lion" /></div>
                       <div class="avatar-item"><img src="./img/avatars/thumbs/elephant.jpg" alt="Elephant" /></div>
                       <div class="avatar-item"><img src="./img/avatars/thumbs/bird.jpg" alt="Bird" /></div>
                       <div class="avatar-item"><img src="./img/avatars/thumbs/wolf.jpg" alt="Wolf" /></div>
@@ -1510,7 +1483,7 @@ class=" read" style="
                       <div class="avatar-item"><img src="./img/avatars/thumbs/lion-chill.jpg" alt="Lion-Chill" /></div>
                       <div class="avatar-item"><img src="./img/avatars/thumbs/sheep.jpg" alt="Sheep" /></div>
                       <div class="avatar-item"><img src="./img/avatars/thumbs/muscular.jpg" alt="Muscular" /></div>
-                    <div class="avatar-item"><img src="./img/avatars/thumbs/eagle2.jpg" alt="Eagle" /></div>
+                      <div class="avatar-item"><img src="./img/avatars/thumbs/eagle2.jpg" alt="Eagle" /></div>
                       <!-- Add more avatars -->
 
                       <div class="avatar-item spacer"></div> <!-- after -->
@@ -1616,7 +1589,7 @@ class=" read" style="
             const usernameDisplay = document.querySelector("#displayUser");
             const bioDisplay = document.querySelector(".bio") || document.querySelector("span");
 
-            
+
             const availabilityMsg = document.createElement("span");
             availabilityMsg.className = "username-status";
             usernameInput.parentNode.appendChild(availabilityMsg);
@@ -1684,19 +1657,17 @@ class=" read" style="
 
           <script>
             const form = document.getElementById("editProfileForm");
-            const notice = document.getElementById("notifications")
-  
 
             form.addEventListener("submit", async (e) => {
               e.preventDefault();
 
               const rawAvatar = document.querySelector("input[name='selectedAvatarInput']").value;
-const avatarAlt = document.querySelector("input[name='selectedAvatarAlt']").value;
-const avatarPath = rawAvatar.replace(/^https?:\/\/[^/]+/, "");
+              const avatarAlt = document.querySelector("input[name='selectedAvatarAlt']").value;
+              const avatarPath = rawAvatar.replace(/^https?:\/\/[^/]+/, "");
 
               const formData = {
                 avatar: avatarPath, // send only relative path
-                avatarAlt,     
+                avatarAlt,
                 username: document.getElementById("displayName").value.trim(),
                 email: document.getElementById("email").value.trim(),
                 bio: document.getElementById("bio").value.trim(),
@@ -1720,11 +1691,11 @@ const avatarPath = rawAvatar.replace(/^https?:\/\/[^/]+/, "");
                       img.src = data.user.avatar.startsWith("http")
                         ? data.user.avatar
                         : window.location.origin + data.user.avatar;
-                        if(data.user.avatarAlt){
-                          img.alt = data.user.avatarAlt.toLowerCase();
-                          updateBanner(img.alt.toLowerCase());
-                        }
-                       
+                      if (data.user.avatarAlt) {
+                        img.alt = data.user.avatarAlt.toLowerCase();
+                        updateBanner(img.alt.toLowerCase());
+                      }
+
                     })
                   }
 
@@ -1752,59 +1723,48 @@ const avatarPath = rawAvatar.replace(/^https?:\/\/[^/]+/, "");
                     setTimeout(() => (bioContainer.style.opacity = 1), 100);
                   }
 
-
-                  if (notice) {
-                    notice.innerHTML = `<div class='toast'>${data.message}</div>`
-                    setTimeout(() => (notice.innerHTML = ""), 3000);
-                  }
+                  showToast(data.message)
                   closeModal();
                 } else {
-                  if (notice) {
-                    notice.innerHTML = `<div class='toast'>${data.message}</div>`
-                    setTimeout(() => (notice.innerHTML = ""), 3000);
-                  }
+                  showToast(data.message)
                 }
               } catch (err) {
                 console.error("Update error:", err);
-
-                if (notice) {
-                  notice.innerHTML = `<div class='toast'>${err}</div>`
-                  setTimeout(() => (notice.innerHTML = ""), 3000);
-                }
+                showToast(err)
               }
             });
 
           </script>
 
-<script>
-  const editBtn = document.getElementById("editProfileBtn");
-  const editModal = document.getElementById("editModal");
-  const closeBtn = document.querySelector(".edit-close-btn");
+          <script>
+            const editBtn = document.getElementById("editProfileBtn");
+            const editModal = document.getElementById("editModal");
+            const closeBtn = document.querySelector(".edit-close-btn");
 
-  // Show modal
-  editBtn.addEventListener("click", () => {
-    editModal.style.display = "flex"; // Use flex to center content
-  });
+            // Show modal
+            editBtn.addEventListener("click", () => {
+              editModal.style.display = "flex"; // Use flex to center content
+            });
 
-  // Close modal on close button
-  closeBtn.addEventListener("click", () => {
-    editModal.style.display = "none";
-  });
+            // Close modal on close button
+            closeBtn.addEventListener("click", () => {
+              editModal.style.display = "none";
+            });
 
-  // Close modal if clicking outside content
-  window.addEventListener("click", (e) => {
-    if (e.target === editModal) {
-      editModal.style.display = "none";
-    }
-  });
+            // Close modal if clicking outside content
+            window.addEventListener("click", (e) => {
+              if (e.target === editModal) {
+                editModal.style.display = "none";
+              }
+            });
 
-</script>
+          </script>
 
-<script>
-  function closeModal() {
-    document.getElementById("editModal").style.display = "none";
-  }
-</script>
+          <script>
+            function closeModal() {
+              document.getElementById("editModal").style.display = "none";
+            }
+          </script>
 
 
           <% } %>
@@ -1814,20 +1774,20 @@ const avatarPath = rawAvatar.replace(/^https?:\/\/[^/]+/, "");
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-const savedAlt = document.getElementById("avatarAlt").value.toLowerCase();
-if (savedAlt) {
-updateBanner(savedAlt); // reuse the updateBanner function
-}
-});
+      const savedAlt = document.getElementById("avatarAlt").value.toLowerCase();
+      if (savedAlt) {
+        updateBanner(savedAlt); // reuse the updateBanner function
+      }
+    });
 
     function updateBanner(altText) {
-const bannerImage = document.getElementById("bannerImage");
-const bannerPath = `/img/avatars/banners/${altText}.jpg`; // Adjust path to your setup
-bannerImage.src = bannerPath;
-bannerImage.alt = `${altText} banner`;
-}
+      const bannerImage = document.getElementById("bannerImage");
+      const bannerPath = `/img/avatars/banners/${altText}.jpg`; // Adjust path to your setup
+      bannerImage.src = bannerPath;
+      bannerImage.alt = `${altText} banner`;
+    }
 
-   </script>
+  </script>
 
 
   <aside class="right-sidebar">
@@ -1870,8 +1830,8 @@ bannerImage.alt = `${altText} banner`;
         &nbsp;<span>Community guidelines</span> &nbsp;.
         <br><br>
         &nbsp;<span>&copy; <%= new Date().getFullYear() %>, &commat;<span class="text-gradient">Gossipa</span> Co. All
-        rights reserved</span>
-        <span class="motto">Motto: <span class="motto-content">"Your privacy is our priority."</span></span> 
+            rights reserved</span>
+        <span class="motto">Motto: <span class="motto-content">"Your privacy is our priority."</span></span>
       </div>
     </div>
   </aside>
@@ -2167,10 +2127,12 @@ bannerImage.alt = `${altText} banner`;
           const userId = post.userId
           const timestamp = dayjs(post.timestamp).fromNow() || new Date().toLocaleString();
           const category = post.category || "random";
-          const likeCount = formatCount(post.reactions?.like?.count || 0);
-          const laughCount = formatCount(post.reactions?.laugh?.count || 0);
-          const cryCount = formatCount(post.reactions?.cry?.count || 0);
-          const gaspCount = formatCount(post.reactions?.gasp?.count || 0);
+          const likeCount = post.reactions?.like?.count || 0;
+          const hotCount = post.reactions?.hot?.count || 0;
+          const laughCount = post.reactions?.laugh?.count || 0;
+          const cryCount = post.reactions?.cry?.count || 0;
+          const gaspCount = post.reactions?.gasp?.count || 0;
+          const totalReactionsCount = formatCount(likeCount + hotCount + laughCount + cryCount + gaspCount);
           const commentCount = formatCount(post.comments?.length || 0);
           const bookmarkCount = formatCount(post.bookmark_count);
           const isAudio = type === "audio";
@@ -2244,16 +2206,33 @@ bannerImage.alt = `${altText} banner`;
                     <div class="first-action">
                     <div class="secret-card" data-id=${id}>
                        <div class="reaction">
-                  
-                    <button class="reaction-btn" data-type="like">👍<div class="reaction-class-wrapper"><span class="reaction-count">${likeCount}</span></div></button>
-                    <button class="reaction-btn" data-type="laugh">😂<div class="reaction-class-wrapper"><span class="reaction-count">${laughCount}</span></div></button>
-                    <button class="reaction-btn" data-type="cry">😂<div class="reaction-class-wrapper"><span class="reaction-count">${cryCount}</span></div></button>
-                    <button class="reaction-btn" data-type="gasp">😱<div class="reaction-class-wrapper"><span class="reaction-count">${gaspCount}</span></div></button>
+                            
+                    <div class="reaction-btn">
+                      <div class="reactions">
+                        <span>
+                                      👍
+                                    </span>
+                                    <span>
+                                      😂
+                                    </span>
+                                    <span>
+                                      😢
+                                    </span>
+                                    <span>
+                                      😱
+                                    </span>
+                        </div>
+                         <div class="reaction-class-wrapper">
+                                      <span class="reaction-count">
+                                        ${totalReactionsCount}
+                                      </span>
+                                    </div>
+                      </div>
                   </div>
                       </div>
                       <button id="commentButton"><i class="fas fa-comment"></i><span
                                   class="comment-count"></span>
-                              </button>
+                      </button>
                     </div>
                     <ul class="second-action">
                               <li class="bookmarked"><i class="fas fa-bookmark"></i>&nbsp;<span id="bookmarkCount">${bookmarkCount}</span></li>
@@ -2347,8 +2326,8 @@ bannerImage.alt = `${altText} banner`;
 </script>
 
 <script>
-     function fetchComment(){
-      fetch("/api/comment-counts")
+  function fetchComment() {
+    fetch("/api/comment-counts")
       .then(res => res.json())
       .then(counts => {
         document.querySelectorAll(".comment-section").forEach(section => {
@@ -2363,23 +2342,23 @@ bannerImage.alt = `${altText} banner`;
         });
       })
       .catch(err => console.error("Failed to fetch comment counts", err));
-    }
+  }
 </script>
 
 <script>
-   window.currentUserId = "<%= userId %>";
+  window.currentUserId = "<%= userId %>";
   window.socket = io({ query: { userId: window.currentUserId } });
 
   socket.on("comment-updated", (data) => {
     const { postId, type, totalComments } = data;
     const section = document.querySelector(`.comment-section[data-post-id="${postId}"][data-type="${type}"]`);
-    
+
     if (section) {
       const countEl = section.querySelector(".comment-count");
       const commentTotal = section.querySelector(".total-count")
       if (countEl && countEl.textContent !== String(totalComments)) {
         countEl.textContent = formatCount(totalComments);
-        if(section.querySelector(".comment-dropdown").classList.contains("active")){
+        if (section.querySelector(".comment-dropdown").classList.contains("active")) {
           commentTotal.textContent = totalComments;
         }
       }
@@ -2387,17 +2366,17 @@ bannerImage.alt = `${altText} banner`;
   });
 
   socket.on("new-comment", (comment) => {
-  const { postId, type, username, stealthMode, profilePicture, user_id, comment: text, id } = comment;
-  const section = document.querySelector(`.comment-section[data-post-id="${postId}"][data-type="${type}"]`);
-  const display = section?.querySelector(".comment-display");
-  const commentList = display.querySelector(".comments-list");
+    const { postId, type, username, stealthMode, profilePicture, user_id, comment: text, id } = comment;
+    const section = document.querySelector(`.comment-section[data-post-id="${postId}"][data-type="${type}"]`);
+    const display = section?.querySelector(".comment-display");
+    const commentList = display.querySelector(".comments-list");
 
 
-  if (display && section.querySelector(".comment-dropdown").classList.contains("active")) {
+    if (display && section.querySelector(".comment-dropdown").classList.contains("active")) {
 
-    const li = document.createElement("li");
-li.classList.add("comment-item");
-    li.innerHTML= `
+      const li = document.createElement("li");
+      li.classList.add("comment-item");
+      li.innerHTML = `
         <img src="${comment.profilePicture}" class="profile-pic thumb"/>
         <div>
           <small class="user">
@@ -2409,9 +2388,9 @@ li.classList.add("comment-item");
         </div>
     `;
 
-    commentList.prepend(li); // ✅ prepend to top
-  }
-});
+      commentList.prepend(li); // ✅ prepend to top
+    }
+  });
 </script>
 
 
@@ -2683,8 +2662,7 @@ li.classList.add("comment-item");
 
 
     if (e.target.closest(".report-btn")) {
-      const btn = e.target.closest(".report-btn")
-      const notice = document.getElementById("notification");
+      const btn = e.target.closest(".report-btn");
 
       e.stopPropagation(); // Prevent closing menu before prompt
 
@@ -2701,19 +2679,14 @@ li.classList.add("comment-item");
 
           const data = await response.json();
           if (data.success) {
-            if (notice) {
-              notice.innerHTML = `Thank you for reporting. We will review it shortly.`;
-              setTimeout(() => (notice.innerHTML = ""), 3000);
-            }
+           
+            showToast("Thank you for reporting. We will review it shortly.;")
 
             document.querySelectorAll(".card-menu-content").forEach((menu) => {
               menu.style.display = "none";
             });
           } else {
-            if (notice) {
-              notice.innerHTML = `Error reporting content`;
-              setTimeout(() => (notice.innerHTML = ""), 3000);
-            }
+            showToast("Error reporting content")
           }
         } catch (error) {
           console.error('Error reporting:', error);
@@ -2730,7 +2703,6 @@ li.classList.add("comment-item");
       const card = secretCard.querySelector(".card");
       const postIdEl = secretCard.querySelector("#secId") || secretCard.querySelector("#audioId");
       const postId = postIdEl ? postIdEl.value : null;
-      const notice = document.getElementById("notification");
 
 
       const postType = secretCard.dataset.type;
@@ -2760,16 +2732,10 @@ li.classList.add("comment-item");
           console.log(data)
 
           if (data.success) {
-            if (notice) {
-              notice.innerHTML = data.message;
-              setTimeout(() => (notice.innerHTML = ""), 3000);
-            }
+            showToast(data.message)
             secretCard.remove()
           } else {
-            if (notice) {
-              notice.innerHTML = data.error;
-              setTimeout(() => (notice.innerHTML = ""), 3000);
-            }
+            showToast(data.error)
           }
         } catch (error) {
           console.error('Error deleting gist', error);
@@ -2813,7 +2779,7 @@ li.classList.add("comment-item");
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    fetchComment() 
+    fetchComment()
   });
 </script>
 
@@ -2860,10 +2826,10 @@ li.classList.add("comment-item");
               ? `<p class="total">All comments: <span class="total-count">${data.totalComments} </span></p>`
               : `<p class="total">Share your thought</p>`;
 
-              display.querySelector(".total")?.remove();
-              display.insertAdjacentHTML("afterbegin", commentHead);
-           
-             commentList.innerHTML = comments.map(comment =>
+            display.querySelector(".total")?.remove();
+            display.insertAdjacentHTML("afterbegin", commentHead);
+
+            commentList.innerHTML = comments.map(comment =>
               `
         <li class="comment-item">
             <img src="${comment.profile_picture}" class="profile-pic thumb"/>
@@ -2878,7 +2844,7 @@ li.classList.add("comment-item");
         </li>
       `).join("");
 
-      // display.innerHTML = commentHead + commentList
+            // display.innerHTML = commentHead + commentList
             count.textContent = formatCount(data.totalComments);
           } catch (err) {
             console.error("Error loading comments:", err);
@@ -2888,9 +2854,9 @@ li.classList.add("comment-item");
         }
 
         const icon = section.querySelector("#commentButton i");
-          icon.className = dropdown.classList.contains("active")
-            ? "fas fa-comment-slash"
-            : "fas fa-comment";
+        icon.className = dropdown.classList.contains("active")
+          ? "fas fa-comment-slash"
+          : "fas fa-comment";
 
       }
 
@@ -2959,9 +2925,9 @@ li.classList.add("comment-item");
 
             const commentHead = `<p class="total">All comments: <span class="total-count">${data.totalComments}</span></p>`;
 
-              display.querySelector(".total")?.remove();
-              display.insertAdjacentHTML("afterbegin", commentHead);
-           
+            display.querySelector(".total")?.remove();
+            display.insertAdjacentHTML("afterbegin", commentHead);
+
             commentList.innerHTML = comments.map(comment => `
 <li class="comment-item">
             <img src="${comment.profile_picture}" class="profile-pic thumb"/>
@@ -2978,11 +2944,11 @@ li.classList.add("comment-item");
             count.textContent = formatCount(data.totalComments);
             form.querySelector("#commentInput").value = "";
           } else {
-            alert("Failed to post comment");
+            showToast("Failed to post comment")
           }
         } catch (err) {
           console.error(err);
-          alert("Error posting comment");
+          showToast("Error posting comment")
         }
       }
     });

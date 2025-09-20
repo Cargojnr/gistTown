@@ -166,7 +166,7 @@
               </ul>
               <hr />
               <div class="theme-switch">
-                <button id="themeToggleBtn" class="theme-toggle-btn">🌙&nbsp;<span class="text-gradient">Early Bird</span></button>
+                <button id="themeToggleBtn" class="theme-toggle-btn">🌙&nbsp;<span class="text-gradient nav-text">Early Bird</span></button>
         </div>
         
               <div class="menu-nav-alt">
@@ -679,11 +679,11 @@ if(Notification.permission === 'granted'){
       const currentCount = parseInt(counter.textContent) || 0;
       counter.textContent = currentCount + 1;
 
-      if (currentCount.textContent > 99) {
-    counter.textContent = "99+";
-  } else {
-    counter.textContent = currentCount;
-  }
+  //     if (currentCount.textContent > 99) {
+  //   counter.textContent = "99+";
+  // } else {
+  //   counter.textContent = currentCount;
+  // }
 
       const notificationsDiv = document.getElementById("notification");
       const notification = document.createElement("div");

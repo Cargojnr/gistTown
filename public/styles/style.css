@@ -549,7 +549,7 @@ abbr {
 
 .form-wrap {
   width: 100% !important;
-  height: 60vh !important;
+  height: 70vh !important;
   background: var(--container-bg);
   border-radius: 30px;
   position: relative;
@@ -558,7 +558,7 @@ abbr {
 
 .input-text {
   width: 100% !important;
-  height: 45vh !important;
+  height: 50vh !important;
   border: none !important;
   font-family: 'Quicksand', sans-serif !important;
   padding: 1rem;
@@ -573,7 +573,7 @@ abbr {
 .close-btn {
   position: absolute;
   top: 2rem;
-  right: 3rem;
+  right: 2rem;
   font-size: 1.2rem;
   cursor: pointer;
   background: var(--card-bg);
@@ -1085,7 +1085,7 @@ a {
 }
 
 .btn-gradient {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
 }
 
 
@@ -1347,7 +1347,6 @@ header {
   width: 100%;
   max-width: 500px;
 }
-
 
 
 mark {

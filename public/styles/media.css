@@ -786,6 +786,10 @@ padding: 0;
 font-size: 12px;
 }
 
+.theme-switch {
+  bottom: 7.5rem !important;
+}
+
 
 }
 
@@ -1211,12 +1215,13 @@ font-size: .9rem;
   }
 
   #recordContainer {
-    height: 32vh !important;
+    height: 45vh !important;
     text-align: center;
     /* background: rgba(255, 255, 255, 0.1); */
-    padding: 30px;
-    margin: 1rem auto;
+    padding: 0 !important;
+    margin: 1rem auto !important;
 }
+
 
 #recordContainer h1 {
     margin-bottom: 15px;
@@ -1230,8 +1235,6 @@ font-size: .9rem;
   font-size: 18px;
 }
 
-
-
 #actionButtons {
   display: none;
   margin-top: 10px !important;
@@ -1243,7 +1246,7 @@ font-size: .9rem;
 
 audio {
   margin-top: 10px !important; 
-  width: 100%;
+  width: 90% !important;
 }
 
   #tutorial-overlay {
@@ -1371,14 +1374,14 @@ button#next-step {
     /* flex-direction: column !important; */
   align-items: center;
   font-size: 16px;
-  padding: 0.5rem;
+  padding: 0.25rem;
 }
 
 .reaction-count {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-color);
   min-width: .9em;
-  margin: auto -.5rem;
+  margin: auto -.25rem;
     /* Provide a default width for alignment */
   ;
 }
@@ -1452,7 +1455,7 @@ button#next-step {
   }
 
   .stat strong, .stat span{
-    font-size: 1rem !important;
+    font-size: .9rem !important;
   }
 
   #profile hr {

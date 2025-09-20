@@ -2095,15 +2095,16 @@ app.post("/share", upload.single("audio"),  ensureAuthenticated, async (req, res
           message: ` Gossipa${userId} posted a new ${contentType} gist 📢 `,
 };
 
+
        // Emit a notification for the new text secret
        for (const [id, socket] of io.sockets.sockets) {
         if (socket.handshake.query.userId !== String(userId)) {
        socket.emit("new-notification", {
         type: "post",
         data: payload,
-      });
+        });
+      }
     }
-  }
 
     // Send success event ONLY to poster
      posterSocket = [...io.sockets.sockets.values()].find(
