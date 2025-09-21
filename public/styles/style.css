@@ -3193,6 +3193,7 @@ li {
   border: none;
   cursor: pointer;
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background: var(--secondary-color);
   color: #fff;
   border-radius: 30px;
   padding: 0.6rem 1.2rem;
