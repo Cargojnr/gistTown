@@ -30,6 +30,7 @@
   }
 
   .banner-image {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     position: relative;
     width: 100%;
     height: 20vh;
@@ -780,7 +781,7 @@
 
               <input type="hidden" id="avatarAlt" value="<%= userAvatarAlt %>" />
               <div class="banner-overlay"></div>
-              <img id="bannerImage" src="/img/avatars/banners/<%= userAvatarAlt %>.jpg" alt="<%= userAvatarAlt %>">
+              <!-- <img id="bannerImage" src="/img/avatars/banners/<%= userAvatarAlt %>.jpg" alt="<%= userAvatarAlt %>"> -->
             </div>
 
             <div class="avatar-status-wrap">
@@ -796,7 +797,7 @@
                   <small class="username">
                     <span class="user user<%= profileId %>">
                       <% if(stealthMode){ %>
-                        @gossipa<%= profileId %>
+                        @voice<%= profileId %>
                           <% } else { %>
                             @<%= userName %>
                               <% } %>
@@ -826,17 +827,18 @@
             </div>
 
             <div class="quick-stats">
+              <% const isMoreThanOne = userProfile.length > 1 %>
               <div class="stat">
                 <strong>
                   <%= formatCount(userProfile.length || 0) %>
                 </strong>
-                <span>Gists</span>
+                <span><%= isMoreThanOne ?  "Echoes" : "Echo" %></span>
               </div>
               <div class="stat">
                 <strong>
                   <%= formatCount(audienceCount) %>
                 </strong>
-                <span>Eavedroppers</span>
+                <span>Resonators</span>
               </div>
               <div class="stat">
                 <strong>
@@ -854,8 +856,8 @@
           <!-- Profile Nav -->
           <form id="navigator">
             <input type="hidden" id="user" name="user" value="<%= profileId %>">
-            <button class="current navigation text" data-type="text">Text</button>
-            <button class="navigation audio" data-type="audio">Audio</button>
+            <button class="current navigation text" data-type="text">Textprint</button>
+            <button class="navigation audio" data-type="audio">Audioprint</button>
           </form>
 
 
@@ -1084,7 +1086,7 @@ class=" read" style="
 
                 <input type="hidden" id="avatarAlt" value="<%= avatarAlt %>" />
                 <div class="banner-overlay"></div>
-                <img id="bannerImage" src="/img/avatars/banners/<%= avatarAlt %>.jpg" alt="<%= avatarAlt %>">
+                <!-- <img id="bannerImage" src="/img/avatars/banners/<%= avatarAlt %>.jpg" alt="<%= avatarAlt %>"> -->
               </div>
               <div class="avatar-status-wrap">
                 <div class="avatar-profile editable-avatar">
@@ -1095,7 +1097,7 @@ class=" read" style="
                     <small class="username">
                       <span class="user<%= userId %>">
                         <% if(stealthMode){ %>
-                          <span class="user">@gossipa<%= userId %></span>
+                          <span class="user">@voice<%= userId %></span>
                           <% } else { %>
                             <span class="user"> @<%= username %></span>
                             <% } %>
@@ -1119,17 +1121,18 @@ class=" read" style="
               </div>
 
               <div class="quick-stats">
+                <% const isMoreThanOne = profile.length > 1 %>
                 <div class="stat">
                   <strong>
                     <%= formatCount(profile.length || 0) %>
                   </strong>
-                  <span>Gists</span>
+                  <span><%= isMoreThanOne ? "Echoes" : "Echo" %></span>
                 </div>
                 <div class="stat">
                   <strong>
                     <%= formatCount(audienceCount) %>
                   </strong>
-                  <span>Eavedroppers</span>
+                  <span>Resonators</span>
                 </div>
                 <div class="stat">
                   <strong>
@@ -1146,8 +1149,8 @@ class=" read" style="
             <!-- Profile Nav -->
             <form id="navigator">
               <input type="hidden" id="user" name="user" value="<%= userId %>">
-              <button class="current navigation text" data-type="text">Text</button>
-              <button class="navigation audio" data-type="audio">Audio</button>
+              <button class="current navigation text" data-type="text">Textprint</button>
+              <button class="navigation audio" data-type="audio">Audioprint</button>
             </form>
 
             <div id="shimmer-container" class="shimmer-container">
@@ -1385,7 +1388,7 @@ class=" read" style="
                               if (data.status === "enabled") {
                                 usernameEl.forEach((username) => {
                                   const usernameSpan = username.querySelector('.user')
-                                  usernameSpan.textContent = "@gossipa" + userId; // or however you store it
+                                  usernameSpan.textContent = "@voice" + userId; // or however you store it
                                 })
                               } else {
                                 usernameEl.forEach((username) => {
@@ -1403,7 +1406,7 @@ class=" read" style="
                         </script>
 
                         <center class="bottom-message" id="scrollEndMessage">
-                          <p>Reached last Gossips. Scroll back to top </p>
+                          <p>Reached last Echo. Scroll back to top </p>
                         </center>
 
                         <script>
@@ -1467,23 +1470,14 @@ class=" read" style="
                     <div class="avatar-carousel" id="avatarCarousel">
                       <div class="avatar-item spacer"></div> <!-- before -->
 
-                      <div class="avatar-item"><img src="./img/avatars/thumbs/dog.jpg" alt="Dog" /></div>
-                      <div class="avatar-item"><img src="./img/avatars/thumbs/monkey.jpg" alt="Monkey" /></div>
-                      <div class="avatar-item"><img src="./img/avatars/thumbs/king.jpg" alt="king" /></div>
-                      <div class="avatar-item"><img src="./img/avatars/thumbs/lion.jpg" alt="lion" /></div>
-                      <div class="avatar-item"><img src="./img/avatars/thumbs/elephant.jpg" alt="Elephant" /></div>
-                      <div class="avatar-item"><img src="./img/avatars/thumbs/bird.jpg" alt="Bird" /></div>
-                      <div class="avatar-item"><img src="./img/avatars/thumbs/wolf.jpg" alt="Wolf" /></div>
-                      <div class="avatar-item"><img src="./img/avatars/thumbs/carmel.jpg" alt="Carmel" /></div>
-                      <div class="avatar-item"><img src="./img/avatars/thumbs/lioness.jpg" alt="Lioness" /></div>
-                      <div class="avatar-item"><img src="./img/avatars/thumbs/cow.jpg" alt="Cow" /></div>
-                      <div class="avatar-item"><img src="./img/avatars/thumbs/cute-dog.jpg" alt="cute-Dog" /></div>
-                      <div class="avatar-item active"><img src="./img/avatars/thumbs/girrafe.jpg" alt="Girrafe" />
-                      </div>
-                      <div class="avatar-item"><img src="./img/avatars/thumbs/lion-chill.jpg" alt="Lion-Chill" /></div>
-                      <div class="avatar-item"><img src="./img/avatars/thumbs/sheep.jpg" alt="Sheep" /></div>
-                      <div class="avatar-item"><img src="./img/avatars/thumbs/muscular.jpg" alt="Muscular" /></div>
-                      <div class="avatar-item"><img src="./img/avatars/thumbs/eagle2.jpg" alt="Eagle" /></div>
+                      <div class="avatar-item"><img src="./img/avatars/thumbs/whisper.jpg" alt="whisper" /></div>
+                      <div class="avatar-item"><img src="./img/avatars/thumbs/pulse.jpg" alt="pulse" /></div>
+                      <div class="avatar-item"><img src="./img/avatars/thumbs/phantom.jpg" alt="phantom" /></div>
+                      <div class="avatar-item"><img src="./img/avatars/thumbs/reverb.jpg" alt="reverb" /></div>
+                      <div class="avatar-item"><img src="./img/avatars/thumbs/sonic.jpg" alt="sonic" /></div>
+                      <div class="avatar-item"><img src="./img/avatars/thumbs/chorus.jpg" alt="chorus" /></div>
+                      <div class="avatar-item"><img src="./img/avatars/thumbs/vibe.jpg" alt="vibe" /></div>
+                      <div class="avatar-item"><img src="./img/avatars/thumbs/Resonance.jpg" alt="Resonance" /></div>
                       <!-- Add more avatars -->
 
                       <div class="avatar-item spacer"></div> <!-- after -->
@@ -1773,19 +1767,19 @@ class=" read" style="
   </section>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const savedAlt = document.getElementById("avatarAlt").value.toLowerCase();
-      if (savedAlt) {
-        updateBanner(savedAlt); // reuse the updateBanner function
-      }
-    });
+    // document.addEventListener("DOMContentLoaded", () => {
+    //   const savedAlt = document.getElementById("avatarAlt").value.toLowerCase();
+    //   if (savedAlt) {
+    //     updateBanner(savedAlt); // reuse the updateBanner function
+    //   }
+    // });
 
-    function updateBanner(altText) {
-      const bannerImage = document.getElementById("bannerImage");
-      const bannerPath = `/img/avatars/banners/${altText}.jpg`; // Adjust path to your setup
-      bannerImage.src = bannerPath;
-      bannerImage.alt = `${altText} banner`;
-    }
+    // function updateBanner(altText) {
+    //   const bannerImage = document.getElementById("bannerImage");
+    //   const bannerPath = `/img/avatars/banners/${altText}.png`; // Adjust path to your setup
+    //   bannerImage.src = bannerPath;
+    //   bannerImage.alt = `${altText} banner`;
+    // }
 
   </script>
 
@@ -1892,7 +1886,7 @@ class=" read" style="
         ? `<img oncontextmenu="return false;" src="/img/gossipa3.png" alt="Verified Badge" class="verified-badge">`
         : "";
 
-      const stealthMode = user.stealth_mode ? `<span class="user">@gossipa${user.id}</span>` : `<span class="user">@${user.username}</span>`
+      const stealthMode = user.stealth_mode ? `<span class="user">@voice${user.id}</span>` : `<span class="user">@${user.username}</span>`
 
       userBox.innerHTML = `
             <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
@@ -1958,7 +1952,7 @@ class=" read" style="
         const eavedropBtn = document.querySelectorAll(`.eavedrop-btn[data-targetid="${id}"]`);
         eavedropBtn.forEach(btn => {
           btn.classList.add("listening");
-          btn.querySelector("span").textContent = "Eavedropping";
+          btn.querySelector("span").textContent = "Resonating";
           btn.querySelector("i").className = "fas fa-ear-listen";
         });
       });
@@ -2004,11 +1998,11 @@ class=" read" style="
 
       if (data.status === "added") {
         eavedropBtn.classList.add("listening");
-        sp.textContent = "Eavedropping";
+        sp.textContent = "Resonating";
         ic.className = "fas fa-ear-listen";
       } else if (data.status === "removed") {
         eavedropBtn.classList.remove("listening");
-        sp.textContent = "Eavedrop";
+        sp.textContent = "Resonate";
         ic.className = "fas fa-ear-deaf";
       }
     } catch (err) {
@@ -2116,7 +2110,7 @@ class=" read" style="
 
       if (posts.length === 0) {
         postsContainer.innerHTML = `<li class="secret fade-in full-width gist-list">
-                <p class="content-preview"> No posts. Share a post </p> 
+                <p class="content-preview">Echo out something to fill the void</p> 
                </li>
         `;
       } else {
@@ -2380,7 +2374,7 @@ class=" read" style="
         <img src="${comment.profilePicture}" class="profile-pic thumb"/>
         <div>
           <small class="user">
-            ${comment.stealth_mode ? '@gossipa' + comment.user_id : comment.username}
+            ${comment.stealth_mode ? '@voice' + comment.user_id : comment.username}
             </small>
           <p class="comment">${text}</p>
         <button type="button" class="translate-btn" data-id="${id}" data-text="${text}">Translate to english</button>
@@ -2835,7 +2829,7 @@ class=" read" style="
             <img src="${comment.profile_picture}" class="profile-pic thumb"/>
             <div>
             <small class="user">
-              <strong>${comment.stealth_mode ? '@gossipa' + comment.user_id : comment.username}</strong>
+              <strong>${comment.stealth_mode ? '@voice' + comment.user_id : comment.username}</strong>
               </small>
             <p class="comment">${comment.comment}</p>
             <button type="button" class="translate-btn" data-id="${comment.id}" data-text="${comment.comment}">Translate to english</button>
@@ -2933,7 +2927,7 @@ class=" read" style="
             <img src="${comment.profile_picture}" class="profile-pic thumb"/>
               <div>
             <small class="user">
-              <strong>${comment.stealth_mode ? '@gossipa' + comment.user_id : comment.username}</strong>
+              <strong>${comment.stealth_mode ? '@voice' + comment.user_id : comment.username}</strong>
               </small>
             <p class="comment">${comment.comment}</p>
             <button type="button" class="translate-btn" data-id="${comment.id}" data-text="${comment.comment}">Translate to english</button>

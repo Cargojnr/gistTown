@@ -1215,6 +1215,10 @@ font-size: .9rem;
     font-size: .5rem !important;
   }
 
+  .comment-display{
+    margin: 0 !important;
+  }
+
   .comment-dropdown {
     padding: .5rem !important;
   }

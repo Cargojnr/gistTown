@@ -54,7 +54,7 @@
   <link rel="stylesheet" href="/styles/media.css" />
   <link rel="stylesheet" href="/styles/new.css" />
   <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
-  <title>Gossipa || <%= locals.title ? title : null%>
+  <title>Echoes || <%= locals.title ? title : null%>
   </title>
 
 </head>
@@ -73,8 +73,12 @@
   <header>
     <div class="container">
       <div class="header">
-        <img oncontextmenu="return false;" src="../../img/logo/main-logo.png" alt="" id="main-logo" class="logo">
-        <img oncontextmenu="return false;" src="../../img/logo/mobile-logo.png" alt="" id="mobile-logo" class="logo">
+        <!-- <img oncontextmenu="return false;" src="../../img/logo/main-logo.png" alt="" id="main-logo" class="logo">
+        <img oncontextmenu="return false;" src="../../img/logo/mobile-logo.png" alt="" id="mobile-logo" class="logo"> -->
+
+        <h1 id="main-logo" class="logo text-gradient"><i class="fas fa-microphone"></i>Echoes</h1>
+        <h1 id="mobile-logo" class="logo text-gradient"><i class="fas fa-microphone"></i></h1>
+    
 
         <form id="liveSearchForm" action="/search" method="post" autocomplete="off">
           <div class="search" id="mobileSearch">
@@ -237,7 +241,7 @@
           <li class="nav-item <%= locals.title === 'Explore Your Space' ? 'current' : null %>">
             <a href="/explore">
               <i class="nav-icon fab fa-modx"></i> &nbsp;
-              <span class="nav-text">Explore</span>
+              <span class="nav-text">Open Air</span>
 
               <span class="nav-tag">New</span>
             </a>

@@ -50,6 +50,20 @@
 }
 
 
+ .small-avatar{
+    height: 48px;
+    width: 48px;
+  }
+  .medium-avatar{
+    height: 96px;
+    width: 96px;
+  }
+  .large-avatar{
+    height: 128px;
+    width: 128px;
+  }
+
+
 
 body {
   background-color: var(--body-bg);
@@ -1177,6 +1191,8 @@ header {
   width: auto;
   height: 70px;
   object-fit: contain;
+  font-weight: 500;
+  /* margin-top: 1rem; */
 }
 
 #mobile-logo {

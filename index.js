@@ -1265,7 +1265,7 @@ const formattedAudio = audioPosts.map((audio) => {
       username: user.username,
       theme: userTheme,
       mode,
-      title: 'Gossip feeds',
+      title: 'Whispers',
     });
     } catch (err) {
       console.log("Failed to fetch saved gists:", err.message, err.stack);
