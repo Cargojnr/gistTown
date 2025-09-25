@@ -1,2 +1,8 @@
 # .gitignore
 .env
+
+#Ignore Ds Store
+.Ds_Store
+
+#Ignore garbage File
+new
