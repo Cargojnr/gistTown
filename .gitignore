@@ -6,3 +6,6 @@
 
 #Ignore garbage File
 new
+
+#Ignore garbage File
+/views/new

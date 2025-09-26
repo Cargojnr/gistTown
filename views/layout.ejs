@@ -22,25 +22,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <meta name="description"
-    content="Share gists secretly with end-to-end encryption. Gossipa guarantees your privacy with 100% anonymity." />
+    content="Voice Out Anonymously with end-to-end encryption. Echoes guarantees your privacy with 100% anonymity." />
   <meta name="keywords"
     content="anonymity, secret sharing, encrypted messaging, privacy, end-to-end encryption, anonymous communication" />
   <meta name="robots" content="index, follow" />
-  <meta name="author" content="Anonym" />
+  <meta name="author" content="Echoes" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Gossipa - Share Gists Secretly" />
+  <meta property="og:title" content="Echoes - Voice Out Anonymously" />
   <meta property="og:description"
-    content="Share your gists secretly with Gossipa. Your privacy is our priority with full end-to-end encryption." />
+    content="Voice Out Anonymously with Echoes. Your privacy is our priority with full end-to-end encryption." />
   <meta property="og:image" content="/img/og-image.png" />
   <meta property="og:url" content="https://yourwebsite.com" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Gossipa - Share Gists Secretly" />
+  <meta name="twitter:title" content="Echoes - Voice Out Anonymously" />
   <meta name="twitter:description"
-    content="Share your gists secretly  with Gossipa. Your privacy is our priority with full end-to-end encryption." />
+    content="Voice Out Anonymously with Echoes. Your privacy is our priority with full end-to-end encryption." />
   <meta name="twitter:image" content="/img/twitter-image.png" />
 
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2&family=Quicksand&display=swap" rel="stylesheet">
@@ -129,7 +129,7 @@
                 <h3 class="username"><span class="username"><span>Hello,&nbsp;</span>
                   <span class="user<%= userId %>">
                    <% if(stealthMode){  %>
-                    <span class="user">@gossipa<%= userId %></span>
+                    <span class="user">@voice<%= userId %></span>
                      <% } else { %>
                       <span class="user"> @<%= username %></span>
                        <% } %>
@@ -718,20 +718,20 @@ if(Notification.permission === 'granted'){
       } else if(data.type === "comment") {
         notification.innerText = `${data.data.message}`;
       }  else if (data.type === "selected") {
-        notification.innerText = `~~@gossipa${data.data.userId}~~ Your gist is the top most discussed for the Day...... Keep it up!"`;
+        notification.innerText = `~~@voice${data.data.userId}~~ Your echo is the top most discussed for the Day...... Keep it up!"`;
         notificationsDiv.style.textAlign = "center"
 
       }else if (data.type === "eavedrop"){
-notification.innerText = `You are being eavedropped by ~~@gossipa${data.data.audience}~~:`;
+notification.innerText = `You are being resonated by ~~@voice${data.data.audience}~~:`;
       }
        else if (data.type === "reaction") {
         const { reaction, count, milestone } = data.data;
         notification.innerText =
-          `Your Gist received a new "${reaction}" reaction! Total: ${count}.`
+          `Your echo received a new "${reaction}" reaction! Total: ${count}.`
       } else if (data.type === "stealth"){
          notification.innerText = `You ${data.data.status} stealth mode.`
       }else if (data.type === "top-secret") {
-        notification.innerText = `Most discussed gist goes to ~~@gossipa${data.data.userId}~~"`;
+        notification.innerText = `Most discussed echo goes to ~~@voice${data.data.userId}~~"`;
       }
 
       function recieveNotification(data){

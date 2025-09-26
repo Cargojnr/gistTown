@@ -287,7 +287,7 @@
         
                     <div class="form-group">
                       <textarea class="form-control input-text" id="postInput" name="secret"
-                        placeholder="Hey <%= username %>, what's popping?"></textarea>
+                        placeholder="Hey <%= stealthMode ? "voice" + userId : username  %>, what's popping?"></textarea>
                     </div>
         
                     <div class="post-action">
@@ -365,11 +365,11 @@
       <div class="premium-card">
         <div class="crown-icon sparkle">👑</div>
 
-        <h3 class="premium-title">Become a Chief Gossipa</h3>
+        <h3 class="premium-title">Become a Top Voice</h3>
         <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain unknown.</p>
 
         <div class="trending-stats">
-          <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
+          <span>🔥 Trending Now: <strong>152</strong>Top Voices</span>
         </div>
 
         <div class="avatar-hint">
@@ -389,6 +389,16 @@
       <ul class="nav user-list">
       </ul>
 
+    </div>
+
+    <div class="inpage-footer">
+      <span>Privacy Policy</span>&nbsp;.
+      &nbsp;<span>Terms of use</span> &nbsp;.
+      &nbsp;<span>Community guidelines</span> &nbsp;.
+      <br><br>
+      &nbsp;<span>&copy; <%= new Date().getFullYear() %>, &commat;<span class="text-gradient">Echoes</span> Co. All
+          rights reserved</span>
+      <span class="motto">Motto: <span class="motto-content">"Your privacy is our priority."</span></span>
     </div>
   </div>
   </aside>

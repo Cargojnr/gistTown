@@ -268,7 +268,7 @@
                                                         <a href=<%=post.user_id===userId ? '/profile'
                                                             : '/profile/amebo/' + post.user_id %>>
                                                             <p class="username user<%= post.user_id %>">
-                                                                <span class="user">@gossipa<%= post.user_id %></span>
+                                                                <span class="user">@voice<%= post.user_id %></span>
                                                                 <% if(post.verified===true) {%>
                                                                     <abbr title="Exclusive Membership"> <img
                                                                             oncontextmenu="return false;"
@@ -288,7 +288,7 @@
                                                 </div>
                                                 <% if(userId !==post.user_id) {%>
                                                     <button data-targetid="<%= post.user_id %>" class="listen"><i
-                                                            class="fas fa-ear-deaf"></i>&nbsp;<span>Eavedrop</span></button>
+                                                            class="fas fa-ear-deaf"></i>&nbsp;<span>Resonate</span></button>
                                                     <% } else { %>
                                                         <a class="listen listening" href="/profile">Go to Profile</a>
                                                         <% } %>
@@ -531,7 +531,7 @@
                                                         <div class="user-info">
                                                             <a href="/profile/amebo/<%= post.user_id %>">
                                                                 <p class="username user<%= post.user_id %>">
-                                                                    <span class="user">@gossipa<%= post.user_id %>
+                                                                    <span class="user">@voice<%= post.user_id %>
                                                                     </span>
                                                                     <% if(post.verified===true) {%>
                                                                         <abbr title="Exclusive Membership"> <img
@@ -553,7 +553,7 @@
                                                     </div>
                                                     <% if(userId !==post.user_id) {%>
                                                         <butto data-targetid="<%= post.user_id %>" class="listen"><i
-                                                                class="fas fa-ear-deaf"></i>&nbsp;<span>Eavedrop</span></button>
+                                                                class="fas fa-ear-deaf"></i>&nbsp;<span>Resonate</span></button>
                                                             <% } else { %>
                                                                 <a class="listen listening" href="/profile">Go to Profile</a>
                                                                 <% } %>
@@ -730,7 +730,7 @@
                                             <% }) %>
 
                                     <%} else { %>
-                                     <p>No gists saved yet...head back to the feeds to save some gist that may interest you</p>
+                                     <p>No echoes saved yet...head back to the voices to save some echoes that may interest you</p>
                                     <%  } %>
                         </ul>
                     </div>
@@ -964,7 +964,7 @@
                             const eavedropBtn = document.querySelectorAll(`.listen[data-targetid="${id}"]`);
                             eavedropBtn.forEach(btn => {
                                 btn.classList.add("listening");
-                                btn.querySelector("span").textContent = "Eavedropping";
+                                btn.querySelector("span").textContent = "Resonating";
                                 btn.querySelector("i").className = "fas fa-ear-listen";
                             });
                         });
@@ -1010,15 +1010,15 @@
         
                         if (data.status === "added") {
                             eavedropBtn.classList.add("listening");
-                            sp.textContent = "Eavedropping";
+                            sp.textContent = "Resonating";
                             ic.className = "fas fa-ear-listen";
                         } else if (data.status === "removed") {
                             eavedropBtn.classList.remove("listening");
-                            sp.textContent = "Eavedrop";
+                            sp.textContent = "Resonate";
                             ic.className = "fas fa-ear-deaf";
                         }
                     } catch (err) {
-                        console.error("Eavedrop failed", err);
+                        console.error("Resonate failed", err);
                     }
                 });
             </script>
@@ -1556,7 +1556,7 @@
             <img src="${comment.profile_picture}" class="profile-pic thumb"/>
             <div>
             <small class="user">
-              <strong>${comment.stealth_mode ? '@gossipa' + comment.user_id : comment.username}</strong>
+              <strong>${comment.stealth_mode ? '@voice' + comment.user_id : comment.username}</strong>
               </small>
             <p class="comment">${comment.comment}</p>
             <button type="button" class="translate-btn" data-id="${comment.id}" data-text="${comment.comment}">Translate to english</button>
@@ -1654,7 +1654,7 @@
                      <img src="${comment.profile_picture}" class="profile-pic thumb"/>
                      <div>
                      <small class="user">
-                       <strong>${comment.stealth_mode ? '@gossipa' + comment.user_id : comment.username }</strong>
+                       <strong>${comment.stealth_mode ? '@voice' + comment.user_id : comment.username }</strong>
                        </small>
                      <p class="comment">${comment.comment}</p>
                      <button type="button" class="translate-btn" data-id="${comment.id}" data-text="${comment.comment}">Translate to english</button>
@@ -1697,7 +1697,7 @@
                  <img src="${comment.profilePicture}" class="profile-pic thumb"/>
                  <div>
                    <small class="user">
-                     ${comment.stealth_mode ? '@gossipa' + comment.user_id : comment.username}
+                     ${comment.stealth_mode ? '@voice' + comment.user_id : comment.username}
                      </small>
                    <p class="comment">${text}</p>
                  <button type="button" class="translate-btn" data-id="${id}" data-text="${text}">Translate to english</button>
@@ -1765,11 +1765,13 @@
         </div>
 
         <div class="inpage-footer">
-            <span>Privacy Policy</span>&nbsp;.
-            &nbsp;<span>Terms of use</span> &nbsp;.
-            &nbsp;<span>Community guidelines</span> &nbsp;.
-            <br><br>
-            &nbsp;<span>&copy; <%= new Date().getFullYear() %>, &commat; Gossipa Co. All rights reserved</span>
+          <span>Privacy Policy</span>&nbsp;.
+          &nbsp;<span>Terms of use</span> &nbsp;.
+          &nbsp;<span>Community guidelines</span> &nbsp;.
+          <br><br>
+          &nbsp;<span>&copy; <%= new Date().getFullYear() %>, &commat;<span class="text-gradient">Echoes</span> Co. All
+              rights reserved</span>
+          <span class="motto">Motto: <span class="motto-content">"Your privacy is our priority."</span></span>
         </div>
     </div>
     </aside>
@@ -1799,7 +1801,7 @@
                   <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
                     <img oncontextmenu="return false;" src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
                     <p class="username">
-                      <span class="user">@gossipa${user.id}</span>
+                      <span class="user">@voice${user.id}</span>
                       ${verifiedBadge}
                     </p>
                   </div>

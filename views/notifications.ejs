@@ -140,7 +140,7 @@
                               <% if (notification.user_id==userId) { %>
 
                                 <% } else { %>
-                                  New Gossip shared by ~~ @gossipa<%= notification.user_id %> ~~
+                                  New Echo voiced out by ~~ @voice<%= notification.user_id %> ~~
                                     <% } %>
                                       <% } %>
 
@@ -148,29 +148,29 @@
                                           <% if (notification.user_id==userId) { %>
 
                                             <% } else { %>
-                                              You are being eavedropped
+                                              You are being Resonated with
                                               <% } %>
                                                 <%} %>
 
                                                   <% if (notification.notificationType==='comment' ) { %>
-                                                    New comment on your secret from ~~ @gossipa<%= notification.user_id
+                                                    New comment on echo from ~~ @voice<%= notification.user_id
                                                       %> ~~
                                                       <% } %>
                                                         <% if (notification.notificationType==='reaction' ) { %>
                                                           <% if (notification.type==="like" ) { %>
-                                                            Your secret got a new 👍 reaction!. Total: <%=
+                                                            Your echo got a new 👍 reaction!. Total: <%=
                                                               notification.count %>.
                                                               <% } else if (notification.type==="laugh" ) { %>
-                                                                Your secret got a new 😂 reaction!. Total: <%=
+                                                                Your echo got a new 😂 reaction!. Total: <%=
                                                                   notification.count %>.
                                                                   <% } else if (notification.type==="gasp" ) { %>
-                                                                    Your secret got a new 😱 reaction!. Total: <%=
+                                                                    Your echo got a new 😱 reaction!. Total: <%=
                                                                       notification.count %>.
                                                                       <% } else if(notification.type==="cry" ) { %>
-                                                                        Your secret got a new 😢 reaction!. Total: <%=
+                                                                        Your echo got a new 😢 reaction!. Total: <%=
                                                                           notification.count %>.
                                                                           <% } else if(notification.type==="hot" ) { %>
-                                                                            Your secret got a new <img
+                                                                            Your echo got a new <img
                                                                               oncontextmenu="return false;"
                                                                               src="../../img/premium-reaction.png"
                                                                               alt="🔥" class="premium-reaction">
@@ -197,8 +197,8 @@
                                                   <% if (notification.user_id==userId) { %>
 
                                                     <% } else { %>
-                                                      ~~ @gossipa<%= notification.audience_id %> ~~ started eavdropping
-                                                        on your
+                                                      ~~ @voice<%= notification.audience_id %> ~~ started resonating
+                                                        with your
                                                         profile
                                                         <% } %>
                                                           <%} %>
@@ -276,7 +276,7 @@
                               <h4>Welcome Message</h4>
                               <p>
                                 Welcome <%= username %> to the anonymous community. Your
-                                  anonymous tag is ~@anonymous<%= userId %>~. Have fun.
+                                  anonymous tag is ~@voice<%= userId %>~. Have fun.
                               </p>
                             </div>
                           </li>
@@ -295,38 +295,48 @@
       <div class="premium-card">
         <div class="crown-icon sparkle">👑</div>
 
-        <h3 class="premium-title">Become a Chief Gossipa</h3>
-        <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain unknown.</p>
+        <h3 class="premium-title">Become a Top Voice</h3>
+          <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain Unknown.</p>
 
-        <div class="trending-stats">
-          <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
-        </div>
+          <div class="trending-stats">
+            <span>🔥 Trending Now: <strong>152</strong>Top Voices</span>
+          </div>
 
         <div class="avatar-hint">
           <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
           <p>You’re 1 step from <strong>trending</strong>…</p>
         </div>
 
-        <a href="/subscribe" class="premium-btn">Unlock Premium</a>
+        <a href="/subscribe" class="premium-btn">Unlock Exclusive</a>
       </div>
     </div>
 
     <div class="aside">
       <center>
-        <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Active
-          Gossipas: <span id="activeCount">0</span></h4>
+        <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Meet Top
+          Voices: <span id="activeCount">0</span></h4>
       </center>
       <ul class="nav user-list">
       </ul>
 
     </div>
+
+    <div class="inpage-footer">
+        <span>Privacy Policy</span>&nbsp;.
+        &nbsp;<span>Terms of use</span> &nbsp;.
+        &nbsp;<span>Community guidelines</span> &nbsp;.
+        <br><br>
+        &nbsp;<span>&copy; <%= new Date().getFullYear() %>, &commat;<span class="text-gradient">Echoes</span> Co. All
+            rights reserved</span>
+        <span class="motto">Motto: <span class="motto-content">"Your privacy is our priority."</span></span>
+      </div>
   </div>
   </aside>
 
 </div>
 
-<script src="https://unpkg.com/lottie-web@5.10.0/build/player/lottie.min.js"></script>
-<!-- Load Day.js and the plugin via CDN -->
+ <!-- Load Day.js and the plugin via CDN -->
+
 <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
@@ -353,7 +363,7 @@
             <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
               <img oncontextmenu="return false;" src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
               <p class="username">
-                <span class="user">@amebo${user.id}</span>
+                <span class="user">@voice${user.id}</span>
                 ${verifiedBadge}
               </p>
             </div>
@@ -459,7 +469,7 @@
         li.innerHTML = `
                     <a class="message" href="secret/${notificationData.id}">
                         <div class="card">
-                            <h4>New secret shared by ~@anonym${notificationData.user_id
+                            <h4>New echo voiced out by ~@voice${notificationData.user_id
           }~</h4>
                             <p>${notificationData.secret.substring(0, 100)} ...
                                 <a style="background: none; font-size: 1rem; padding: 0; font-weight: bold;" 
@@ -472,7 +482,7 @@
         li.innerHTML = `
                     <a class="message" href="profile/amebo/${notificationData.audience}">
                         <div class="card">
-                            <h4>You are being eavedropped by @${notificationData.audience} </h4>
+                            <h4>You are being resonated by @${notificationData.audience} </h4>
                         </div>
                     </a>
                 `;
@@ -481,7 +491,7 @@
         li.innerHTML = `
                      <a class="message" href="secret/${notificationData.id}">
                         <div class="card">
-                            <h4>Your secret received a new "${notificationData.reaction}" reaction! Total: ${notificationData.count}.</h4>
+                            <h4>Your echo received a new "${notificationData.reaction}" reaction! Total: ${notificationData.count}.</h4>
                         </div>
                     </a>
                     `;
@@ -490,7 +500,7 @@
         li.innerHTML = `
                     <a class="message" href="secret/${data.data.id}">
                         <div class="card">
-                            <h4>Most discussed secret goes to ~~@anonym${data.data.userId
+                            <h4>Most discussed secret goes to ~~@voice${data.data.userId
           }~~</h4>
                             <p>${data.data.secret.substring(0, 100)} ...
                                 <a style="background: none; font-size: 1rem; padding: 0; font-weight: bold;" 
@@ -503,7 +513,7 @@
         li.innerHTML = `
                     <a class="message" href="secret/${notificationData.id}">
                         <div class="card">
-                            <h4>Most discussed secret goes to ~~@anonym${notificationData.userId
+                            <h4>Most discussed secret goes to ~~@voice${notificationData.userId
           }~~</h4>
                             <p>${notificationData.secret.substring(0, 100)} ...
                                 <a style="background: none; font-size: 1rem; padding: 0; font-weight: bold;" 
@@ -516,11 +526,6 @@
 
       // Append the new notification to the list
       notificationList.prepend(li);
-
-      // Increment the notification counter
-      const counter = document.querySelector(".counter");
-      const currentCount = parseInt(counter.textContent) || 0;
-      counter.textContent = currentCount + 1;
     });
   }
 </script>

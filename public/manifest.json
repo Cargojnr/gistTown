@@ -1,7 +1,7 @@
 
 {
-    "name": "Gossipa",
-    "short_name": "Gossipa",
+    "name": "Echoes",
+    "short_name": "Echoes",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#0f0e17",

@@ -165,26 +165,26 @@
       <div class="premium-card">
         <div class="crown-icon sparkle">👑</div>
 
-        <h3 class="premium-title">Become a Chief Gossipa</h3>
-        <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain Unknown.</p>
+        <h3 class="premium-title">Become a Top Voice</h3>
+          <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain Unknown.</p>
 
-        <div class="trending-stats">
-          <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
-        </div>
+          <div class="trending-stats">
+            <span>🔥 Trending Now: <strong>152</strong>Top Voices</span>
+          </div>
 
         <div class="avatar-hint">
           <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
           <p>You’re 1 step from <strong>trending</strong>…</p>
         </div>
 
-        <a href="/subscribe" class="premium-btn">Chief Gossipa</a>
+        <a href="/subscribe" class="premium-btn">Unlock Exclusive</a>
       </div>
     </div>
 
     <div class="aside">
       <center>
-        <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Meet The
-          Chiefs
+        <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Meet Top
+          Voices
           :<span id="activeCount">0</span></h4>
       </center>
       <ul class="nav user-list">
@@ -197,7 +197,9 @@
       &nbsp;<span>Terms of use</span> &nbsp;.
       &nbsp;<span>Community guidelines</span> &nbsp;.
       <br><br>
-      &nbsp;<span>&copy; <%= new Date().getFullYear() %>, &commat; Gossipa Co. All rights reserved</span>
+      &nbsp;<span>&copy; <%= new Date().getFullYear() %>, &commat;<span class="text-gradient">Echoes</span> Co. All
+          rights reserved</span>
+      <span class="motto">Motto: <span class="motto-content">"Your privacy is our priority."</span></span>
     </div>
   </div>
   </aside>
@@ -227,7 +229,7 @@
         ? `<img oncontextmenu="return false;" src="/img/gossipa3.png" alt="Verified Badge" class="verified-badge">`
         : "";
 
-        const stealthMode = user.stealth_mode ? `@gossipa${user.id}` : `@${user.username}`
+        const stealthMode = user.stealth_mode ? `@voice${user.id}` : `@${user.username}`
 
       userBox.innerHTML = `
                 <div class="user-card" style="display: flex; align-items: center; gap: 10px;">

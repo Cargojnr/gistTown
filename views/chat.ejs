@@ -13,7 +13,7 @@
     <div id="chat-box">
       <div class="chat-box">
         <center>
-          <h2> Connected Gossipas:
+          <h2> Connected Voices:
             <span class="connected">
               <span class="users-count">0</span>
             </span>
@@ -43,12 +43,12 @@
       <div class="premium-card">
         <div class="crown-icon sparkle">👑</div>
 
-        <h3 class="premium-title">Become a Chief Gossipa</h3>
-        <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain Unknown.</p>
+        <h3 class="premium-title">Become a Top Voice</h3>
+          <p class="premium-text">Stand out in the World of anonymity. Get Heard. Remain Unknown.</p>
 
-        <div class="trending-stats">
-          <span>🔥 Trending Now: <strong>152</strong> Gissipas</span>
-        </div>
+          <div class="trending-stats">
+            <span>🔥 Trending Now: <strong>152</strong>Top Voices</span>
+          </div>
 
         <div class="avatar-hint">
           <img src="/img/avatars/thumbs/dog.jpg" alt="Anonymous" class="blur-avatar" />
@@ -61,8 +61,8 @@
 
     <div class="aside-2">
       <center>
-        <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Active
-          Gossipa
+        <h4 class="user-count"><button class="dot active animate-ping-once" data-slide="0"></button>&nbsp;Top
+          Voices
           :<span id="activeCount">0</span></h4>
       </center>
       <ul class="nav user-list">
@@ -75,7 +75,9 @@
       &nbsp;<span>Terms of use</span> &nbsp;.
       &nbsp;<span>Community guidelines</span> &nbsp;.
       <br><br>
-      &nbsp;<span>&copy; <%= new Date().getFullYear() %>, &commat; Gossipa Co. All rights reserved</span>
+      &nbsp;<span>&copy; <%= new Date().getFullYear() %>, &commat;<span class="text-gradient">Echoes</span> Co. All
+          rights reserved</span>
+      <span class="motto">Motto: <span class="motto-content">"Your privacy is our priority."</span></span>
     </div>
   </aside>
 </div>
@@ -111,7 +113,7 @@
               <div class="user-card" style="display: flex; align-items: center; gap: 10px;">
                 <img oncontextmenu="return false;" src="${user.profile_picture}" alt="Avatar" class="profile-pic" style="width: 32px; height: 32px; border-radius: 50%;">
                 <p class="username">
-                  <span class="user">@amebo${user.id}</span>
+                  <span class="user">@voice${user.id}</span>
                   ${verifiedBadge}
                 </p>
               </div>
@@ -270,7 +272,7 @@
 
     msgUser.className = "user";
     msgDiv.textContent = message;
-    msgUser.textContent = `gossipa${user}`;
+    msgUser.textContent = `voice${user}`;
     timeSpan.textContent = ` (${new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})`;
 
     msgDiv.classList.add(type);
@@ -297,7 +299,7 @@
   // Check if it's the first connection after page reload
   let count = 0;
   socket.on('userJoined', (userId) => {
-    appendSystemMessage(`👋 gossipa${userId} joined the chat`);
+    appendSystemMessage(`👋 voice${userId} joined the chat`);
 
     // Only count new join if not already marked
     if (!sessionStorage.getItem('hasJoined')) {
@@ -315,7 +317,7 @@
   });
 
   socket.on('userLeft', (userId) => {
-    appendSystemMessage(`❌ gossipa${userId} left the chat`);
+    appendSystemMessage(`❌ voice${userId} left the chat`);
     count = Math.max(0, count - 1); // avoid negative count
     userCount.innerHTML = count;
   });
@@ -350,7 +352,7 @@
 
   socket.on('typing', (data) => {
     if (data.user !== user) {
-      typingIndicator.textContent = `📝 gossipa${data.user} is typing...`;
+      typingIndicator.textContent = `📝 voice${data.user} is typing...`;
       currentTypingUser = data.user;
     }
   });
