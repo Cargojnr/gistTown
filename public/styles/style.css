@@ -1196,7 +1196,7 @@ header {
 }
 
 #mobile-logo {
-  display: none;
+  display: none !important;
 }
 
 .topbar-icons {

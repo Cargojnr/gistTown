@@ -747,8 +747,12 @@ notification.innerText = `You are being resonated by ~~@voice${data.data.audienc
   </script>
 
 
-<script src="js/app.js"></script>
+<script src="/js/app.js"></script>
+<% if (locals.theme) { %>
+  <script src="/js/theme.js"></script>
+<% } else {%>
   <script src="/js/defaultTheme.js"></script>
+  <% } %>
 </body>
 
 </html>

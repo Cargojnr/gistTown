@@ -9,3 +9,10 @@ new
 
 #Ignore garbage File
 /views/new
+
+/views/chat.ejs
+/views/register.ejs
+/views/advice.js
+/views/comment.ejs
+/views/innerFeeds.ejs
+

@@ -18,7 +18,7 @@ menu.classList.toggle('menu-visible');
 
 
 const header = document.querySelector("header");
-const logos = document.querySelectorAll(".logo");
+const logo = document.getElementById("logo");
 
 window.addEventListener("scroll", function () {
   const scrolled = window.scrollY > 0;
@@ -26,14 +26,10 @@ window.addEventListener("scroll", function () {
     let body = document.querySelector("body");
     body.style.overflowY = "scroll";
     header.classList.add("scrolled");
-    logos.forEach(logo => {
-      logo.style.opacity = 1;
-    })
+    logo.style.opacity = 1;
   } else {
     header.classList.remove("scrolled");
-    logos.forEach(logo => {
-      logo.style.opacity = 0;
-    })
+    logo.style.opacity = 0;
   }
 });
 
