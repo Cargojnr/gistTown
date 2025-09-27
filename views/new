@@ -276,3 +276,32 @@ app.get("/notifications", async (req, res) => {
                       <img src="../../img/premium-reaction.png" class="premium-reaction">
                       <span class="reaction-count">${hotCount}</span>
                     </button>
+
+
+
+                    <script>
+  window.currentUserId = "<%= userId %>";
+  window.socket = io({ query: { userId: window.currentUserId } });
+
+  socket.on("new-notification", (data) => {
+    const alerts = document.getElementById("alertAvatar")
+    const alertAvatar = document.querySelector(".alert-avatar")
+    const alert = document.createElement("img");
+    alert.className = "profile-pic thumb";
+
+    if (data.type === "post") {
+      alerts.style.display= "flex"
+      alert.src = `${data.data.avatar}`
+    }
+
+    alertAvatar.appendChild(alert)
+  });
+
+
+  // Poster → toast feedback
+  socket.on("post-success", (data) => {
+    if (data.type === "success") {
+      showToast("Post shared successfully!")
+    }
+  });
+</script>
