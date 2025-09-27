@@ -478,11 +478,11 @@ header .profiled {
 
 
   #main-logo{
-    display: none;
+    display: none !important;
   }
 
   #mobile-logo {
-    display: inline-block;
+    display: inline-block !important;
     height: 50px;
   }
 
