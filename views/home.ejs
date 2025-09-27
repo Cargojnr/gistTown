@@ -988,8 +988,6 @@
     <div class="container">
       <div class="header">
         <a href="/" id="logo">
-          <!-- <img oncontextmenu="return false;" src="../../img/logo/main-logo.png" alt="" id="main-logo" class="logo">
-          <img oncontextmenu="return false;" src="../../img/logo/mobile-logo.png" alt="" id="mobile-logo" class="logo"> -->
           <h1 class="text-gradient main-logo"><i class="fas fa-microphone"></i>Echoes</h1>
           <h1 class="text-gradient mobile-logo"><i class="fas fa-microphone"></i></h1>
         </a>
@@ -1012,10 +1010,9 @@
                 <div class="menu">
                   <div class="menu-nav">
                     <div class="menu-logo">
-                      <img oncontextmenu="return false;" src="../../img/logo/main-logo.png" alt="" id="main-logo"
-                        class="logo">
-                      <img oncontextmenu="return false;" src="../../img/logo/mobile-logo.png" alt="" id="mobile-logo"
-                        class="logo">
+
+                        <h1 class="text-gradient main-logo"><i class="fas fa-microphone"></i>Echoes</h1>
+                        <h1 class="text-gradient mobile-logo"><i class="fas fa-microphone"></i></h1>
 
                     </div>
                     <ul class="pages">
@@ -1084,7 +1081,7 @@
       <div class="fade-in">
         <div class="hero">
           <i class="fas fa-microphone fa-7x"></i>
-          <h1 class="display-3 text-gradient">Voice Out to the World</h1>
+          <h1 class="display-3 text-gradient">Voice it Out</h1>
           <p class="lead sub-lead">Speak freely. Share secretly. Connect fearlessly.</p>
           <button class="btn btn-gradient"><a href="#about-info" class="btn">Explore How It Works</a></button>
           <button class="btn btn-gradient"><a href="/register" class="btn">Join Now</a></button>
@@ -1490,9 +1487,6 @@
       <div class="footer">
         <div class="footer-flex">
           <div class="footer-logo">
-            <!-- <img oncontextmenu="return false;" src="../../img/logo/main-logo.png" alt="" id="main-logo" class="logo">
-            <img oncontextmenu="return false;" src="../../img/logo/mobile-logo.png" alt="" id="mobile-logo"
-              class="logo"> -->
               <h1 class="text-gradient main-logo"><i class="fas fa-microphone"></i>Echoes</h1>
           <h1 class="text-gradient mobile-logo"><i class="fas fa-microphone"></i></h1>
 
@@ -1585,24 +1579,6 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      const header = document.querySelector("header");
-      const nextSection = document
-        .querySelector("body")
-        .querySelector("section:not(.active)");
-      const logo = document.getElementById("logo");
-
-      window.addEventListener("scroll", function () {
-        const scrolled = window.scrollY > 0;
-        if (scrolled) {
-          let body = document.querySelector("body");
-          body.style.overflowY = "scroll";
-          header.classList.add("scrolled");
-          logo.style.opacity = 1;
-        } else {
-          header.classList.remove("scrolled");
-          logo.style.opacity = 0;
-        }
-      });
 
       const aboutInfoSection = document.querySelector("#about-info");
       const headers = document.querySelectorAll(".m-head");
@@ -1669,51 +1645,6 @@
         .addEventListener('mouseleave', () => timer = setInterval(() => go((idx + 1) % slides.length), 5000));
     });
   </script>
-
-<script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("../../js/service-worker.js");
-  }
-</script>
-<script>
-  let deferredPrompt;
-  const installBtn = document.getElementById('installBtn');
-
-  // Listen for install prompt event
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    installBtn.style.display = 'flex';
-  });
-
-  // Handle click to show install prompt
-  installBtn.addEventListener('click', async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      const notificationsDiv = document.getElementById("notification");
-    const notification = document.createElement("div");
-    notification.className = "toast";
-      if (outcome === 'accepted') {
-        console.log('User accepted the install prompt');
-        
-    notification.innerText = "Installation successful"
-      } else {
-        console.log('User dismissed the install prompt');
-         notification.innerText = "Installation failed"
-      }
-      installBtn.style.display = 'none';
-      deferredPrompt = null;
-
-       notificationsDiv.appendChild(notification);
-
-    // Automatically remove the notification after 5 seconds
-    setTimeout(() => {
-      notification.remove();
-    }, 5000);
-    }
-  });
-</script>
 
   <script src="/js/defaultTheme.js"></script>
   <script src="/js/app.js"></script>

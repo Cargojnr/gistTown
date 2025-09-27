@@ -313,8 +313,6 @@
       <div class="container">
         <div class="header">
           <a href="/" id="logo">
-            <!-- <img oncontextmenu="return false;" src="../../img/logo/main-logo.png" alt="" id="main-logo" class="logo">
-            <img oncontextmenu="return false;" src="../../img/logo/mobile-logo.png" alt="" id="mobile-logo" class="logo"> -->
 
             <h1 class="text-gradient main-logo"><i class="fas fa-microphone"></i>Echoes</h1>
           <h1 class="text-gradient mobile-logo"><i class="fas fa-microphone"></i></h1>
@@ -341,10 +339,8 @@
                   <div class="menu">
                     <div class="menu-nav">
                       <div class="menu-logo">
-                        <!-- <img oncontextmenu="return false;" src="../../img/logo/main-logo.png" alt="" id="main-logo" class="logo">
-                        <img oncontextmenu="return false;" src="../../img/logo/mobile-logo.png" alt="" id="mobile-logo" class="logo"> -->
-
-                        <h1 class="text-gradient"><i class="fas fa-microphone"></i>Echoes</h1>
+                        <h1 class="text-gradient main-logo"><i class="fas fa-microphone"></i>Echoes</h1>
+                        <h1 class="text-gradient mobile-logo"><i class="fas fa-microphone"></i></h1>
                 
                       </div>
                       <ul class="pages">
@@ -503,8 +499,6 @@
         <div class="footer">
           <div class="footer-flex">
             <div class="footer-logo">
-              <!-- <img oncontextmenu="return false;" src="../../img/logo/main-logo.png" alt="" id="main-logo" class="logo">
-              <img oncontextmenu="return false;" src="../../img/logo/mobile-logo.png" alt="" id="mobile-logo" class="logo"> -->
               <h1 class="text-gradient main-logo"><i class="fas fa-microphone"></i>Echoes</h1>
               <h1 class="text-gradient mobile-logo"><i class="fas fa-microphone"></i></h1>
             </div>
@@ -605,29 +599,6 @@ if (closest){
       updateCenterSelection();
     </script>
     
-
-    <script>
-      const header = document.querySelector("header");
-      const nextSection = document
-        .querySelector("body")
-        .querySelector("section:not(.active)");
-      const logo = document.getElementById("logo");
-
-      window.addEventListener("scroll", function () {
-        const scrolled = window.scrollY > 0;
-        if (scrolled) {
-          let body = document.querySelector("body");
-          body.style.overflowY = "scroll";
-          header.classList.add("scrolled");
-          logo.style.opacity = 1;
-        } else {
-          header.classList.remove("scrolled");
-          logo.style.opacity = 0;
-        }
-      });
-    </script>
-
-
 
     <script src="/js/app.js"></script>
     <script src="/js/defaultTheme.js"></script>

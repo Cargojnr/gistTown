@@ -1192,7 +1192,7 @@ header {
   height: 70px;
   object-fit: contain;
   font-weight: 500;
-  /* margin-top: 1rem; */
+  margin-right: 1rem;
 }
 
 #mobile-logo {
