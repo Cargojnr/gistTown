@@ -788,6 +788,7 @@ font-size: 12px;
 
 .theme-switch {
   top: 1rem !important;
+  left: 1rem !important;
 }
 
 .theme-toggle-btn {
