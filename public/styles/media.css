@@ -1078,6 +1078,11 @@ font-size: .9rem;
   margin-left: .75rem;
 } */
 
+.center-highlight {
+  width: 92px !important;
+  height: 92px !important;
+}
+
 /*Menu*/
   .menu {
   position: relative;

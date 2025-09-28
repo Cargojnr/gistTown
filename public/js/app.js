@@ -48,6 +48,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
   installBtn.style.display = 'flex';
 });
 
+if(installBtn){
 // Handle click to show install prompt
 installBtn.addEventListener('click', async () => {
   if (deferredPrompt) {
@@ -75,6 +76,9 @@ installBtn.addEventListener('click', async () => {
   }, 5000);
   }
 });
+
+}
+
 
 });
 

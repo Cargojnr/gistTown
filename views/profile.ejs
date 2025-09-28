@@ -554,25 +554,34 @@
   }
 
   .center-highlight {
-    position: absolute;
-    top: 10%;
-    bottom: 0;
-    left: 50%;
-    width: 100px;
-    height: 100px;
-    transform: translateX(-50%);
-    border-radius: 50%;
-    z-index: 10;
-    pointer-events: none;
-    box-shadow: 0 0 10px var(--primary-color);
-  }
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100px ;
+  height: 100px ;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  z-index: 10;
+  pointer-events: none;
+  border: 2px solid var(--primary-color);
+  box-shadow: 0 0 10px var(--primary-color);
+  animation: pulse 2s infinite alternate;
+}
+
+
+@keyframes pulse {
+  from { box-shadow: 0 0 10px var(--primary-color); }
+  to   { box-shadow: 0 0 25px var(--primary-color), 0 0 40px rgba(127,90,240,.4); }
+}
 
   .avatar-carousel {
     display: flex;
     overflow-x: auto;
+    margin: auto;
     gap: 1.5rem;
     scroll-behavior: smooth;
-    padding: 1rem 0;
+    padding: .75rem 0;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
   }
@@ -582,9 +591,7 @@
   }
 
   .avatar-item.spacer {
-    width: calc(18vw - 45px);
-    /* 45px is half the avatar width (90px) */
-    height: 90px;
+    height: 95px;
     pointer-events: none;
     opacity: 0;
   }
@@ -592,8 +599,8 @@
 
   .avatar-item {
     flex: 0 0 auto;
-    width: 90px;
-    height: 90px;
+    width: clamp(70px, 8vw, 90px);
+  height: clamp(70px, 8vw, 90px);
     border-radius: 50%;
     overflow: hidden;
     scroll-snap-align: center;
@@ -614,6 +621,7 @@
     transform: scale(1.1);
     opacity: 1;
     z-index: 5;
+    box-shadow: 0 0 15px rgba(127, 90, 240, 0.6); /* glow based on theme color */
   }
 
   #editProfileForm .form-group {
@@ -1463,6 +1471,7 @@ class=" read" style="
                       <% } %>
                 </div>
 
+                <div class="form-group">
                 <div class="avatar-selector-wrapper">
                   <h3 class="display-3">Change Your Avatar</h3>
                   <div class="carousel-container">
@@ -1472,8 +1481,8 @@ class=" read" style="
 
                       <div class="avatar-item"><img src="./img/avatars/thumbs/whisper.jpg" alt="whisper" /></div>
                       <div class="avatar-item"><img src="./img/avatars/thumbs/pulse.jpg" alt="pulse" /></div>
-                      <div class="avatar-item"><img src="./img/avatars/thumbs/phantom.jpg" alt="phantom" /></div>
                       <div class="avatar-item"><img src="./img/avatars/thumbs/reverb.jpg" alt="reverb" /></div>
+                      <div class="avatar-item"><img src="./img/avatars/thumbs/phantom.jpg" alt="phantom" /></div>
                       <div class="avatar-item"><img src="./img/avatars/thumbs/sonic.jpg" alt="sonic" /></div>
                       <div class="avatar-item"><img src="./img/avatars/thumbs/chorus.jpg" alt="chorus" /></div>
                       <div class="avatar-item"><img src="./img/avatars/thumbs/vibe.jpg" alt="vibe" /></div>
@@ -1485,7 +1494,7 @@ class=" read" style="
                   </div>
 
                 </div>
-
+              </div>
                 <form id="editProfileForm" class="profile-form">
 
                   <div class="form-group">
@@ -1511,10 +1520,43 @@ class=" read" style="
           <script>
             const carousel = document.getElementById('avatarCarousel');
             const avatarItems = document.querySelectorAll('.avatar-item');
+            const centerHighlight = document.querySelector('.center-highlight');
             const profilePicPreview = document.getElementById("profilePicPreview")
             const selectedAvatar = document.getElementById("selectedAvatar")
             const selectedAvatarInput = document.getElementById("selectedAvatarInput")
             const selectedAvatarAlt = document.getElementById("selectedAvatarAlt")
+
+
+            function resizeHighlightToActive() {
+          const active = document.querySelector('.avatar-item.active');
+          if (active && centerHighlight) {
+            const rect = active.getBoundingClientRect();
+            const size = rect.width + 10; // halo margin
+            centerHighlight.style.width = size + "px";
+            centerHighlight.style.height = size + "px";
+          }
+        }
+
+        function updateSpacers() {
+  const carousel = document.getElementById('avatarCarousel');
+  const spacers = document.querySelectorAll('.avatar-item.spacer');
+  const avatar = document.querySelector('.avatar-item:not(.spacer)');
+
+  if (!carousel || !avatar) return;
+
+  const carouselRect = carousel.getBoundingClientRect();
+  const avatarRect = avatar.getBoundingClientRect();
+
+  // Center point of the carousel
+  const centerOffset = carouselRect.width / 2;
+
+  // Spacer should equal center position minus half avatar width
+  const spacerWidth = centerOffset - (avatarRect.width / 2);
+
+  spacers.forEach(spacer => {
+    spacer.style.width = spacerWidth + "px";
+  });
+}
 
             function updateCenterSelection() {
               let closest = null;
@@ -1544,6 +1586,7 @@ class=" read" style="
                   selectedAvatarInput.value = relativePath;
                   selectedAvatarAlt.value = img.alt.toLowerCase();
                 }
+                resizeHighlightToActive();
               }
             }
 
@@ -1568,12 +1611,39 @@ class=" read" style="
               });
             });
 
+
             carousel.addEventListener('scroll', () => {
               window.requestAnimationFrame(updateCenterSelection);
             });
 
-            // Initial call
+            document.addEventListener('keydown', (e) => {
+          const active = document.querySelector('.avatar-item.active');
+          if (!active) return;
+          if (e.key === "ArrowRight" && active.nextElementSibling) {
+            scrollToCenter(active.nextElementSibling);
+          } else if (e.key === "ArrowLeft" && active.previousElementSibling) {
+            scrollToCenter(active.previousElementSibling);
+          }
+        });
+      
+// Run again on resize (responsive fix)
+window.addEventListener('resize', () => {
+  updateSpacers();
+  updateCenterSelection(); // make sure highlight stays locked
+});
+
+      
+        // Initial center on page load (middle avatar)
+        setTimeout(() => {
+          const middleIndex = Math.floor(avatarItems.length / 2);
+          const middleAvatar = avatarItems[middleIndex];
+          if (middleAvatar) {
+            scrollToCenter(middleAvatar);
             updateCenterSelection();
+            // Run once on load
+updateSpacers();
+          }
+        }, 200);
           </script>
 
           <script>
@@ -1738,6 +1808,18 @@ class=" read" style="
             // Show modal
             editBtn.addEventListener("click", () => {
               editModal.style.display = "flex"; // Use flex to center content
+
+              // Give browser a moment to render modal, then initialize carousel
+              setTimeout(() => {
+  const middleIndex = Math.floor(avatarItems.length / 2);
+  const middleAvatar = avatarItems[middleIndex];
+  if (middleAvatar) {
+    scrollToCenter(middleAvatar);
+    updateCenterSelection();
+  }
+  updateSpacers();
+}, 200);
+
             });
 
             // Close modal on close button
