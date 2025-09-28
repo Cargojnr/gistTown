@@ -26,11 +26,15 @@ window.addEventListener("scroll", function () {
     let body = document.querySelector("body");
     body.style.overflowY = "scroll";
     header.classList.add("scrolled");
-    logo.style.opacity = 1;
+    if(logo){
+      logo.style.opacity = 1;
+    }
   } else {
     header.classList.remove("scrolled");
-    logo.style.opacity = 0;
-  }
+    if(logo){
+      logo.style.opacity = 0;
+    }
+    }
 });
 
 

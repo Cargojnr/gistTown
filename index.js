@@ -668,8 +668,6 @@ app.get("/section/:section", ensureAuthenticated, async (req, res) => {
         stealthMode : user.stealth_mode,
         profilePicture: avatarUrl,
         username: user.username,
-        theme: userTheme,
-        mode: mode,
         reactions: JSON.stringify(
           usersSecret.map((secret) => secret.reactions || {})
         ),
@@ -713,8 +711,6 @@ const result = await db.query(query, values);
         stealthMode : user.stealth_mode,
         profilePicture: avatarUrl,
         username: user.username,
-        theme: userTheme,
-        mode: mode,
         reactions: JSON.stringify(
           usersSecret.map((secret) => secret.reactions || {})
         ),
@@ -777,8 +773,6 @@ app.get("/random-secret", ensureAuthenticated, async (req, res) => {
         profilePicture: avatarUrl,
         stealthMode : user.stealth_mode,
         username: user.username,
-        theme: userTheme,
-        mode: mode,
         reactions: JSON.stringify(randomSecret.reactions || {}),
       });
     } catch (err) {
@@ -1181,8 +1175,6 @@ app.get("/feeds", ensureAuthenticated, async (req, res) => {
 
 
     try {
-      const userTheme = user.color || "default";
-      const mode = user.mode || "light";
       const allUsers = await db.query(
         "SELECT id, verified, username, profile_picture FROM users"
       );
@@ -1263,8 +1255,6 @@ const formattedAudio = audioPosts.map((audio) => {
       stealthMode : user.stealth_mode,
       profilePicture: avatarUrl,
       username: user.username,
-      theme: userTheme,
-      mode,
       title: 'Whispers',
     });
     } catch (err) {
@@ -1482,8 +1472,6 @@ app.get("/notifications", ensureAuthenticated, async (req, res) => {
         stealthMode : user.stealth_mode,
         profilePicture: avatarUrl,
         username: user.username,
-        theme: userTheme,
-        mode: mode,
       });
     } catch (error) {
       console.log(error);
@@ -2202,8 +2190,6 @@ app.post("/edit",  ensureAuthenticated, async (req, res) => {
         title: "Edit your Gossip",
         submit: "Update",
         secret: data,
-        theme: userTheme,
-        mode: mode,
         userId: user.id,
         username: user.username,
         activeStatus: user.active_status,
