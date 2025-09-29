@@ -585,8 +585,6 @@ app.get("/chat",  ensureAuthenticated, async (req, res) => {
     const mode = user.mode || "light";
     res.render("chat", {
       title: "Connect With Gossipas",
-      theme: userTheme,
-      mode: mode,
       username: user.username,
       userId: user.id,
       activeStatus: user.active_status,
@@ -606,8 +604,6 @@ app.get("/feedback", ensureAuthenticated, async (req, res) => {
     
     res.render("feedback", {
       title: "Enter Your Feedback",
-      theme: userTheme,
-      mode: mode,
       username: user.username,
       userId: user.id,
       activeStatus: user.active_status,
@@ -647,8 +643,6 @@ app.get("/section/:section", ensureAuthenticated, async (req, res) => {
   const user = getCurrentUser(req)
   const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
   const { section } = req.params;
-  const userTheme = user.color || "default";
-  const mode = user.mode || "light";
     try {
       
       const result = await db.query(
@@ -682,8 +676,6 @@ app.get("/section/:section", ensureAuthenticated, async (req, res) => {
 app.get("/emotional-support", ensureAuthenticated, async (req, res) => {
   const user = getCurrentUser(req)
   const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
-  const userTheme = user.color || "default";
-  const mode = user.mode || "light";
     try {
       const keywords = ['love', 'relationship', 'marriage', 'heartbreak', 'breakup', 'advice', 'left me'];
 
@@ -818,8 +810,6 @@ app.get("/partial-submit", ensureAuthenticated, async (req, res) => {
     const formData = {
       title: "Share a Gossip",
       submit: "Submit",
-      theme: userTheme,
-      mode: mode,
       username: user.username,
       userId: user.id,
       activeStatus: user.active_status,
@@ -842,8 +832,6 @@ app.get("/submit", ensureAuthenticated, async (req, res) => {
     const formData = {
       title: "Share your Gossip",
       submit: "Share",
-      theme: userTheme,
-      mode: mode,
       username: user.username,
       userId: user.id,
       activeStatus: user.active_status,
@@ -922,8 +910,6 @@ app.get("/secret/:id", ensureAuthenticated, async (req, res) => {
       username: userProfile.username,
       profilePicture: avatarUrl,
       totalComments: commentData.length || null,
-      theme: userTheme,
-      mode: mode,
       relatedGist,
       reactions: JSON.stringify(data.reactions || {}),
     });
@@ -1145,8 +1131,6 @@ app.get("/profile/user/:userid", ensureAuthenticated, async (req, res) => {
 app.get("/feeds/:category", ensureAuthenticated, async (req, res) => {
   const { category } = req.params;
   const user = getCurrentUser(req)
-  const userTheme = user.color || "default";
-  const mode = user.mode || "light";
   try {
     const result = await db.query(
       "SELECT secrets.id, profile_picture, verified,username,user_id, color, secrets.category, secret.type, reactions,  secret FROM secrets JOIN users ON users.id = user_id WHERE category = $1 ORDER BY secrets.id DESC ",
@@ -1156,8 +1140,6 @@ app.get("/feeds/:category", ensureAuthenticated, async (req, res) => {
     const response = result.rows;
     res.json({
       secrets: response,
-      theme: userTheme,
-      mode: mode,
       reactions: JSON.stringify(response.reactions || {}),
     });
     console.log(`Fetched secrets for category "${category}":`, response);
@@ -1513,8 +1495,6 @@ app.get("/admin/reports", ensureAuthenticated, async (req, res) => {
 app.get("/admin/reviews", ensureAuthenticated, async (req, res) => {
   const user = getCurrentUser(req) 
   const avatarUrl = resolveAvatarUrl(user.profile_picture, req);
-  const userTheme = user.color || "default";
-  const mode = user.mode || "light";
   try {
     const reviewsQuery = `
             SELECT *, username
@@ -1528,8 +1508,6 @@ app.get("/admin/reviews", ensureAuthenticated, async (req, res) => {
 
     res.render("./admin/admin-reviews", {
       reviews,
-      theme: userTheme,
-      mode: mode,
       userId: user.id,
       activeStatus: user.active_status,
       verification: user.verified,
