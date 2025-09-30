@@ -465,12 +465,12 @@
                 textEl.innerHTML = highlightMatch(raw, keyword);
                 const newBtn = document.createElement("button");
                 newBtn.textContent = "Show Less";
-                newBtn.className = "read-more";
+                newBtn.className = "read";
                 newBtn.onclick = ev => toggleRead(ev, newBtn, keyword);
                 textEl.appendChild(newBtn);
                 textEl.classList.add("expanded");
               } else {
-                const short = raw.slice(0, 150) + "...";
+                const short = raw.slice(0, 70) + "...";
                 textEl.innerHTML = highlightMatch(short, keyword);
                 const newBtn = document.createElement("button");
                 newBtn.textContent = "Read More";
@@ -486,13 +486,13 @@
               li.classList.add("suggestion-item");
 
               const short = item.secret.length > 50 ? item.secret.slice(0, 50) + "..." : item.secret;
-              const highlightedText = highlightMatch(item.secret, query);
+              const highlightedText = highlightMatch(short, query);
 
               li.innerHTML = `
       <span class="arrow">→</span>
        <div class="search-text short-text" data-full="${item.secret.replace(/"/g, '&quot;')}">
         ${highlightedText}
-        ${item.secret.length > 50 ? '<button class="read-more" onclick="toggleRead(event, this, \'' + query + '\')">Read More</button>' : ''}
+        ${item.secret.length > 50 ? '<button class="read" onclick="toggleRead(event, this, \'' + query + '\')">Read More</button>' : ''}
       </div>
     `;
 

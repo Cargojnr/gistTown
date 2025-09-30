@@ -164,6 +164,11 @@ font-family: 'Quicksand', sans-serif;
  /* Search */
  #liveSearchForm {
   width: 250px !important;
+  margin-right: .9rem !important;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Align icon to the left */
+  flex: 1;
 }
 
 .search input {
@@ -187,13 +192,6 @@ font-family: 'Quicksand', sans-serif;
   border: none;
 }
 
-  #liveSearchForm {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* Align icon to the left */
-    flex: 1;
-  }
-
 
   .search-btn {
     background: none;
@@ -203,11 +201,6 @@ font-family: 'Quicksand', sans-serif;
     cursor: pointer;
   }
 
-  #liveSearchForm {
-    max-width: 500px; 
-    margin: auto ;
-    margin-right: .9rem !important;
-  }
 
 
   #mobileSearch {
@@ -527,7 +520,8 @@ header .profiled {
   /* Search */
 
   #liveSearchForm {
-    max-width: 500px;
+    max-width: 350px;
+    width: 170px !important;
     width: 100%; 
     margin: auto .9rem !important;
   }
@@ -845,6 +839,11 @@ font-size: 12px;
     font-size: 1rem;
   }
 
+  .first-action button,
+.second-action button {
+  font-size: .9rem;
+}
+
   .post-action {
     display: flex;
     gap: 0;
@@ -862,6 +861,10 @@ font-size: 12px;
     overflow-y: auto;
     width: 100%;
     max-width: 900px;
+  }
+
+  .share-link, .copy-link{
+    font-size: .9rem;
   }
 
   p,
@@ -903,21 +906,22 @@ font-size: 12px;
 
 
   .topbar-icons {
-    gap: .5rem;
+    gap: .5rem !important;
   }
 
 
   .topbar-icons .fab, .topbar-icons .fas, #liveSearchForm .fas{
-      font-size: 1.5rem;
+      font-size: 1.5rem !important;
   }
 
   #liveSearchForm {
-    /* max-width: 38px;  */
     margin: 0 !important;
+    max-width: 200px;
+    width: 50vw !important;
   }
 
   #mobileSearch {
-    width: 30px;
+    width: 50vw !important;
   }
   
   #mobileSearch.active {
@@ -933,7 +937,19 @@ font-size: 12px;
     font-size: 0.85rem;
     max-height: 180px;
     left: 2% !important;
-    width: 83%;
+    width: 95%;
+  }
+
+  .suggestion-item {
+    gap: 0.5rem;
+    padding: 0.5rem .75rem;
+    font-size: 0.8rem;
+    line-height: 1.2;
+  }
+
+  .suggestion-item .arrow {
+    font-size: .8rem;
+    padding-top: 2px;
   }
 
 
@@ -1442,7 +1458,9 @@ button#next-step {
   height: 25px !important;
 }
 
-
+#commentButton {
+  padding: .25rem .5rem !important;
+}
 
   .comment {
     font-size: .9rem;
