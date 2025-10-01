@@ -99,7 +99,7 @@
 
   .secret-footer {
     position: fixed;
-    bottom: 5rem !important;
+    bottom: 5.75rem !important;
     width: 50%;
     margin-top: 2rem;
     background: rgba(255, 255, 255, 0.03);
@@ -144,9 +144,7 @@
   }
 
   .reaction-count {
-    font-size: 0.9rem;
     color: #aaa;
-    margin-left: 4px;
   }
 
   .reaction-comment-form {
@@ -176,6 +174,7 @@
     background: linear-gradient(135deg, #7f5af0, #d13d87);
     border: none;
     padding: 0.5rem 1rem;
+    margin-right: .5rem;
     border-radius: 12px;
     color: white;
     font-weight: bold;
@@ -520,7 +519,7 @@ const selectedIndex = Math.floor(normalizedRotation / angle);
     <input type="hidden" name="secretUserId" value="${selectedSecret.user_id}" />
     <input type="hidden" name="commentUserId" value="<%= userId %>" />
     <textarea name="comment" id="commentInput" placeholder="Drop your thoughts... 🤐" required></textarea>
-    <button type="submit">Send</button>
+    <button type="submit"><i class="fas fa-paper-plane"></i> <span class="nav-text">Send</span></button>
   </form>
 </div>
 

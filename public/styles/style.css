@@ -3109,9 +3109,8 @@ li {
 .card-menu {
   position: absolute;
   right: 1rem;
-  top: 1rem;
+  top: 1.25rem;
 }
-
 
 
 .card-toggle-btn {
@@ -3132,17 +3131,6 @@ li {
   box-shadow: .2rem .2rem .5rem rgba(0, 0, 0, 0.3);
 }
 
-
-
-
-/* Comment button minor update */
-#commentButton {
-  background-color: transparent;
-  border: 1px solid #ccc;
-  padding: 8px;
-  border-radius: 8px;
-  cursor: pointer;
-}
 
 /* Smooth scroll back text */
 #scrollEndMessage {
@@ -3205,6 +3193,13 @@ li {
   border-radius: 12px;
 }
 
+
+/* Comment button minor update */
+#commentButton {
+  background-color: transparent;
+  cursor: pointer;
+}
+
 #commentButton {
   border: none;
   cursor: pointer;
@@ -3237,28 +3232,27 @@ li {
 }
 
 #comment-form {
+  position: relative;
   display: flex;
   align-items: center;
   width: 100%;
   gap: 0.5rem;
-  margin-top: 1rem
+  margin-top: 1rem;
+  background: var(--card-bg);
+  border-radius: 30px;
+  border: 1px solid var(--glass-bg);
 }
 
 #commentInput {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid var(--primary-color);
-  outline: none;
-  border-radius: 4px;
+  width: 80%;
   resize: none;
-  margin-bottom: 10px;
-  margin-right: 10px;
-  flex: 1;
-  padding: 0.8rem;
-  border-radius: 12px;
+  padding: 0.5rem 0.8rem;
   font-size: 0.9rem;
-  background: var(--input-bg);
+  outline: none;
+  border: none;
+  background: var(--card-bg);
   color: var(--text-color);
+  border-radius: 30px;
 }
 
 #commentInput:hover {
@@ -3266,17 +3260,18 @@ li {
 }
 
 #postCommentButton {
-  padding: 19px;
+  position: absolute;
+  top: .25rem;
+  bottom: 0;
+  right: .5rem;
+  padding: .75rem 1rem;
   border: none;
-  border-radius: 4px;
-  background: var(--primary-color);
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  border-radius: 50%;
   color: var(--text-color);
   cursor: pointer;
   font-size: 14px;
   align-self: flex-start;
-  height: 100%;
-  border-radius: 12px;
   font-weight: 500;
   transition: background 0.3s ease;
 }
@@ -3321,10 +3316,6 @@ li {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
-.reply {
-  margin: 0 .5rem;
-}
-
 .comment-item .user {
   font-weight: 500;
   margin-bottom: 0.4rem;
@@ -3351,6 +3342,7 @@ li {
 
 .reply {
   font-size: 0.85rem;
+  margin: 0 .5rem;
   margin-left: 1.5rem;
   color: var(--text-muted);
 }
