@@ -1470,7 +1470,7 @@ button#next-step {
 
 #postCommentButton {
   padding: .5rem .75rem;
-  top: .5rem !important;
+  top: 0rem !important;
 }
 
   .comment {

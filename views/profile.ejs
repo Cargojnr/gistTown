@@ -775,6 +775,12 @@
   .copy-link {
     color: #fff !important;
   }
+
+  .bookmarked {
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+  }
 </style>
 
 <div id="main">
@@ -986,7 +992,7 @@ class=" read" style="
                             </div>
 
                             <ul class="second-action">
-                              <li class="bookmarked"><i class="fas fa-bookmark"></i>&nbsp;<span id="bookmarkCount">
+                              <li class="bookmarked bookmark-btn"><i class="fas fa-bookmark"></i>&nbsp;<span id="bookmarkCount" class="reaction-count">
                                   <%= formatCount(secret.bookmark_count) %>
                                 </span>
                               </li>
@@ -1010,7 +1016,7 @@ class=" read" style="
                               <!-- <input type="text" id="commentInput" placeholder="Write a comment" name="comment"> -->
                               <button id="postCommentButton">
                                 <!-- Post -->
-                                <i class="fas fa-paper-plane"></i>
+                                <i class="fas fa-arrow-up"></i>
                               </button>
                               <% if (locals.message) { %>
                                 <small>
@@ -1307,7 +1313,7 @@ class=" read" style="
                             </div>
 
                             <ul class="second-action">
-                              <li class="bookmarked"><i class="fas fa-bookmark"></i>&nbsp;<span id="bookmarkCount">
+                              <li class="bookmarked bookmark-btn"><i class="fas fa-bookmark"></i>&nbsp;<span id="bookmarkCount" class="reaction-count">
                                   <%= formatCount(secret.bookmark_count) %>
                                 </span>
                               </li>
@@ -1331,7 +1337,7 @@ class=" read" style="
                               <!-- <input type="text" id="commentInput" placeholder="Write a comment" name="comment"> -->
                               <button id="postCommentButton">
                                 <!-- Post -->
-                                <i class="fas fa-paper-plane"></i>
+                                <i class="fas fa-arrow-up"></i>
                               </button>
                               <% if (locals.message) { %>
                                 <small>
@@ -2294,7 +2300,7 @@ updateSpacers();
                       </button>
                     </div>
                     <ul class="second-action">
-                              <li class="bookmarked"><i class="fas fa-bookmark"></i>&nbsp;<span id="bookmarkCount">${bookmarkCount}</span></li>
+                              <li class="bookmarked bookmark-btn"><i class="fas fa-bookmark"></i>&nbsp;<span id="bookmarkCount" class="reaction-count">${bookmarkCount}</span></li>
                             </ul>
                             </div>
                    
@@ -2313,7 +2319,7 @@ updateSpacers();
                               <!-- <input type="text" id="commentInput" placeholder="Write a comment" name="comment"> -->
                               <button id="postCommentButton">
                                 <!-- Post -->
-                                <i class="fas fa-paper-plane"></i>
+                                <i class="fas fa-arrow-up"></i>
                               </button>
                             </form>
 
