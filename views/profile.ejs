@@ -1086,7 +1086,7 @@ class=" read" style="
               <div class="banner-image">
                 
               <div class="card-footer">
-                <button id="editProfileBtn" class="edit-profile-btn"><i class="fas fa-pen"></i>&nbsp;Edit
+                <button id="editProfileBtn" class="edit-profile-btn"><span><i class="fas fa-pen"></i></span>&nbsp;Edit
                   Profile</button>
               </div>
 
@@ -1812,7 +1812,11 @@ updateSpacers();
             const closeBtn = document.querySelector(".edit-close-btn");
 
             // Show modal
-            editBtn.addEventListener("click", () => {
+            editBtn.addEventListener("click", (e) => {
+              e.target.querySelector("span").innerHTML = `<div class="button-spinner"></div>`
+              e.target.disabled= true;
+
+
               editModal.style.display = "flex"; // Use flex to center content
 
               // Give browser a moment to render modal, then initialize carousel
@@ -1825,6 +1829,9 @@ updateSpacers();
   }
   updateSpacers();
 }, 200);
+
+e.target.querySelector("span").innerHTML = `<i class="fas fa-pen"></i>`
+e.target.disabled= false;
 
             });
 
@@ -2955,6 +2962,7 @@ updateSpacers();
       if (e.target.closest("#comment-form")) {
         e.preventDefault();
         const form = e.target;
+        const postButton = form.querySelector("#postCommentButton");
         const section = form.closest(".comment-section");
         const postType = section.closest(".secret").dataset.type;
         const postId = section.querySelector("#secretId")?.value || section.querySelector("#audioId")?.value;
@@ -2967,6 +2975,10 @@ updateSpacers();
         const commentList = section.querySelector(".comments-list");
         const totalcomments = display.querySelector("total-count");
         const count = section.querySelector(".comment-count");
+
+        postButton.innerHTML = `<div class="button-spinner"></div>`;
+        postButton.disabled = true;
+
 
         try {
           const res = await fetch(`/comment/${postType}`, {
@@ -3015,6 +3027,9 @@ updateSpacers();
           console.error(err);
           showToast("Error posting comment")
         }
+
+        postButton.innerHTML = `<i class="fas fa-arrow-up"></i>`;
+              postButton.disabled = false;
       }
     });
   });

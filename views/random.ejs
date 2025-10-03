@@ -518,7 +518,7 @@ const selectedIndex = Math.floor(normalizedRotation / angle);
     <input type="hidden" name="secretUserId" value="${selectedSecret.user_id}" />
     <input type="hidden" name="commentUserId" value="<%= userId %>" />
     <textarea name="comment" id="commentInput" placeholder="Drop your thoughts... 🤐" required></textarea>
-    <button type="submit"><i class="fas fa-paper-plane"></i> <span class="nav-text">Send</span></button>
+    <button type="submit" class="postCommentButton"><i class="fas fa-paper-plane"></i> <span class="nav-text">Send</span></button>
   </form>
 </div>
 
@@ -732,11 +732,15 @@ const selectedIndex = Math.floor(normalizedRotation / angle);
     form.addEventListener("submit", function (e) {
       e.preventDefault();
 
+      const postButton = form.querySelector("#postCommentButton");
       const commentSection = this.closest(".secret-footer");
       const secretId = commentSection.querySelector("#secretId").value;
       const secretUserId = commentSection.querySelector('[name="secretUserId"]').value;
       const commentUserId = commentSection.querySelector('[name="commentUserId"]').value;
       const comment = commentSection.querySelector("#commentInput").value;
+
+      postButton.innerHTML = `<div class="button-spinner"></div>`;
+              postButton.disabled = true;
 
       fetch("/comment/text", {
         method: "POST",
@@ -763,6 +767,9 @@ const selectedIndex = Math.floor(normalizedRotation / angle);
         .catch((err) => {
           console.error("Comment submission error:", err);
         });
+
+        postButton.innerHTML = `<i class="fas fa-arrow-up"></i>`;
+              postButton.disabled = false;
     });
   }
 
