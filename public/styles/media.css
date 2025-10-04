@@ -1417,9 +1417,8 @@ button#next-step {
     padding: 7.5px;
   }
 
-    
   .reactions .sleek {
-    margin: 5px !important;
+    margin: 2px !important;
   }
 
 .reactions {
@@ -1428,7 +1427,6 @@ button#next-step {
 
 .reaction-btn {
   display: flex;
-    /* flex-direction: column !important; */
   align-items: center;
   font-size: 0.9rem !important;
   padding: 0.25rem;

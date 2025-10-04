@@ -134,7 +134,7 @@ header {
 }
 
 .container {
-  max-width: 1300px;
+  max-width: 1500px;
   margin: auto;
   padding: 0 1rem;
 }
@@ -2244,7 +2244,7 @@ li {
 #real-secrets #secrets {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 5px;
   justify-content: center;
   align-items: flex-start;
 }
@@ -2334,7 +2334,7 @@ li {
   cursor: pointer;
   font-family: 'Quicksand', sans-serif;
   /* font-size: 1rem; */
-  font-weight: 100;
+  font-weight: 600;
   background: radial-gradient(circle, rgba(211, 211, 211, 0.6) 0%, rgb(255, 255, 255, 0) 100%);
   transition: opacity 0.5s ease, filter 0.5s ease;
   overflow: hidden;
@@ -2369,7 +2369,7 @@ li {
   display: none;
 }
 
-.card small {
+.card .user {
   font-weight: bold;
 }
 
