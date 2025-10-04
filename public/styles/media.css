@@ -352,7 +352,7 @@ header .profiled {
 }
 
 .reactions.sleek {
-  margin-top: 10px !important;
+  margin-top: 10px ;
 }
 
 
@@ -918,16 +918,16 @@ font-size: 12px;
 
   #liveSearchForm {
     margin: 0 !important;
-    max-width: 200px;
-    width: 50vw !important;
+    max-width: 250px;
+    width: 55vw !important;
   }
 
   #mobileSearch {
-    width: 50vw !important;
+    width: 55vw !important;
   }
   
   #mobileSearch.active {
-    width: 50vw !important;
+    width: 55vw !important;
   }
 
   .search-btn {
@@ -1074,17 +1074,9 @@ font-size: 12px;
   #login input,
   #reset input {
    width: 100%;
-   padding: .5rem;
-   font-size: 1rem;
+   padding: .75rem;
    background: var(--dark-container-bg);
    color: var(--light-body-bg);
- }
-
- #register input,
-  #login input,
-  #reset input {
-   padding: 1rem;
-   font-size: 1rem;
  }
 
  
@@ -1689,13 +1681,13 @@ button#next-step {
     align-items: baseline;
   }
 
-  .footer-logo i {
+  /* .footer-logo i {
     font-size: 1.5rem;
   }
 
   .footer-logo h4 {
     font-size: 1.5rem;
-  }
+  } */
 
 }
 

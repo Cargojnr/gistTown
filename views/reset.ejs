@@ -39,7 +39,7 @@
   <link rel="stylesheet" href="/styles/style.css" />
   <link rel="stylesheet" href="/styles/media.css" />
 
-  <title>Echoes - Voice Out Anonymously </title>
+  <title>Echoes || Reset your password </title>
 
   <style>
     .layout-container {
@@ -87,6 +87,17 @@
       padding: 1.5rem !important;
     }
 
+    .form-container h2 {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .form-container .account-det{
+      display: flex;
+      align-items: center;
+      gap: .25rem;
+    }
+
     .form-control {
       border: 2px solid #1e2a3f;
     }
@@ -100,20 +111,6 @@
           padding: 2rem 0;
         }
 
-  
-        @media (max-width: 768px) {
-          .hero h1 {
-            font-size: 2.5rem;
-          }
-  
-          .hero p {
-            font-size: 1.2rem;
-          }
-  
-          .form-container {
-            padding: 1.5rem;
-          }
-        }
 
         .footer-part {
           color: #777;
@@ -194,11 +191,8 @@
     <div class="container">
       <div class="header">
         <a href="/" id="logo">
-          <!-- <img oncontextmenu="return false;" src="../../img/logo/main-logo.png" alt="" id="main-logo" class="logo">
-          <img oncontextmenu="return false;" src="../../img/logo/mobile-logo.png" alt="" id="mobile-logo" class="logo"> -->
-
-          <h1 class="text-gradient main-logo"><i class="fas fa-microphone"></i>Echoes</h1>
-          <h1 class="text-gradient mobile-logo"><i class="fas fa-microphone"></i></h1>
+          <h1 id="main-logo" class="text-gradient"><i class="fas fa-microphone"></i>&nbsp;Echoes</h1>
+          <h1 id="mobile-logo" class="text-gradient"><i class="fas fa-microphone"></i></h1>
         </a>
         <ul id="navbar">
           <li class="navbar">
@@ -220,10 +214,7 @@
                 <div class="menu">
                   <div class="menu-nav">
                     <div class="menu-logo">
-                      <img oncontextmenu="return false;" src="../../img/logo/main-logo.png" alt="" id="main-logo"
-                        class="logo">
-                      <img oncontextmenu="return false;" src="../../img/logo/mobile-logo.png" alt="" id="mobile-logo"
-                        class="logo">
+                        <h1 id="main-logo" class="logo text-gradient"><i class="fas fa-microphone"></i>&nbsp;Echoes</h1>
 
                     </div>
                     <ul class="pages">
@@ -298,8 +289,17 @@
       </p>
       <% if (locals.foundUser){ %>
         <div class="form-container">
-          <h2> Hey <span style="text-transform: uppercase;">@<%= foundUser.username %>
-                </span></h2>
+          <h2> Hey
+          <div class="account-det">
+            <span class="avatar-profile">
+              <img
+              oncontextmenu="return false;" src="<%= foundUser.profile_picture %>"
+              alt="Profile Picture" class="profile-pic thumb">
+            </span>
+            
+             <span class="user" style="text-transform: uppercase;">@<%= foundUser.username %> </span>
+          </div>
+            </h2>
           <form action="/reset" method="POST" id="reset">
             <input type="hidden" name="id" value="<%= foundUser.id %>" />
             <div class="form-group">
@@ -315,7 +315,7 @@
                 </p>
                 <% } %>
             </div>
-            <button type="submit" class="btn btn-dark secret-btn">Reset</button>
+            <button type="submit" id="submit" class="btn btn-gradient">Reset</button>
           </form>
         </div>
         <% } else { %>
@@ -329,7 +329,7 @@
                     <%= message %>
                   </p>
                   <% } %>
-                    <button type="submit" class="btn btn-secondary secret-btn">
+                    <button type="submit" id="submit" class="btn btn-gradient">
                       Search
                     </button>
               </div>
@@ -373,12 +373,9 @@
       <div class="footer">
         <div class="footer-flex">
           <div class="footer-logo">
-            <!-- <img oncontextmenu="return false;" src="../../img/logo/main-logo.png" alt="" id="main-logo" class="logo">
-            <img oncontextmenu="return false;" src="../../img/logo/mobile-logo.png" alt="" id="mobile-logo"
-              class="logo"> -->
-
-              <h1 class="text-gradient main-logo"><i class="fas fa-microphone"></i>Echoes</h1>
-          <h1 class="text-gradient mobile-logo"><i class="fas fa-microphone"></i></h1>
+            <div class="logo">
+              <h1 class="text-gradient"><i class="fas fa-microphone"></i>&nbsp;Echoes</h1>
+            </div>
           </div>
           <div class="footer-children">
             <center>

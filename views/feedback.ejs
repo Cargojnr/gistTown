@@ -133,10 +133,14 @@
     submitBtn.addEventListener("click", async (e) => {
         e.preventDefault();
 
-        const review = document.querySelector('input[name="review"]').value;
-        const idea = document.querySelector('input[name="idea"]').value;
-        const rating = document.querySelector('input[name="rating"]:checked')?.value;
+        const review = document.querySelector('input[name="review"]');
+        const idea = document.querySelector('input[name="idea"]');
+        const rating = document.querySelector('input[name="rating"]:checked');
 
+        // Store their values if needed
+const reviewValue = review.value;
+const ideaValue = idea.value;
+const ratingValue = rating ? rating.value : "";
 
         if (!rating) {
             showToast("Please select a rating before submitting.")
@@ -156,9 +160,11 @@
 
             const data = await result.json();
             showToast("Feedback submitted successfully!")
-            review = ""
-            idea = ""
-            rating = ""
+            
+            // Reset inputs
+review.value = "";
+idea.value = "";
+if (rating) rating.checked = false;
         } catch (error) {
             console.error("Submission failed:", error);
             showToast("There was an error submitting your feedback.")
