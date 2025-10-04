@@ -1206,7 +1206,7 @@ font-size: .9rem;
   }
 
   #feeds #secrets {
-    gap: 10px;
+    gap: 10px !important;
     margin-top: 1rem;
   }
 
