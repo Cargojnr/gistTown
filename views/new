@@ -324,3 +324,128 @@ app.get("/notifications", async (req, res) => {
     // }
 
   </script>
+
+
+
+  <div id="trending">
+    <div class="trending">
+              <% if (locals.trendingGist) { %>
+                <ul id="secrets" class="real-secrets" style="display: none;">
+                  <% trendingGist.forEach((trending)=> { %>
+                    <li class="secret full-width">
+                      <div class="trend-box">
+                        <div class="card-header">
+                          <div class="user-details header<%= trending.user_id %>">
+                            <a href=<%=trending.user_id===userId ? '/profile' : '/profile/amebo/' + trending.user_id %>
+                              class="thumb"><img oncontextmenu="return false;" src="<%= trending.profile_picture %>"
+                                alt="Profile Picture" class="profile-pic thumb"></a>
+                            <div class="user-info">
+                              <a href=<%=trending.user_id===userId ? '/profile' : '/profile/amebo/' + trending.user_id
+                                %>>
+                                <p class="username-row user<%= trending.user_id %>">
+                                  <% if (trending.stealth_mode) {%>
+                                  <span class="user">@voice<%= trending.user_id %></span>
+                                  <% } else { %>
+                                    <span class="user">@<%= trending.username %></span>
+                                          <% } %>
+                                  <% if(trending.verified===true) {%>
+                                    <abbr title="Exclusive Membership"> <img oncontextmenu="return false;"
+                                        src="../../img/gossipa3.png" alt="" class="verified-badge"></abbr>
+                                    <% } else {%>
+
+                                      <% } %>
+                                </p>
+                              </a>
+                            </div>
+                            <span class="you-live-badge hidden">🎙️Live</span>
+                          </div>
+                          <% if(userId !==trending.user_id) {%>
+                            <button data-targetid="<%= trending.user_id %>" class="listen"><i
+                                class="fas fa-ear-deaf"></i>&nbsp;<span>Resonate</span></button>
+                            <% } else { %>
+                              <button class="listen listening">Visit profile</button>
+                              <% } %>
+                        </div>
+                        <div class="card-content">
+                          <p>
+                            <span class="content">
+                              <% if (trending.secret.split(" ").length > 20) { %>
+            <%= trending.secret.substring(0, 70) + " ..." %>
+                                <% } else { %>
+                                  <%= trending.secret %>
+                                    <% } %>
+                            </span>
+                            <% if (trending.secret.split(" ").length > 20) { %>
+        
+                            <a class=" read" href="secret/<%= trending.id %>">See all</a>
+
+                              <% } %>
+                          </p>
+                        </div>
+                      </div>
+
+                    </li>
+                    <% }); %>
+
+                </ul>
+                <% } %>
+                  <div class="controls">
+                    <button id="scrollLeft"><i class="fas fa-chevron-left"></i></button>
+                    <button id="scrollRight"><i class="fas fa-chevron-right"></i></button>
+                  </div>
+            </div>
+          </div>
+
+  </div>
+
+
+  <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          const secretsContainer = document.querySelector('#trending #secrets');
+          const secrets = secretsContainer.querySelectorAll("li");
+          const leftBtn = document.querySelector(".controls button:first-child");
+          const rightBtn = document.querySelector(".controls button:last-child");
+
+
+          let currentIndex = 0;
+
+          const updateButtons = () => {
+            leftBtn.disabled = currentIndex === 0;
+            rightBtn.disabled = currentIndex === secrets.length - 1;
+          };
+
+          const scrollToIndex = (index) => {
+            if (index >= 0 && index < secrets.length) {
+
+              secrets[index].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+              currentIndex = index;
+              updateButtons();
+            }
+          };
+
+          leftBtn.addEventListener("click", () => scrollToIndex(currentIndex - 1));
+          rightBtn.addEventListener("click", () => scrollToIndex(currentIndex + 1));
+
+          // Initialize
+          scrollToIndex(0);
+
+          // Optional: Update index based on scroll (if user scrolls manually)
+          secretsContainer.addEventListener("scroll", () => {
+            let closestIndex = 0;
+            let closestDistance = Infinity;
+
+            secrets.forEach((item, index) => {
+              const rect = item.getBoundingClientRect();
+              const distance = Math.abs(rect.left);
+              if (distance < closestDistance) {
+                closestDistance = distance;
+                closestIndex = index;
+              }
+            });
+
+            currentIndex = closestIndex;
+            updateButtons();
+          });
+        });
+
+      </script>

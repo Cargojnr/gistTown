@@ -373,7 +373,7 @@
     margin-top: 1rem;
   }
 
-  .gossipa-comment-form {
+  .comment-form {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--border-color, #444);
     padding: 1rem;
@@ -386,7 +386,12 @@
     transition: all 0.3s ease;
   }
 
-  .gossipa-comment-form textarea {
+  .comment-input {
+    position: relative;
+    width: 100%;
+  }
+
+  .comment-form textarea {
     background: transparent;
     border: none;
     resize: none;
@@ -400,7 +405,7 @@
     outline: none;
   }
 
-  .gossipa-comment-form textarea::placeholder {
+  .comment-form textarea::placeholder {
     color: var(--text-muted, #888);
     font-style: italic;
   }
@@ -416,7 +421,7 @@
     color: var(--text-muted, #888);
   }
 
-  .gossipa-comment-form .submit-btn {
+  .comment-form .submit-btn {
     background: linear-gradient(135deg, #7f5af0, #d13d87);
     color: #fff;
     border: none;
@@ -428,7 +433,7 @@
     transition: background 0.3s ease;
   }
 
-  .gossipa-comment-form .submit-btn:hover {
+  .comment-form .submit-btn:hover {
     background: linear-gradient(135deg, #9f7fff, #ff67a6);
   }
 
@@ -551,21 +556,26 @@
                 </p>
               </div>
 
-              <form action="/comment/text" method="POST" class="gossipa-comment-form">
+              <form action="/comment/text" method="POST" class="comment-form">
                 <input type="hidden" id="secretId" name="id" value="<%= secret.id %>" />
                 <input type="hidden" name="secretUserId" value="<%= secret.user_id %>" />
                 <input type="hidden" name="commentUserId" value="<%= userId %>" />
 
-                <textarea name="comment" id="commentInput" placeholder="drop your thoughts anonymously..." maxlength="300"
+                <div class="comment-input">
+                  <textarea name="comment" id="commentInput" placeholder="drop your thoughts anonymously..." maxlength="300"
                   required></textarea>
 
-                <div class="comment-footer">
-                  <span class="hint">🎭 Stay anonymous • no replies</span>
-                  <!-- <button type="submit" class="submit-btn">Send</button> -->
                   <button type="submit" id="postCommentButton">
                     <!-- Post -->
                     <i class="fas fa-paper-plane"></i>
                   </button>
+
+                </div>
+                
+                <div class="comment-footer">
+                  <span class="hint">🎭 Stay anonymous • no replies</span>
+                  <!-- <button type="submit" class="submit-btn">Send</button> -->
+                  <p class="word-count">0/<span id="wordCount">300</span></p>
                 </div>
 
                 <% if (locals.message) { %>
@@ -750,7 +760,7 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
           // Bubble for comment form submission
-  const cardContainer= document.querySelector("#card-container")
+  const cardContainer= document.querySelector("#card-container");
 
           cardContainer.addEventListener("submit", async (e) => {
             if (e.target.closest(".gossipa-comment-form")) {
@@ -827,11 +837,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <script>
   document.querySelectorAll('.gossipa-comment-form textarea').forEach((textarea) => {
-    textarea.addEventListener('input', () => {
+    textarea.addEventListener('input', () => {     
+      const wordCountText = document.querySelector(".word-count");
+
       textarea.style.height = 'auto';
       textarea.style.height = `${textarea.scrollHeight}px`;
+
+        updateWordCount();
+
+        function updateWordCount() {
+        const count = textarea.value.length;
+        wordCountText.firstChild.textContent = `${count}/`;
+      }
+    
+      });
     });
-  });
 
 </script>
 

@@ -323,6 +323,11 @@ abbr {
   z-index: 1000
 }
 
+#countdown {
+  font-weight: bold;
+   text-align: center;
+}
+
 .toast {
   display: flex;
   align-items: center;
@@ -1599,7 +1604,7 @@ mark {
   display: flex;
   align-items: center;
   padding: 0.5rem 1rem;
-  font-size: 14px;
+  font-size: .9rem;
   font-weight: 600;
   color: var(--button-text);
   background-color: var(--container-bg);
@@ -2244,7 +2249,7 @@ li {
 #real-secrets #secrets {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 20px;
   justify-content: center;
   align-items: flex-start;
 }
