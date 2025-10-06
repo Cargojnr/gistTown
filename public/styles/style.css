@@ -325,8 +325,8 @@ abbr {
 
 .pinned {
    position: absolute ;
-   top: 1rem ;
-    right: 1rem ;
+   top: .25rem;
+    right: .5rem ;
 }
 
 #countdown {
@@ -1785,6 +1785,38 @@ mark {
 #overlay-content h4 {
   font-size: 2.5rem;
   margin-bottom: .5rem;
+}
+
+/* Announcement */
+#announcement-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+#announcement-overlay.hidden {
+  /* display: none; */
+  /* z-index: 0; */
+}
+
+.trumpet-animation {
+  background-image: url('/img/Animation\ -\ 1736260375882.gif'); /* Add trumpet animation GIF */
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }
 
 /* Tutorial */

@@ -205,7 +205,7 @@
                   <li><a href="/feedback">Reviews</a></li>
                   <li> <button id="installBtn" style="display:none;" class="install-prompt">
                       <span class="pulse-ring"></span>
-                      Install Gossipa App
+                      Install App
                       <i class="fas fa-download"></i> 
                     </button></li>
 
@@ -302,7 +302,8 @@
         <center>
           <h2>Announcement! 🎇🎆</h2>
           <h4>Loudest in the room</h4>
-          <!-- <p id="pin-secret"></p> -->
+          <div id="daily-echo"></div>
+          <p id="pin-secret"></p>
           <small id="posted-by"></small>
           <div id="countdown-timer">5</div>
         </center>
@@ -517,104 +518,14 @@
 
 
 
-
-  <script>
-    const showAnnouncement = (secret) => {
-      const overlay = document.getElementById("announcement-overlay");
-      const secretText = document.getElementById("pin-secret");
-      const postedBy = document.getElementById("posted-by");
-      const countdownTimer = document.getElementById("countdown-timer");
-      const closeButton = document.getElementById("close-announcement");
-
-      // secretText.textContent = `"${secret.secret}"`;
-      postedBy.textContent = `Goes to ~~@voice${secret.user_id}~~`;
-
-      let countdown = 5;
-      const countdownInterval = setInterval(() => {
-        countdown -= 1;
-        countdownTimer.textContent = countdown;
-
-        if (countdown === 0) {
-          clearInterval(countdownInterval);
-          setTimeout(() => {
-            overlay.classList.add("hidden");
-            pinSecret(secret);
-          }, 1000);
-        }
-      }, 1000);
-
-      overlay.classList.remove("hidden");
-
-      closeButton.addEventListener("click", () => {
-        overlay.classList.add("hidden");
-        pinSecret(secret);
-      });
-    };
-
-  </script>
-
-  <script>
-    function updateCountdown() {
-      const countdownEl = document.getElementById("countdown");
-      if (!countdownEl) return;
-
-      const now = new Date();
-      const nextTarget = new Date();
-      nextTarget.setUTCHours(17, 5, 0, 0); // 11:00 AM GMT
-
-      if (now > nextTarget) {
-        nextTarget.setUTCDate(nextTarget.getUTCDate() + 1); // move to next day
-      }
-
-      const distance = nextTarget - now;
-
-      const hours = String(Math.floor((distance / (1000 * 60 * 60)) % 24)).padStart(2, '0');
-      const minutes = String(Math.floor((distance / (1000 * 60)) % 60)).padStart(2, '0');
-      const seconds = String(Math.floor((distance / 1000) % 60)).padStart(2, '0');
-
-      const span = document.createElement('span')
-      span.textContent = `${hours}:${minutes}:${seconds}`
-      span.style.fontSize = "4rem"
-
-      countdownEl.textContent = ``;
-      countdownEl.appendChild(span)
-      countdownEl.style.flex = " 1 1 100% !important"
-      countdownEl.style.width = "100% !important"
-      span.style.color = "var(--secondary-color)"
-
-    }
-
-    // Start the countdown interval when DOM is ready
-    document.addEventListener("DOMContentLoaded", () => {
-      updateCountdown();
-      setInterval(updateCountdown, 1000);
-    });
-  </script>
-
 <script>
-  const fetchTopDiscussedSecret = async () => {
-    try {
-      const response = await fetch("/top-discussed");
-      const data = await response.json();
-      const topSecret = data.topSecret;
-
-      if (data.success) {
-        showAnnouncement(topSecret);
-      } else {
-        console.log("No trending secret to display.");
-      }
-    } catch (error) {
-      console.error("Error fetching top discussed secret:", error);
-    }
-  };
-
   pinSecret = (topSecret) => {
-    const pinnedSection = document.getElementById("pinned");
-    pinnedSection.classList.add("visible")
-    pinnedSection.innerHTML = `
+const pinnedSection = document.getElementById("pinned");
+pinnedSection.classList.add("visible")
+pinnedSection.innerHTML = `
 <li class="secret">
 <div class="pin-card">
-<h3> Loudest in the Room</h3>
+<h3> Loudest in the Room <i class="fas fa-thumbtack pinned"></i></h3>
 <br/>
 <div class="card">
 <small>~~ @voice${topSecret.user_id} ~~</small>
@@ -636,7 +547,6 @@ display: block !important;
 </center>
 </p>
 
-<i class="fas fa-thumbtack pinned"></i>
 
 </div>
 </div>
@@ -644,38 +554,175 @@ display: block !important;
 `;
 
 
-    document.getElementById("pinnedButton").addEventListener("click", function (e) {
-      e.preventDefault()
+document.getElementById("pinnedButton").addEventListener("click", function (e) {
+  e.preventDefault()
 
-      const target = document.getElementById(`secret${topSecret.id}`);
+  const target = document.getElementById(`secret${topSecret.id}`);
 
-      // Smooth Scroll
-      target.scrollIntoView({ behavior: "smooth", block: "center" });
+  // Smooth Scroll
+  target.scrollIntoView({ behavior: "smooth", block: "center" });
 
-      highlightElement(target.querySelector(".card"))
+  highlightElement(target.querySelector(".card"))
 
-      // Add highlight effect
-      target.querySelector(".card").classList.add("highlight");
-      target.querySelector(".card").style.width = '100% !important'
-      target.querySelector(".card").style.flex = '1 1 100% !important'
+  // Add highlight effect
+  target.querySelector(".card").classList.add("highlight");
+  target.querySelector(".card").style.width = '100% !important'
+  target.querySelector(".card").style.flex = '1 1 100% !important'
 
-    })
+})
 
-    highlightElement(pinnedSection)
-    // Set a timeout to unpin the secret after 24 hours
-    setTimeout(() => {
-      pinnedSection.innerHTML = "";
-    }, 24 * 60 * 60 * 1000); // 24 hours
+highlightElement(pinnedSection)
+// Set a timeout to unpin the secret after 24 hours
+setTimeout(() => {
+  pinnedSection.innerHTML = "";
+}, 24 * 60 * 60 * 1000); // 24 hours
+};
+
+// Schedule the announcement at 12:00 PM GMT
+now = new Date();
+targetTime = new Date();
+targetTime.setUTCHours(12, 0, 0, 0); // 12:00 PM GMT
+timeUntilAnnouncement = targetTime - now;
+</script>
+
+<script>
+  function updateCountdown() {
+    const countdownEl = document.getElementById("countdown");
+    if (!countdownEl) return;
+  
+    const now = new Date();
+    const nextTarget = new Date();
+    nextTarget.setUTCHours(10, 48, 0, 0); // 11:00 AM GMT
+  
+    if (now > nextTarget) {
+      nextTarget.setUTCDate(nextTarget.getUTCDate() + 1); // move to next day
+    }
+  
+    const distance = nextTarget - now;
+  
+    const hours = String(Math.floor((distance / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+    const minutes = String(Math.floor((distance / (1000 * 60)) % 60)).padStart(2, '0');
+    const seconds = String(Math.floor((distance / 1000) % 60)).padStart(2, '0');
+  
+    const span = document.createElement('span')
+    span.textContent = `${hours}:${minutes}:${seconds}`
+    span.style.fontSize = "4rem"
+    span.style.display = "block"
+  
+    countdownEl.textContent = `Next echo broadcast in:`;
+    countdownEl.appendChild(span)
+    countdownEl.style.flex = " 1 1 100% !important"
+    countdownEl.style.width = "100% !important"
+    span.style.color = "var(--secondary-color)"
+  
+  }
+  
+  // Start the countdown interval when DOM is ready
+  document.addEventListener("DOMContentLoaded", () => {
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  });
+  </script>
+  
+
+<script>
+  const ANNOUNCEMENT_KEY = "lastAnnouncementDate";
+
+  // 🎙️ Collection of “Echo of the Day” taglines — change daily by index
+  const ECHO_QUOTES = [
+    "Today's echo carries the whispers of truth.",
+    "Every voice matters — yours just joined the chorus.",
+    "Silence echoes louder than words… until you speak.",
+    "Let your echo travel beyond the noise.",
+    "A whisper today becomes a storm tomorrow.",
+    "Your voice is your vibe — let it resonate.",
+    "Echoes fade, but words remembered never die.",
+  ];
+
+  function getDailyEcho() {
+    const todayIndex = new Date().getDate() % ECHO_QUOTES.length;
+    return ECHO_QUOTES[todayIndex];
+  }
+
+  function shouldShowAnnouncement() {
+    const lastShown = localStorage.getItem(ANNOUNCEMENT_KEY);
+    const today = new Date().toISOString().split("T")[0];
+    return lastShown !== today;
+  }
+
+  function markAnnouncementShown() {
+    const today = new Date().toISOString().split("T")[0];
+    localStorage.setItem(ANNOUNCEMENT_KEY, today);
+  }
+
+  const showAnnouncement = (secret) => {
+    const overlay = document.getElementById("announcement-overlay");
+    const postContent = document.getElementById("pin-secret");
+    const postedBy = document.getElementById("posted-by");
+    const countdownTimer = document.getElementById("countdown-timer");
+    const dailyEchoEl = document.getElementById("daily-echo");
+    const closeButton = document.getElementById("close-announcement");
+
+    const echoText = getDailyEcho();
+    dailyEchoEl.textContent = `🎧 ${echoText}`;
+    postContent.textContent = `"${secret.secret}"`;
+    postedBy.textContent = `Goes to ~~@voice${secret.user_id}~~`;
+
+    let countdown = 5;
+    const countdownInterval = setInterval(() => {
+      countdown -= 1;
+      countdownTimer.textContent = countdown;
+      if (countdown === 0) {
+        clearInterval(countdownInterval);
+        setTimeout(() => {
+          overlay.classList.add("hidden");
+          pinSecret(secret);
+        }, 1000);
+      }
+    }, 1000);
+
+    overlay.classList.remove("hidden");
+
+    closeButton.addEventListener("click", () => {
+      overlay.classList.add("hidden");
+      pinSecret(secret);
+    });
+
+    markAnnouncementShown();
   };
 
-  // Schedule the announcement at 12:00 PM GMT
-  now = new Date();
-  targetTime = new Date();
-  targetTime.setUTCHours(17, 5, 0, 0); // 12:00 PM GMT
-  timeUntilAnnouncement = targetTime - now;
+  async function fetchTopDiscussedSecret() {
+    try {
+      const response = await fetch("/top-discussed");
+      const data = await response.json();
 
-  setTimeout(fetchTopDiscussedSecret, timeUntilAnnouncement);
+      if (data.success && shouldShowAnnouncement()) {
+        showAnnouncement(data.topSecret);
+      } else {
+        console.log("No trending secret or already echoed today.");
+      }
+    } catch (error) {
+      console.error("Error fetching top discussed secret:", error);
+    }
+  }
+
+  function scheduleAnnouncement() {
+    const now = new Date();
+    const target = new Date();
+    target.setUTCHours(10, 48, 0, 0); // 5:05 PM UTC
+
+    if (now >= target && shouldShowAnnouncement()) {
+      fetchTopDiscussedSecret();
+    } else {
+      const delay = target - now;
+      console.log(`Next echo broadcast in ${(delay / 1000 / 60).toFixed(1)} minutes`);
+      setTimeout(fetchTopDiscussedSecret, delay);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", scheduleAnnouncement);
 </script>
+
 
   <script>
     const reactToSecret = async (secretId, type) => {
