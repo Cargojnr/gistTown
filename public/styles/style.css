@@ -1795,12 +1795,32 @@ mark {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.8);
+  background: rgba(15, 14, 23, 0.85);
+  backdrop-filter: blur(8px);
   color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   z-index: 50;
+}
+
+.announcement-card {
+  background: var(--foreground);
+  color: var(--background);
+  padding: 2rem;
+  border-radius: 1.5rem;
+  text-align: center;
+  max-width: 400px;
+  box-shadow: 0 0 25px rgba(127, 90, 240, 0.4);
+  animation: fadeIn 0.5s ease;
+}
+
+#daily-echo {
+  font-size: 1rem;
+  font-style: italic;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
 }
 
 #announcement-overlay.hidden {
@@ -1817,6 +1837,16 @@ mark {
   position: absolute;
   top: 20px;
   right: 20px;
+}
+
+#countdown-timer {
+  font-weight: bold;
+  color: var(--secondary);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 /* Tutorial */

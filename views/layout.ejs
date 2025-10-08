@@ -296,7 +296,7 @@
 
     <div id="milestone-badge" class="hidden">🎉 10 Reactions! 🎉</div>
 
-    <div id="announcement-overlay" class="hidden">
+    <!-- <div id="announcement-overlay" class="hidden">
       <div class="trumpet-animation"></div>
       <div class="overlay-content" text-align="center">
         <center>
@@ -309,7 +309,7 @@
         </center>
       </div>
       <button id="close-announcement" class="btn btn-secondary">Close</button>
-    </div>
+    </div> -->
 
 
 
@@ -518,9 +518,15 @@
 
 
 
-<script>
+<!-- <script>
   pinSecret = (topSecret) => {
 const pinnedSection = document.getElementById("pinned");
+
+if (!pinnedSection) {
+    console.warn("No pinned section found on this page.");
+    return; // gracefully exit instead of breaking
+  }
+
 pinnedSection.classList.add("visible")
 pinnedSection.innerHTML = `
 <li class="secret">
@@ -553,23 +559,28 @@ display: block !important;
 </li>
 `;
 
+const pinnedButton = document.getElementById("pinnedButton");
 
-document.getElementById("pinnedButton").addEventListener("click", function (e) {
+if (pinnedButton) {
+  pinnedButton.addEventListener("click", function (e) {
   e.preventDefault()
 
   const target = document.getElementById(`secret${topSecret.id}`);
 
+  if(target){
   // Smooth Scroll
   target.scrollIntoView({ behavior: "smooth", block: "center" });
-
+  
   highlightElement(target.querySelector(".card"))
-
+  
   // Add highlight effect
   target.querySelector(".card").classList.add("highlight");
   target.querySelector(".card").style.width = '100% !important'
   target.querySelector(".card").style.flex = '1 1 100% !important'
-
+  }
+  
 })
+}
 
 highlightElement(pinnedSection)
 // Set a timeout to unpin the secret after 24 hours
@@ -683,10 +694,14 @@ timeUntilAnnouncement = targetTime - now;
 
     overlay.classList.remove("hidden");
 
-    closeButton.addEventListener("click", () => {
-      overlay.classList.add("hidden");
-      pinSecret(secret);
-    });
+    closeButton.replaceWith(closeButton.cloneNode(true));
+const newCloseButton = document.getElementById("close-announcement");
+
+newCloseButton.addEventListener("click", () => {
+  overlay.classList.add("hidden");
+  pinSecret(secret);
+});
+
 
     markAnnouncementShown();
   };
@@ -721,7 +736,7 @@ timeUntilAnnouncement = targetTime - now;
   }
 
   document.addEventListener("DOMContentLoaded", scheduleAnnouncement);
-</script>
+</script> -->
 
 
   <script>
