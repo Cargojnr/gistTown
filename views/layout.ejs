@@ -233,7 +233,7 @@
 
     <aside class="left-sidebar">
         <ul class="nav">
-          <li class="nav-item <%= locals.title === 'Gossip feeds' ? 'current' : null %>">
+          <li class="nav-item <%= locals.title === 'Feeds' ? 'current' : null %>">
             <a href="/feeds">
               <i class="nav-icon fas fa-home"></i> &nbsp;
               <span class="nav-text">Open Air</span>
@@ -279,13 +279,45 @@
           </li>
 
           <li class="nav-item <%= locals.title === 'Share your Gossip' || 'Edit your Gossip' ? 'current' : null %>">
-            <a href="/submit">
+            <a 
+            href="<%= locals.title === 'Gossipa feeds' ? 'javascript:void(0);' : '/submit' %>"
+            id="compose-toggle"
+            class="compose-link"
+            >
               <i class="fas fa-circle-plus nav-icon"></i>
               &nbsp;<span class="nav-text"> Compose Gist</span>&nbsp;
-              <i class="fas fa-chevron-down nav-text"></i>
+              <i id="compose-arrow" class="fas fa-chevron-down nav-text"></i>
             </a>
 
+           
+              <!-- Hidden toggle dropdown only visible on Feeds -->
+              <ul id="compose-menu" class="compose-menu ">
+                <% if (locals.title === 'Feeds') { %>
+                  <button  onclick="openModal('', 'text')">
+                    <i class="fas fa-pen-to-square"></i> Type it Out
+                  </button>
+                <% } else { %>
+                  <a href="/submit">
+                    <i class="fas fa-pen-to-square"></i> Type it Out
+                  </a>
+                <% } %>
+              </li>
+            
+              <li>
+                <% if (locals.title === 'Feeds') { %>
+                  <button  onclick="openModal('', 'audio')">
+                    <i class="fas fa-microphone"></i> Voice it Out
+                  </button>
+                <% } else { %>
+                  <a href="/submit">
+                    <i class="fas fa-microphone"></i> Voice it Out
+                  </a>
+                <% } %>
+              </li>
+              </ul>
+
           </li>
+
         </ul>
 
     </aside>
@@ -515,6 +547,53 @@
     });
 
   </script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const pageTitle = "<%= locals.title %>";
+    const toggle = document.getElementById("compose-toggle");
+    const menu = document.getElementById("compose-menu");
+    const arrow = document.getElementById("compose-arrow");
+    const links = menu?.querySelectorAll("a");
+
+    // 1️⃣ Toggle dropdown — only active on feeds page
+    toggle?.addEventListener("click", (e) => {
+      if (pageTitle !== "Feeds") return; // skip dropdown on other pages
+      e.preventDefault();
+      menu.classList.toggle("visible");
+      arrow.classList.toggle("rotated");
+    });
+
+    // 2️⃣ Handle link clicks — open modal on feeds, redirect otherwise
+    links?.forEach(link => {
+      link.addEventListener("click", (e) => {
+        const type = link.dataset.type;
+
+        if (pageTitle === "Feeds") {
+          e.preventDefault();
+          menu.classList.remove("visible");
+          arrow.classList.remove("rotated");
+          if (typeof openModal === "function") {
+            openModal("", type); // your modal function on feeds
+          } else {
+            console.warn("openModal function not found");
+          }
+        } else {
+          // Redirect to /submit on other pages
+          window.location.href = "/submit";
+        }
+      });
+    });
+
+    // 3️⃣ Close menu when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!menu?.contains(e.target) && !toggle?.contains(e.target)) {
+        menu?.classList.remove("visible");
+        arrow?.classList.remove("rotated");
+      }
+    });
+  });
+</script>
 
 
 

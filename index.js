@@ -1101,7 +1101,7 @@ app.get("/profile/user/:userid", ensureAuthenticated, async (req, res) => {
    const userAvatarUrl = resolveAvatarUrl(userPicture, req);
 
       res.render("profile", {
-        title: stealthMode ? `gossipa${userid} Profile` : username,
+        title: stealthMode ? `Voice${userid} Profile` : username,
         userId: user.id,
         username: user.username,
         verification: user.verified,
@@ -1237,7 +1237,7 @@ const formattedAudio = audioPosts.map((audio) => {
       stealthMode : user.stealth_mode,
       profilePicture: avatarUrl,
       username: user.username,
-      title: 'Whispers',
+      title: 'Feeds',
     });
     } catch (err) {
       console.log("Failed to fetch saved gists:", err.message, err.stack);
@@ -2058,7 +2058,7 @@ app.post("/share", upload.single("audio"),  ensureAuthenticated, async (req, res
           category: secretResult.rows[0].category,
           type: secretResult.rows[0].type,
           avatar: secretResult.rows[0].profile_picture,
-          message: ` Gossipa${userId} posted a new ${contentType} gist 📢 `,
+          message: ` Voice${userId} posted a new ${contentType} gist 📢 `,
 };
 
 
@@ -2104,7 +2104,7 @@ app.post("/share", upload.single("audio"),  ensureAuthenticated, async (req, res
           id: response.id,
           ...newAudio.toJSON(),
           avatar: user.profile_picture,
-          message: ` Gossipa${userId} posted a new ${contentType} gist 📢 `,
+          message: ` Voice${userId} posted a new ${contentType} gist 📢 `,
         };
 
         // Emit a notification for the new audio secret
@@ -2138,7 +2138,7 @@ for (const [id, socket] of io.sockets.sockets) {
           userId,
           username,
           profile_picture,
-          message: ` Gossipa${userId} posted a new secret  📢 `,
+          message: ` Voice${userId} posted a new secret  📢 `,
         });
 
 

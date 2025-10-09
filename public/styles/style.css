@@ -901,6 +901,73 @@ abbr {
   display: block;
 }
 
+/* Compose Menu */
+#compose-arrow {
+  transition: transform 0.25s ease;
+}
+
+.compose-menu {
+  position: absolute;
+  top: 105%;
+  left: 0;
+  right: 0;
+  background: var(--container-bg);
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  list-style: none;
+  padding: .2rem;
+  margin-top: 0.4rem;
+  min-width: 180px;
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: all 0.25s ease;
+  z-index: 999;
+}
+
+.compose-menu.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.compose-menu a {
+  width: 100%;
+  cursor: pointer;
+  display: block;
+  padding: 0.6rem 1rem;
+  color: var(--text-color);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+
+.compose-menu button{
+  width: 100%;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0.6rem 1rem;
+  color: var(--text-color);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.compose-menu a:hover , 
+  .compose-menu button:hover{ 
+  background: var(--glass-bg);
+  color: var(--secondary-color);
+}
+
+.fa-chevron-down.rotated {
+  transform: rotate(180deg);
+  transition: transform 0.25s ease;
+}
+
+
 /* Basic Modal Styles */
 .modal {
   display: none;

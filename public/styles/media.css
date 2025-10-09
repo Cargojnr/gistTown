@@ -102,7 +102,7 @@ font-family: 'Quicksand', sans-serif;
 
   aside {
     position: fixed !important;
-    top: 90% !important;
+    top: 92% !important;
       left: 0 !important;
       right: 0 !important;
       width: 100vw !important;
@@ -343,7 +343,15 @@ header .profiled {
   display: none;
 }
 
-
+.compose-menu {
+  position: fixed;
+  top: 83%;
+  right: 0% !important;
+  left: 70%;
+  height: 70px;
+  margin: auto;
+  width: 120px;
+}
 
 .card-menu {
   position: absolute;
@@ -895,7 +903,7 @@ font-size: 12px;
 
   aside {
     position: fixed !important;
-    top: 89% !important;
+    top: 90% !important;
       left: 0 !important;
       right: 0 !important;
       z-index: 20 !important;
