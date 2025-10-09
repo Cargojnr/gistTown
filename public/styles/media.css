@@ -587,6 +587,23 @@ header .profiled {
     max-width: 90vw;
   }
 
+  /* Form ui*/
+  .form-wrap {
+    width: 100% !important;
+    height: 60vh !important;
+    background: var(--container-bg);
+    border-radius: 30px;
+    position: relative;
+  }
+
+  .input-text {
+    width: 100% !important;
+    height: 45vh !important;
+    padding: 1rem;
+    font-size: 1rem;
+    border-radius: 30px;
+    margin-bottom: 1rem;
+  }
 
 
   /* Chat Styling */
