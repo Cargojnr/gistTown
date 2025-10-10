@@ -268,7 +268,7 @@ abbr {
   color: var(--secondary-color);
   font-weight: bold;
   cursor: pointer;
-  font-size: 0.8rem !important;
+  font-size: 0.9rem !important;
   font-family: 'Quicksand', sans-serif !important;
 }
 
@@ -2950,7 +2950,7 @@ li {
 .card-menu {
   position: absolute;
   right: 1rem;
-  top: 1.25rem;
+  top: 1.2rem;
 }
 
 
