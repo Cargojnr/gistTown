@@ -1,4 +1,28 @@
 @media (max-width: 1200px) {
+  
+  .main {
+    width: 100%;
+  }
+  aside {
+    width: 200px !important;
+    margin-bottom: 1rem;
+  } 
+  
+  .nav-item, .nav-text {
+   font-size: 1rem;
+  }
+  
+  #selectCategory {
+    position: fixed;
+    top: 4rem;
+    gap: .2rem;
+    right: 0 !important;
+  }
+  
+  .right-sidebar{
+    display: none !important;
+  }
+  
 #feeds .secret.half-width {
   flex: 1 1 100%; /* Two in a row */
   width: 100% !important;
@@ -35,29 +59,6 @@ font-family: 'Quicksand', sans-serif;
 
   #liveSearchForm {
     width: 350px;
-  }
-  
-  .main {
-    width: 100%;
-  }
-  aside {
-    width: 200px !important;
-    margin-bottom: 1rem;
-  } 
-  
-  .nav-item, .nav-text {
-   font-size: 1rem;
-  }
-  
-  #selectCategory {
-    position: fixed;
-    top: 4rem;
-    gap: .2rem;
-    right: 0 !important;
-  }
-  
-  .right-sidebar{
-    display: none !important;
   }
 }
 
