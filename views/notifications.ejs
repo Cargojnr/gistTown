@@ -1,4 +1,11 @@
 <style>
+  .card, .card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
   .shimmer-wrapper {
     display: flex;
     flex-direction: column;
@@ -181,16 +188,14 @@
                           <p class="card-content">
                             <span>
                               <% if (notification.notificationType==='secret' ) { %>
-                                <% if (notification.user_id==userId) { %>
-
-                                  <% } else { %>
-                                    <%if (notification.secret.split(" ").length > 100) { %> 
-                                <%=notification.secret.substring(0, 100) + " ..." %>
-                                      <% } else { %>
+                                <% if (notification.user_id==userId) { %><% } else { %>
+                                  <%if (notification.secret.split(" ").length > 100) { %> 
+                                        <%=notification.secret.substring(0, 100) + " ..." %>
+                                    <% } else { %>
                                         <%= notification.secret %>
-                                          <% } %>
-                                            <% } %>
-                                              <% } %>
+                                     <% } %>
+                                  <% } %>
+                              <% } %>
 
 
                                                 <% if(notification.notificationType==='eavedrop' ){ %>
