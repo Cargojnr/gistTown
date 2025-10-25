@@ -808,7 +808,7 @@
                   </span>
 
                   <small class="username">
-                    <span class="user user<%= profileId %>">
+                    <span class="user user<%= profileId %>" style="color: #000 !important">
                       <% if(stealthMode){ %>
                         @voice<%= profileId %>
                           <% } else { %>
@@ -1107,10 +1107,10 @@ class=" read" style="
                 </div>
                 <div class="username-bundle">
                   <p class="username-row">
-                    <small class="username">
-                      <span class="user<%= userId %>">
+                    <small class="username" >
+                      <span class="user<%= userId %>" >
                         <% if(stealthMode){ %>
-                          <span class="user">@voice<%= userId %></span>
+                          <span class="user" style="color: var(--text-color) !important">@voice<%= userId %></span>
                           <% } else { %>
                             <span class="user"> @<%= username %></span>
                             <% } %>
