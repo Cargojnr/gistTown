@@ -495,7 +495,12 @@ function hideBrandLogo() {
   }
 
   e.target.querySelector("#submit").disabled = false;
+  data = {
+    username: "",
+    password: "",
+  };
   e.target.querySelector("#submit").innerHTML = `Login`;
+
 });
 
 document.querySelector('#verifyForm').addEventListener('submit', async (e) => {
