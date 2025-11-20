@@ -808,7 +808,7 @@
                   </span>
 
                   <small class="username">
-                    <span class="user user<%= profileId %>" style="color: #000 !important">
+                    <span class="user<%= profileId %>" style="color: var(--text-color) !important">
                       <% if(stealthMode){ %>
                         @voice<%= profileId %>
                           <% } else { %>
@@ -831,13 +831,14 @@
                       <% } %>
                 </p>
 
+
                 <button class="edit-profile-btn eavedrop-btn btn-gradient" data-targetid="<%= profileId %>">
                   <i class="fas fa-ear-deaf"></i>
                   <span>Resonate</span>
                 </button>
-
               </div>
             </div>
+
 
             <div class="quick-stats">
               <% const isMoreThanOne = userProfile.length > 1 %>

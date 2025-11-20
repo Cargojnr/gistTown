@@ -180,6 +180,16 @@
                 </div>
                 <% } %>
 
+                     <% if (locals.flaggedReport) { %>
+                            <div class="card">
+                              <div class="card-title">Leads</div>
+                              <div class="card-body">
+                                <%= flaggedReport.length %>
+                              </div>
+                              <!-- <button>Click Me</button> -->
+                            </div>
+                            <% } %>
+
                   <% if (locals.feeds) { %>
                     <div class="card">
                       <div class="card-title">No. of Content Posted</div>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Voice to Text</title>
+<style>
+.pulse { animation: pulse 1s infinite; }
+@keyframes pulse { 0% {opacity: 1;} 50% {opacity: 0.5;} 100% {opacity: 1;} }
+</style>
+</head>
+<body>
+  <div class="voice-compose">
+    <h2>🎙️ Speak Your Echo</h2>
+    <button id="recordBtn">Start Recording</button>
+    <button id="stopBtn" disabled>Stop</button>
+    <audio id="playback" controls></audio>
+    <p id="status"></p>
+  </div>
+  <textarea id="transcript" placeholder="Your spoken echo will appear here..." rows="5"></textarea>
+
+<script>
+let mediaRecorder, chunks = [];
+const recordBtn = document.getElementById("recordBtn");
+const stopBtn = document.getElementById("stopBtn");
+const status = document.getElementById("status");
+const playback = document.getElementById("playback");
+const transcriptArea = document.getElementById("transcript");
+
+recordBtn.addEventListener("click", async () => {
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  mediaRecorder = new MediaRecorder(stream);
+  chunks = [];
+
+  mediaRecorder.ondataavailable = e => chunks.push(e.data);
+  mediaRecorder.onstop = async () => {
+    const blob = new Blob(chunks, { type: "audio/webm" });
+    playback.src = URL.createObjectURL(blob);
+    status.textContent = "⏳ Uploading for transcription...";
+
+    const formData = new FormData();
+    formData.append("audio", blob, "recording.webm");
+
+    try {
+      const res = await fetch("/api/transcribe", {
+        method: "POST",
+        body: formData
+      });
+
+      if (!res.ok) throw new Error(`Server responded ${res.status}`);
+      const data = await res.json();
+
+      if (data.error) throw new Error(data.error);
+
+      status.textContent = "✅ Transcribed successfully!";
+      transcriptArea.value = data.text;
+    } catch (err) {
+      console.error("Transcription error:", err);
+      status.textContent = "❌ Failed to transcribe: " + err.message;
+    }
+  };
+
+  mediaRecorder.start();
+  recordBtn.disabled = true;
+  stopBtn.disabled = false;
+  status.textContent = "🎙️ Recording...";
+});
+
+stopBtn.addEventListener("click", () => {
+  mediaRecorder.stop();
+  recordBtn.disabled = false;
+  stopBtn.disabled = true;
+});
+</script>
+</body>
+</html>
