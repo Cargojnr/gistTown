@@ -61,7 +61,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+// const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // const test = async () => {
 //   const models = await openai.models.list();
@@ -2028,38 +2028,38 @@ app.post("/search",  ensureAuthenticated, async (req, res) => {
   }
 });
 
-app.post("/api/transcribe", upload.single("audio"), async (req, res) => {
-  try {
-    // ✅ Confirm upload worked
-    if (!req.file) {
-      return res.status(400).json({ error: "No audio file uploaded." });
-    }
+// app.post("/api/transcribe", upload.single("audio"), async (req, res) => {
+//   try {
+//     // ✅ Confirm upload worked
+//     if (!req.file) {
+//       return res.status(400).json({ error: "No audio file uploaded." });
+//     }
 
-    const filePath = path.resolve(req.file.path);
-    console.log("🎧 File uploaded to:", filePath);
-    console.log("📦 File info:", req.file);
-    console.log("🔑 API key exists:", !!process.env.OPENAI_API_KEY);
-    // ✅ Whisper API call
-    const transcription = await openai.audio.transcriptions.create({
-      file: fs.createReadStream(filePath),
-      model: "whisper-1",
-    });
+//     const filePath = path.resolve(req.file.path);
+//     console.log("🎧 File uploaded to:", filePath);
+//     console.log("📦 File info:", req.file);
+//     console.log("🔑 API key exists:", !!process.env.OPENAI_API_KEY);
+//     // ✅ Whisper API call
+//     const transcription = await openai.audio.transcriptions.create({
+//       file: fs.createReadStream(filePath),
+//       model: "whisper-1",
+//     });
 
-    console.log("📝 Transcription response:", transcription);
+//     console.log("📝 Transcription response:", transcription);
 
-    // ✅ Clean up the file after processing
-    fs.unlinkSync(filePath);
+//     // ✅ Clean up the file after processing
+//     fs.unlinkSync(filePath);
 
-    // ✅ Return the text result
-    res.json({ text: transcription.text || "No text returned" });
-  } catch (err) {
-    console.error("❌ Transcription Error:", err);
-    res.status(500).json({
-     error: err.message || "Transcription failed." ,
-     details: err.response ? await err.response.text() : null
-     });
-  }
-});
+//     // ✅ Return the text result
+//     res.json({ text: transcription.text || "No text returned" });
+//   } catch (err) {
+//     console.error("❌ Transcription Error:", err);
+//     res.status(500).json({
+//      error: err.message || "Transcription failed." ,
+//      details: err.response ? await err.response.text() : null
+//      });
+//   }
+// });
 
 //Post route to share a post either text or audio
 app.post("/share", upload.single("audio"),  ensureAuthenticated, async (req, res) => {
