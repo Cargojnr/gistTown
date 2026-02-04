@@ -63,11 +63,11 @@ const upload = multer({ storage });
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-const test = async () => {
-  const models = await openai.models.list();
-  console.log(models.data.map(m => m.id));
-};
-test();
+// const test = async () => {
+//   const models = await openai.models.list();
+//   console.log(models.data.map(m => m.id));
+// };
+// test();
  
 
 const app = express();
@@ -1147,7 +1147,7 @@ app.get("/feeds/:category", ensureAuthenticated, async (req, res) => {
   const user = getCurrentUser(req)
   try {
     const result = await db.query(
-      "SELECT secrets.id, profile_picture, verified,username,user_id, color, secrets.category, secret.type, reactions,  secret FROM secrets JOIN users ON users.id = user_id WHERE category = $1 ORDER BY secrets.id DESC ",
+      "SELECT secrets.id, profile_picture, verified,username,user_id, color, category, secret.type, reactions,  secret FROM secrets JOIN users ON users.id = user_id WHERE category = $1 ORDER BY secrets.id DESC ",
       [category]
     );
 
